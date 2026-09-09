@@ -61,6 +61,19 @@ const auth = {
   setToken() {},
   async logout() { const { error } = await supabase.auth.signOut(); if (error) throw error; window.location.hash = "/"; },
   redirectToLogin(returnTo = "/") { window.location.hash = `/login?returnTo=${encodeURIComponent(returnTo)}`; },
-  async loginWithProvider(provider = "google", returnTo = "/") { try { const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: `${window.location.origin}${window.location.pathname}#/login?returnTo=${encodeURIComponent(returnTo)}` } }); if (error) throw error; } catch (error) { const message = error?.message || "Google sign-in failed"; if (/provider.*not enabled|unsupported provider/i.test(message)) throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet."); throw error; } },
+  async loginWithProvider(provider = "google", returnTo = "/") {
+    try {
+      const productionOrigin = "https://phoomth1407.github.io/SafeSpace-ph";
+      const isGitHubPages = window.location.hostname === "phoomth1407.github.io";
+      const origin = isGitHubPages ? productionOrigin : window.location.origin;
+      const redirectTo = `${origin}${window.location.pathname.replace(/\/SafeSpace-ph$/, "")}/#/login?returnTo=${encodeURIComponent(returnTo)}`;
+      const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
+      if (error) throw error;
+    } catch (error) {
+      const message = error?.message || "Google sign-in failed";
+      if (/provider.*not enabled|unsupported provider/i.test(message)) throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet.");
+      throw error;
+    }
+  },
 };
 export const base44 = { entities, functions: { invoke }, auth };
