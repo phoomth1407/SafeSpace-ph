@@ -1,0 +1,143 @@
+import React, { useState, useEffect } from "react";
+import { Loader2, Phone, AlertCircle, ExternalLink, BookOpen, Heart } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import ResourceCard from "@/components/ResourceCard";
+import { useTranslation } from "@/lib/i18n";
+
+const selfCareLinks = {
+  th: [
+    { title: "กรมสุขภาพจิต กระทรวงสาธารณสุข", url: "https://www.dmh.go.th", desc: "ข้อมูลและความรู้ด้านสุขภาพจิต วิธีดูแลตนเอง และแหล่งบริการให้คำปรึกษา" },
+    { title: "กรมสุขภาพจิต (สายด่วน 1327)", url: "https://dmh.go.th", desc: "แหล่งข้อมูลและคลังความรู้เรื่องสุขภาพจิต การดูแลตนเอง และการปรึกษาปัญหา" },
+    { title: "สุขภาพใจ.com", url: "https://www.thaimentalhealth.com", desc: "บทความและวิธีการบำบัดตนเอง การจัดการอารมณ์ และการสร้างความเข้มแข็งในใจ" },
+    { title: "จิตวิทยาพลิกชีวิต", url: "https://www.facebook.com/psychologylife", desc: "เพจแชร์ความรู้จิตวิทยาเพื่อการดูแลตนเอง เข้าใจอารมณ์ และพัฒนาตนเอง" },
+    { title: "Ooca บำบัดใจ", url: "https://www.ooca.co", desc: "แพลตฟอร์มปรึกษานักจิตวิทยาออนไลน์ พร้อมบทความดูแลสุขภาพจิต" },
+  ],
+  en: [
+    { title: "HelpGuide — Mental Health", url: "https://www.helpguide.org/mental-health", desc: "Evidence-based guides on self-care, managing emotions, and building resilience" },
+    { title: "Mindful.org", url: "https://www.mindful.org", desc: "Mindfulness and meditation practices for self-therapy and emotional well-being" },
+    { title: "Headspace", url: "https://www.headspace.com", desc: "Guided meditations and self-care techniques for stress, anxiety, and sleep" },
+    { title: "Psychology Today — Self-Help", url: "https://www.psychologytoday.com/us/basics/self-help", desc: "Articles on self-therapy, coping skills, and emotional regulation" },
+    { title: "NAMI — Self-Care", url: "https://www.nami.org/About-Mental-Illness/Treatments/Self-Care", desc: "Practical self-care strategies for mental health recovery and maintenance" },
+  ],
+};
+
+export default function Resources() {
+  const { t, lang } = useTranslation();
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await base44.entities.EmergencyResource.list();
+        setResources(data);
+      } catch (err) {
+        setResources([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const links = selfCareLinks[lang] || selfCareLinks.th;
+
+  return (
+    <div className="space-y-6 max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="text-center pt-2">
+        <h1 className="text-2xl font-bold text-slate-100">{t("resources.title")}</h1>
+        <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
+          {t("resources.subtitle")}
+        </p>
+      </div>
+
+      {/* Emergency banner */}
+      <div className="bg-gradient-to-br from-red-500/20 to-rose-600/20 rounded-2xl p-5 border border-red-500/30 text-slate-100">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0">
+            <AlertCircle className="w-5 h-5 text-red-300" />
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold">{t("resources.emergency.title")}</h2>
+            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+              {t("resources.emergency.desc")}
+            </p>
+            <div className="flex gap-2 mt-3">
+              <a href="tel:191" className="bg-slate-100 text-slate-900 text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5" /> 191
+              </a>
+              <a href="tel:1669" className="bg-slate-100 text-slate-900 text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5" /> 1669
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Self-care links */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-emerald-300" />
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-slate-100">{t("resources.selfcare.title")}</h2>
+            <p className="text-xs text-slate-500">{t("resources.selfcare.subtitle")}</p>
+          </div>
+        </div>
+        <div className="space-y-3 mt-3">
+          {links.map((link, i) => (
+            <a
+              key={i}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block bg-slate-900/60 rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition-colors"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center flex-shrink-0">
+                  <Heart className="w-5 h-5 text-rose-300" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-sm font-semibold text-slate-100">{link.title}</h3>
+                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-slate-300 transition-colors" />
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{link.desc}</p>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Hotlines list */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Phone className="w-4 h-4 text-slate-400" />
+          <h2 className="text-sm font-semibold text-slate-100">{t("resources.hotlines.title")}</h2>
+        </div>
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <Loader2 className="w-6 h-6 text-slate-600 animate-spin" />
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {resources.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer note */}
+      <div className="text-center py-4">
+        <p className="text-xs text-slate-500 leading-relaxed">
+          {t("resources.footer1")}<br />
+          {t("resources.footer2")}
+        </p>
+      </div>
+    </div>
+  );
+}
