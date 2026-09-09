@@ -1,140 +1,44 @@
-// ระบบให้คะแนนแบบประเมินตามกฎ (ไม่ใช้ AI)
-// อ้างอิงเกณฑ์: คำตอบตัวเลือกแรก = ดีที่สุด (0 คะแนน) → ตัวเลือกสุดท้าย = แย่ที่สุด (3 คะแนน)
+// Rule-based screening score used by the offline/GitHub Pages build.
+// This is a screening aid, not a medical diagnosis.
 import { assessmentCategories } from "./assessmentQuestions";
 
 export function computeAssessmentResult(answers) {
-  let totalScore = 0;
-  let maxScore = 0;
-  let hasSelfHarmRisk = false;
-  const categoryScores = {};
-
-  assessmentCategories.forEach((cat) => {
-    let catScore = 0;
-    let catMax = 0;
-    cat.questions.forEach((q) => {
-      catMax += 3;
-      const answer = answers.find((a) => a.question === q.q);
-      if (answer) {
-        const optionIndex = q.options.indexOf(answer.answer);
-        if (optionIndex >= 0) {
-          catScore += optionIndex;
-          if (q.q.includes("ทำร้ายตัวเอง") && optionIndex >= 2) {
-            hasSelfHarmRisk = true;
-          }
-        }
+  let totalScore=0,maxScore=0,hasSelfHarmRisk=false;
+  const categoryScores={};
+  assessmentCategories.forEach(cat=>{
+    let catScore=0,catMax=0;
+    ["th","en"].forEach(lang=>{
+      const qs=cat.questions[lang]||[];
+      qs.forEach((q,idx)=>{
+        if(lang!=="th"&&cat.questions.th?.[idx]?.q===undefined)return;
+        catMax+=lang==="th"?3:0;
+      });
+    });
+    const qs=cat.questions.th||cat.questions.en||[];
+    catMax=qs.length*3;
+    qs.forEach((q,idx)=>{
+      const enQ=cat.questions.en?.[idx];
+      const answer=answers.find(a=>a.question===q.q||a.question===enQ?.q);
+      if(answer){
+        const options=(answer.question===enQ?.q?enQ:q).options;
+        const optionIndex=options.indexOf(answer.answer);
+        if(optionIndex>=0)catScore+=optionIndex;
+        if((/ทำร้ายตัวเอง|ฆ่าตัวตาย|self[- ]?harm|suicide/i.test(q.q)||/self[- ]?harm|suicide/i.test(enQ?.q||""))&&optionIndex>=2)hasSelfHarmRisk=true;
       }
     });
-    categoryScores[cat.title] = {
-      score: catScore,
-      max: catMax,
-      pct: catMax > 0 ? catScore / catMax : 0,
-    };
-    totalScore += catScore;
-    maxScore += catMax;
+    categoryScores[cat.title]={score:catScore,max:catMax,pct:catMax?catScore/catMax:0};
+    totalScore+=catScore;maxScore+=catMax;
   });
-
-  const normalizedScore = Math.round((totalScore / maxScore) * 100);
-
-  let riskLevel;
-  if (hasSelfHarmRisk || normalizedScore >= 76) {
-    riskLevel = "severe";
-  } else if (normalizedScore >= 51) {
-    riskLevel = "high";
-  } else if (normalizedScore >= 26) {
-    riskLevel = "moderate";
-  } else {
-    riskLevel = "low";
-  }
-
-  const highCategories = Object.entries(categoryScores)
-    .filter(([, v]) => v.pct >= 0.6)
-    .map(([k]) => k);
-
-  return {
-    risk_level: riskLevel,
-    risk_score: normalizedScore,
-    ai_summary: generateSummary(riskLevel, highCategories, hasSelfHarmRisk),
-    recommendations: generateRecommendations(riskLevel, highCategories, hasSelfHarmRisk),
-    similar_case: null,
-  };
+  const normalizedScore=maxScore?Math.round(totalScore/maxScore*100):0;
+  const risk_level=hasSelfHarmRisk||normalizedScore>=76?"severe":normalizedScore>=51?"high":normalizedScore>=26?"moderate":"low";
+  const highCategories=Object.entries(categoryScores).filter(([,v])=>v.pct>=.6).map(([k])=>k);
+  return {risk_level,risk_score:normalizedScore,ai_summary:generateSummary(risk_level,highCategories,hasSelfHarmRisk),recommendations:generateRecommendations(risk_level,highCategories,hasSelfHarmRisk),similar_case:null};
 }
-
-function generateSummary(riskLevel, highCategories, hasSelfHarmRisk) {
-  const baseSummaries = {
-    low: "จากการประเมิน คุณมีสุขภาพจิตในภาวะปกติ สามารถจัดการกับความเครียดและปัญหาในชีวิตได้ดี ขอให้ดูแลและรักษาสภาพจิตใจที่ดีนี้ต่อไป",
-    moderate:
-      "จากการประเมิน คุณมีความเครียดและความเสี่ยงด้านสุขภาพจิตในระดับปานกลาง มีบางด้านในชีวิตที่ส่งผลต่อจิตใจของคุณ ควรให้ความสนใจและหาวิธีจัดการกับปัญหาเหล่านั้น",
-    high: "จากการประเมิน คุณมีความเสี่ยงด้านสุขภาพจิตในระดับสูง มีหลายด้านในชีวิตที่ส่งผลกระทบต่อจิตใจอย่างมาก ควรได้รับการช่วยเหลือและการดูแลเพิ่มเติม",
-    severe:
-      "จากการประเมิน คุณมีความเสี่ยงรุนแรงด้านสุขภาพจิต ควรขอความช่วยเหลือจากผู้เชี่ยวชาญโดยด่วน คุณไม่ได้อยู่คนเดียว มีคนพร้อมช่วยเหลือคุณเสมอ",
-  };
-
-  let summary = baseSummaries[riskLevel];
-
-  if (highCategories.length > 0 && riskLevel !== "low") {
-    summary += ` ด้านที่ควรให้ความสนใจ ได้แก่ ${highCategories.join(" ")}`;
-  }
-
-  if (hasSelfHarmRisk) {
-    summary +=
-      " จากคำตอบ คุณมีความคิดเกี่ยวกับการทำร้ายตัวเอง ขอให้ติดต่อสายด่วนทันทีเพื่อรับความช่วยเหลือ";
-  }
-
-  return summary;
+function generateSummary(level,high,selfRisk){
+  const s={low:"จากการประเมิน คุณมีความเครียดในระดับค่อนข้างต่ำ ขอให้ดูแลสุขภาพกายและใจต่อไป",moderate:"จากการประเมิน คุณมีความเครียดหรือปัจจัยที่ควรให้ความสนใจในบางด้าน ลองพูดคุยกับคนที่ไว้ใจได้",high:"จากการประเมิน คุณมีความเครียดในระดับสูง ควรพูดคุยกับผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้",severe:"จากการประเมินพบสัญญาณของความเครียดในระดับสูงมาก ควรขอความช่วยเหลือจากผู้ใหญ่หรือผู้เชี่ยวชาญโดยเร็ว ผลนี้ไม่ใช่การวินิจฉัย"};
+  return s[level]+(high.length?` ด้านที่ควรให้ความสนใจ: ${high.join(", ")}`:"")+(selfRisk?" หากคำตอบบางข้อทำให้คุณรู้สึกไม่ปลอดภัย โปรดบอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้ทันที":"");
 }
-
-function generateRecommendations(riskLevel, highCategories, hasSelfHarmRisk) {
-  const recs = [];
-
-  const generalRecs = {
-    low: [
-      "ดูแลสุขภาพกายและใจต่อไป นอนหลับพักผ่อนให้เพียงพอ",
-      "ทำกิจกรรมที่ทำให้มีความสุขและผ่อนคลายเป็นประจำ",
-      "รักษาความสัมพันธ์กับคนรอบข้างและเครือข่ายสนับสนุน",
-    ],
-    moderate: [
-      "หาเวลาพักผ่อนและทำกิจกรรมที่ชอบเพื่อลดความเครียด",
-      "พูดคุยกับคนที่ไว้ใจได้เกี่ยวกับสิ่งที่รู้สึก",
-      "ออกกำลังกายเป็นประจำ ช่วยลดความเครียดได้",
-      "หากความรู้สึกไม่ดีต่อเนื่อง ควรปรึกษาผู้เชี่ยวชาญ",
-    ],
-    high: [
-      "ควรปรึกษาผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อรับการประเมินและการรักษาที่เหมาะสม",
-      "พูดคุยกับผู้ปกครอง ครู หรือคนที่ไว้ใจได้เกี่ยวกับสิ่งที่คุณกำลังเผชิญ",
-      "หลีกเลี่ยงการอยู่คนเดียว พยายามอยู่ใกล้คนที่ปลอดภัย",
-      "ติดต่อสายด่วนสุขภาพจิต 1327 เพื่อรับคำปรึกษา",
-    ],
-    severe: [
-      "ติดต่อสายด่วนสุขภาพจิต 1327 หรือ 1667 (สายด่วนเด็กและเยาวชน) ทันที",
-      "อย่าอยู่คนเดียว ขอความช่วยเหลือจากคนรอบข้างที่ไว้ใจได้",
-      "ควรพบแพทย์หรือนักจิตวิทยาเพื่อรับการรักษาโดยด่วน",
-      "หากมีความคิดทำร้ายตัวเอง โทร 1669 หรือไปโรงพยาบาลใกล้บ้านทันที",
-    ],
-  };
-
-  recs.push(...generalRecs[riskLevel]);
-
-  if (highCategories.includes("การถูกกลั่นแกล้ง")) {
-    recs.push("หากถูกกลั่นแกล้ง แจ้งครูหรือผู้ปกครองทันที หรือโทรสายด่วน 1300");
-  }
-  if (highCategories.includes("ครอบครัว")) {
-    recs.push(
-      "หากปัญหาครอบครัวส่งผลกระทบ ลองคุยกับผู้ใหญ่ในบ้านหรือปรึกษาครูที่ไว้ใจได้"
-    );
-  }
-  if (highCategories.includes("การเรียนและการศึกษา")) {
-    recs.push(
-      "วางแผนการเรียนที่เหมาะสม แบ่งเวลาพักผ่อน และขอความช่วยเหลือจากครูเมื่อต้องการ"
-    );
-  }
-  if (highCategories.includes("สุขภาพและโภชนาการ")) {
-    recs.push(
-      "ดูแลสุขภาพกาย นอนหลับให้เพียงพอ กินอาหารครบ 3 มื้อ และออกกำลังกายสม่ำเสมอ"
-    );
-  }
-  if (hasSelfHarmRisk) {
-    recs.push("หากคิดทำร้ายตัวเอง โทร 1669 ทันที หรือไปยังโรงพยาบาลใกล้บ้าน");
-  }
-
-  return recs;
+function generateRecommendations(level,high,selfRisk){
+  const r={low:["พักผ่อนให้เพียงพอ","ทำกิจกรรมที่ช่วยให้ผ่อนคลาย","พูดคุยกับคนที่ไว้ใจได้"],moderate:["หาเวลาพักและทำกิจกรรมที่ช่วยลดความเครียด","พูดคุยกับคนที่ไว้ใจได้","หากความรู้สึกไม่ดีต่อเนื่อง ควรปรึกษาผู้เชี่ยวชาญ"],high:["พูดคุยกับผู้ปกครอง ครู หรือผู้เชี่ยวชาญที่ไว้ใจได้","อยู่ใกล้คนที่ทำให้รู้สึกปลอดภัย","พิจารณารับคำปรึกษาจากผู้เชี่ยวชาญ"],severe:["บอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้โดยเร็ว","พยายามอยู่กับคนที่ปลอดภัยและให้การสนับสนุน","หากไม่ปลอดภัยหรือเป็นเหตุฉุกเฉิน ให้ติดต่อบริการฉุกเฉินในพื้นที่"]};
+  const out=[...(r[level]||r.moderate)];if(high.includes("การถูกกลั่นแกล้ง"))out.push("หากถูกกลั่นแกล้ง ควรแจ้งครูหรือผู้ปกครองที่ไว้ใจได้");if(selfRisk)out.push("หากรู้สึกไม่ปลอดภัย โปรดขอความช่วยเหลือจากผู้ใหญ่ที่ไว้ใจได้ทันที");return out;
 }
