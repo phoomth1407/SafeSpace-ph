@@ -91,12 +91,7 @@ const entities = new Proxy({}, { get: (_, name) => entity(name) });
 
 async function localGuestAssessment(payload) {
   const result = computeAssessmentResult(payload.answers || []);
-  return {
-    ...result,
-    id: makeId(),
-    is_guest: true,
-    analysis_source: "local-screening-fallback",
-  };
+  return { ...result, id: makeId(), is_guest: true, analysis_source: "local-screening-fallback" };
 }
 
 const invoke = async (name, payload = {}) => {
@@ -122,21 +117,9 @@ const invoke = async (name, payload = {}) => {
     const key = payload.action === "heart" ? "hearted_by" : "bumped_by";
     const countKey = payload.action === "heart" ? "hearts" : "bumps";
     const users = Array.isArray(post[key]) ? post[key] : [];
-    const next = users.includes(authUser.id)
-      ? users.filter((id) => id !== authUser.id)
-      : [...users, authUser.id];
-    const updated = await entities.CommunityPost.update(payload.post_id, {
-      [key]: next,
-      [countKey]: next.length,
-    });
-    return {
-      data: {
-        hearts: updated.hearts || 0,
-        bumps: updated.bumps || 0,
-        hearted: (updated.hearted_by || []).includes(authUser.id),
-        bumped: (updated.bumped_by || []).includes(authUser.id),
-      },
-    };
+    const next = users.includes(authUser.id) ? users.filter((id) => id !== authUser.id) : [...users, authUser.id];
+    const updated = await entities.CommunityPost.update(payload.post_id, { [key]: next, [countKey]: next.length });
+    return { data: { hearts: updated.hearts || 0, bumps: updated.bumps || 0, hearted: (updated.hearted_by || []).includes(authUser.id), bumped: (updated.bumped_by || []).includes(authUser.id) } };
   }
 
   if (name === "createComment") {
@@ -150,10 +133,7 @@ const invoke = async (name, payload = {}) => {
     if (!authUser) return { data: { error: "auth_required" } };
     const { data: me } = await supabase.from("users").select("role").eq("id", authUser.id).maybeSingle();
     if (me?.role !== "admin") return { data: { error: "admin_required" } };
-    const result = await entities.User.update(payload.target_id, {
-      banned: !!payload.banned,
-      banned_until: payload.banned_until || null,
-    });
+    const result = await entities.User.update(payload.target_id, { banned: !!payload.banned, banned_until: payload.banned_until || null });
     return { data: result };
   }
 
@@ -175,7 +155,7 @@ const auth = {
     return data.user ? currentAppUser() : data;
   },
   async verifyOtp({ email, otpCode }) {
-    const { data, error } = await supabase.auth.verifyOtp({ email, token: otpCode, type: "email" });
+    const { data, error } = await supabase.auth.verifyOtp({ email, token: otpCode, type: "signup" });
     if (error) throw error;
     return { ...data, access_token: data.session?.access_token };
   },
