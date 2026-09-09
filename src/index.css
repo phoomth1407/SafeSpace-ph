@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 225 20% 6%;
+    --foreground: 220 14% 90%;
+    --card: 222 18% 9%;
+    --card-foreground: 220 14% 90%;
+    --popover: 222 18% 9%;
+    --popover-foreground: 220 14% 90%;
+    --primary: 220 14% 22%;
+    --primary-foreground: 220 14% 92%;
+    --secondary: 222 16% 13%;
+    --secondary-foreground: 220 14% 88%;
+    --muted: 222 16% 13%;
+    --muted-foreground: 220 10% 58%;
+    --accent: 222 16% 16%;
+    --accent-foreground: 220 14% 90%;
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 220 14% 96%;
+    --border: 222 16% 17%;
+    --input: 222 16% 17%;
+    --ring: 220 14% 30%;
+    --chart-1: 350 60% 55%;
+    --chart-2: 200 55% 50%;
+    --chart-3: 38 70% 55%;
+    --chart-4: 270 50% 60%;
+    --chart-5: 160 45% 45%;
+    --radius: 0.75rem;
+    --font-heading: ui-sans-serif, system-ui, sans-serif;
+    --font-body: ui-sans-serif, system-ui, sans-serif;
+    --font-display: ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sidebar-background: 222 18% 9%;
+    --sidebar-foreground: 220 14% 88%;
+    --sidebar-primary: 220 14% 22%;
+    --sidebar-primary-foreground: 220 14% 92%;
+    --sidebar-accent: 222 16% 16%;
+    --sidebar-accent-foreground: 220 14% 90%;
+    --sidebar-border: 222 16% 17%;
+    --sidebar-ring: 220 14% 30%;
+  }
+
+  .dark {
+    --background: 225 20% 6%;
+    --foreground: 220 14% 90%;
+    --card: 222 18% 9%;
+    --card-foreground: 220 14% 90%;
+    --popover: 222 18% 9%;
+    --popover-foreground: 220 14% 90%;
+    --primary: 220 14% 22%;
+    --primary-foreground: 220 14% 92%;
+    --secondary: 222 16% 13%;
+    --secondary-foreground: 220 14% 88%;
+    --muted: 222 16% 13%;
+    --muted-foreground: 220 10% 58%;
+    --accent: 222 16% 16%;
+    --accent-foreground: 220 14% 90%;
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 220 14% 96%;
+    --border: 222 16% 17%;
+    --input: 222 16% 17%;
+    --ring: 220 14% 30%;
+    --chart-1: 350 60% 55%;
+    --chart-2: 200 55% 50%;
+    --chart-3: 38 70% 55%;
+    --chart-4: 270 50% 60%;
+    --chart-5: 160 45% 45%;
+    --sidebar-background: 222 18% 9%;
+    --sidebar-foreground: 220 14% 88%;
+    --sidebar-primary: 220 14% 22%;
+    --sidebar-primary-foreground: 220 14% 92%;
+    --sidebar-accent: 222 16% 16%;
+    --sidebar-accent-foreground: 220 14% 90%;
+    --sidebar-border: 222 16% 17%;
+    --sidebar-ring: 220 14% 30%;
+  }
+
+  .theme-light {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 40% 96%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 215 25% 27%;
+    --chart-1: 350 60% 55%;
+    --chart-2: 200 55% 50%;
+    --chart-3: 38 70% 55%;
+    --chart-4: 270 50% 60%;
+    --chart-5: 160 45% 45%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 222 47% 11%;
+    --sidebar-primary-foreground: 210 40% 96%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 215 25% 27%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+}
+
+/* ===== Light theme overrides (default is dark) ===== */
+.theme-light {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Solid backgrounds */
+.theme-light .bg-slate-950 { background-color: #f1f5f9 !important; }
+.theme-light .bg-slate-900 { background-color: #ffffff !important; }
+.theme-light .bg-slate-800 { background-color: #e2e8f0 !important; }
+.theme-light .bg-slate-700 { background-color: #cbd5e1 !important; }
+
+/* Translucent backgrounds */
+.theme-light .bg-slate-950\/80 { background-color: rgba(248, 250, 252, 0.85) !important; }
+.theme-light .bg-slate-950\/95 { background-color: rgba(248, 250, 252, 0.96) !important; }
+.theme-light .bg-slate-900\/60 { background-color: rgba(255, 255, 255, 0.75) !important; }
+.theme-light .bg-slate-900\/80 { background-color: rgba(255, 255, 255, 0.9) !important; }
+.theme-light .bg-slate-800\/60 { background-color: rgba(241, 245, 249, 0.7) !important; }
+.theme-light .bg-slate-800\/50 { background-color: rgba(241, 245, 249, 0.6) !important; }
+.theme-light .bg-slate-700\/40 { background-color: rgba(203, 213, 225, 0.5) !important; }
+
+/* Primary buttons (white-on-dark in dark theme → dark-on-light in light theme) */
+.theme-light .bg-slate-100 { background-color: #1e293b !important; }
+.theme-light .bg-slate-100:hover { background-color: #0f172a !important; }
+.theme-light .hover\:bg-white:hover { background-color: #0f172a !important; }
+
+/* Text colors */
+.theme-light .text-slate-100 { color: #0f172a !important; }
+.theme-light .text-slate-200 { color: #1e293b !important; }
+.theme-light .text-slate-300 { color: #334155 !important; }
+.theme-light .text-slate-400 { color: #475569 !important; }
+.theme-light .text-slate-500 { color: #64748b !important; }
+.theme-light .text-slate-600 { color: #94a3b8 !important; }
+
+/* Buttons that use dark text on light bg → flip to light text */
+.theme-light .text-slate-900 { color: #f1f5f9 !important; }
+.theme-light .hover\:text-slate-200:hover { color: #1e293b !important; }
+.theme-light .hover\:text-slate-300:hover { color: #334155 !important; }
+
+/* Borders */
+.theme-light .border-slate-800 { border-color: #e2e8f0 !important; }
+.theme-light .border-slate-700 { border-color: #cbd5e1 !important; }
+.theme-light .border-slate-600 { border-color: #94a3b8 !important; }
+.theme-light .border-slate-800\/50 { border-color: rgba(226, 232, 240, 0.6) !important; }
+.theme-light .border-dashed { border-color: #cbd5e1 !important; }
+
+/* Dividers */
+.theme-light .divide-slate-800\/50 > * + * { border-color: rgba(226, 232, 240, 0.6) !important; }
+.theme-light .divide-slate-800 > * + * { border-color: #e2e8f0 !important; }
+
+/* Gradients */
+.theme-light .from-slate-950 { --tw-gradient-from: #f1f5f9 var(--tw-gradient-from-position) !important; }
+.theme-light .via-slate-900 { --tw-gradient-via: #ffffff var(--tw-gradient-via-position) !important; }
+.theme-light .to-slate-950 { --tw-gradient-to: #f1f5f9 var(--tw-gradient-to-position) !important; }
+.theme-light .from-slate-900 { --tw-gradient-from: #ffffff var(--tw-gradient-from-position) !important; }
+.theme-light .to-slate-800 { --tw-gradient-to: #e2e8f0 var(--tw-gradient-to-position) !important; }
+
+/* Inputs */
+.theme-light input, .theme-light textarea {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #0f172a !important;
+}
+.theme-light input::placeholder, .theme-light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+.theme-light .placeholder\:text-slate-500::placeholder { color: #94a3b8 !important; }
+
+/* Hover backgrounds that were dark */
+.theme-light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
+.theme-light .hover\:bg-slate-800\/60:hover { background-color: rgba(241, 245, 249, 0.8) !important; }
+.theme-light .hover\:bg-slate-800\/50:hover { background-color: rgba(241, 245, 249, 0.7) !important; }
+
+/* Border on hover */
+.theme-light .hover\:border-slate-700:hover { border-color: #cbd5e1 !important; }
+.theme-light .hover\:border-slate-600:hover { border-color: #94a3b8 !important; }
