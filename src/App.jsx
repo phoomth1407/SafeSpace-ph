@@ -9,6 +9,7 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import Assessment from "@/pages/Assessment";
 import AssessmentResult from "@/pages/AssessmentResult";
+import PHQ9 from "@/pages/PHQ9";
 import Community from "@/pages/Community";
 import ContactAdmin from "@/pages/ContactAdmin";
 import Resources from "@/pages/Resources";
@@ -23,5 +24,5 @@ import { LanguageProvider, useTranslation } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 
 const AppGate=()=>{const {hasLang}=useTranslation();return hasLang?<AuthenticatedApp/>:<LanguageSelect/>;};
-const AuthenticatedApp=()=>{const {isLoadingAuth}=useAuth();if(isLoadingAuth)return <div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"/></div>;return <Routes><Route element={<Layout/>}><Route path="/" element={<Home/>}/><Route path="/assessment" element={<Assessment/>}/><Route path="/result" element={<AssessmentResult/>}/><Route path="/result/:id" element={<AssessmentResult/>}/><Route path="/community" element={<Community/>}/><Route path="/contact-admin" element={<ContactAdmin/>}/><Route path="/resources" element={<Resources/>}/><Route path="/history" element={<History/>}/><Route path="/admin" element={<Admin/>}/></Route><Route path="/login" element={<Login/>}/><Route path="/register" element={<Register/>}/><Route path="/forgot-password" element={<ForgotPassword/>}/><Route path="/reset-password" element={<ResetPassword/>}/><Route path="*" element={<PageNotFound/>}/></Routes>;};
+const AuthenticatedApp=()=>{const {isLoadingAuth}=useAuth();if(isLoadingAuth)return <div className="fixed inset-0 flex items-center justify-center"><div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"/></div>;return <Routes><Route element={<Layout/>}><Route path="/" element={<Home/>}/><Route path="/assessment" element={<Assessment/>}/><Route path="/phq9" element={<PHQ9/>}/><Route path="/result" element={<AssessmentResult/>}/><Route path="/result/:id" element={<AssessmentResult/>}/><Route path="/community" element={<Community/>}/><Route path="/contact-admin" element={<ContactAdmin/>}/><Route path="/resources" element={<Resources/>}/><Route path="/history" element={<History/>}/><Route path="/admin" element={<Admin/>}/></Route><Route path="/login" element={<Login/>}/><Route path="/register" element={<Register/>}/><Route path="/forgot-password" element={<ForgotPassword/>}/><Route path="/reset-password" element={<ResetPassword/>}/><Route path="*" element={<PageNotFound/>}/></Routes>;};
 export default function App(){return <LanguageProvider><ThemeProvider><AuthProvider><QueryClientProvider client={queryClientInstance}><Router><ScrollToTop/><AppGate/></Router><Toaster/></QueryClientProvider></AuthProvider></ThemeProvider></LanguageProvider>}
