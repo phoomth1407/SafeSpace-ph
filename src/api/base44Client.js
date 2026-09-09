@@ -1,37 +1,205 @@
+import { supabase } from "@/lib/supabaseClient";
 import { computeAssessmentResult } from "@/lib/assessmentScoring";
 
-// Base44-free browser backend for the school/demo build.
-const KEY="safespace_";
-const read=(k,fallback=[])=>{try{return JSON.parse(localStorage.getItem(KEY+k)||JSON.stringify(fallback));}catch{return fallback;}};
-const write=(k,v)=>localStorage.setItem(KEY+k,JSON.stringify(v));
-const id=()=>`${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const user=()=>read("session",null);
-const entity=(name)=>({
- async list(order="-created_date",limit=50){const a=read(`entity_${name}`,[]),f=order.replace(/^-/,"");a.sort((x,y)=>String(y[f]||"").localeCompare(String(x[f]||"")));return a.slice(0,limit);},
- async filter(filters={},order="created_date",limit=100){const a=read(`entity_${name}`,[]).filter(x=>Object.entries(filters).every(([k,v])=>x[k]===v)),f=order.replace(/^-/,"");a.sort((x,y)=>String(x[f]||"").localeCompare(String(y[f]||"")));return a.slice(0,limit);},
- async get(i){return read(`entity_${name}`,[]).find(x=>x.id===i)||null;},
- async create(data){const item={...data,id:data.id||id(),created_date:data.created_date||new Date().toISOString(),created_by_id:data.created_by_id||user()?.id||null};const a=read(`entity_${name}`,[]);a.push(item);write(`entity_${name}`,a);return item;},
- async update(i,patch){const a=read(`entity_${name}`,[]),n=a.findIndex(x=>x.id===i);if(n<0)throw Error("Not found");a[n]={...a[n],...patch,updated_date:new Date().toISOString()};write(`entity_${name}`,a);return a[n];},
- async delete(i){write(`entity_${name}`,read(`entity_${name}`,[]).filter(x=>x.id!==i));return{success:true};}
-});
-const entities=new Proxy({},{get:(_,name)=>entity(name)});
+// Compatibility adapter: existing pages keep the Base44-style API while the
+// actual data, auth, and server functions run through Supabase.
+const tableFor = (name) => ({
+  Assessment: "assessments",
+  GuestAssessment: "guest_assessments",
+  CommunityPost: "community_posts",
+  CommunityComment: "community_comments",
+  EmergencyResource: "emergency_resources",
+  Report: "reports",
+  ContactRequest: "contact_requests",
+  User: "users",
+}[name] || name);
 
-function assess(answers,lang){const r=computeAssessmentResult(answers||[]);if(lang!=="en")return r;const s={low:"Your answers suggest relatively low current stress. Keep taking care of your wellbeing and talk to someone you trust when needed.",moderate:"Your answers suggest some areas of stress that deserve attention. Consider talking with someone you trust.",high:"Your answers suggest a high level of distress. Consider talking with a trusted adult or qualified mental-health professional.",severe:"Your answers suggest significant distress. Please reach out to a trusted adult or qualified professional as soon as possible. This result is not a diagnosis."};return{...r,ai_summary:s[r.risk_level]||s.moderate,recommendations:["Talk with someone you trust.","Use healthy ways to manage stress and make time for rest.","If distress continues, consider qualified professional support."],analysis_source:"local-rule-based"};}
-const invoke=async(name,p={})=>{
- if(name==="analyzeAssessment"){const r=assess(p.answers,p.language);if(user()){const x=await entities.Assessment.create({...r,answers:p.answers||[],age:p.age||null,nationality:p.nationality||"",language:p.language||"th"});return{data:{...r,id:x.id,is_guest:false}};}return{data:{...r,id:id(),is_guest:true}};}
- if(name==="analyzeCommunityPost"){const text=String(p.content||"").trim(),risky=/suicide|self[- ]?harm|ฆ่าตัวตาย|ทำร้ายตัวเอง/i.test(text);return{data:await entities.CommunityPost.create({content:text,category:p.category||"other",author_name:p.author_name||"anonymous",ai_risk_flag:risky?"high":"safe",ai_response:p.ai_enabled===false?"":(risky?"This message may describe serious distress. Consider reaching out to a trusted adult or qualified professional.":"Thanks for sharing. Community support is not a substitute for professional support."),hearts:0,bumps:0,hearted_by:[],bumped_by:[],is_announcement:false})};}
- if(name==="communityInteract"){const u=user();if(!u)return{data:{error:"auth_required"}};const p0=await entities.CommunityPost.get(p.post_id);if(!p0)return{data:{error:"not_found"}};const k=p.action==="heart"?"hearted_by":"bumped_by",c=p.action==="heart"?"hearts":"bumps",a=Array.isArray(p0[k])?p0[k]:[],next=a.includes(u.id)?a.filter(x=>x!==u.id):[...a,u.id],x=await entities.CommunityPost.update(p.post_id,{[k]:next,[c]:next.length});return{data:{hearts:x.hearts||0,bumps:x.bumps||0,hearted:(x.hearted_by||[]).includes(u.id),bumped:(x.bumped_by||[]).includes(u.id)}};}
- if(name==="createComment"){if(!user())return{data:{error:"auth_required"}};return{data:await entities.CommunityComment.create(p)};}
- if(name==="manageBan")return{data:await entities.User.update(p.user_id,{banned:!!p.banned})};
- return{data:{error:`Function ${name} is unavailable in the local build.`}};
+const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+const currentAuthUser = async () => {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw error;
+  return data.user || null;
 };
-const auth={
- async me(){return user();},
- async loginViaEmailPassword(email,password){const u=read("accounts",[]).find(x=>x.email.toLowerCase()===email.toLowerCase()&&x.password===password);if(!u)throw Error("Invalid email or password");write("session",u);return u;},
- async register({email,password}){if(read("accounts",[]).some(x=>x.email.toLowerCase()===email.toLowerCase()))throw Error("An account with this email already exists");const u={id:id(),email,role:"user",banned:false};const a=read("accounts",[]);a.push({...u,password});write("accounts",a);write("session",u);return u;},
- async verifyOtp(){return{access_token:"local-demo"};},async resendOtp(){return{success:true};},setToken(){},
- logout(){localStorage.removeItem(KEY+"session");window.location.href="/";},
- redirectToLogin(r="/"){window.location.href=`/login?returnTo=${encodeURIComponent(r)}`;},
- loginWithProvider(){throw Error("Google sign-in is unavailable in the static GitHub Pages build. Use email/password.");}
+
+const currentAppUser = async () => {
+  const authUser = await currentAuthUser();
+  if (!authUser) return null;
+  const { data: profile } = await supabase
+    .from("users")
+    .select("id,email,full_name,role,banned,banned_until,created_date,updated_date")
+    .eq("id", authUser.id)
+    .maybeSingle();
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    ...authUser.user_metadata,
+    ...(profile || {}),
+  };
 };
-export const base44={entities,functions:{invoke},auth};
+
+const entity = (name) => {
+  const table = tableFor(name);
+  return {
+    async list(order = "-created_date", limit = 50) {
+      const field = order.replace(/^-/, "");
+      let query = supabase.from(table).select("*");
+      query = query.order(field, { ascending: !order.startsWith("-") });
+      const { data, error } = await query.limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+    async filter(filters = {}, order = "created_date", limit = 100) {
+      const field = order.replace(/^-/, "");
+      let query = supabase.from(table).select("*");
+      for (const [key, value] of Object.entries(filters)) query = query.eq(key, value);
+      query = query.order(field, { ascending: !order.startsWith("-") });
+      const { data, error } = await query.limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+    async get(id) {
+      const { data, error } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
+      if (error) throw error;
+      return data || null;
+    },
+    async create(input) {
+      const authUser = await currentAuthUser();
+      const row = {
+        ...input,
+        id: input?.id || makeId(),
+        created_by_id: input?.created_by_id ?? authUser?.id ?? null,
+      };
+      const { data, error } = await supabase.from(table).insert(row).select("*").single();
+      if (error) throw error;
+      return data;
+    },
+    async update(id, patch) {
+      const { data, error } = await supabase.from(table).update(patch).eq("id", id).select("*").single();
+      if (error) throw error;
+      return data;
+    },
+    async delete(id) {
+      const { error } = await supabase.from(table).delete().eq("id", id);
+      if (error) throw error;
+      return { success: true };
+    },
+  };
+};
+
+const entities = new Proxy({}, { get: (_, name) => entity(name) });
+
+async function localGuestAssessment(payload) {
+  const result = computeAssessmentResult(payload.answers || []);
+  return {
+    ...result,
+    id: makeId(),
+    is_guest: true,
+    analysis_source: "local-screening-fallback",
+  };
+}
+
+const invoke = async (name, payload = {}) => {
+  if (name === "analyzeAssessment") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: await localGuestAssessment(payload) };
+    const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
+    if (error) throw error;
+    return { data: { ...(data || {}), is_guest: false } };
+  }
+
+  if (name === "analyzeCommunityPost") {
+    const { data, error } = await supabase.functions.invoke("analyze-community-post", { body: payload });
+    if (error) throw error;
+    return { data };
+  }
+
+  if (name === "communityInteract") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const post = await entities.CommunityPost.get(payload.post_id);
+    if (!post) return { data: { error: "not_found" } };
+    const key = payload.action === "heart" ? "hearted_by" : "bumped_by";
+    const countKey = payload.action === "heart" ? "hearts" : "bumps";
+    const users = Array.isArray(post[key]) ? post[key] : [];
+    const next = users.includes(authUser.id)
+      ? users.filter((id) => id !== authUser.id)
+      : [...users, authUser.id];
+    const updated = await entities.CommunityPost.update(payload.post_id, {
+      [key]: next,
+      [countKey]: next.length,
+    });
+    return {
+      data: {
+        hearts: updated.hearts || 0,
+        bumps: updated.bumps || 0,
+        hearted: (updated.hearted_by || []).includes(authUser.id),
+        bumped: (updated.bumped_by || []).includes(authUser.id),
+      },
+    };
+  }
+
+  if (name === "createComment") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    return { data: await entities.CommunityComment.create(payload) };
+  }
+
+  if (name === "manageBan") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { data: me } = await supabase.from("users").select("role").eq("id", authUser.id).maybeSingle();
+    if (me?.role !== "admin") return { data: { error: "admin_required" } };
+    const result = await entities.User.update(payload.target_id, {
+      banned: !!payload.banned,
+      banned_until: payload.banned_until || null,
+    });
+    return { data: result };
+  }
+
+  return { data: { error: `Function ${name} is unavailable.` } };
+};
+
+const auth = {
+  async me() {
+    return currentAppUser();
+  },
+  async loginViaEmailPassword(email, password) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    return currentAppUser();
+  },
+  async register({ email, password }) {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+    return data.user ? currentAppUser() : data;
+  },
+  async verifyOtp({ email, otpCode }) {
+    const { data, error } = await supabase.auth.verifyOtp({ email, token: otpCode, type: "email" });
+    if (error) throw error;
+    return { ...data, access_token: data.session?.access_token };
+  },
+  async resendOtp(email) {
+    const { data, error } = await supabase.auth.resend({ type: "signup", email });
+    if (error) throw error;
+    return data;
+  },
+  setToken() {},
+  async logout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    window.location.hash = "/";
+  },
+  redirectToLogin(returnTo = "/") {
+    window.location.hash = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+  },
+  async loginWithProvider(provider = "google", returnTo = "/") {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: `${window.location.origin}${window.location.pathname}#/login?returnTo=${encodeURIComponent(returnTo)}` },
+    });
+    if (error) throw error;
+  },
+};
+
+export const base44 = { entities, functions: { invoke }, auth };
