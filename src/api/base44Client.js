@@ -17,19 +17,28 @@ const tableFor = (name) => ({
 const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 const currentAuthUser = async () => {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  if (!sessionData.session?.user) return null;
+
   const { data, error } = await supabase.auth.getUser();
-  if (error) throw error;
+  if (error) {
+    // A stale browser session should not break guest assessment mode.
+    if (/session|jwt|auth/i.test(error.message || "")) return null;
+    throw error;
+  }
   return data.user || null;
 };
 
 const currentAppUser = async () => {
   const authUser = await currentAuthUser();
   if (!authUser) return null;
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("users")
     .select("id,email,full_name,role,banned,banned_until,created_date,updated_date")
     .eq("id", authUser.id)
     .maybeSingle();
+  if (error && error.code !== "PGRST116") throw error;
   return {
     id: authUser.id,
     email: authUser.email,
@@ -96,10 +105,19 @@ async function localGuestAssessment(payload) {
 
 const invoke = async (name, payload = {}) => {
   if (name === "analyzeAssessment") {
+    // Read the actual session at submit time. AuthContext can briefly lag behind
+    // Supabase's persisted session after refresh/OAuth, so do not trust only UI state.
     const authUser = await currentAuthUser();
     if (!authUser) return { data: await localGuestAssessment(payload) };
+
     const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
-    if (error) throw error;
+    if (error) {
+      // Never strand a user because a browser token went stale during submit.
+      if (/auth|session|jwt|unauthorized|401/i.test(error.message || "")) {
+        return { data: await localGuestAssessment(payload) };
+      }
+      throw error;
+    }
     return { data: { ...(data || {}), is_guest: false } };
   }
 
@@ -174,11 +192,21 @@ const auth = {
     window.location.hash = `/login?returnTo=${encodeURIComponent(returnTo)}`;
   },
   async loginWithProvider(provider = "google", returnTo = "/") {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: `${window.location.origin}${window.location.pathname}#/login?returnTo=${encodeURIComponent(returnTo)}` },
-    });
-    if (error) throw error;
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}${window.location.pathname}#/login?returnTo=${encodeURIComponent(returnTo)}`,
+        },
+      });
+      if (error) throw error;
+    } catch (error) {
+      const message = error?.message || "Google sign-in failed";
+      if (/provider.*not enabled|unsupported provider/i.test(message)) {
+        throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet.");
+      }
+      throw error;
+    }
   },
 };
 
