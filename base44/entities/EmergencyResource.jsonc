@@ -1,0 +1,61 @@
+{
+  "name": "EmergencyResource",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "\u0e0a\u0e37\u0e48\u0e2d\u0e2b\u0e19\u0e48\u0e27\u0e22\u0e07\u0e32\u0e19/\u0e2a\u0e32\u0e22\u0e14\u0e48\u0e27\u0e19"
+    },
+    "phone": {
+      "type": "string",
+      "description": "\u0e40\u0e1a\u0e2d\u0e23\u0e4c\u0e42\u0e17\u0e23\u0e28\u0e31\u0e1e\u0e17\u0e4c"
+    },
+    "description": {
+      "type": "string",
+      "description": "\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "mental",
+        "general",
+        "child",
+        "emergency"
+      ],
+      "default": "mental",
+      "description": "\u0e2b\u0e21\u0e27\u0e14\u0e2b\u0e21\u0e39\u0e48"
+    },
+    "available_hours": {
+      "type": "string",
+      "description": "\u0e40\u0e27\u0e25\u0e32\u0e43\u0e2b\u0e49\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23"
+    },
+    "icon": {
+      "type": "string",
+      "description": "\u0e0a\u0e37\u0e48\u0e2d\u0e44\u0e2d\u0e04\u0e2d\u0e19\u0e08\u0e32\u0e01 lucide-react"
+    }
+  },
+  "required": [
+    "name",
+    "phone",
+    "description",
+    "category"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
