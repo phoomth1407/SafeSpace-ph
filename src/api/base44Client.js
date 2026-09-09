@@ -65,8 +65,9 @@ const auth = {
     try {
       const productionOrigin = "https://phoomth1407.github.io/SafeSpace-ph";
       const isGitHubPages = window.location.hostname === "phoomth1407.github.io";
-      const origin = isGitHubPages ? productionOrigin : window.location.origin;
-      const redirectTo = `${origin}${window.location.pathname.replace(/\/SafeSpace-ph$/, "")}/#/login?returnTo=${encodeURIComponent(returnTo)}`;
+      const redirectTo = isGitHubPages
+        ? `${productionOrigin}/#/login?returnTo=${encodeURIComponent(returnTo)}`
+        : `${window.location.origin}${window.location.pathname}#/login?returnTo=${encodeURIComponent(returnTo)}`;
       const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
       if (error) throw error;
     } catch (error) {
