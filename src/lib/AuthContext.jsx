@@ -11,8 +11,17 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
 
   const checkUserAuth = useCallback(async () => {
-    setIsLoadingAuth(true);
     try {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) throw sessionError;
+
+      if (!sessionData.session) {
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthError(null);
+        return;
+      }
+
       const u = await base44.auth.me();
       setUser(u);
       setIsAuthenticated(!!u);
@@ -28,9 +37,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkUserAuth();
-    const { data: listener } = supabase.auth.onAuthStateChange(() => {
-      checkUserAuth();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      // Update the basic auth state immediately from Supabase, then hydrate
+      // the application profile without creating an auth/session race.
+      if (!session?.user) {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+      void checkUserAuth();
     });
+
     return () => listener.subscription.unsubscribe();
   }, [checkUserAuth]);
 
