@@ -19,8 +19,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Apply home copy
-        run: python -c "from pathlib import Path; p=Path('src/lib/i18n.jsx'); s=p.read_text(); old='\"home.subtitle\": \"แอปพลิเคชันที่ช่วยให้เยาวชนไทยเข้าใจสุขภาพจิตของตนเอง ผ่านแบบประเมินอัจฉริยะ พื้นที่แบ่งปัน และสายด่วนที่พึ่งพาได้\",'; new='\"home.subtitle\": \"แอปพลิเคชันที่ช่วยให้เยาวชนไทยเข้าใจสุขภาพจิตของตนเอง พูดคุย และสายด่วนรวมถึงให้ข้อมูลพึ่งพาได้\",'; p.write_text(s.replace(old,new,1))"
+      - name: Apply SafeSpace copy updates
+        run: python scripts/apply-build-copy.py
       - name: Install dependencies
         run: npm install
       - name: Build
