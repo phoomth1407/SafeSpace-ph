@@ -124,19 +124,15 @@
   }
 }
 
-/* ===== Light theme overrides (default is dark) ===== */
 .theme-light {
   background-color: #f1f5f9;
   color: #0f172a;
 }
 
-/* Solid backgrounds */
 .theme-light .bg-slate-950 { background-color: #f1f5f9 !important; }
 .theme-light .bg-slate-900 { background-color: #ffffff !important; }
 .theme-light .bg-slate-800 { background-color: #e2e8f0 !important; }
 .theme-light .bg-slate-700 { background-color: #cbd5e1 !important; }
-
-/* Translucent backgrounds */
 .theme-light .bg-slate-950\/80 { background-color: rgba(248, 250, 252, 0.85) !important; }
 .theme-light .bg-slate-950\/95 { background-color: rgba(248, 250, 252, 0.96) !important; }
 .theme-light .bg-slate-900\/60 { background-color: rgba(255, 255, 255, 0.75) !important; }
@@ -144,58 +140,42 @@
 .theme-light .bg-slate-800\/60 { background-color: rgba(241, 245, 249, 0.7) !important; }
 .theme-light .bg-slate-800\/50 { background-color: rgba(241, 245, 249, 0.6) !important; }
 .theme-light .bg-slate-700\/40 { background-color: rgba(203, 213, 225, 0.5) !important; }
-
-/* Primary buttons (white-on-dark in dark theme → dark-on-light in light theme) */
 .theme-light .bg-slate-100 { background-color: #1e293b !important; }
 .theme-light .bg-slate-100:hover { background-color: #0f172a !important; }
 .theme-light .hover\:bg-white:hover { background-color: #0f172a !important; }
-
-/* Text colors */
 .theme-light .text-slate-100 { color: #0f172a !important; }
 .theme-light .text-slate-200 { color: #1e293b !important; }
 .theme-light .text-slate-300 { color: #334155 !important; }
 .theme-light .text-slate-400 { color: #475569 !important; }
 .theme-light .text-slate-500 { color: #64748b !important; }
 .theme-light .text-slate-600 { color: #94a3b8 !important; }
-
-/* Buttons that use dark text on light bg → flip to light text */
+.theme-light .text-amber-200 { color: #92400e !important; }
+.theme-light .text-amber-300 { color: #b45309 !important; }
+.theme-light .text-amber-400 { color: #92400e !important; }
+.theme-light .text-purple-300 { color: #7e22ce !important; }
+.theme-light .text-emerald-300 { color: #047857 !important; }
+.theme-light .text-orange-300 { color: #c2410c !important; }
+.theme-light .text-red-300 { color: #b91c1c !important; }
 .theme-light .text-slate-900 { color: #f1f5f9 !important; }
 .theme-light .hover\:text-slate-200:hover { color: #1e293b !important; }
 .theme-light .hover\:text-slate-300:hover { color: #334155 !important; }
-
-/* Borders */
 .theme-light .border-slate-800 { border-color: #e2e8f0 !important; }
 .theme-light .border-slate-700 { border-color: #cbd5e1 !important; }
 .theme-light .border-slate-600 { border-color: #94a3b8 !important; }
 .theme-light .border-slate-800\/50 { border-color: rgba(226, 232, 240, 0.6) !important; }
 .theme-light .border-dashed { border-color: #cbd5e1 !important; }
-
-/* Dividers */
 .theme-light .divide-slate-800\/50 > * + * { border-color: rgba(226, 232, 240, 0.6) !important; }
 .theme-light .divide-slate-800 > * + * { border-color: #e2e8f0 !important; }
-
-/* Gradients */
 .theme-light .from-slate-950 { --tw-gradient-from: #f1f5f9 var(--tw-gradient-from-position) !important; }
 .theme-light .via-slate-900 { --tw-gradient-via: #ffffff var(--tw-gradient-via-position) !important; }
 .theme-light .to-slate-950 { --tw-gradient-to: #f1f5f9 var(--tw-gradient-to-position) !important; }
 .theme-light .from-slate-900 { --tw-gradient-from: #ffffff var(--tw-gradient-from-position) !important; }
 .theme-light .to-slate-800 { --tw-gradient-to: #e2e8f0 var(--tw-gradient-to-position) !important; }
-
-/* Inputs */
-.theme-light input, .theme-light textarea {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  color: #0f172a !important;
-}
-.theme-light input::placeholder, .theme-light textarea::placeholder {
-  color: #94a3b8 !important;
-}
+.theme-light input, .theme-light textarea { background-color: rgba(255, 255, 255, 0.9) !important; color: #0f172a !important; }
+.theme-light input::placeholder, .theme-light textarea::placeholder { color: #94a3b8 !important; }
 .theme-light .placeholder\:text-slate-500::placeholder { color: #94a3b8 !important; }
-
-/* Hover backgrounds that were dark */
 .theme-light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
 .theme-light .hover\:bg-slate-800\/60:hover { background-color: rgba(241, 245, 249, 0.8) !important; }
 .theme-light .hover\:bg-slate-800\/50:hover { background-color: rgba(241, 245, 249, 0.7) !important; }
-
-/* Border on hover */
 .theme-light .hover\:border-slate-700:hover { border-color: #cbd5e1 !important; }
 .theme-light .hover\:border-slate-600:hover { border-color: #94a3b8 !important; }
