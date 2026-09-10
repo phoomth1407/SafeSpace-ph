@@ -23,15 +23,13 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           i18n = Path('src/lib/i18n.jsx')
           s = i18n.read_text()
-          s = s.replace(
-              '"home.subtitle": "แอปพลิเคชันที่ช่วยให้เยาวชนไทยเข้าใจสุขภาพจิตของตนเอง ผ่านแบบประเมินอัจฉริยะ พื้นที่แบ่งปัน และสายด่วนที่พึ่งพาได้",',
-              '"home.subtitle": "แอปพลิเคชันที่ช่วยให้เยาวชนไทยเข้าใจสุขภาพจิตของตนเอง พูดคุย และสายด่วนรวมถึงให้ข้อมูลพึ่งพาได้",',
-              1,
-          )
-          i18n.write_text(s)
+          old = '"home.subtitle": "แอปพลิเคชันที่ช่วยให้เยาวชนไทยเข้าใจสุขภาพจิตของตนเอง ผ่านแบบประเมินอัจฉริยะ พื้นที่แบ่งปัน และสายด่วนที่พึ่งพาได้",'
+          new = '"home.subtitle": "แอปพลิเคชันที่ช่วยให้เยาวชนไทยเข้าใจสุขภาพจิตของตนเอง พูดคุย และสายด่วนรวมถึงให้ข้อมูลพึ่งพาได้",'
+          if old not in s:
+              raise SystemExit('home subtitle not found')
+          i18n.write_text(s.replace(old, new, 1))
 
           p = Path('src/pages/AssessmentResult.jsx')
           s = p.read_text()
