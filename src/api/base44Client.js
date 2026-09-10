@@ -30,13 +30,38 @@ const entity = (name) => {
   };
 };
 const entities = new Proxy({}, { get: (_, name) => entity(name) });
-async function localGuestAssessment(payload) { return { ...(computeAssessmentResult(payload.answers || [])), id: makeId(), is_guest: true, analysis_source: "local-screening-fallback" }; }
+
+function localGuestAssessment(payload) {
+  const lang = payload?.language === "en" ? "en" : "th";
+  const result = computeAssessmentResult(payload.answers || [], lang);
+  const text = lang === "en"
+    ? {
+        low: "Your screening responses suggest relatively low levels of concern at this time.",
+        moderate: "Your screening responses suggest some areas that may be worth paying attention to.",
+        high: "Your screening responses suggest higher levels of concern, and talking with a trusted adult or professional may be helpful.",
+        severe: "Your screening responses suggest substantial concern. Please reach out to a trusted adult or qualified professional for support.",
+      }
+    : {
+        low: "จากคำตอบในการคัดกรอง ขณะนี้ยังพบประเด็นที่น่ากังวลในระดับค่อนข้างต่ำ",
+        moderate: "จากคำตอบในการคัดกรอง พบประเด็นบางด้านที่อาจควรใส่ใจและดูแลเพิ่มเติม",
+        high: "จากคำตอบในการคัดกรอง พบประเด็นที่ควรใส่ใจมากขึ้น และการพูดคุยกับผู้ใหญ่ที่ไว้ใจได้หรือผู้เชี่ยวชาญอาจช่วยได้",
+        severe: "จากคำตอบในการคัดกรอง พบประเด็นที่ควรได้รับการดูแลอย่างจริงจัง ควรพูดคุยกับผู้ใหญ่ที่ไว้ใจได้หรือผู้เชี่ยวชาญเพื่อขอความช่วยเหลือ",
+      };
+  return {
+    ...result,
+    ai_summary: text[result.risk_level] || text.moderate,
+    id: makeId(),
+    is_guest: true,
+    analysis_source: "local-screening-fallback",
+    language: lang,
+  };
+}
 
 const invoke = async (name, payload = {}) => {
   if (name === "analyzeAssessment") {
-    const authUser = await currentAuthUser(); if (!authUser) return { data: await localGuestAssessment(payload) };
+    const authUser = await currentAuthUser(); if (!authUser) return { data: localGuestAssessment(payload) };
     const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
-    if (error) { if (/auth|session|jwt|unauthorized|401/i.test(error.message || "")) return { data: await localGuestAssessment(payload) }; throw error; }
+    if (error) { if (/auth|session|jwt|unauthorized|401/i.test(error.message || "")) return { data: localGuestAssessment(payload) }; throw error; }
     return { data: { ...(data || {}), is_guest: false } };
   }
   if (name === "analyzePhq9") {
