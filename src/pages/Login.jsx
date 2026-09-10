@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,125 +9,12 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
-const GOOGLE_CLIENT_ID =
-  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-  "912407578947-p1vbqspkg2e1v3k4lk6o4qu49ofe7u02.apps.googleusercontent.com";
-
-async function createNonce() {
-  const bytes = crypto.getRandomValues(new Uint8Array(32));
-  const nonce = btoa(String.fromCharCode(...bytes));
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(nonce),
-  );
-  const hashedNonce = Array.from(new Uint8Array(digest))
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-  return { nonce, hashedNonce };
-}
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [googleReady, setGoogleReady] = useState(false);
   const returnTo = safeReturnTo();
-
-  useEffect(() => {
-    let cancelled = false;
-    let script = null;
-
-    const initializeGoogleOneTap = async () => {
-      try {
-        const { data } = await supabase.auth.getSession();
-        if (cancelled || data.session) return;
-
-        const start = async () => {
-          if (cancelled || !window.google?.accounts?.id) return;
-          const { nonce, hashedNonce } = await createNonce();
-
-          window.google.accounts.id.initialize({
-            client_id: GOOGLE_CLIENT_ID,
-            nonce: hashedNonce,
-            use_fedcm_for_prompt: true,
-            cancel_on_tap_outside: true,
-            callback: async (response) => {
-              if (!response?.credential) {
-                setError("Google did not return a sign-in credential.");
-                return;
-              }
-
-              setError("");
-              setLoading(true);
-              try {
-                const { error: signInError } = await supabase.auth.signInWithIdToken({
-                  provider: "google",
-                  token: response.credential,
-                  nonce,
-                });
-                if (signInError) throw signInError;
-                window.location.hash = returnTo || "/";
-              } catch (signInError) {
-                setError(signInError?.message || "Google One Tap sign-in failed.");
-              } finally {
-                setLoading(false);
-              }
-            },
-          });
-
-          if (!cancelled) setGoogleReady(true);
-
-          window.google.accounts.id.prompt((notification) => {
-            if (notification.isNotDisplayed() && !cancelled) {
-              console.debug(
-                "Google One Tap not displayed:",
-                notification.getNotDisplayedReason(),
-              );
-            }
-            if (notification.isSkippedMoment() && !cancelled) {
-              console.debug(
-                "Google One Tap skipped:",
-                notification.getSkippedReason(),
-              );
-            }
-          });
-        };
-
-        if (window.google?.accounts?.id) {
-          await start();
-          return;
-        }
-
-        script = document.createElement("script");
-        script.src = "https://accounts.google.com/gsi/client";
-        script.async = true;
-        script.defer = true;
-        script.onload = start;
-        script.onerror = () => {
-          if (!cancelled) setError("Could not load Google One Tap.");
-        };
-        document.head.appendChild(script);
-      } catch (loadError) {
-        if (!cancelled) {
-          setError(loadError?.message || "Could not initialize Google One Tap.");
-        }
-      }
-    };
-
-    void initializeGoogleOneTap();
-
-    return () => {
-      cancelled = true;
-      setGoogleReady(false);
-      try {
-        window.google?.accounts?.id?.cancel?.();
-      } catch (_) {
-        // Ignore cleanup errors from Google's SDK.
-      }
-      if (script) script.remove();
-    };
-  }, [returnTo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -144,13 +30,15 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = () => {
+  const handleGoogle = async () => {
     setError("");
-    if (!googleReady || !window.google?.accounts?.id) {
-      setError("Google sign-in is still loading. Please try again in a moment.");
-      return;
+    setLoading(true);
+    try {
+      await base44.auth.loginWithProvider("google", returnTo);
+    } catch (err) {
+      setError(err.message || "Google sign-in failed");
+      setLoading(false);
     }
-    window.google.accounts.id.prompt();
   };
 
   return (
@@ -170,13 +58,6 @@ export default function Login() {
         </>
       }
     >
-      <div className="mb-6">
-        <p className="text-xs text-muted-foreground text-center mb-3">
-          Google One Tap is available when Google can verify your account.
-        </p>
-        <div id="google-one-tap" aria-label="Google One Tap sign-in" />
-      </div>
-
       <Button
         type="button"
         variant="outline"
