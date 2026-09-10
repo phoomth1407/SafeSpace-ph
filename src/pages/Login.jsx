@@ -32,6 +32,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleReady, setGoogleReady] = useState(false);
   const returnTo = safeReturnTo();
 
   useEffect(() => {
@@ -76,6 +77,8 @@ export default function Login() {
             },
           });
 
+          if (!cancelled) setGoogleReady(true);
+
           window.google.accounts.id.prompt((notification) => {
             if (notification.isNotDisplayed() && !cancelled) {
               console.debug(
@@ -117,6 +120,7 @@ export default function Login() {
 
     return () => {
       cancelled = true;
+      setGoogleReady(false);
       try {
         window.google?.accounts?.id?.cancel?.();
       } catch (_) {
@@ -140,13 +144,13 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = async () => {
+  const handleGoogle = () => {
     setError("");
-    try {
-      await base44.auth.loginWithProvider("google", returnTo);
-    } catch (err) {
-      setError(err.message || "Google sign-in failed");
+    if (!googleReady || !window.google?.accounts?.id) {
+      setError("Google sign-in is still loading. Please try again in a moment.");
+      return;
     }
+    window.google.accounts.id.prompt();
   };
 
   return (
