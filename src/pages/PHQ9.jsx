@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Brain, Check, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useTranslation } from "@/lib/i18n";
-import { PHQ9_OPTIONS, PHQ9_QUESTIONS, scorePhq9, getPhq9BandLabel } from "@/lib/phq9";
+import { PHQ9_OPTIONS, PHQ9_QUESTIONS, scorePhq9 } from "@/lib/phq9";
 
 export default function PHQ9() {
   const navigate = useNavigate();
@@ -38,7 +38,18 @@ export default function PHQ9() {
         language: lang,
       });
       const data = res?.data || {};
-      navigate("/result", { state: { result: { ...data, phq9_score: result.score, phq9_band: result.band, screening_type: "phq9" }, isGuest: false } });
+      navigate("/result", {
+        state: {
+          result: {
+            ...data,
+            phq9_score: result.score,
+            phq9_band: result.band,
+            phq9_answers: result.answers,
+            screening_type: "phq9",
+          },
+          isGuest: false,
+        },
+      });
     } catch (err) {
       setError(err?.message || (lang === "en" ? "Analysis failed." : "วิเคราะห์ผลไม่สำเร็จ"));
     } finally {
