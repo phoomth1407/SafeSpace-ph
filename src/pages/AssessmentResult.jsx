@@ -52,10 +52,22 @@ export default function AssessmentResult() {
             <>
               <h1 className="text-3xl font-bold text-purple-300">{phqScore}/27</h1>
               <p className="mt-1 text-sm text-slate-300">{phqBand}</p>
-              <div className="mt-4 mx-auto max-w-xs"><div className="h-3 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-purple-400 rounded-full transition-all duration-700" style={{ width: `${Math.min(100, (phqScore / 27) * 100)}%` }} /></div></div>
+              <div className="mt-4 mx-auto max-w-xs">
+                <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-purple-400 rounded-full transition-all duration-700" style={{ width: `${Math.min(100, (phqScore / 27) * 100)}%` }} />
+                </div>
+              </div>
             </>
           ) : (
-            <><h1 className={`text-2xl font-bold ${risk.color}`}>{risk.label}</h1><div className="mt-4 mx-auto max-w-xs"><div className="h-3 bg-slate-800 rounded-full overflow-hidden"><div className={`h-full bg-gradient-to-r ${risk.bar} rounded-full transition-all duration-700`} style={{ width: `${score}%` }} /></div><div className="text-xs text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div></div></div></>
+            <>
+              <h1 className={`text-2xl font-bold ${risk.color}`}>{risk.label}</h1>
+              <div className="mt-4 mx-auto max-w-xs">
+                <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
+                  <div className={`h-full bg-gradient-to-r ${risk.bar} rounded-full transition-all duration-700`} style={{ width: `${score}%` }} />
+                </div>
+                <div className="text-xs text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div>
+              </div>
+            </>
           )}
         </div>
       </div>
