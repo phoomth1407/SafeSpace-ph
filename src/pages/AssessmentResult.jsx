@@ -28,7 +28,8 @@ export default function AssessmentResult() {
   if (error || !result) return <div className="text-center py-20 space-y-4"><p className="text-sm text-slate-500">{error || t("result.notfound")}</p><Link to="/assessment" className="text-sm text-rose-300 font-medium underline">{t("result.retry")}</Link></div>;
 
   const isPhq9 = result.screening_type === "phq9" || result.phq9_score !== undefined;
-  const phqScore = Number(result.phq9_score ?? result.risk_score ?? 0);
+  const rawPhqScore = Number(result.phq9_score ?? 0);
+  const phqScore = Number.isFinite(rawPhqScore) ? Math.max(0, Math.min(27, Math.round(rawPhqScore))) : 0;
   const phqBand = getPhq9BandLabel(phqScore, lang);
   const riskConfig = {
     low: { label: t("risk.low"), color: "text-emerald-300", bg: "bg-emerald-500/10 border-emerald-500/20", bar: "from-emerald-400 to-emerald-500" },
@@ -52,7 +53,7 @@ export default function AssessmentResult() {
             <>
               <h1 className="text-3xl font-bold text-purple-300">{phqScore}/27</h1>
               <p className="mt-1 text-sm text-slate-300 font-medium">{phqBand}</p>
-              <div className="mt-4 mx-auto max-w-xs"><div className="h-3 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-purple-400 rounded-full transition-all duration-700" style={{ width: `${Math.min(100, (phqScore / 27) * 100)}%` }} /></div></div>
+              <div className="mt-4 mx-auto max-w-xs"><div className="h-3 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-purple-400 rounded-full transition-all duration-700" style={{ width: `${(phqScore / 27) * 100}%` }} /></div></div>
             </>
           ) : (
             <>
@@ -66,7 +67,7 @@ export default function AssessmentResult() {
         </div>
       </div>
 
-      {isPhq9 && <div className="bg-purple-500/10 rounded-2xl p-5 border border-purple-500/20"><div className="flex items-center gap-2 mb-2"><Brain className="w-4 h-4 text-purple-300" /><h2 className="text-sm font-semibold text-slate-100">PHQ-9</h2></div></div>}
+      {isPhq9 && <div className="bg-purple-500/10 rounded-2xl p-5 border border-purple-500/20"><div className="flex items-center gap-2 mb-2"><Brain className="w-4 h-4 text-purple-300" /><h2 className="text-sm font-semibold text-slate-100">PHQ-9</h2></div><p className="text-xs text-slate-400 leading-relaxed">{lang === "en" ? "This score is a screening indicator and should be interpreted with other information by a qualified professional." : "คะแนนนี้เป็นผลจากการคัดกรอง ควรตีความร่วมกับข้อมูลด้านอื่นโดยผู้เชี่ยวชาญ"}</p></div>}
 
       {result.depression_chance && <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800"><div className="flex items-center gap-2 mb-3"><div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center"><Brain className="w-4 h-4 text-purple-300" /></div><h2 className="text-sm font-semibold text-slate-100">{t("result.aiAnalysis")}</h2></div><div className="text-xs text-slate-500 mb-1">{lang === "en" ? "Screening-based estimate" : "แนวโน้มจากแบบประเมิน"}</div><p className="text-sm text-slate-300 leading-relaxed">{result.depression_chance}</p>{result.similar_case && <><div className="text-xs text-slate-500 mt-4 mb-1">{lang === "en" ? "Factors reflected in your answers" : "ปัจจัยที่สะท้อนจากคำตอบ"}</div><p className="text-sm text-slate-300 leading-relaxed">{result.similar_case}</p></>}</div>}
       <div className="bg-amber-500/10 rounded-2xl p-4 border border-amber-500/20"><p className="text-xs text-amber-700 dark:text-amber-200 leading-relaxed">{lang === "en" ? "Important: This result is only an initial screening estimate based on your answers. It is not a medical diagnosis and cannot confirm any mental health condition. If your concerns continue or affect daily life, consider talking with a trusted adult or qualified mental health professional." : "หมายเหตุสำคัญ: ผลลัพธ์นี้เป็นเพียงการประเมินเบื้องต้นจากคำตอบของคุณ ไม่ใช่การวินิจฉัยทางการแพทย์ และไม่สามารถยืนยันว่าคุณมีภาวะทางสุขภาพจิตใด ๆ ได้ หากคุณรู้สึกว่าปัญหายังคงเกิดขึ้นหรือส่งผลต่อชีวิตประจำวัน ควรพูดคุยกับผู้ปกครอง ครู หรือผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อรับคำแนะนำที่เหมาะสม"}</p></div>
