@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { ArrowLeft, Loader2, Phone, Lightbulb, AlertTriangle, Heart, RotateCcw, Brain } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useTranslation } from "@/lib/i18n";
-import { getPhq9BandLabel } from "@/lib/phq9";
+import { getPhq9BandLabel, scorePhq9 } from "@/lib/phq9";
 
 export default function AssessmentResult() {
   const { id } = useParams();
@@ -27,8 +27,10 @@ export default function AssessmentResult() {
   if (loading) return <div className="flex flex-col items-center justify-center py-20"><Loader2 className="w-8 h-8 text-slate-600 animate-spin" /><p className="text-sm text-slate-500 mt-3">{t("result.loading")}</p></div>;
   if (error || !result) return <div className="text-center py-20 space-y-4"><p className="text-sm text-slate-500">{error || t("result.notfound")}</p><Link to="/assessment" className="text-sm text-rose-300 font-medium underline">{t("result.retry")}</Link></div>;
 
-  const isPhq9 = result.screening_type === "phq9" || result.phq9_score !== undefined;
-  const rawPhqScore = Number(result.phq9_score ?? 0);
+  const isPhq9 = result.screening_type === "phq9" || result.phq9_score !== undefined || result.phq9_answers !== undefined;
+  const phqAnswerSource = result.phq9_answers || result.answers;
+  const calculatedPhq = phqAnswerSource ? scorePhq9(phqAnswerSource).score : null;
+  const rawPhqScore = calculatedPhq ?? Number(result.phq9_score ?? 0);
   const phqScore = Number.isFinite(rawPhqScore) ? Math.max(0, Math.min(27, Math.round(rawPhqScore))) : 0;
   const phqBand = getPhq9BandLabel(phqScore, lang);
   const riskConfig = {
