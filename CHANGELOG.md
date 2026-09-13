@@ -44,6 +44,7 @@
 - Improved Community text hierarchy and Dark Mode readability.
 - Improved descriptive and empty-state text contrast.
 - Preserved the original button appearance after theme cleanup.
+- Now it's Live, No refresh needed
 
 ### Resources / Hotlines
 - Restored the hotline list with safe fallback data.
