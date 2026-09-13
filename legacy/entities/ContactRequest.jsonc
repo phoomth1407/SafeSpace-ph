@@ -1,0 +1,64 @@
+{
+  "name": "ContactRequest",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "glitch",
+        "question",
+        "feedback",
+        "other"
+      ],
+      "default": "feedback",
+      "description": "\u0e1b\u0e23\u0e30\u0e40\u0e20\u0e17\u0e04\u0e33\u0e02\u0e2d"
+    },
+    "subject": {
+      "type": "string",
+      "description": "\u0e2b\u0e31\u0e27\u0e02\u0e49\u0e2d"
+    },
+    "message": {
+      "type": "string",
+      "description": "\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "resolved"
+      ],
+      "default": "pending",
+      "description": "\u0e2a\u0e16\u0e32\u0e19\u0e30"
+    },
+    "language": {
+      "type": "string",
+      "description": "\u0e20\u0e32\u0e29\u0e32\u0e17\u0e35\u0e48\u0e43\u0e0a\u0e49"
+    }
+  },
+  "required": [
+    "type",
+    "subject",
+    "message"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
