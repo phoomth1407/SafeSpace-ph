@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { ArrowLeft, Loader2, Phone, Lightbulb, AlertTriangle, Heart, RotateCcw, Wind, Sprout, Users, BookOpen } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
@@ -35,7 +35,7 @@ export default function AssessmentResult() {
       }
       // Logged-in: fetch from database
       try {
-        const data = await base44.entities.Assessment.get(id);
+        const data = await appClient.entities.Assessment.get(id);
         setResult(data);
       } catch (err) {
         setError(t("result.notfound"));
