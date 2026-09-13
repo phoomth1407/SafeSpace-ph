@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import AmbientSoundPlayer from "@/components/AmbientSoundPlayer";
 
 export default function Layout() {
   const location = useLocation();
@@ -147,6 +148,8 @@ export default function Layout() {
           </div>
         </div>
       </header>
+
+      <AmbientSoundPlayer />
 
       <main className="max-w-5xl mx-auto px-4 py-6 pb-24 md:pb-8">
         <Outlet />
