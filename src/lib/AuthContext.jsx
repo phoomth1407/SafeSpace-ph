@@ -44,8 +44,20 @@ export const AuthProvider = ({ children }) => {
       if (!session?.user) {
         setUser(null);
         setIsAuthenticated(false);
+        return;
       }
+
       void checkUserAuth();
+
+      if (event === "SIGNED_IN") {
+        const pending = sessionStorage.getItem("safespace_auth_return_to");
+        if (pending) {
+          sessionStorage.removeItem("safespace_auth_return_to");
+          window.setTimeout(() => {
+            window.location.hash = pending || "/";
+          }, 100);
+        }
+      }
     });
 
     return () => listener.subscription.unsubscribe();
