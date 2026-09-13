@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2, Check, Heart, LogIn, UserPlus, Sparkles, Shield, User as UserIcon, ShieldAlert, Home as HomeIcon, GraduationCap, Users as UsersIcon, Apple } from "lucide-react";
 import { assessmentCategories } from "@/lib/assessmentQuestions";
 import { useAuth } from "@/lib/AuthContext";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 import Mascot from "@/components/Mascot";
 
@@ -125,7 +125,7 @@ export default function Assessment() {
     try {
       const answersArray = Object.values(answers);
 
-      const res = await base44.functions.invoke("analyzeAssessment", {
+      const res = await appClient.functions.invoke("analyzeAssessment", {
         answers: answersArray,
         language: lang,
         age: Number(ageInput),
