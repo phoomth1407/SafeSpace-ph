@@ -29,7 +29,7 @@ export default function Login() {
       await base44.auth.loginViaEmailPassword(email, password);
       window.location.href = returnTo;
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      setError(err.message || t("auth.invalidCredentials"));
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ export default function Login() {
         onClick={handleGoogle}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        Continue with Google
+        {t("auth.google")}
       </Button>
 
       <GoogleOneTap returnTo={returnTo} />
@@ -72,7 +72,7 @@ export default function Login() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
+          <span className="bg-card px-3 text-muted-foreground">{t("auth.or")}</span>
         </div>
       </div>
 
@@ -128,7 +128,7 @@ export default function Login() {
               {t("auth.loggingIn")}
             </>
           ) : (
-            "Log in"
+            {t("auth.login")}
           )}
         </Button>
       </form>
