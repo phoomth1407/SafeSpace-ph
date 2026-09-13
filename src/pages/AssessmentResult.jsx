@@ -174,12 +174,18 @@ export default function AssessmentResult() {
         <div className="grid sm:grid-cols-2 gap-2.5">
           <motion.button onClick={() => setBreathingOpen(true)} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }} transition={{ type: "spring", stiffness: 320, damping: 22 }} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-sky-300 dark:hover:border-sky-500/30 transition-colors">
             <Wind className="w-4 h-4 text-sky-700 dark:text-sky-300 mb-2" />
-            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextBreath")}</div>
+            <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextBreath")}</div>
             <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextBreathDesc")}</div>
           </motion.button>
-          <motion.button onClick={() => setGroundingOpen(true)} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-emerald-300 dark:hover:border-emerald-500/30 transition-colors">
+          <motion.button
+            onClick={() => setGroundingOpen(true)}
+            whileHover={{ y: -3, scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
+            className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-emerald-300 dark:hover:border-emerald-500/30 transition-colors"
+          >
             <Sprout className="w-4 h-4 text-emerald-700 dark:text-emerald-300 mb-2" />
-            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextGround")}</div>
+            <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextGround")}</div>
             <div className="text-xs !text-black dark:!text-black mt-1">{t("result.nextGroundDesc")}</div>
           </motion.button>
           <motion.div
@@ -189,7 +195,7 @@ export default function AssessmentResult() {
           >
             <Link to="/community" className="block text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-violet-300 dark:hover:border-violet-500/30 transition-colors">
               <Users className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />
-              <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextCommunity")}</div>
+              <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextCommunity")}</div>
               <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextCommunityDesc")}</div>
             </Link>
           </motion.div>
@@ -200,7 +206,7 @@ export default function AssessmentResult() {
           >
             <Link to="/resources" className="block text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-amber-300 dark:hover:border-amber-500/30 transition-colors">
               <BookOpen className="w-4 h-4 text-amber-700 dark:text-amber-300 mb-2" />
-              <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextResources")}</div>
+              <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextResources")}</div>
               <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextResourcesDesc")}</div>
             </Link>
           </motion.div>
