@@ -3,7 +3,7 @@
 
 > Session summary grouped by user-facing changes instead of listing every micro-commit.
 
-### 🌤️ Wellbeing & Home
+### Wellbeing & Home
 - Added Daily Mood Check-in.
 - Added interactive guided breathing exercise with Thai/English support.
 - Added interactive 5-4-3-2-1 Grounding with Thai/English support.
@@ -11,7 +11,7 @@
 - Added animated release effects for the user's own text: Sky Lantern, Breeze into Leaves, and Stardust.
 - Improved Light/Dark contrast across the wellbeing tools.
 
-### 🎧 Ambient Sound Mixer
+### Ambient Sound Mixer
 - Added a global procedural Ambient Sound Mixer using Web Audio API.
 - Added Rain, Ocean, Wind, Fireplace, Soft Bowl / 432 Hz, and Lo-Fi.
 - Added per-track volume, master volume, Play/Pause, and 15/30/60 minute timers.
@@ -22,7 +22,7 @@
 - Renamed the Thai Wind label to 'ลม'.
 - Added cross-page controls from Community and Resources.
 
-### 🧠 Assessment Result & AI
+### Assessment Result & AI
 - Restored and expanded AI analysis on Assessment Result.
 - Improved explanations to discuss concern level, reasons, answer patterns, and recommendations.
 - Added 'Things you can try next' / 'สิ่งที่คุณลองทำต่อได้'.
@@ -32,34 +32,34 @@
 - Added a local rule-based tool recommender as a final fallback.
 - Added the database field for personalized tool recommendations.
 
-### 🤖 AI reliability / fallback
+### AI reliability / fallback
 - Added a three-level AI path: OpenAI → Gemini → local fallback.
 - Added better AI error logging.
 - Increased AI output capacity to reduce truncation.
 - Deployed the assessment Edge Function through multiple hardened versions.
 - Gemini fallback expects the Supabase secret GEMINI_API_KEY.
 
-### 💬 Community
+### Community
 - Added Quick wellbeing tools: Breathe, Grounding, and Sounds.
 - Improved Community text hierarchy and Dark Mode readability.
 - Improved descriptive and empty-state text contrast.
 - Preserved the original button appearance after theme cleanup.
 
-### 📞 Resources / Hotlines
+### Resources / Hotlines
 - Restored the hotline list with safe fallback data.
 - Added Breathe, Grounding, and Sounds to the Resources self-care section.
 - Improved Light/Dark text hierarchy and supporting-text contrast.
 
-### 📊 History
+### History
 - Improved Light/Dark contrast and text hierarchy.
 - Kept History focused on assessment history and trend visualization.
 
-### 🌐 TH / EN
+### TH / EN
 - Expanded and fixed translations across Authentication, Assessment, Result, Mood Check-in, Breathing, Grounding, Worry Release, Community, and Resources.
 - Fixed several JSX translation/rendering issues.
 - Passed the selected language into assessment and community AI flows.
 
-### 🎨 Light / Dark Theme & UI consistency
+### Light / Dark Theme & UI consistency
 - Improved Light/Dark contrast across major pages.
 - Fixed text that was too gray or invisible in Light Mode.
 - Fixed Dark Mode text that became black on dark backgrounds.
@@ -70,7 +70,7 @@
 - Restored Grounding card animation after an intermediate regression.
 - Fixed Assessment Result navigation cards for Community and Resources.
 
-### 🐛 Build / stability fixes
+### Build / stability fixes
 - Fixed multiple JSX/i18n syntax errors caused by malformed translation edits.
 - Fixed Worry Release build failures.
 - Fixed Assessment Result navigation/link structure.
@@ -78,7 +78,7 @@
 - Fixed the database mismatch after adding personalized AI tool recommendations.
 - Kept the assessment Edge Function JWT-protected.
 
-### 🔐 Authentication
+### Authentication
 - Added Google One Tap authentication.
 - Added nonce handling for Google One Tap ID-token sign-in.
 - Fixed OAuth callback routing and return-to behavior.
