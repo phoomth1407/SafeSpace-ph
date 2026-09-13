@@ -1,34 +1,40 @@
-# AGENTS.md
+# SafeSpace Development Notes
 
-## Project Context
+## Current stack
 
-This is a Base44 app repository. Treat it as user-owned application code, keep changes focused on the user's request, and preserve existing project conventions.
+- Frontend: React + Vite
+- Backend: Supabase
+- Database: Supabase Postgres
+- Authentication: Supabase Auth
+- Server-side logic: Supabase Edge Functions
+- Deployment: GitHub Pages
+- AI: OpenAI primary, Gemini fallback, local fallback
 
-Start with `README.md` for local setup, environment variables, and publish workflow.
+## Development
 
-## Base44 References
-
-- CLI overview: https://docs.base44.com/developers/references/cli/get-started/overview.md
-- Agent skills: https://docs.base44.com/developers/backend/overview/skills.md
-
-If your agent supports Agent Skills, install or update Base44 skills before Base44-specific work:
+Run the frontend locally with:
 
 ```bash
-npx skills add base44/skills
+npm install
+npm run dev
 ```
 
-## Key Files
+The active backend lives in Supabase. Do not add new Base44 dependencies or Base44-specific runtime behavior.
 
-- `src/`: frontend application source.
-- `src/api/base44Client.js`: frontend Base44 SDK client.
-- `vite.config.js`: Vite config and Base44 Vite plugin setup.
-- `.env.local`: local-only environment values; never commit secrets.
+## Repository structure
 
-## Working Notes
+- `src/`: frontend application
+- `src/api/base44Client.js`: compatibility adapter currently used by older page code; the implementation inside it talks to Supabase
+- `src/lib/supabaseClient.js`: Supabase client
+- `supabase/`: current Supabase-side project assets when present
+- `legacy/`: archived files from the original Base44 project; not used by production
 
-- Use `base44 dev` as the default local development command when you need the local Base44 backend. It can run the backend and frontend together.
-- When docs or code mention the frontend being started automatically, that usually means the Base44 project config includes `site.serveCommand`, for example `"serveCommand": "npm run dev"` in `base44/config.jsonc`.
-- Use `npm run dev` only for frontend-only work against the hosted Base44 backend.
-- Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
-- Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
-- Run the relevant checks from `package.json` before finishing code changes.
+## Important rules
+
+- Keep authentication on Supabase Auth.
+- Keep Edge Functions JWT-protected unless the function itself implements explicit authentication or a safe webhook pattern.
+- Store AI API keys in Supabase secrets, never in frontend code.
+- Preserve Thai/English support.
+- Preserve Light/Dark theme support.
+- Avoid changing established button colors unless explicitly requested.
+- Assessment AI is a screening/support feature, not a diagnostic system.
