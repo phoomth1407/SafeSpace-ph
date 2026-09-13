@@ -33,7 +33,7 @@ export default function MoodCheckInCard() {
     <section className="bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("mood.title")}</h2>
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{t("mood.title")}</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("mood.subtitle")}</p>
         </div>
         {saved && <span className="text-xs text-emerald-600 dark:text-emerald-300">{t("mood.saved")}</span>}
