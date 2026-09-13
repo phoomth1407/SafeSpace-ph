@@ -70,7 +70,7 @@ export default function Resources() {
       {/* Header */}
       <div className="text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("resources.title")}</h1>
-        <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
+        <p className="text-sm !text-black mt-1.5 leading-relaxed">
           {t("resources.subtitle")}
         </p>
       </div>
@@ -102,13 +102,13 @@ export default function Resources() {
       <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
         <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">{t("resources.toolsTitle")}</h2>
         <div className="grid grid-cols-3 gap-2 mt-3">
-          <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-sky-300 dark:hover:border-sky-500/30">
+          <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-sky-300 dark:hover:border-sky-500/30">
             🫧 {t("resources.toolsBreath")}
           </button>
-          <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-emerald-300 dark:hover:border-emerald-500/30">
+          <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-emerald-300 dark:hover:border-emerald-500/30">
             🌿 {t("resources.toolsGround")}
           </button>
-          <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-violet-300 dark:hover:border-violet-500/30">
+          <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-violet-300 dark:hover:border-violet-500/30">
             🎧 {t("resources.toolsSound")}
           </button>
         </div>
@@ -122,7 +122,7 @@ export default function Resources() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-slate-100">{t("resources.selfcare.title")}</h2>
-            <p className="text-xs text-slate-500">{t("resources.selfcare.subtitle")}</p>
+            <p className="text-xs !text-black">{t("resources.selfcare.subtitle")}</p>
           </div>
         </div>
         <div className="space-y-3 mt-3">
@@ -141,9 +141,9 @@ export default function Resources() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <h3 className="text-sm font-semibold text-slate-100">{link.title}</h3>
-                    <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-slate-300 transition-colors" />
+                    <ExternalLink className="w-3 h-3 !text-black group-hover:!text-black transition-colors" />
                   </div>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{link.desc}</p>
+                  <p className="text-xs !text-black mt-1 leading-relaxed">{link.desc}</p>
                 </div>
               </div>
             </a>
@@ -154,12 +154,12 @@ export default function Resources() {
       {/* Hotlines list */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <Phone className="w-4 h-4 text-slate-400" />
+          <Phone className="w-4 h-4 !text-black" />
           <h2 className="text-sm font-semibold text-slate-100">{t("resources.hotlines.title")}</h2>
         </div>
         {loading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="w-6 h-6 text-slate-600 animate-spin" />
+            <Loader2 className="w-6 h-6 !text-black animate-spin" />
           </div>
         ) : (
           <div className="space-y-3">
@@ -172,7 +172,7 @@ export default function Resources() {
 
       {/* Footer note */}
       <div className="text-center py-4">
-        <p className="text-xs text-slate-500 leading-relaxed">
+        <p className="text-xs !text-black leading-relaxed">
           {t("resources.footer1")}<br />
           {t("resources.footer2")}
         </p>
