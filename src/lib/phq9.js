@@ -39,10 +39,27 @@ export function getPhq9BandLabel(score, lang = "th") {
 }
 
 export function scorePhq9(answers) {
-  const normalized = PHQ9_QUESTIONS.map((q) => {
-    const raw = answers?.[q.id] ?? answers?.[String(q.id)] ?? 0;
+  // Accept all shapes used across the app:
+  // 1) question-id map: { 1: 0, 2: 1, ... }
+  // 2) zero-based array: [0, 1, 2, ...]
+  // 3) saved Supabase row shape: { phq9: [0, 1, 2, ...] }
+  // 4) { phq9_answers: [...] }
+  const source = Array.isArray(answers)
+    ? answers
+    : Array.isArray(answers?.phq9)
+      ? answers.phq9
+      : Array.isArray(answers?.phq9_answers)
+        ? answers.phq9_answers
+        : answers;
+
+  const normalized = PHQ9_QUESTIONS.map((q, index) => {
+    const raw = Array.isArray(source)
+      ? source[index]
+      : source?.[q.id] ?? source?.[String(q.id)] ?? 0;
+
     return Math.max(0, Math.min(3, Number(raw) || 0));
   });
+
   const score = normalized.reduce((sum, value) => sum + value, 0);
   return { score, band: getPhq9Band(score), answers: normalized };
 }
