@@ -37,7 +37,8 @@ export default function Layout() {
             <span className="font-semibold text-slate-100 text-sm">SafeSpace</span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Main navigation */}
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -58,88 +59,91 @@ export default function Layout() {
               })}
             </nav>
 
-            {/* Theme toggle */}
-            <button
-              onClick={toggle}
-              title={t("theme.toggle")}
-              className="flex items-center gap-1 text-xs text-slate-400 px-2.5 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
-            >
-              {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-            </button>
-
-            {/* Language switcher */}
-            <div className="relative">
+            {/* Right-side utility/auth controls */}
+            <div className="flex items-center gap-1.5 ml-auto">
+              {/* Theme toggle */}
               <button
-                onClick={() => setLangOpen(!langOpen)}
+                onClick={toggle}
+                title={t("theme.toggle")}
                 className="flex items-center gap-1 text-xs text-slate-400 px-2.5 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
               >
-                <Globe className="w-3.5 h-3.5" />
-                {lang === "en" ? "EN" : "ไทย"}
+                {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
               </button>
-              {langOpen && (
-                <div className="absolute right-0 mt-1 w-28 bg-slate-900 border border-slate-800 rounded-xl shadow-xl py-1 z-50">
+
+              {/* Language switcher */}
+              <div className="relative">
+                <button
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex items-center gap-1 text-xs text-slate-400 px-2.5 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                  {lang === "en" ? "EN" : "ไทย"}
+                </button>
+                {langOpen && (
+                  <div className="absolute right-0 mt-1 w-28 bg-slate-900 border border-slate-800 rounded-xl shadow-xl py-1 z-50">
+                    <button
+                      onClick={() => { setLang("th"); setLangOpen(false); }}
+                      className={cn("w-full text-left px-3 py-1.5 text-xs hover:bg-slate-800", lang === "th" ? "text-rose-300" : "text-slate-300")}
+                    >
+                      ภาษาไทย
+                    </button>
+                    <button
+                      onClick={() => { setLang("en"); setLangOpen(false); }}
+                      className={cn("w-full text-left px-3 py-1.5 text-xs hover:bg-slate-800", lang === "en" ? "text-rose-300" : "text-slate-300")}
+                    >
+                      English
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Auth controls */}
+              {isAuthenticated ? (
+                <div className="flex items-center gap-2 ml-1 pl-2 border-l border-slate-800">
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      className={cn(
+                        "flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors",
+                        location.pathname === "/admin"
+                          ? "bg-slate-100 text-slate-900"
+                          : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                      )}
+                    >
+                      <Shield className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">{t("nav.admin")}</span>
+                    </Link>
+                  )}
+                  <span className="hidden sm:block text-xs text-slate-500 max-w-[120px] truncate">
+                    {user?.full_name || user?.email}
+                  </span>
                   <button
-                    onClick={() => { setLang("th"); setLangOpen(false); }}
-                    className={cn("w-full text-left px-3 py-1.5 text-xs hover:bg-slate-800", lang === "th" ? "text-rose-300" : "text-slate-300")}
+                    onClick={handleLogout}
+                    className="flex items-center gap-1 text-xs text-slate-400 px-3 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
                   >
-                    ภาษาไทย
+                    <LogOut className="w-3.5 h-3.5" />
+                    {t("nav.logout")}
                   </button>
-                  <button
-                    onClick={() => { setLang("en"); setLangOpen(false); }}
-                    className={cn("w-full text-left px-3 py-1.5 text-xs hover:bg-slate-800", lang === "en" ? "text-rose-300" : "text-slate-300")}
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 ml-1 pl-2 border-l border-slate-800">
+                  <Link
+                    to="/login"
+                    className="flex items-center gap-1 text-xs text-slate-400 px-3 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
                   >
-                    English
-                  </button>
+                    <LogIn className="w-3.5 h-3.5" />
+                    {t("nav.login")}
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="flex items-center gap-1 text-xs text-slate-900 bg-slate-100 px-3 py-1.5 rounded-full hover:bg-white transition-colors"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    {t("nav.register")}
+                  </Link>
                 </div>
               )}
             </div>
-
-            {/* Auth buttons */}
-            {isAuthenticated ? (
-              <div className="flex items-center gap-2">
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className={cn(
-                      "flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors",
-                      location.pathname === "/admin"
-                        ? "bg-slate-100 text-slate-900"
-                        : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-                    )}
-                  >
-                    <Shield className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">{t("nav.admin")}</span>
-                  </Link>
-                )}
-                <span className="hidden sm:block text-xs text-slate-500 max-w-[120px] truncate">
-                  {user?.full_name || user?.email}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-1 text-xs text-slate-400 px-3 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  {t("nav.logout")}
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5">
-                <Link
-                  to="/login"
-                  className="flex items-center gap-1 text-xs text-slate-400 px-3 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"
-                >
-                  <LogIn className="w-3.5 h-3.5" />
-                  {t("nav.login")}
-                </Link>
-                <Link
-                  to="/register"
-                  className="flex items-center gap-1 text-xs text-slate-900 bg-slate-100 px-3 py-1.5 rounded-full hover:bg-white transition-colors"
-                >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  {t("nav.register")}
-                </Link>
-              </div>
-            )}
           </div>
         </div>
       </header>
