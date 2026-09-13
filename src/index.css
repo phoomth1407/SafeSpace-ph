@@ -156,7 +156,38 @@
 .theme-light .text-slate-300 { color: #334155 !important; }
 .theme-light .text-slate-400 { color: #475569 !important; }
 .theme-light .text-slate-500 { color: #64748b !important; }
-.theme-light .text-slate-600 { color: #94a3b8 !important; }
+.theme-light .text-slate-600 { color: #64748b !important; }
+
+/* Colored text/backgrounds: keep accent colors readable on white */
+.theme-light .text-sky-300 { color: #0369a1 !important; }
+.theme-light .text-sky-400 { color: #0284c7 !important; }
+.theme-light .text-emerald-300 { color: #047857 !important; }
+.theme-light .text-emerald-400 { color: #059669 !important; }
+.theme-light .text-amber-300 { color: #b45309 !important; }
+.theme-light .text-amber-400 { color: #d97706 !important; }
+.theme-light .text-orange-300 { color: #c2410c !important; }
+.theme-light .text-orange-400 { color: #ea580c !important; }
+.theme-light .text-red-300 { color: #b91c1c !important; }
+.theme-light .text-red-400 { color: #dc2626 !important; }
+.theme-light .text-purple-300 { color: #7e22ce !important; }
+.theme-light .text-purple-400 { color: #9333ea !important; }
+.theme-light .text-rose-300 { color: #be123c !important; }
+.theme-light .text-rose-400 { color: #e11d48 !important; }
+
+.theme-light .bg-sky-500\/10 { background-color: rgba(224, 242, 254, 0.9) !important; }
+.theme-light .bg-emerald-500\/10 { background-color: rgba(236, 253, 245, 0.95) !important; }
+.theme-light .bg-amber-500\/10 { background-color: rgba(255, 247, 237, 0.95) !important; }
+.theme-light .bg-orange-500\/10 { background-color: rgba(255, 247, 237, 0.95) !important; }
+.theme-light .bg-red-500\/10 { background-color: rgba(254, 242, 242, 0.95) !important; }
+.theme-light .bg-purple-500\/10 { background-color: rgba(250, 245, 255, 0.95) !important; }
+.theme-light .bg-rose-500\/10 { background-color: rgba(255, 241, 242, 0.95) !important; }
+
+.theme-light .border-sky-500\/20 { border-color: #bae6fd !important; }
+.theme-light .border-emerald-500\/20 { border-color: #a7f3d0 !important; }
+.theme-light .border-amber-500\/20 { border-color: #fed7aa !important; }
+.theme-light .border-red-500\/20 { border-color: #fecaca !important; }
+.theme-light .border-purple-500\/20 { border-color: #e9d5ff !important; }
+.theme-light .border-rose-500\/20 { border-color: #fecdd3 !important; }
 
 /* Buttons that use dark text on light bg → flip to light text */
 .theme-light .text-slate-900 { color: #f1f5f9 !important; }
