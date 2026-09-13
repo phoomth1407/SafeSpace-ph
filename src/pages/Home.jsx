@@ -99,7 +99,7 @@ export default function Home() {
         <h2 className="text-xl font-semibold text-slate-100">{t("tools.title")}</h2>
       </div>
 
-      {/* Guided breathing */
+      {/* Guided breathing */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
