@@ -115,7 +115,7 @@ export default function AssessmentResult() {
             <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.aiAnalysis")}</h2>
           </div>
           <div className="text-xs text-black dark:text-slate-400 mb-1">{t("result.trend")}</div>
-          <p className="text-sm text-black dark:text-slate-300 leading-relaxed">{result.depression_chance}</p>
+          <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.depression_chance}</p>
           {result.similar_case && (
             <>
               <div className="text-xs text-black dark:text-slate-400 mt-4 mb-1">{t("result.factors")}</div>
@@ -197,8 +197,8 @@ export default function AssessmentResult() {
             const content = (
               <>
                 {iconMap[tool.id] || <Lightbulb className="w-4 h-4 text-slate-700 dark:text-slate-300 mb-2" />}
-                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</div>
-                {reason && <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 leading-relaxed">{reason}</div>}
+                <div className="text-sm font-semibold !text-black dark:!text-white">{title}</div>
+                {reason && <div className="text-xs !text-black dark:!text-black mt-1 leading-relaxed">{reason}</div>}
               </>
             );
 
