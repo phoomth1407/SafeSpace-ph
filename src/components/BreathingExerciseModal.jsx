@@ -140,7 +140,7 @@ export default function BreathingExerciseModal({ open, onClose }) {
 
         <button
           onClick={() => setRunning((v) => !v)}
-          className="w-full mt-4 h-12 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-semibold flex items-center justify-center gap-2 hover:opacity-90"
+          className="w-full mt-4 h-12 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 border border-slate-800 dark:border-slate-200/20 font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-white transition-colors shadow-sm"
         >
           {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           {running ? t("breath.pause") : t("breath.start")}
