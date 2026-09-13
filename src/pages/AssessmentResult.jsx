@@ -107,7 +107,7 @@ export default function AssessmentResult() {
             <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
               <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">AI</div>
             </div>
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.aiAnalysis")}</h2>
+            <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.aiAnalysis")}</h2>
           </div>
           <div className="text-xs !text-black dark:!text-black mb-1">{t("result.trend")}</div>
           <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.depression_chance}</p>
@@ -133,7 +133,7 @@ export default function AssessmentResult() {
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500/80 to-sky-500/80 flex items-center justify-center">
             <Heart className="w-4 h-4 text-white" fill="white" />
           </div>
-          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.summary")}</h2>
+          <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.summary")}</h2>
         </div>
         <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.ai_summary}</p>
       </div>
@@ -145,7 +145,7 @@ export default function AssessmentResult() {
             <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
               <Lightbulb className="w-4 h-4 text-sky-300" />
             </div>
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.recommendations")}</h2>
+            <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.recommendations")}</h2>
           </div>
           <ul className="space-y-2">
             {result.recommendations.map((rec, i) => (
@@ -164,7 +164,7 @@ export default function AssessmentResult() {
           <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
             <Lightbulb className="w-4 h-4 text-sky-700 dark:text-sky-300" />
           </div>
-          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextTitle")}</h2>
+          <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.nextTitle")}</h2>
         </div>
         <p className="text-xs !text-black dark:!text-black mb-3">{t("result.nextDesc")}</p>
 
