@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Loader2, Phone, AlertCircle, ExternalLink, BookOpen, Heart } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import ResourceCard from "@/components/ResourceCard";
+import BreathingExerciseModal from "@/components/BreathingExerciseModal";
+import GroundingModal from "@/components/GroundingModal";
 import { useTranslation } from "@/lib/i18n";
 
 const defaultHotlines = {
@@ -44,6 +46,8 @@ export default function Resources() {
   const { t, lang } = useTranslation();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [breathingOpen, setBreathingOpen] = useState(false);
+  const [groundingOpen, setGroundingOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -91,6 +95,22 @@ export default function Resources() {
               </a>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Interactive self-care tools */}
+      <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
+        <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">{t("resources.toolsTitle")}</h2>
+        <div className="grid grid-cols-3 gap-2 mt-3">
+          <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-sky-300 dark:hover:border-sky-500/30">
+            🫧 {t("resources.toolsBreath")}
+          </button>
+          <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-emerald-300 dark:hover:border-emerald-500/30">
+            🌿 {t("resources.toolsGround")}
+          </button>
+          <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-violet-300 dark:hover:border-violet-500/30">
+            🎧 {t("resources.toolsSound")}
+          </button>
         </div>
       </div>
 
@@ -157,6 +177,8 @@ export default function Resources() {
           {t("resources.footer2")}
         </p>
       </div>
+      <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
+      <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
     </div>
   );
 }
