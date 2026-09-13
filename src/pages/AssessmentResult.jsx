@@ -73,7 +73,7 @@ export default function AssessmentResult() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => navigate("/")}
-        className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-200 transition-colors"
+        className="flex items-center gap-1 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         {t("result.back")}
@@ -82,64 +82,71 @@ export default function AssessmentResult() {
       {/* Risk summary card */}
       <div className={`rounded-2xl p-6 border ${risk.bg}`}>
         <div className="text-center">
-          <div className="text-xs text-slate-400 mb-1">{t("result.yourResult")}</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">{t("result.yourResult")}</div>
           <h1 className={`text-2xl font-bold ${risk.color}`}>{risk.label}</h1>
           <div className="mt-4 mx-auto max-w-xs">
-            <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
               <div
                 className={`h-full bg-gradient-to-r ${risk.bar} rounded-full transition-all duration-700`}
                 style={{ width: `${score}%` }}
               />
             </div>
-            <div className="text-xs text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div>
           </div>
         </div>
       </div>
 
       {/* AI analysis */}
       {result.depression_chance && (
-        <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
+        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <div className="text-purple-300 text-sm font-bold">AI</div>
+            <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
+              <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">AI</div>
             </div>
-            <h2 className="text-sm font-semibold text-slate-100">AI วิเคราะห์ความเสี่ยง</h2>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">AI วิเคราะห์ความเสี่ยง</h2>
           </div>
-          <div className="text-xs text-slate-500 mb-1">แนวโน้มจากแบบประเมิน</div>
-          <p className="text-sm text-slate-300 leading-relaxed">{result.depression_chance}</p>
+          <div className="text-xs text-slate-500 dark:text-slate-500 mb-1">แนวโน้มจากแบบประเมิน</div>
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{result.depression_chance}</p>
           {result.similar_case && (
             <>
-              <div className="text-xs text-slate-500 mt-4 mb-1">ปัจจัยที่สะท้อนจากคำตอบ</div>
-              <p className="text-sm text-slate-300 leading-relaxed">{result.similar_case}</p>
+              <div className="text-xs text-slate-500 dark:text-slate-500 mt-4 mb-1">ปัจจัยที่สะท้อนจากคำตอบ</div>
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{result.similar_case}</p>
             </>
           )}
         </div>
       )}
 
+      {/* Screening note */}
+      <div className="bg-amber-50 dark:bg-amber-500/10 rounded-2xl p-4 border border-amber-200 dark:border-amber-500/20">
+        <p className="text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
+          <strong>หมายเหตุสำคัญ:</strong> ผลนี้เป็นเพียงการประเมินเบื้องต้น ไม่ใช่การวินิจฉัยทางการแพทย์ หากมีความกังวลหรือผลกระทบต่อชีวิตประจำวัน ควรปรึกษาผู้เชี่ยวชาญด้านสุขภาพจิตเพิ่มเติม คะแนนความเสี่ยงนี้ใช้ PHQ-9 เป็นหนึ่งในกรอบอ้างอิงร่วมกับคำตอบส่วนอื่นของแบบประเมิน จึงไม่ใช่คะแนน PHQ-9 โดยตรง
+        </p>
+      </div>
+
       {/* Summary */}
-      <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
+      <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500/80 to-sky-500/80 flex items-center justify-center">
             <Heart className="w-4 h-4 text-white" fill="white" />
           </div>
-          <h2 className="text-sm font-semibold text-slate-100">{t("result.summary")}</h2>
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.summary")}</h2>
         </div>
-        <p className="text-sm text-slate-300 leading-relaxed">{result.ai_summary}</p>
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{result.ai_summary}</p>
       </div>
 
       {/* Recommendations */}
       {result.recommendations && result.recommendations.length > 0 && (
-        <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
+        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
               <Lightbulb className="w-4 h-4 text-sky-300" />
             </div>
-            <h2 className="text-sm font-semibold text-slate-100">{t("result.recommendations")}</h2>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.recommendations")}</h2>
           </div>
           <ul className="space-y-2">
             {result.recommendations.map((rec, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-slate-300 leading-relaxed">
-                <span className="w-5 h-5 rounded-full bg-slate-800 text-slate-300 text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+              <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                 <span>{rec}</span>
               </li>
             ))}
@@ -149,16 +156,16 @@ export default function AssessmentResult() {
 
       {/* Emergency alert for high risk */}
       {isHighRisk && (
-        <div className="bg-red-500/10 rounded-2xl p-5 border border-red-500/20">
+        <div className="bg-red-50 dark:bg-red-500/10 rounded-2xl p-5 border border-red-200 dark:border-red-500/20">
           <div className="flex items-center gap-2 mb-2">
             <Phone className="w-5 h-5 text-red-400" />
-            <h2 className="text-sm font-semibold text-red-300">{t("result.emergency.title")}</h2>
+            <h2 className="text-sm font-semibold text-red-700 dark:text-red-300">{t("result.emergency.title")}</h2>
           </div>
-          <p className="text-xs text-red-300/80 leading-relaxed mb-3">
+          <p className="text-xs text-red-700/80 dark:text-red-300/80 leading-relaxed mb-3">
             {t("result.emergency.desc")}
           </p>
           <div className="flex gap-2">
-            <a href="tel:1327" className="flex-1 bg-red-500/20 text-red-200 text-sm font-semibold px-4 py-2.5 rounded-xl text-center hover:bg-red-500/30 transition-colors border border-red-500/30">
+            <a href="tel:1327" className="flex-1 bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-200 text-sm font-semibold px-4 py-2.5 rounded-xl text-center hover:bg-red-500/30 transition-colors border border-red-500/30">
               {t("result.emergency.call1")}
             </a>
             <a href="tel:1667" className="flex-1 bg-red-500/20 text-red-200 text-sm font-semibold px-4 py-2.5 rounded-xl text-center hover:bg-red-500/30 transition-colors border border-red-500/30">
@@ -170,8 +177,8 @@ export default function AssessmentResult() {
 
       {/* Guest prompt */}
       {isGuest && (
-        <div className="bg-sky-500/10 rounded-2xl p-5 border border-sky-500/20 text-center">
-          <p className="text-sm text-sky-200 mb-3">
+        <div className="bg-sky-50 dark:bg-sky-500/10 rounded-2xl p-5 border border-sky-200 dark:border-sky-500/20 text-center">
+          <p className="text-sm text-sky-700 dark:text-sky-200 mb-3">
             <AlertTriangle className="w-4 h-4 inline mr-1" />
             {t("result.guest.prompt")}
           </p>
