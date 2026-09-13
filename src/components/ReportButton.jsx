@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Flag, X, Loader2, Check } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 
 export default function ReportButton({ targetType, targetId, reportedUserId, postId, targetContent }) {
@@ -14,7 +14,7 @@ export default function ReportButton({ targetType, targetId, reportedUserId, pos
   const handleReport = async (reasonKey) => {
     setReporting(true);
     try {
-      await base44.entities.Report.create({
+      await appClient.entities.Report.create({
         target_type: targetType,
         target_id: targetId,
         post_id: postId,
