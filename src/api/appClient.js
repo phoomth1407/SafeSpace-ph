@@ -19,15 +19,7 @@ const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const currentAuthUser = async () => {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   if (sessionError) throw sessionError;
-  if (!sessionData.session?.user) return null;
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error) {
-    // A stale browser session should not break guest assessment mode.
-    if (/session|jwt|auth/i.test(error.message || "")) return null;
-    throw error;
-  }
-  return data.user || null;
+  return sessionData.session?.user || null;
 };
 
 const currentAppUser = async () => {
