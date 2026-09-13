@@ -201,10 +201,10 @@ export default function Community() {
       {/* Header */}
       <div className="text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("community.title")}</h1>
-        <p className="text-sm !text-black mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
+        <p className="text-sm text-black dark:text-slate-400 mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
         <button
           onClick={() => navigate("/contact-admin")}
-          className="mt-3 inline-flex items-center gap-1.5 text-xs !text-slate-900 dark:!text-white hover:!text-black bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
         >
           <Mail className="w-3.5 h-3.5" />
           {t("contact.tab")}
@@ -356,7 +356,7 @@ export default function Community() {
             <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-3">
               <Heart className="w-6 h-6 !text-black" />
             </div>
-            <p className="text-sm !text-black">{t("community.empty")}</p>
+            <p className="text-sm text-black dark:text-slate-400">{t("community.empty")}</p>
           </div>
         ) : (
           sortedPosts.map((post) => (
