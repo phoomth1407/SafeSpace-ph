@@ -130,7 +130,7 @@ export default function Community() {
         </span>
         <button
           onClick={() => { setShowForm(false); setShowAnnounce(false); setContent(""); setError(null); }}
-          className="!text-black hover:!text-black"
+          className="!text-slate-900 hover:!text-slate-700 dark:!text-slate-300 dark:hover:!text-white"
         >
           <X className="w-4 h-4" />
         </button>
@@ -157,7 +157,7 @@ export default function Community() {
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder={t("community.authorPlaceholder")}
               disabled={anon}
-              className="flex-1 text-sm text-slate-200 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:!text-black disabled:opacity-40"
+              className="flex-1 text-sm text-slate-200 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:!text-slate-500 disabled:opacity-40"
             />
             <label className="flex items-center gap-1.5 text-xs text-slate-900 dark:text-slate-100 cursor-pointer select-none">
               <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
@@ -168,7 +168,7 @@ export default function Community() {
             <input type="checkbox" checked={aiEnabled} onChange={(e) => setAiEnabled(e.target.checked)} className="accent-sky-500" />
             <div className="flex flex-col">
               <span className="text-slate-200">{t("community.aiToggle")}</span>
-              <span className="text-[10px] !text-black">{t("community.aiToggleDesc")}</span>
+              <span className="text-[10px] !text-slate-600 dark:!text-slate-400">{t("community.aiToggleDesc")}</span>
             </div>
           </label>
         </>
@@ -179,7 +179,7 @@ export default function Community() {
         onChange={(e) => setContent(e.target.value)}
         placeholder={t("community.contentPlaceholder")}
         rows={5}
-        className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 resize-none focus:outline-none focus:border-slate-600 placeholder:!text-black"
+        className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 resize-none focus:outline-none focus:border-slate-600 placeholder:!text-slate-500"
       />
       {error && <div className="text-xs text-red-400">{error}</div>}
       <div className="flex items-center justify-between">
@@ -334,7 +334,7 @@ export default function Community() {
       <div className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="w-6 h-6 !text-black animate-spin" />
+            <Loader2 className="w-6 h-6 !text-slate-900 dark:!text-white animate-spin" />
           </div>
         ) : focusedPostId ? (
           (() => {
@@ -354,7 +354,7 @@ export default function Community() {
         ) : sortedPosts.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-3">
-              <Heart className="w-6 h-6 !text-black" />
+              <Heart className="w-6 h-6 !text-slate-900 dark:!text-white" />
             </div>
             <p className="text-sm text-black dark:text-slate-400">{t("community.empty")}</p>
           </div>
