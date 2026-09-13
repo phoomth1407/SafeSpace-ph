@@ -55,7 +55,7 @@ export default function WorryReleaseModal({ open, onClose }) {
               maxLength={500}
               rows={5}
               placeholder={t("worry.placeholder")}
-              className="mt-5 w-full resize-none rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4 text-sm text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-violet-300/50"
+              className="mt-5 w-full resize-none rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4 text-sm text-slate-900 dark:text-slate-100 !placeholder:text-slate-700 dark:!placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-violet-300/50"
             />
 
             <div className="mt-4">
