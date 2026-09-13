@@ -8,6 +8,7 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import GoogleOneTap from "@/components/GoogleOneTap";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -61,6 +62,8 @@ export default function Login() {
         <GoogleIcon className="w-5 h-5 mr-2" />
         Continue with Google
       </Button>
+
+      <GoogleOneTap returnTo={returnTo} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
