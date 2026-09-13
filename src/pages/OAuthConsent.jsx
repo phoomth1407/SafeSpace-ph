@@ -138,7 +138,7 @@ export default function OAuthConsent() {
 
   if (checking) {
     return (
-      <AuthLayout icon={ShieldCheck} title="{t("oauth.title")}">
+      <AuthLayout icon={ShieldCheck} title={t("oauth.title")}>
         <div className="flex items-center justify-center py-6 text-muted-foreground">
           <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
           {t("oauth.loading")}
@@ -154,7 +154,7 @@ export default function OAuthConsent() {
     return (
       <AuthLayout
         icon={ShieldCheck}
-        title={decided === "approve" ? "{t("oauth.granted")}" : "{t("oauth.denied")}"}
+        title={decided === "approve" ? t("oauth.granted") : t("oauth.denied")}
         subtitle={`${t("oauth.returnTo")} ${client} ${t("oauth.closeWindow")}`}
       />
     );
@@ -165,7 +165,7 @@ export default function OAuthConsent() {
   // no approve/deny controls.
   if (reconnect) {
     return (
-      <AuthLayout icon={ShieldCheck} title="{t("oauth.reconnect")}">
+      <AuthLayout icon={ShieldCheck} title={t("oauth.reconnect")}>
         <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {reconnect}
         </div>
@@ -178,7 +178,7 @@ export default function OAuthConsent() {
   // the error alone, never the approve/deny controls.
   if (error && !info) {
     return (
-      <AuthLayout icon={ShieldCheck} title="{t("oauth.title")}">
+      <AuthLayout icon={ShieldCheck} title={t("oauth.title")}>
         <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {error}
         </div>
