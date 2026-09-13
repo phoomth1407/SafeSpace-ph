@@ -201,11 +201,12 @@ const auth = {
     }
   },
 
-  async loginWithGoogleIdToken(idToken, returnTo = "/") {
+  async loginWithGoogleIdToken(idToken, returnTo = "/", nonce) {
     sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
     const { error } = await supabase.auth.signInWithIdToken({
       provider: "google",
       token: idToken,
+      ...(nonce ? { nonce } : {}),
     });
     if (error) {
       sessionStorage.removeItem("safespace_auth_return_to");
