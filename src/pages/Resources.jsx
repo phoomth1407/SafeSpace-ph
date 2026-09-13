@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Loader2, Phone, AlertCircle, ExternalLink, BookOpen, Heart } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import ResourceCard from "@/components/ResourceCard";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
@@ -52,7 +52,7 @@ export default function Resources() {
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await base44.entities.EmergencyResource.list();
+        const data = await appClient.entities.EmergencyResource.list();
         setResources(data.length ? data : (defaultHotlines[lang] || defaultHotlines.th));
       } catch (err) {
         setResources([]);
