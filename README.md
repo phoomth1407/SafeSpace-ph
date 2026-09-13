@@ -33,6 +33,10 @@ npm run dev
 
 Vite will print the local development URL in the terminal.
 
+# Website URL
+
+https://phoomth1407.github.io/SafeSpace-ph
+
 ## Supabase
 
 The frontend uses Supabase for:
