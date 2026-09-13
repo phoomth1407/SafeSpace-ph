@@ -96,6 +96,26 @@ export default function AssessmentResult() {
         </div>
       </div>
 
+      {/* AI analysis */}
+      {result.depression_chance && (
+        <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center">
+              <div className="text-purple-300 text-sm font-bold">AI</div>
+            </div>
+            <h2 className="text-sm font-semibold text-slate-100">AI วิเคราะห์ความเสี่ยง</h2>
+          </div>
+          <div className="text-xs text-slate-500 mb-1">แนวโน้มจากแบบประเมิน</div>
+          <p className="text-sm text-slate-300 leading-relaxed">{result.depression_chance}</p>
+          {result.similar_case && (
+            <>
+              <div className="text-xs text-slate-500 mt-4 mb-1">ปัจจัยที่สะท้อนจากคำตอบ</div>
+              <p className="text-sm text-slate-300 leading-relaxed">{result.similar_case}</p>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Summary */}
       <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
         <div className="flex items-center gap-2 mb-3">
