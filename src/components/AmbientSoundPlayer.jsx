@@ -36,32 +36,57 @@ function createChannel(ctx, id) {
   if (id === "bowl") {
     const osc = ctx.createOscillator();
     const g = ctx.createGain();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+
     osc.type = "sine";
     osc.frequency.value = 432;
-    g.gain.value = 0.02;
+    g.gain.value = 0.035;
+
+    lfo.type = "sine";
+    lfo.frequency.value = 0.18;
+    lfoGain.gain.value = 0.012;
+
+    lfo.connect(lfoGain);
+    lfoGain.connect(g.gain);
     osc.connect(g);
     g.connect(gain);
+
     osc.start();
-    return { input: gain, gain, nodes: [osc, g] };
+    lfo.start();
+    return { input: gain, gain, nodes: [osc, g, lfo, lfoGain] };
   }
 
   if (id === "lofi") {
     const master = ctx.createGain();
-    master.gain.value = 0.05;
+    const tone = ctx.createOscillator();
+    const toneGain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    master.gain.value = 0.08;
+    filter.type = "lowpass";
+    filter.frequency.value = 1800;
+    tone.type = "triangle";
+    tone.frequency.value = 220;
+    toneGain.gain.value = 0.35;
+
+    tone.connect(toneGain);
+    toneGain.connect(filter);
+    filter.connect(master);
     master.connect(gain);
-    [261.63, 329.63, 392].forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      const g = ctx.createGain();
-      osc.type = i === 0 ? "triangle" : "sine";
-      osc.frequency.value = f;
-      g.gain.value = 0.35;
-      osc.connect(g);
-      g.connect(master);
-      osc.start();
-      master.gain.setTargetAtTime(0.05, ctx.currentTime, 0.5);
-      if (i === 2) master.gain.setTargetAtTime(0.035, ctx.currentTime + 6, 3);
-    });
-    return { input: gain, gain, nodes: [master] };
+
+    tone.start();
+
+    // Very slow pitch movement keeps the pad alive without sounding like a fixed tone.
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.035;
+    lfoGain.gain.value = 35;
+    lfo.connect(lfoGain);
+    lfoGain.connect(tone.frequency);
+    lfo.start();
+
+    return { input: gain, gain, nodes: [tone, toneGain, filter, master, lfo, lfoGain] };
   }
 
   if (id === "fire") {
@@ -95,17 +120,20 @@ function createChannel(ctx, id) {
   filter.Q.value = id === "ocean" ? 0.7 : 0.2;
 
   const lfo = ctx.createOscillator();
-  const lfoGain = ctx.createGain();
+  const lfoDepth = ctx.createGain();
   lfo.frequency.value = id === "ocean" ? 0.08 : id === "forest" ? 0.05 : 0.18;
-  lfoGain.gain.value = id === "ocean" ? 0.5 : 0.28;
-  lfo.connect(lfoGain);
-  lfoGain.connect(gain.gain);
+
+  // Modulate the filter instead of the output gain so volume=0 is truly silent.
+  lfoDepth.gain.value = id === "ocean" ? 220 : 140;
+  lfo.connect(lfoDepth);
+  lfoDepth.connect(filter.frequency);
+
   noise.connect(filter);
   filter.connect(gain);
   noise.start();
   lfo.start();
 
-  return { input: gain, gain, nodes: [noise, filter, lfo, lfoGain] };
+  return { input: gain, gain, nodes: [noise, filter, lfo, lfoDepth] };
 }
 
 export default function AmbientSoundPlayer() {
