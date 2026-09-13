@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
 import CommunityPostCard from "@/components/CommunityPostCard";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
@@ -34,7 +34,7 @@ export default function Community() {
   const loadPosts = async () => {
     setLoading(true);
     try {
-      const data = await base44.entities.CommunityPost.list("-created_date", 50);
+      const data = await appClient.entities.CommunityPost.list("-created_date", 50);
       setPosts(data);
     } catch (err) {
       setError(t("community.error"));
@@ -52,7 +52,7 @@ export default function Community() {
 
   const handleDeletePost = async (id) => {
     try {
-      await base44.entities.CommunityPost.delete(id);
+      await appClient.entities.CommunityPost.delete(id);
       setPosts(posts.filter((p) => p.id !== id));
       if (focusedPostId === id) setFocusedPostId(null);
     } catch (err) {
@@ -68,7 +68,7 @@ export default function Community() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await base44.functions.invoke("analyzeCommunityPost", {
+      const res = await appClient.functions.invoke("analyzeCommunityPost", {
         content: content.trim(),
         category,
         author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
@@ -98,7 +98,7 @@ export default function Community() {
     setSubmitting(true);
     setError(null);
     try {
-      await base44.entities.CommunityPost.create({
+      await appClient.entities.CommunityPost.create({
         content: content.trim(),
         category: "other",
         is_announcement: true,
