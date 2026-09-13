@@ -578,7 +578,7 @@ const translations = {
     "worry.releasedTitle": "You can set it down for a moment",
     "worry.releaseMessage.lantern": "Imagine this thought slowly floating away from you. You do not have to solve everything right now.",
     "worry.releaseMessage.leaves": "Let the thought pass like a leaf in the breeze. You can bring your attention back to what is in front of you.",
-    "worry.releaseMessage.stardust": "Let the thought become tiny points of light and fade from view. It is okay to take a short break from it.",,
+    "worry.releaseMessage.stardust": "Let the thought become tiny points of light and fade from view. It is okay to take a short break from it.",
 
     "assess.guest.notice": "Guest mode — your result is saved anonymously",
     "assess.guest.notice.login": "Log in",
