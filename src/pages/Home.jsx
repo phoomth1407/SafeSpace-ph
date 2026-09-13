@@ -47,7 +47,7 @@ export default function Home() {
 
           <motion.h1
             variants={fadeUp}
-            className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 leading-tight"
+            className="text-3xl md:text-5xl font-bold text-slate-100 leading-tight"
           >
             {t("home.title1")}
             <br />
@@ -60,7 +60,7 @@ export default function Home() {
             </motion.span>
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="text-sm text-slate-600 dark:text-slate-400 mt-4 max-w-md mx-auto leading-relaxed">
+          <motion.p variants={fadeUp} className="text-sm text-slate-400 mt-4 max-w-md mx-auto leading-relaxed">
             {t("home.subtitle")}
           </motion.p>
 
@@ -68,7 +68,7 @@ export default function Home() {
             <MagneticButton>
               <Link
                 to="/assessment"
-                className="group !bg-slate-900 !text-white dark:!bg-slate-100 dark:!text-slate-900 text-sm font-semibold px-6 py-3 rounded-full hover:!bg-slate-800 dark:hover:!bg-white transition-colors flex items-center gap-2 shadow-lg shadow-slate-900/20"
+                className="group bg-slate-100 text-slate-900 text-sm font-semibold px-6 py-3 rounded-full hover:bg-white transition-colors flex items-center gap-2 shadow-lg shadow-slate-900/40"
               >
                 <ClipboardList className="w-4 h-4" />
                 {t("home.cta.assessment")}
@@ -78,7 +78,7 @@ export default function Home() {
             <MagneticButton>
               <Link
                 to="/community"
-                className="!bg-slate-900 !text-slate-100 dark:!bg-slate-900 dark:!text-slate-200 text-sm font-semibold px-6 py-3 rounded-full border border-slate-700 hover:!bg-slate-800 transition-colors flex items-center gap-2"
+                className="bg-slate-900 text-slate-200 text-sm font-semibold px-6 py-3 rounded-full border border-slate-700 hover:bg-slate-800 transition-colors flex items-center gap-2"
               >
                 <Users className="w-4 h-4" />
                 {t("home.cta.community")}
@@ -100,7 +100,7 @@ export default function Home() {
       >
         <button
           onClick={() => setBreathingOpen(true)}
-          className="w-full text-left !bg-white dark:!bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-sky-300/60 dark:hover:border-sky-500/30 transition-colors group"
+          className="w-full text-left bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-sky-300/60 dark:hover:border-sky-500/30 transition-colors group"
         >
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
@@ -131,12 +131,12 @@ export default function Home() {
           <motion.div
             key={i}
             variants={fadeUp}
-            className="!bg-white dark:!bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 text-center"
+            className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800 text-center"
           >
             <div className={`w-9 h-9 rounded-xl ${stat.color} flex items-center justify-center mx-auto mb-2`}>
               <stat.icon className="w-4.5 h-4.5" />
             </div>
-            <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
+            <div className="text-xl font-bold text-slate-100">
               <AnimatedCounter value={stat.value} suffix={stat.suffix} />
             </div>
             <div className="text-[10px] text-slate-500 mt-0.5">{stat.label}</div>
@@ -152,7 +152,7 @@ export default function Home() {
         transition={{ duration: 0.5 }}
       >
         <div className="text-center mb-4">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("home.why.title")}</h2>
+          <h2 className="text-lg font-semibold text-slate-100">{t("home.why.title")}</h2>
           <p className="text-xs text-slate-500 mt-1">{t("home.why.subtitle")}</p>
         </div>
         <StatsDashboard />
@@ -175,7 +175,7 @@ export default function Home() {
             <TiltCard className="h-full">
               <Link
                 to={feature.to}
-                className="group block !bg-white dark:!bg-slate-900/60 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors h-full"
+                className="group block bg-slate-900/60 rounded-2xl p-6 border border-slate-800 hover:border-slate-700 transition-colors h-full"
               >
                 <div
                   style={{ transform: "translateZ(40px)" }}
@@ -185,7 +185,7 @@ export default function Home() {
                 </div>
                 <h3
                   style={{ transform: "translateZ(30px)" }}
-                  className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-1"
+                  className="text-base font-semibold text-slate-100 mb-1"
                 >
                   {feature.title}
                 </h3>
@@ -211,7 +211,7 @@ export default function Home() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.5 }}
-        className="relative !bg-white dark:!bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 rounded-3xl p-8 text-center overflow-hidden border border-slate-200 dark:border-slate-800"
+        className="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-center overflow-hidden border border-slate-800"
       >
         <motion.div
           animate={{ rotate: 360 }}
@@ -225,12 +225,12 @@ export default function Home() {
         />
         <div className="relative">
           <Sparkles className="w-8 h-8 text-rose-300 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{t("home.cta2.title")}</h2>
+          <h2 className="text-xl font-semibold text-slate-100">{t("home.cta2.title")}</h2>
           <p className="text-xs text-slate-400 mt-2 mb-5">{t("home.cta2.subtitle")}</p>
           <MagneticButton>
             <Link
               to="/assessment"
-              className="group inline-flex items-center gap-2 !bg-slate-900 !text-white dark:!bg-slate-100 dark:!text-slate-900 text-sm font-semibold px-6 py-3 rounded-full hover:!bg-slate-800 dark:hover:!bg-white transition-colors"
+              className="group inline-flex items-center gap-2 bg-slate-100 text-slate-900 text-sm font-semibold px-6 py-3 rounded-full hover:bg-white transition-colors"
             >
               {t("home.cta2.button")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
