@@ -4,6 +4,8 @@ import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, 
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import CommunityPostCard from "@/components/CommunityPostCard";
+import BreathingExerciseModal from "@/components/BreathingExerciseModal";
+import GroundingModal from "@/components/GroundingModal";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
 
@@ -26,6 +28,8 @@ export default function Community() {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
   const [focusedPostId, setFocusedPostId] = useState(null);
+  const [breathingOpen, setBreathingOpen] = useState(false);
+  const [groundingOpen, setGroundingOpen] = useState(false);
 
   const loadPosts = async () => {
     setLoading(true);
@@ -207,6 +211,24 @@ export default function Community() {
         </button>
       </div>
 
+      {/* Quick wellbeing tools */}
+      {!focusedPostId && (
+        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">{t("community.quickTitle")}</h2>
+          <div className="grid grid-cols-3 gap-2">
+            <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-sky-300 dark:hover:border-sky-500/30">
+              🫧 {t("community.quickBreath")}
+            </button>
+            <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-emerald-300 dark:hover:border-emerald-500/30">
+              🌿 {t("community.quickGround")}
+            </button>
+            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-300 hover:border-violet-300 dark:hover:border-violet-500/30">
+              🎧 {t("community.quickSound")}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Banned notice */}
       {isAuthenticated && isBanned && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-center flex items-center justify-center gap-2">
@@ -350,6 +372,8 @@ export default function Community() {
           ))
         )}
       </div>
+      <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
+      <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
     </div>
   );
 }
