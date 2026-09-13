@@ -59,34 +59,39 @@ function createChannel(ctx, id) {
 
   if (id === "lofi") {
     const master = ctx.createGain();
-    const tone = ctx.createOscillator();
-    const toneGain = ctx.createGain();
     const filter = ctx.createBiquadFilter();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    const nodes = [master, filter, lfo, lfoGain];
 
-    master.gain.value = 0.08;
+    // A soft four-note chord pad that is clearly audible but still stays gentle.
     filter.type = "lowpass";
-    filter.frequency.value = 1800;
-    tone.type = "triangle";
-    tone.frequency.value = 220;
-    toneGain.gain.value = 0.35;
+    filter.frequency.value = 1400;
+    master.gain.value = 0.22;
 
-    tone.connect(toneGain);
-    toneGain.connect(filter);
+    [220, 261.63, 329.63, 392].forEach((frequency, index) => {
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      osc.type = index === 0 ? "triangle" : "sine";
+      osc.frequency.value = frequency;
+      oscGain.gain.value = index === 0 ? 0.24 : 0.16;
+      osc.connect(oscGain);
+      oscGain.connect(filter);
+      osc.start();
+      nodes.push(osc, oscGain);
+    });
+
     filter.connect(master);
     master.connect(gain);
 
-    tone.start();
-
-    // Very slow pitch movement keeps the pad alive without sounding like a fixed tone.
-    const lfo = ctx.createOscillator();
-    const lfoGain = ctx.createGain();
-    lfo.frequency.value = 0.035;
-    lfoGain.gain.value = 35;
+    // Very slow movement adds warmth without pumping the volume up and down.
+    lfo.frequency.value = 0.028;
+    lfoGain.gain.value = 16;
     lfo.connect(lfoGain);
-    lfoGain.connect(tone.frequency);
+    lfoGain.connect(filter.frequency);
     lfo.start();
 
-    return { input: gain, gain, nodes: [tone, toneGain, filter, master, lfo, lfoGain] };
+    return { input: gain, gain, nodes };
   }
 
   if (id === "fire") {
@@ -218,7 +223,7 @@ export default function AmbientSoundPlayer() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={t("sound.title")}
-        className="fixed right-4 bottom-20 md:bottom-6 z-[60] w-12 h-12 rounded-full bg-slate-900 text-white shadow-lg border border-slate-700 flex items-center justify-center hover:scale-105 transition-transform"
+        className="fixed right-4 bottom-20 md:bottom-6 z-[60] w-12 h-12 rounded-full !bg-white dark:!bg-slate-900 !text-slate-900 dark:!text-white shadow-lg border border-slate-300 dark:border-slate-700 flex items-center justify-center hover:scale-105 transition-transform"
       >
         {open ? <ChevronUp className="w-5 h-5" /> : <Headphones className="w-5 h-5" />}
       </button>
@@ -228,12 +233,10 @@ export default function AmbientSoundPlayer() {
           <div className="flex items-center justify-between gap-3 mb-3">
             <div>
               <h3 className="font-semibold !text-slate-900 dark:!text-slate-100">{t("sound.title")}</h3>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400">{t("sound.subtitle")}</p>
             </div>
             <button onClick={() => setOpen(false)} className="text-slate-500"><X className="w-4 h-4" /></button>
           </div>
 
-          <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-2">{t("sound.howTo")}</p>
           <div className="grid grid-cols-2 gap-2 mb-3">
             {Object.entries(PRESETS).map(([id]) => {
               const preset = PRESETS[id];
