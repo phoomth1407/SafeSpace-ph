@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
+import { getPhq9BandLabel } from "@/lib/phq9";
 
 export default function History() {
   const { isAuthenticated } = useAuth();
@@ -67,11 +68,16 @@ export default function History() {
   // Trend data (oldest → newest)
   const trendData = [...assessments]
     .sort((a, b) => new Date(a.created_date) - new Date(b.created_date))
-    .map((a) => ({
-      score: a.risk_score || 0,
-      date: new Date(a.created_date).toLocaleDateString(lang === "en" ? "en-US" : "th-TH", { day: "numeric", month: "short" }),
-      risk: a.risk_level,
-    }));
+    .map((a) => {
+      const isPhq9 = a.screening_type === "phq9" || a.phq9_score !== undefined;
+      const phqScore = isPhq9 ? Math.max(0, Math.min(27, Math.round(Number(a.phq9_score) || 0))) : null;
+      return {
+        score: isPhq9 ? Math.round((phqScore / 27) * 100) : (Number(a.risk_score) || 0),
+        date: new Date(a.created_date).toLocaleDateString(lang === "en" ? "en-US" : "th-TH", { day: "numeric", month: "short" }),
+        risk: isPhq9 ? a.phq9_band : a.risk_level,
+        isPhq9,
+      };
+    });
 
   // Trend direction (lower score = better/improving)
   let trend = "stable";
@@ -153,7 +159,12 @@ export default function History() {
           {/* Assessment list */}
           <div className="space-y-3">
             {assessments.map((a) => {
-              const risk = riskConfig[a.risk_level] || riskConfig.moderate;
+              const isPhq9 = a.screening_type === "phq9" || a.phq9_score !== undefined;
+              const phqScore = isPhq9 ? Math.max(0, Math.min(27, Math.round(Number(a.phq9_score) || 0))) : null;
+              const risk = isPhq9
+                ? { label: getPhq9BandLabel(phqScore, lang), color: "text-purple-300 bg-purple-500/10" }
+                : (riskConfig[a.risk_level] || riskConfig.moderate);
+              const displayScore = isPhq9 ? phqScore + "/27" : String(Number(a.risk_score) || 0);
               return (
                 <Link
                   key={a.id}
@@ -166,9 +177,9 @@ export default function History() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className={`text-xs px-2 py-0.5 rounded-full ${risk.color}`}>{risk.label}</span>
-                      <span className="text-xs text-slate-500">{a.risk_score || 0}</span>
+                      <span className="text-xs text-slate-500">{displayScore}</span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">{a.ai_summary}</p>
+                    <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">{isPhq9 ? (a.phq9_ai_summary || a.ai_summary || "") : (a.ai_summary || "")}</p>
                     <div className="flex items-center gap-1 mt-1.5 text-[10px] text-slate-600">
                       <Calendar className="w-3 h-3" />
                       {new Date(a.created_date).toLocaleDateString(lang === "en" ? "en-US" : "th-TH", { day: "numeric", month: "short", year: "numeric" })}
