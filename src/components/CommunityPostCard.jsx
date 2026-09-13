@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Heart, Trash2, Loader2, TrendingUp, Megaphone } from "lucide-react";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import CommentSection from "@/components/CommentSection";
 import ReportButton from "@/components/ReportButton";
 import BanModal from "@/components/BanModal";
@@ -62,7 +62,7 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
   const handleInteract = async (action) => {
     setInteracting(action);
     try {
-      const res = await base44.functions.invoke("communityInteract", { post_id: post.id, action });
+      const res = await appClient.functions.invoke("communityInteract", { post_id: post.id, action });
       const data = res.data;
       if (data?.error) return;
       setHearts(data.hearts);
