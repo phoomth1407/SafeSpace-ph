@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ClipboardList, Users, Phone, ArrowRight, Heart, ShieldCheck, Sparkles, Brain, TrendingUp } from "lucide-react";
 import StatsDashboard from "@/components/StatsDashboard";
 import MoodCheckInCard from "@/components/MoodCheckInCard";
+import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import TiltCard from "@/components/TiltCard";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
@@ -21,6 +22,7 @@ const stagger = {
 
 export default function Home() {
   const { t } = useTranslation();
+  const [breathingOpen, setBreathingOpen] = useState(false);
 
   return (
     <div className="space-y-12">
@@ -88,6 +90,30 @@ export default function Home() {
 
       {/* Daily mood check-in */}
       <MoodCheckInCard />
+
+      {/* Guided breathing */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        className="relative"
+      >
+        <button
+          onClick={() => setBreathingOpen(true)}
+          className="w-full text-left bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-sky-300/60 dark:hover:border-sky-500/30 transition-colors group"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+              🫧
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{t("breath.title")}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("breath.subtitle")}</p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </button>
+      </motion.section>
 
       {/* Quick stats */}
       <motion.section
@@ -212,6 +238,7 @@ export default function Home() {
           </MagneticButton>
         </div>
       </motion.section>
+      <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
     </div>
   );
 }
