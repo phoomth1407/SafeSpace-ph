@@ -168,7 +168,7 @@ export default function AssessmentResult() {
             <a href="tel:1327" className="flex-1 bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-200 text-sm font-semibold px-4 py-2.5 rounded-xl text-center hover:bg-red-500/30 transition-colors border border-red-500/30">
               {t("result.emergency.call1")}
             </a>
-            <a href="tel:1667" className="flex-1 bg-red-500/20 text-red-200 text-sm font-semibold px-4 py-2.5 rounded-xl text-center hover:bg-red-500/30 transition-colors border border-red-500/30">
+            <a href="tel:1667" className="flex-1 bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-200 text-sm font-semibold px-4 py-2.5 rounded-xl text-center hover:bg-red-200 dark:hover:bg-red-500/30 transition-colors border border-red-200 dark:border-red-500/30">
               {t("result.emergency.call2")}
             </a>
           </div>
