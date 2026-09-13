@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Loader2, Send, MessageCircle, ChevronDown } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 import CommentItem from "@/components/CommentItem";
 
@@ -17,7 +17,7 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
   const loadComments = async () => {
     setLoading(true);
     try {
-      const data = await base44.entities.CommunityComment.filter({ post_id: post.id }, "created_date", 100);
+      const data = await appClient.entities.CommunityComment.filter({ post_id: post.id }, "created_date", 100);
       setComments(data);
     } catch (err) {
       setComments([]);
@@ -38,7 +38,7 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
     setSubmitting(true);
     setError(null);
     try {
-      const res = await base44.functions.invoke("createComment", {
+      const res = await appClient.functions.invoke("createComment", {
         post_id: post.id,
         content: content.trim(),
         author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
@@ -60,7 +60,7 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
 
   const handleDelete = async (commentId) => {
     try {
-      await base44.entities.CommunityComment.delete(commentId);
+      await appClient.entities.CommunityComment.delete(commentId);
       setComments(comments.filter((c) => c.id !== commentId));
     } catch (err) {
       alert(t("community.deleteCommentError"));
