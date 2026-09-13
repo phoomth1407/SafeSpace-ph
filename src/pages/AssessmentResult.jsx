@@ -86,7 +86,7 @@ export default function AssessmentResult() {
       {/* Risk summary card */}
       <div className={`rounded-2xl p-6 border ${risk.bg}`}>
         <div className="text-center">
-          <div className="text-xs !text-black dark:!text-black mb-1">{t("result.yourResult")}</div>
+          <div className="text-xs text-black dark:text-slate-400 mb-1">{t("result.yourResult")}</div>
           <h1 className={`text-2xl font-bold ${risk.color}`}>{risk.label}</h1>
           <div className="mt-4 mx-auto max-w-xs">
             <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -95,7 +95,7 @@ export default function AssessmentResult() {
                 style={{ width: `${score}%` }}
               />
             </div>
-            <div className="text-xs !text-black dark:!text-black mt-1.5">{t("result.riskScore")}: {score}/100</div>
+            <div className="text-xs text-black dark:text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div>
           </div>
         </div>
       </div>
@@ -109,11 +109,11 @@ export default function AssessmentResult() {
             </div>
             <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.aiAnalysis")}</h2>
           </div>
-          <div className="text-xs !text-black dark:!text-black mb-1">{t("result.trend")}</div>
-          <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.depression_chance}</p>
+          <div className="text-xs text-black dark:text-slate-400 mb-1">{t("result.trend")}</div>
+          <p className="text-sm text-black dark:text-slate-300 leading-relaxed">{result.depression_chance}</p>
           {result.similar_case && (
             <>
-              <div className="text-xs !text-black dark:!text-black mt-4 mb-1">{t("result.factors")}</div>
+              <div className="text-xs text-black dark:text-slate-400 mt-4 mb-1">{t("result.factors")}</div>
               <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.similar_case}</p>
             </>
           )}
@@ -149,7 +149,7 @@ export default function AssessmentResult() {
           </div>
           <ul className="space-y-2">
             {result.recommendations.map((rec, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm !text-black dark:!text-black leading-relaxed">
+              <li key={i} className="flex items-start gap-2 text-sm text-black dark:text-slate-300 leading-relaxed">
                 <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-800 !text-black dark:!text-black text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                 <span>{rec}</span>
               </li>
@@ -166,13 +166,13 @@ export default function AssessmentResult() {
           </div>
           <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.nextTitle")}</h2>
         </div>
-        <p className="text-xs !text-black dark:!text-black mb-3">{t("result.nextDesc")}</p>
+        <p className="text-xs text-black dark:text-slate-400 mb-3">{t("result.nextDesc")}</p>
 
         <div className="grid sm:grid-cols-2 gap-2.5">
           <button onClick={() => setBreathingOpen(true)} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-sky-300 dark:hover:border-sky-500/30 transition-colors">
             <Wind className="w-4 h-4 text-sky-700 dark:text-sky-300 mb-2" />
             <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextBreath")}</div>
-            <div className="text-xs !text-black dark:!text-black mt-1">{t("result.nextBreathDesc")}</div>
+            <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextBreathDesc")}</div>
           </button>
           <button onClick={() => setGroundingOpen(true)} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-emerald-300 dark:hover:border-emerald-500/30 transition-colors">
             <Sprout className="w-4 h-4 text-emerald-700 dark:text-emerald-300 mb-2" />
