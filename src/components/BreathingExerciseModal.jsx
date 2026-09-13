@@ -99,7 +99,7 @@ export default function BreathingExerciseModal({ open, onClose }) {
           <div className="w-11 h-11 rounded-2xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center mx-auto mb-3">
             <Wind className="w-5 h-5 text-sky-700 dark:text-sky-300" />
           </div>
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{t("breath.title")}</h2>
+          <h2 className="text-xl font-semibold !text-slate-900 dark:!text-slate-100">{t("breath.title")}</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("breath.subtitle")}</p>
         </div>
 
@@ -140,7 +140,7 @@ export default function BreathingExerciseModal({ open, onClose }) {
 
         <button
           onClick={() => setRunning((v) => !v)}
-          className="w-full mt-4 h-12 rounded-2xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 border border-slate-800 dark:border-slate-200/20 font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-white transition-colors shadow-sm"
+          className="w-full mt-4 h-12 rounded-2xl !bg-slate-900 !text-white dark:!bg-slate-100 dark:!text-slate-900 border border-slate-800 dark:border-slate-200/20 font-semibold flex items-center justify-center gap-2 hover:!bg-slate-800 dark:hover:!bg-white transition-colors shadow-sm"
         >
           {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           {running ? t("breath.pause") : t("breath.start")}
