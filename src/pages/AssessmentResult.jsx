@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Phone, Lightbulb, AlertTriangle, Heart, RotateCcw } from "lucide-react";
+import { ArrowLeft, Loader2, Phone, Lightbulb, AlertTriangle, Heart, RotateCcw, Wind, Sprout, Users, BookOpen } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useTranslation } from "@/lib/i18n";
+import BreathingExerciseModal from "@/components/BreathingExerciseModal";
+import GroundingModal from "@/components/GroundingModal";
 
 export default function AssessmentResult() {
   const { id } = useParams();
@@ -12,6 +14,8 @@ export default function AssessmentResult() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [breathingOpen, setBreathingOpen] = useState(false);
+  const [groundingOpen, setGroundingOpen] = useState(false);
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -154,6 +158,40 @@ export default function AssessmentResult() {
         </div>
       )}
 
+            {/* Next-step tools */}
+      <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-2 mb-1">
+          <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
+            <Lightbulb className="w-4 h-4 text-sky-700 dark:text-sky-300" />
+          </div>
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextTitle")}</h2>
+        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">{t("result.nextDesc")}</p>
+
+        <div className="grid sm:grid-cols-2 gap-2.5">
+          <button onClick={() => setBreathingOpen(true)} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-sky-300 dark:hover:border-sky-500/30 transition-colors">
+            <Wind className="w-4 h-4 text-sky-700 dark:text-sky-300 mb-2" />
+            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextBreath")}</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("result.nextBreathDesc")}</div>
+          </button>
+          <button onClick={() => setGroundingOpen(true)} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-emerald-300 dark:hover:border-emerald-500/30 transition-colors">
+            <Sprout className="w-4 h-4 text-emerald-700 dark:text-emerald-300 mb-2" />
+            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextGround")}</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("result.nextGroundDesc")}</div>
+          </button>
+          <Link to="/community" className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-violet-300 dark:hover:border-violet-500/30 transition-colors">
+            <Users className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />
+            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextCommunity")}</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("result.nextCommunityDesc")}</div>
+          </Link>
+          <Link to="/resources" className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-amber-300 dark:hover:border-amber-500/30 transition-colors">
+            <BookOpen className="w-4 h-4 text-amber-700 dark:text-amber-300 mb-2" />
+            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextResources")}</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("result.nextResourcesDesc")}</div>
+          </Link>
+        </div>
+      </div>
+
       {/* Emergency alert for high risk */}
       {isHighRisk && (
         <div className="bg-red-50 dark:bg-red-500/10 rounded-2xl p-5 border border-red-200 dark:border-red-500/20">
@@ -210,6 +248,8 @@ export default function AssessmentResult() {
           {t("result.hotlines")}
         </Link>
       </div>
+      <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
+      <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
     </div>
   );
 }
