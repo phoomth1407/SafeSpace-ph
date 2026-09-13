@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Bug, Zap, HelpCircle, MessageSquare, Mail, Send, Loader2, Check, ArrowLeft, LogIn } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 
@@ -27,7 +27,7 @@ export default function ContactAdmin() {
     setSubmitting(true);
     setError(null);
     try {
-      await base44.entities.ContactRequest.create({
+      await appClient.entities.ContactRequest.create({
         type,
         subject: subject.trim(),
         message: message.trim(),
