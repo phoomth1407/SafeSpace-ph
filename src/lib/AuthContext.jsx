@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { supabase } from "@/lib/supabaseClient";
 
 const AuthContext = createContext();
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const u = await base44.auth.me();
+      const u = await appClient.auth.me();
       setUser(u);
       setIsAuthenticated(!!u);
       setAuthError(null);
@@ -64,12 +64,12 @@ export const AuthProvider = ({ children }) => {
   }, [checkUserAuth]);
 
   const logout = async () => {
-    await base44.auth.logout();
+    await appClient.auth.logout();
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  const navigateToLogin = () => base44.auth.redirectToLogin(window.location.hash.replace(/^#/, "") || "/");
+  const navigateToLogin = () => appClient.auth.redirectToLogin(window.location.hash.replace(/^#/, "") || "/");
 
   return (
     <AuthContext.Provider
