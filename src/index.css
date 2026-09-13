@@ -190,7 +190,7 @@
 .theme-light .border-rose-500\/20 { border-color: #fecdd3 !important; }
 
 /* Buttons that use dark text on light bg → flip to light text */
-.theme-light .text-slate-900 { color: #f1f5f9 !important; }
+.theme-light .text-slate-900 { color: #0f172a !important; }
 .theme-light .hover\:text-slate-200:hover { color: #1e293b !important; }
 .theme-light .hover\:text-slate-300:hover { color: #334155 !important; }
 
