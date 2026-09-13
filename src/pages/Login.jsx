@@ -128,7 +128,7 @@ export default function Login() {
               {t("auth.loggingIn")}
             </>
           ) : (
-            {t("auth.login")}
+            t("auth.login")
           )}
         </Button>
       </form>
