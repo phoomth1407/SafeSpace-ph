@@ -105,19 +105,11 @@ async function localGuestAssessment(payload) {
 
 const invoke = async (name, payload = {}) => {
   if (name === "analyzeAssessment") {
-    // Baseline mode: no AI/server analysis. Use the deterministic local scorer.
-    const scored = await localGuestAssessment(payload);
     const authUser = await currentAuthUser();
-    if (!authUser) return { data: scored };
-
-    const saved = await entities.Assessment.create({
-      ...scored,
-      is_guest: false,
-      age: payload.age || null,
-      nationality: payload.nationality || null,
-      created_by_id: authUser.id,
-    });
-    return { data: { ...saved, is_guest: false } };
+    if (!authUser) return { data: await localGuestAssessment(payload) };
+    const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
+    if (error) throw error;
+    return { data: { ...(data || {}), is_guest: false } };
   }
 
   if (name === "analyzeCommunityPost") {
