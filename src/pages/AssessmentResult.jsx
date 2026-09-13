@@ -6,6 +6,7 @@ import { base44 } from "@/api/base44Client";
 import { useTranslation } from "@/lib/i18n";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
+import WorryReleaseModal from "@/components/WorryReleaseModal";
 
 export default function AssessmentResult() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ export default function AssessmentResult() {
   const [error, setError] = useState(null);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
+  const [worryOpen, setWorryOpen] = useState(false);
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -161,55 +163,78 @@ export default function AssessmentResult() {
         </div>
       )}
 
-            {/* Next-step tools */}
+            {/* Personalized next steps */}
       <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-2 mb-1">
           <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
             <Lightbulb className="w-4 h-4 text-sky-700 dark:text-sky-300" />
           </div>
-          <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.nextTitle")}</h2>
+          <h2 className="text-sm font-semibold !text-black dark:!text-white">{t("result.personalized")}</h2>
         </div>
-        <p className="text-xs text-black dark:text-slate-400 mb-3">{t("result.nextDesc")}</p>
-
+        <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">{t("result.personalizedReason")}</p>
         <div className="grid sm:grid-cols-2 gap-2.5">
-          <motion.button onClick={() => setBreathingOpen(true)} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }} transition={{ type: "spring", stiffness: 320, damping: 22 }} className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-sky-300 dark:hover:border-sky-500/30 transition-colors">
-            <Wind className="w-4 h-4 text-sky-700 dark:text-sky-300 mb-2" />
-            <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextBreath")}</div>
-            <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextBreathDesc")}</div>
-          </motion.button>
-          <motion.button
-            onClick={() => setGroundingOpen(true)}
-            whileHover={{ y: -3, scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            transition={{ type: "spring", stiffness: 320, damping: 22 }}
-            className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-emerald-300 dark:hover:border-emerald-500/30 transition-colors"
-          >
-            <Sprout className="w-4 h-4 text-emerald-700 dark:text-emerald-300 mb-2" />
-            <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextGround")}</div>
-            <div className="text-xs !text-black dark:!text-black mt-1">{t("result.nextGroundDesc")}</div>
-          </motion.button>
-          <motion.div
-            whileHover={{ y: -3, scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            transition={{ type: "spring", stiffness: 320, damping: 22 }}
-          >
-            <Link to="/community" className="block text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-violet-300 dark:hover:border-violet-500/30 transition-colors">
-              <Users className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />
-              <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextCommunity")}</div>
-              <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextCommunityDesc")}</div>
-            </Link>
-          </motion.div>
-          <motion.div
-            whileHover={{ y: -3, scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            transition={{ type: "spring", stiffness: 320, damping: 22 }}
-          >
-            <Link to="/resources" className="block text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-amber-300 dark:hover:border-amber-500/30 transition-colors">
-              <BookOpen className="w-4 h-4 text-amber-700 dark:text-amber-300 mb-2" />
-              <div className="text-sm font-semibold !text-black dark:!text-white">{t("result.nextResources")}</div>
-              <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextResourcesDesc")}</div>
-            </Link>
-          </motion.div>
+          {(Array.isArray(result.tool_recommendations) && result.tool_recommendations.length
+            ? result.tool_recommendations
+            : [
+                { id: "breath", reason: "" },
+                { id: "ground", reason: "" },
+                { id: "community", reason: "" },
+                { id: "resources", reason: "" },
+              ]
+          ).slice(0, 4).map((tool, index) => {
+            const common = "text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:shadow-md transition-all";
+            const title = t(`result.tool.${tool.id}`);
+            const reason = tool.reason || "";
+            const iconMap = {
+              breath: <Wind className="w-4 h-4 text-sky-700 dark:text-sky-300 mb-2" />,
+              ground: <Sprout className="w-4 h-4 text-emerald-700 dark:text-emerald-300 mb-2" />,
+              worry: <Heart className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />,
+              community: <Users className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />,
+              resources: <BookOpen className="w-4 h-4 text-amber-700 dark:text-amber-300 mb-2" />,
+              sound: <span className="text-base block mb-2">🎧</span>,
+            };
+
+            const content = (
+              <>
+                {iconMap[tool.id] || <Lightbulb className="w-4 h-4 text-slate-700 dark:text-slate-300 mb-2" />}
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</div>
+                {reason && <div className="text-xs text-slate-700 dark:text-slate-400 mt-1 leading-relaxed">{reason}</div>}
+              </>
+            );
+
+            if (tool.id === "community") {
+              return (
+                <motion.div key={tool.id + index} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }}>
+                  <Link to="/community" className={common + " block"}>{content}</Link>
+                </motion.div>
+              );
+            }
+            if (tool.id === "resources") {
+              return (
+                <motion.div key={tool.id + index} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }}>
+                  <Link to="/resources" className={common + " block"}>{content}</Link>
+                </motion.div>
+              );
+            }
+            if (tool.id === "sound") {
+              return (
+                <motion.button key={tool.id + index} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }} onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className={common}>{content}</motion.button>
+              );
+            }
+            if (tool.id === "worry") {
+              return (
+                <motion.button key={tool.id + index} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }} onClick={() => setWorryOpen(true)} className={common}>{content}</motion.button>
+              );
+            }
+            if (tool.id === "ground") {
+              return (
+                <motion.button key={tool.id + index} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }} onClick={() => setGroundingOpen(true)} className={common}>{content}</motion.button>
+              );
+            }
+            return (
+              <motion.button key={tool.id + index} whileHover={{ y: -3, scale: 1.015 }} whileTap={{ scale: 0.985 }} onClick={() => setBreathingOpen(true)} className={common}>{content}</motion.button>
+            );
+          })}
         </div>
       </div>
 
@@ -271,6 +296,7 @@ export default function AssessmentResult() {
       </div>
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
+      <WorryReleaseModal open={worryOpen} onClose={() => setWorryOpen(false)} />
     </div>
   );
 }
