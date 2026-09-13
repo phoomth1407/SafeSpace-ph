@@ -11,6 +11,7 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import GoogleOneTap from "@/components/GoogleOneTap";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -160,6 +161,8 @@ export default function Register() {
         <GoogleIcon className="w-5 h-5 mr-2" />
         Continue with Google
       </Button>
+
+      <GoogleOneTap returnTo={safeReturnTo()} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
