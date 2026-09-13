@@ -42,7 +42,7 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
   const catLabel = categoryLabels[post.category]?.[lang] || categoryLabels.other[lang];
   const risk = riskBadge[post.ai_risk_flag] || riskBadge.safe;
   const canDelete = isAdmin || isOwner;
-  const authorDisplay = post.author_name || (isAnnouncement ? "Admin" : t("community.anon"));
+  const authorDisplay = post.author_name || (isAnnouncement ? t("community.admin") : t("community.anon"));
 
   const handleDelete = async () => {
     if (!confirming) {
