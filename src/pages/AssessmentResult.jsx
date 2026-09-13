@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Phone, Lightbulb, AlertTriangle, Heart, RotateCcw, Brain } from "lucide-react";
+import { ArrowLeft, Loader2, Phone, Lightbulb, AlertTriangle, Heart, RotateCcw } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useTranslation } from "@/lib/i18n";
 
@@ -95,20 +95,6 @@ export default function AssessmentResult() {
           </div>
         </div>
       </div>
-
-      {/* Depression chance (AI) */}
-      {result.depression_chance && (
-        <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <Brain className="w-4 h-4 text-purple-300" />
-            </div>
-            <h2 className="text-sm font-semibold text-slate-100">{t("result.aiAnalysis")}</h2>
-          </div>
-          <div className="text-xs text-slate-500 mb-1">{t("result.depressionChance")}</div>
-          <p className="text-sm text-slate-300 leading-relaxed">{result.depression_chance}</p>
-        </div>
-      )}
 
       {/* Summary */}
       <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
