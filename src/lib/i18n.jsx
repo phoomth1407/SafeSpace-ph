@@ -52,6 +52,8 @@ const translations = {
     "auth.registrationFailed": "สมัครสมาชิกไม่สำเร็จ",
     "auth.invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
     "auth.oauthFailed": "เข้าสู่ระบบด้วย Google ไม่สำเร็จ",
+    "auth.google": "ดำเนินการต่อด้วย Google",
+    "auth.or": "หรือ",
 
     "lang.title": "SafeSpace",
     "lang.subtitle": "พื้นที่ปลอดภัยสำหรับใจคุณ — เลือกภาษาเพื่อเริ่มต้น",
@@ -379,6 +381,8 @@ const translations = {
     "auth.registrationFailed": "Registration failed",
     "auth.invalidCredentials": "Invalid email or password",
     "auth.oauthFailed": "Google sign-in failed",
+    "auth.google": "Continue with Google",
+    "auth.or": "or",
 
     "lang.title": "SafeSpace",
     "lang.subtitle": "A safe space for your heart — choose a language to begin",
