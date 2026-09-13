@@ -1,77 +1,110 @@
-# Base44 Project
+# SafeSpace
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+SafeSpace is a Vite + React web application focused on youth mental-health screening, supportive self-care tools, community support, and trusted resources.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+The current production stack is:
+
+- React + Vite
+- Supabase Auth
+- Supabase Postgres
+- Supabase Edge Functions
+- GitHub Pages for the frontend
+- OpenAI as the primary assessment-analysis provider
+- Gemini as the AI fallback when configured
+- A local rule-based fallback when both AI providers are unavailable
 
 ## Prerequisites
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
+- Node.js
+- npm
+- A configured Supabase project for authentication, database access, and Edge Functions
 
-See the [Base44 CLI docs](https://docs.base44.com/developers/references/cli/get-started/overview) if you want to run Base44 commands directly.
-
-## Run Locally
-
-Run the full local development environment from the project root:
+## Install
 
 ```bash
-base44 dev
+npm install
 ```
 
-`base44 dev` starts the local Base44 development backend and, when this app is configured for it, also starts the frontend dev server for you. Use the frontend URL printed by the command.
-
-For example, when the Base44 project config includes a `serveCommand`, `base44 dev` can launch the frontend too:
-
-```json5
-{
-  "site": {
-    "serveCommand": "npm run dev"
-  }
-}
-```
-
-In a Base44 project this lives in `base44/config.jsonc`.
-
-## Run Only The Frontend
-
-If you only want to work on the frontend against the hosted Base44 backend, run:
+## Run locally
 
 ```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+Vite will print the local development URL in the terminal.
 
-## Use The Hosted Backend
+## Supabase
 
-For frontend-only development, create or update `.env.local` in the project root:
+The frontend uses Supabase for:
 
-```bash
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=https://your-app.base44.app
+- Authentication
+- User profiles
+- Assessments and assessment history
+- Community posts and comments
+- Emergency resources
+- Edge Functions for AI analysis and community moderation
+
+The assessment AI Edge Function is:
+
+```
+analyze-assessment
 ```
 
-`VITE_BASE44_APP_ID` identifies the Base44 app.
+AI processing is designed as:
 
-`VITE_BASE44_APP_BASE_URL` tells the Base44 Vite plugin where to send local `/api` requests. Point it at your deployed Base44 app URL when you want the local frontend to use the hosted backend.
-
-When you use `base44 dev`, the command injects the local Base44 values for you, so `.env.local` is mainly needed for frontend-only workflows.
-
-## Publish Your Changes
-
-After pushing your changes to git, open the Base44 dashboard and publish the app:
-
-```bash
-base44 dashboard open
+```
+OpenAI
+  -> Gemini fallback
+  -> Local fallback
 ```
 
-## Docs & Support
+Gemini fallback requires the Supabase Edge Function secret:
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+```
+GEMINI_API_KEY
+```
 
-Base44 CLI command reference: [https://docs.base44.com/developers/references/cli/commands/introduction](https://docs.base44.com/developers/references/cli/commands/introduction)
+Other secrets such as the OpenAI API key must also remain in Supabase secret storage and must never be committed to the repository.
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+## Frontend features
+
+- Assessment with PHQ-9-related screening context
+- AI-assisted assessment analysis
+- Personalized next-step wellbeing tools
+- Daily Mood Check-in
+- Guided Breathing
+- 5-4-3-2-1 Grounding
+- Worry Release
+- Procedural Ambient Sound Mixer
+- Anonymous Community
+- Mental-health resources and hotlines
+- Assessment History and trend visualization
+- Thai and English language support
+- Light and Dark themes
+- Google OAuth and Google One Tap authentication
+
+## Legacy folder
+
+The `legacy/` directory contains archived files inherited from the original Base44 version of the project.
+
+These files are kept only for historical/reference purposes and are not part of the current production backend.
+
+The active application uses Supabase instead.
+
+## Deployment
+
+The frontend is deployed from the GitHub repository to GitHub Pages.
+
+Supabase Edge Functions are deployed to the connected Supabase project.
+
+Before deploying changes, verify:
+
+1. `npm run build` succeeds.
+2. GitHub Actions completes successfully.
+3. Supabase Edge Functions are deployed successfully.
+4. Light/Dark theme behavior is checked.
+5. Thai/English language behavior is checked.
+
+## Notes
+
+Assessment results are intended for screening and supportive guidance. They are not medical diagnoses.
