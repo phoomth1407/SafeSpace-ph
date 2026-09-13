@@ -4,6 +4,25 @@ import { base44 } from "@/api/base44Client";
 import ResourceCard from "@/components/ResourceCard";
 import { useTranslation } from "@/lib/i18n";
 
+const defaultHotlines = {
+  th: [
+    { id: "hotline-1327", phone: "1327", icon: "phone", name: "สายด่วนสุขภาพจิต 1327", description: "กรมสุขภาพจิต ให้คำปรึกษาปัญหาสุขภาพจิต ความเครียด ซึมเศร้า และการฆ่าตัวตาย โดยไม่คิดค่าใช้จ่าย", available_hours: "24 ชั่วโมง", category: "mental" },
+    { id: "hotline-1667", phone: "1667", icon: "phone", name: "สายด่วนเด็กและเยาวชน 1667", description: "ให้คำปรึกษาปัญหาเด็กและเยาวชน การถูกกลั่นแกล้ง ความรุนแรงในครอบครัว และปัญหาจิตใจ", available_hours: "24 ชั่วโมง", category: "youth" },
+    { id: "hotline-1323", phone: "1323", icon: "phone", name: "สถานบำบัดสุขภาพจิตเด็กและวัยรุ่น 1323", description: "ให้คำปรึกษาออนไลน์สำหรับเด็กและวัยรุ่น ปัญหาการเรียน ครอบครัว และจิตใจ", available_hours: "24 ชั่วโมง", category: "youth" },
+    { id: "hotline-1300", phone: "1300", icon: "phone", name: "สายด่วนผู้สูงอายุ 1300", description: "ให้คำปรึกษาและช่วยเหลือผู้สูงอายุ ปัญหาสุขภาพกาย สุขภาพใจ และการถูกทอดทิ้ง", available_hours: "24 ชั่วโมง", category: "general" },
+    { id: "hotline-1663", phone: "1663", icon: "phone", name: "สายด่วนเอดส์ 1663", description: "ให้คำปรึกษาเรื่องเอดส์ โรคติดต่อทางเพศสัมพันธ์ และการตรวจเลือด", available_hours: "จันทร์-ศุกร์ 8.00-20.00 น.", category: "general" },
+    { id: "hotline-1506", phone: "1506", icon: "phone", name: "สายด่วนกองทุนประกันสังคม 1506", description: "ตอบคำถามเรื่องประกันสังคม สิทธิการรักษาพยาบาล และเงินชดเชย", available_hours: "จันทร์-ศุกร์ 8.30-16.30 น.", category: "general" },
+  ],
+  en: [
+    { id: "hotline-1327", phone: "1327", icon: "phone", name: "Mental Health Hotline 1327", description: "Thailand Department of Mental Health support for mental health concerns, stress, depression, and crisis support", available_hours: "24 hours", category: "mental" },
+    { id: "hotline-1667", phone: "1667", icon: "phone", name: "Child & Youth Hotline 1667", description: "Support for children and young people facing bullying, family violence, and emotional concerns", available_hours: "24 hours", category: "youth" },
+    { id: "hotline-1323", phone: "1323", icon: "phone", name: "Child & Adolescent Mental Health 1323", description: "Online support for children and teenagers about school, family, and emotional concerns", available_hours: "24 hours", category: "youth" },
+    { id: "hotline-1300", phone: "1300", icon: "phone", name: "Elderly Support Hotline 1300", description: "Support for older adults with physical health, mental health, and neglect concerns", available_hours: "24 hours", category: "general" },
+    { id: "hotline-1663", phone: "1663", icon: "phone", name: "HIV / Sexual Health Hotline 1663", description: "Information and counseling about HIV, sexually transmitted infections, and testing", available_hours: "Mon-Fri 8:00-20:00", category: "general" },
+    { id: "hotline-1506", phone: "1506", icon: "phone", name: "Social Security Hotline 1506", description: "Questions about social security, healthcare rights, and compensation", available_hours: "Mon-Fri 8:30-16:30", category: "general" },
+  ],
+};
+
 const selfCareLinks = {
   th: [
     { title: "กรมสุขภาพจิต กระทรวงสาธารณสุข", url: "https://www.dmh.go.th", desc: "ข้อมูลและความรู้ด้านสุขภาพจิต วิธีดูแลตนเอง และแหล่งบริการให้คำปรึกษา" },
@@ -30,7 +49,7 @@ export default function Resources() {
     const load = async () => {
       try {
         const data = await base44.entities.EmergencyResource.list();
-        setResources(data);
+        setResources(data.length ? data : (defaultHotlines[lang] || defaultHotlines.th));
       } catch (err) {
         setResources([]);
       } finally {
