@@ -8,6 +8,7 @@ export default function ResourceCard({ resource }) {
   const categoryColors = {
     mental: "bg-rose-500/10 text-rose-300 border-rose-500/20",
     child: "bg-sky-500/10 text-sky-300 border-sky-500/20",
+    youth: "bg-sky-500/10 text-sky-300 border-sky-500/20",
     general: "bg-slate-700/40 text-slate-300 border-slate-700",
     emergency: "bg-red-500/10 text-red-300 border-red-500/20"
   };
@@ -15,6 +16,7 @@ export default function ResourceCard({ resource }) {
   const categoryLabels = {
     mental: t("rescat.mental"),
     child: t("rescat.child"),
+    youth: t("rescat.child"),
     general: t("rescat.general"),
     emergency: t("rescat.emergency")
   };
