@@ -103,13 +103,13 @@ export default function AssessmentResult() {
             <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
               <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">AI</div>
             </div>
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">AI วิเคราะห์ความเสี่ยง</h2>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.aiAnalysis")}</h2>
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-500 mb-1">แนวโน้มจากแบบประเมิน</div>
+          <div className="text-xs text-slate-500 dark:text-slate-500 mb-1">{t("result.trend")}</div>
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{result.depression_chance}</p>
           {result.similar_case && (
             <>
-              <div className="text-xs text-slate-500 dark:text-slate-500 mt-4 mb-1">ปัจจัยที่สะท้อนจากคำตอบ</div>
+              <div className="text-xs text-slate-500 dark:text-slate-500 mt-4 mb-1">{t("result.factors")}</div>
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{result.similar_case}</p>
             </>
           )}
@@ -119,7 +119,7 @@ export default function AssessmentResult() {
       {/* Screening note */}
       <div className="bg-amber-50 dark:bg-amber-500/10 rounded-2xl p-4 border border-amber-200 dark:border-amber-500/20">
         <p className="text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
-          <strong>หมายเหตุสำคัญ:</strong> ผลนี้เป็นเพียงการประเมินเบื้องต้น ไม่ใช่การวินิจฉัยทางการแพทย์ หากมีความกังวลหรือผลกระทบต่อชีวิตประจำวัน ควรปรึกษาผู้เชี่ยวชาญด้านสุขภาพจิตเพิ่มเติม คะแนนความเสี่ยงนี้ใช้ PHQ-9 เป็นหนึ่งในกรอบอ้างอิงร่วมกับคำตอบส่วนอื่นของแบบประเมิน จึงไม่ใช่คะแนน PHQ-9 โดยตรง
+          <strong>{t("result.noteTitle")}:</strong> {t("result.note")}
         </p>
       </div>
 
