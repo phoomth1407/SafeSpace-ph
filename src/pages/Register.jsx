@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +33,7 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      const result = await base44.auth.register({ email, password });
+      const result = await appClient.auth.register({ email, password });
       if (result?.session) {
         window.location.href = safeReturnTo();
         return;
@@ -50,7 +50,7 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      await base44.auth.verifyOtp({ email, otpCode });
+      await appClient.auth.verifyOtp({ email, otpCode });
       // Supabase persists the verified session automatically.
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
@@ -65,7 +65,7 @@ export default function Register() {
   const handleResend = async () => {
     setError("");
     try {
-      await base44.auth.resendOtp(email);
+      await appClient.auth.resendOtp(email);
       toast({
         title: "Code sent",
         description: "Check your email for the new code.",
@@ -78,7 +78,7 @@ export default function Register() {
   const handleGoogle = async () => {
     setError("");
     try {
-      await base44.auth.loginWithProvider("google", safeReturnTo());
+      await appClient.auth.loginWithProvider("google", safeReturnTo());
     } catch (err) {
       setError(err.message || "Google sign-in failed");
     }
