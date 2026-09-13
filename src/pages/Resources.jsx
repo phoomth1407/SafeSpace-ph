@@ -70,7 +70,7 @@ export default function Resources() {
       {/* Header */}
       <div className="text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("resources.title")}</h1>
-        <p className="text-sm !text-black mt-1.5 leading-relaxed">
+        <p className="text-sm text-black dark:text-slate-400 mt-1.5 leading-relaxed">
           {t("resources.subtitle")}
         </p>
       </div>
