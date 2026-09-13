@@ -144,7 +144,7 @@ export default function Community() {
                 key={key}
                 onClick={() => setCategory(key)}
                 className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                  category === key ? "bg-slate-100 text-slate-900" : "bg-slate-800 !text-black hover:!text-black"
+                  category === key ? "bg-slate-100 text-slate-900" : "bg-slate-800 text-slate-200 hover:text-white"
                 }`}
               >
                 {labelObj[lang] || labelObj.th}
@@ -159,7 +159,7 @@ export default function Community() {
               disabled={anon}
               className="flex-1 text-sm text-slate-200 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:!text-black disabled:opacity-40"
             />
-            <label className="flex items-center gap-1.5 text-xs !text-black cursor-pointer select-none">
+            <label className="flex items-center gap-1.5 text-xs !text-slate-900 dark:!text-white cursor-pointer select-none">
               <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
               {t("community.anonToggle")}
             </label>
@@ -183,7 +183,7 @@ export default function Community() {
       />
       {error && <div className="text-xs text-red-400">{error}</div>}
       <div className="flex items-center justify-between">
-        <span className="text-xs !text-black">{content.length} {t("community.chars")}</span>
+        <span className="text-xs !text-slate-900 dark:!text-white">{content.length} {t("community.chars")}</span>
         <button
           onClick={isAnnounce ? handleAnnounce : handleSubmit}
           disabled={submitting || content.trim().length < (isAnnounce ? 5 : 10)}
@@ -204,7 +204,7 @@ export default function Community() {
         <p className="text-sm !text-black mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
         <button
           onClick={() => navigate("/contact-admin")}
-          className="mt-3 inline-flex items-center gap-1.5 text-xs !text-black hover:!text-black bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs !text-slate-900 dark:!text-white hover:!text-black bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
         >
           <Mail className="w-3.5 h-3.5" />
           {t("contact.tab")}
@@ -214,15 +214,15 @@ export default function Community() {
       {/* Quick wellbeing tools */}
       {!focusedPostId && (
         <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
-          <h2 className="text-sm font-semibold !text-black dark:!text-black mb-3">{t("community.quickTitle")}</h2>
+          <h2 className="text-sm font-semibold !text-black dark:!text-white mb-3">{t("community.quickTitle")}</h2>
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-sky-300 dark:hover:border-sky-500/30">
+            <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white dark:!text-white hover:border-sky-300 dark:hover:border-sky-500/30">
               🫧 {t("community.quickBreath")}
             </button>
-            <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-emerald-300 dark:hover:border-emerald-500/30">
+            <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white dark:!text-white hover:border-emerald-300 dark:hover:border-emerald-500/30">
               🌿 {t("community.quickGround")}
             </button>
-            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-violet-300 dark:hover:border-violet-500/30">
+            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white dark:!text-white hover:border-violet-300 dark:hover:border-violet-500/30">
               🎧 {t("community.quickSound")}
             </button>
           </div>
@@ -257,7 +257,7 @@ export default function Community() {
         <div className="space-y-2">
           <button
             onClick={() => setShowForm(true)}
-            className="w-full bg-slate-900/60 rounded-2xl p-4 border border-dashed border-slate-700 !text-black text-sm hover:border-slate-600 hover:!text-black transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-slate-900/60 rounded-2xl p-4 border border-dashed border-slate-700 text-slate-300 text-sm hover:border-slate-600 hover:text-white transition-colors flex items-center justify-center gap-2"
           >
             <PenLine className="w-4 h-4" />
             {t("community.writePlaceholder")}
@@ -281,12 +281,12 @@ export default function Community() {
       {/* Filter bar */}
       {!focusedPostId && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="flex items-center gap-1 text-xs !text-black">
+          <span className="flex items-center gap-1 text-xs !text-slate-900 dark:!text-white">
             <Filter className="w-3.5 h-3.5" />
           </span>
           <button
             onClick={() => setFilter("all")}
-            className={`text-xs px-3 py-1 rounded-full transition-colors ${filter === "all" ? "bg-slate-100 text-slate-900" : "bg-slate-800 !text-black hover:!text-black"}`}
+            className={`text-xs px-3 py-1 rounded-full transition-colors ${filter === "all" ? "bg-slate-100 text-slate-900" : "bg-slate-800 text-slate-200 hover:text-white"}`}
           >
             {t("community.filter.all")}
           </button>
@@ -294,7 +294,7 @@ export default function Community() {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`text-xs px-3 py-1 rounded-full transition-colors ${filter === key ? "bg-slate-100 text-slate-900" : "bg-slate-800 !text-black hover:!text-black"}`}
+              className={`text-xs px-3 py-1 rounded-full transition-colors ${filter === key ? "bg-slate-100 text-slate-900" : "bg-slate-800 text-slate-200 hover:text-white"}`}
             >
               {labelObj[lang] || labelObj.th}
             </button>
@@ -306,7 +306,7 @@ export default function Community() {
       {focusedPostId && (
         <button
           onClick={() => setFocusedPostId(null)}
-          className="flex items-center gap-1.5 text-xs !text-black hover:!text-black transition-colors"
+          className="flex items-center gap-1.5 text-xs !text-slate-900 dark:!text-white hover:!text-black transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           {t("community.back")}
