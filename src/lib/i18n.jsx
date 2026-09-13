@@ -181,6 +181,7 @@ const translations = {
     "sound.play": "เล่น",
     "sound.pause": "พัก",
     "sound.timerSet": "ตั้งเวลาแล้ว",
+    "sound.howTo": "เลือก preset หรือเลื่อนระดับเสียงแต่ละแทร็ก แล้วกดเล่น เสียงถูกสร้างขึ้นแบบสดในเบราว์เซอร์",
 
     "assess.guest.notice": "โหมด guest — ผลการประเมินจะถูกบันทึกแบบไม่ระบุตัวตน",
     "assess.guest.notice.login": "เข้าสู่ระบบ",
@@ -609,6 +610,7 @@ const translations = {
     "sound.play": "Play",
     "sound.pause": "Pause",
     "sound.timerSet": "Timer set",
+    "sound.howTo": "Choose a preset or adjust each track, then press Play. Sounds are generated live in your browser.",
 
     "assess.guest.notice": "Guest mode — your result is saved anonymously",
     "assess.guest.notice.login": "Log in",
