@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Sparkles, X, Wind, Cloud, Star } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 
@@ -100,9 +101,64 @@ export default function WorryReleaseModal({ open, onClose }) {
               ))}
             </div>
 
-            <div className="relative text-6xl mb-5">{MODES.find((m) => m.id === mode)?.icon}</div>
-            <h3 className="relative text-xl font-semibold text-slate-900 dark:text-slate-100">{t("worry.releasedTitle")}</h3>
-            <p className="relative max-w-sm text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">{t(`worry.releaseMessage.${mode}`)}</p>
+            <motion.div
+              className="relative text-6xl mb-5"
+              initial={{ y: 0, opacity: 1, scale: 1, rotate: 0 }}
+              animate={
+                mode === "lantern"
+                  ? { y: -120, opacity: 0.15, scale: 0.75, rotate: -4 }
+                  : mode === "leaves"
+                    ? { x: 150, y: -35, opacity: 0.08, rotate: 28 }
+                    : { y: -20, opacity: 0, scale: 0.35, rotate: 180 }
+              }
+              transition={{ duration: 3.2, ease: "easeOut" }}
+            >
+              {MODES.find((m) => m.id === mode)?.icon}
+            </motion.div>
+
+            <motion.div
+              className="relative w-full max-w-sm mb-4 min-h-16 flex items-center justify-center"
+              initial="hidden"
+              animate="visible"
+            >
+              {Array.from({ length: mode === "stardust" ? 24 : 10 }).map((_, i) => (
+                <motion.span
+                  key={`release-particle-${i}`}
+                  className={`absolute rounded-full ${mode === "lantern" ? "bg-amber-300" : mode === "leaves" ? "bg-emerald-300" : "bg-violet-300"}`}
+                  style={{
+                    width: mode === "stardust" ? 4 : 5,
+                    height: mode === "stardust" ? 4 : 5,
+                    left: `${45 + ((i * 17) % 20)}%`,
+                    top: `${45 + ((i * 29) % 16)}%`,
+                  }}
+                  initial={{ opacity: 0, x: 0, y: 0, scale: 0.4 }}
+                  animate={{
+                    opacity: [0, 0.9, 0],
+                    x: (i % 2 ? 1 : -1) * (35 + (i % 5) * 14),
+                    y: -30 - (i % 6) * 12,
+                    scale: [0.4, 1, 0.2],
+                  }}
+                  transition={{ duration: 2.6 + (i % 4) * 0.2, delay: i * 0.04, ease: "easeOut" }}
+                />
+              ))}
+            </motion.div>
+
+            <motion.h3
+              className="relative text-xl font-semibold !text-slate-900 dark:!text-slate-100"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+            >
+              {t("worry.releasedTitle")}
+            </motion.h3>
+            <motion.p
+              className="relative max-w-sm text-sm !text-slate-800 dark:!text-slate-300 mt-2 leading-relaxed"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.15, duration: 0.7 }}
+            >
+              {t(`worry.releaseMessage.${mode}`)}
+            </motion.p>
 
             <button
               onClick={onClose}
