@@ -112,9 +112,16 @@ export default function AmbientSoundPlayer() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [master, setMaster] = useState(0.45);
+  const [master, setMaster] = useState(0.6);
   const [timer, setTimer] = useState(0);
-  const [volumes, setVolumes] = useState(() => Object.fromEntries(CHANNELS.map((c) => [c.id, 0])));
+  const [volumes, setVolumes] = useState(() => ({
+    rain: 0.22,
+    ocean: 0,
+    forest: 0,
+    fire: 0,
+    bowl: 0,
+    lofi: 0,
+  }));
   const ctxRef = useRef(null);
   const channelsRef = useRef({});
   const timerRef = useRef(null);
@@ -193,17 +200,28 @@ export default function AmbientSoundPlayer() {
           <div className="flex items-center justify-between gap-3 mb-3">
             <div>
               <h3 className="font-semibold !text-slate-900 dark:!text-slate-100">{t("sound.title")}</h3>
-              <p className="text-[11px] text-slate-500">{t("sound.subtitle")}</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">{t("sound.subtitle")}</p>
             </div>
             <button onClick={() => setOpen(false)} className="text-slate-500"><X className="w-4 h-4" /></button>
           </div>
 
+          <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-2">{t("sound.howTo")}</p>
           <div className="grid grid-cols-2 gap-2 mb-3">
-            {Object.entries(PRESETS).map(([id]) => (
-              <button key={id} onClick={() => setPreset(id)} className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300">
-                {t(`sound.preset.${id}`)}
-              </button>
-            ))}
+            {Object.entries(PRESETS).map(([id]) => {
+              const preset = PRESETS[id];
+              const selected = Object.keys(preset).every((key) => Math.abs((volumes[key] || 0) - preset[key]) < 0.001);
+              return (
+                <button
+                  key={id}
+                  onClick={() => setPreset(id)}
+                  className={`px-3 py-2 rounded-xl border text-xs transition-colors ${selected
+                    ? "bg-sky-500/10 border-sky-400/40 text-sky-800 dark:text-sky-200"
+                    : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"}`}
+                >
+                  {t(`sound.preset.${id}`)}
+                </button>
+              );
+            })}
           </div>
 
           <div className="space-y-2">
@@ -228,7 +246,7 @@ export default function AmbientSoundPlayer() {
           <div className="flex items-center gap-2 mt-3">
             <Volume2 className="w-4 h-4 text-slate-500" />
             <input type="range" min="0" max="1" step="0.01" value={master} onChange={(e) => setMaster(Number(e.target.value))} className="flex-1" />
-            <button onClick={togglePlaying} className="h-9 px-3 rounded-xl bg-slate-900 text-white text-xs font-semibold flex items-center gap-1">
+            <button onClick={togglePlaying} className="h-9 px-3 rounded-xl !bg-slate-900 !text-white dark:!bg-slate-100 dark:!text-slate-900 text-xs font-semibold flex items-center gap-1">
               {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               {playing ? t("sound.pause") : t("sound.play")}
             </button>
