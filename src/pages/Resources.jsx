@@ -100,7 +100,7 @@ export default function Resources() {
 
       {/* Interactive self-care tools */}
       <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
-        <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">{t("resources.toolsTitle")}</h2>
+        <h2 className="text-sm font-semibold !text-black dark:!text-black mb-1">{t("resources.toolsTitle")}</h2>
         <div className="grid grid-cols-3 gap-2 mt-3">
           <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-black dark:!text-black hover:border-sky-300 dark:hover:border-sky-500/30">
             🫧 {t("resources.toolsBreath")}
