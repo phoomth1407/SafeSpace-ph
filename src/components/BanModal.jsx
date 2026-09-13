@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, UserX, ShieldCheck, Ban } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 
 export default function BanModal({ userId, onClose }) {
@@ -14,7 +14,7 @@ export default function BanModal({ userId, onClose }) {
   useEffect(() => {
     if (!userId) return;
     setLoading(true);
-    base44.entities.User.get(userId)
+    appClient.entities.User.get(userId)
       .then(setU)
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -24,7 +24,7 @@ export default function BanModal({ userId, onClose }) {
     setBanning(true);
     try {
       if (u.banned) {
-        await base44.functions.invoke("manageBan", { target_id: userId, banned: false, banned_until: null });
+        await appClient.functions.invoke("manageBan", { target_id: userId, banned: false, banned_until: null });
         setU({ ...u, banned: false, banned_until: null });
       } else {
         let bannedUntil = null;
@@ -34,7 +34,7 @@ export default function BanModal({ userId, onClose }) {
           d.setDate(d.getDate() + days);
           bannedUntil = d.toISOString();
         }
-        await base44.functions.invoke("manageBan", { target_id: userId, banned: true, banned_until: bannedUntil });
+        await appClient.functions.invoke("manageBan", { target_id: userId, banned: true, banned_until: bannedUntil });
         setU({ ...u, banned: true, banned_until: bannedUntil });
       }
     } catch {}
