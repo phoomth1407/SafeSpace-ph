@@ -7,7 +7,7 @@ import {
 import {
   ClipboardList, Users, AlertTriangle, TrendingUp, Trash2, Loader2, Shield, Activity, UserX, Flag, CheckCircle, Mail, Search, Filter,
 } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
@@ -44,11 +44,11 @@ export default function Admin() {
     const load = async () => {
       try {
         const [a, g, p, r, cr] = await Promise.all([
-          base44.entities.Assessment.list("-created_date", 200),
-          base44.entities.GuestAssessment.list("-created_date", 200),
-          base44.entities.CommunityPost.list("-created_date", 200),
-          base44.entities.Report.filter({ status: "pending" }, "-created_date", 100),
-          base44.entities.ContactRequest.filter({ status: "pending" }, "-created_date", 100),
+          appClient.entities.Assessment.list("-created_date", 200),
+          appClient.entities.GuestAssessment.list("-created_date", 200),
+          appClient.entities.CommunityPost.list("-created_date", 200),
+          appClient.entities.Report.filter({ status: "pending" }, "-created_date", 100),
+          appClient.entities.ContactRequest.filter({ status: "pending" }, "-created_date", 100),
         ]);
         setAssessments(a);
         setGuestAssessments(g);
@@ -56,7 +56,7 @@ export default function Admin() {
         setReports(r);
         setContactRequests(cr);
         try {
-          const u = await base44.entities.User.list("-created_date", 200);
+          const u = await appClient.entities.User.list("-created_date", 200);
           setUsers(u);
         } catch {}
       } catch (err) {
@@ -72,7 +72,7 @@ export default function Admin() {
     setBanning(u.id);
     try {
       if (u.banned) {
-        await base44.functions.invoke("manageBan", { target_id: u.id, banned: false, banned_until: null });
+        await appClient.functions.invoke("manageBan", { target_id: u.id, banned: false, banned_until: null });
         setUsers(users.map((x) => (x.id === u.id ? { ...x, banned: false, banned_until: null } : x)));
       } else {
         let bannedUntil = null;
@@ -82,7 +82,7 @@ export default function Admin() {
           d.setDate(d.getDate() + days);
           bannedUntil = d.toISOString();
         }
-        await base44.functions.invoke("manageBan", { target_id: u.id, banned: true, banned_until: bannedUntil });
+        await appClient.functions.invoke("manageBan", { target_id: u.id, banned: true, banned_until: bannedUntil });
         setUsers(users.map((x) => (x.id === u.id ? { ...x, banned: true, banned_until: bannedUntil } : x)));
       }
     } catch (err) {
@@ -97,7 +97,7 @@ export default function Admin() {
   const handleResolveContact = async (id) => {
     setResolvingContact(id);
     try {
-      await base44.entities.ContactRequest.update(id, { status: "resolved" });
+      await appClient.entities.ContactRequest.update(id, { status: "resolved" });
       setContactRequests(contactRequests.filter((c) => c.id !== id));
     } catch {}
     setResolvingContact(null);
@@ -106,7 +106,7 @@ export default function Admin() {
   const handleResolveReport = async (id) => {
     setResolving(id);
     try {
-      await base44.entities.Report.update(id, { status: "resolved" });
+      await appClient.entities.Report.update(id, { status: "resolved" });
       setReports(reports.filter((r) => r.id !== id));
     } catch {}
     setResolving(null);
@@ -116,7 +116,7 @@ export default function Admin() {
     if (!confirm(t("admin.deleteConfirm"))) return;
     setDeleting(id);
     try {
-      await base44.entities.CommunityPost.delete(id);
+      await appClient.entities.CommunityPost.delete(id);
       setPosts(posts.filter((p) => p.id !== id));
     } catch (err) {
       alert(t("admin.deleteFail"));
