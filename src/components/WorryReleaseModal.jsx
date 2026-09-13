@@ -101,6 +101,21 @@ export default function WorryReleaseModal({ open, onClose }) {
               ))}
             </div>
 
+            <motion.p
+              className="relative z-10 max-w-sm px-4 text-base font-medium !text-black dark:!text-white leading-relaxed break-words whitespace-pre-wrap"
+              initial={{ opacity: 1, y: 0 }}
+              animate={
+                mode === "lantern"
+                  ? { y: -85, opacity: 0, scale: 0.9 }
+                  : mode === "leaves"
+                    ? { x: 120, opacity: 0, rotate: 6 }
+                    : { opacity: 0, scale: 0.55, filter: "blur(5px)" }
+              }
+              transition={{ duration: 2.8, delay: 0.15, ease: "easeInOut" }}
+            >
+              {text}
+            </motion.p>
+
             <motion.div
               className="relative text-6xl mb-5"
               initial={{ y: 0, opacity: 1, scale: 1, rotate: 0 }}
