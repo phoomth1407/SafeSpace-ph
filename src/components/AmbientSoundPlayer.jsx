@@ -183,6 +183,12 @@ export default function AmbientSoundPlayer() {
   }, [volumes, master]);
 
   useEffect(() => {
+    const openPlayer = () => setOpen(true);
+    window.addEventListener("safespace:open-sounds", openPlayer);
+    return () => window.removeEventListener("safespace:open-sounds", openPlayer);
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       if (ctxRef.current) ctxRef.current.close().catch(() => {});
