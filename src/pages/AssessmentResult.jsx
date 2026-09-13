@@ -49,8 +49,8 @@ export default function AssessmentResult() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 !text-black animate-spin" />
-        <p className="text-sm !text-black mt-3">{t("result.loading")}</p>
+        <Loader2 className="w-8 h-8 !text-slate-900 dark:!text-white animate-spin" />
+        <p className="text-sm !text-slate-900 dark:!text-white mt-3">{t("result.loading")}</p>
       </div>
     );
   }
@@ -58,7 +58,7 @@ export default function AssessmentResult() {
   if (error || !result) {
     return (
       <div className="text-center py-20 space-y-4">
-        <p className="text-sm !text-black">{error || t("result.notfound")}</p>
+        <p className="text-sm !text-slate-900 dark:!text-white">{error || t("result.notfound")}</p>
         <Link to="/assessment" className="text-sm text-rose-300 font-medium underline">{t("result.retry")}</Link>
       </div>
     );
@@ -80,7 +80,7 @@ export default function AssessmentResult() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => navigate("/")}
-        className="flex items-center gap-1 text-sm !text-black dark:!text-black hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+        className="flex items-center gap-1 text-sm !text-black dark:!text-white hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         {t("result.back")}
@@ -112,14 +112,14 @@ export default function AssessmentResult() {
             <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
               <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">AI</div>
             </div>
-            <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.aiAnalysis")}</h2>
+            <h2 className="text-sm font-semibold !text-black dark:!text-white">{t("result.aiAnalysis")}</h2>
           </div>
           <div className="text-xs text-black dark:text-slate-400 mb-1">{t("result.trend")}</div>
-          <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.depression_chance}</p>
+          <p className="text-sm !text-black dark:!text-white leading-relaxed">{result.depression_chance}</p>
           {result.similar_case && (
             <>
               <div className="text-xs text-black dark:text-slate-400 mt-4 mb-1">{t("result.factors")}</div>
-              <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.similar_case}</p>
+              <p className="text-sm !text-black dark:!text-white leading-relaxed">{result.similar_case}</p>
             </>
           )}
         </div>
@@ -138,9 +138,9 @@ export default function AssessmentResult() {
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500/80 to-sky-500/80 flex items-center justify-center">
             <Heart className="w-4 h-4 text-white" fill="white" />
           </div>
-          <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.summary")}</h2>
+          <h2 className="text-sm font-semibold !text-black dark:!text-white">{t("result.summary")}</h2>
         </div>
-        <p className="text-sm !text-black dark:!text-black leading-relaxed">{result.ai_summary}</p>
+        <p className="text-sm !text-black dark:!text-white leading-relaxed">{result.ai_summary}</p>
       </div>
 
       {/* Recommendations */}
@@ -150,12 +150,12 @@ export default function AssessmentResult() {
             <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
               <Lightbulb className="w-4 h-4 text-sky-300" />
             </div>
-            <h2 className="text-sm font-semibold !text-black dark:!text-black">{t("result.recommendations")}</h2>
+            <h2 className="text-sm font-semibold !text-black dark:!text-white">{t("result.recommendations")}</h2>
           </div>
           <ul className="space-y-2">
             {result.recommendations.map((rec, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-black dark:text-slate-300 leading-relaxed">
-                <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-800 !text-black dark:!text-black text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-800 !text-black dark:!text-white text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                 <span>{rec}</span>
               </li>
             ))}
@@ -198,7 +198,7 @@ export default function AssessmentResult() {
               <>
                 {iconMap[tool.id] || <Lightbulb className="w-4 h-4 text-slate-700 dark:text-slate-300 mb-2" />}
                 <div className="text-sm font-semibold !text-black dark:!text-white">{title}</div>
-                {reason && <div className="text-xs !text-black dark:!text-black mt-1 leading-relaxed">{reason}</div>}
+                {reason && <div className="text-xs !text-black dark:!text-white mt-1 leading-relaxed">{reason}</div>}
               </>
             );
 
