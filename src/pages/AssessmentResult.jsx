@@ -28,10 +28,15 @@ export default function AssessmentResult() {
   if (error || !result) return <div className="text-center py-20 space-y-4"><p className="text-sm text-slate-500">{error || t("result.notfound")}</p><Link to="/assessment" className="text-sm text-rose-300 font-medium underline">{t("result.retry")}</Link></div>;
 
   const isPhq9 = result.screening_type === "phq9" || result.phq9_score !== undefined || result.phq9_answers !== undefined;
-  const phqAnswerSource = result.phq9_answers || result.answers;
+  // Prefer the authoritative PHQ-9 score saved/returned by the PHQ-9 flow.
+  // Only calculate from answers when the saved score is genuinely missing/invalid.
+  const persistedPhqScore = Number(result.phq9_score);
+  const phqAnswerSource = result.phq9_answers ?? result.answers;
   const calculatedPhq = phqAnswerSource ? scorePhq9(phqAnswerSource).score : null;
-  const rawPhqScore = calculatedPhq ?? Number(result.phq9_score ?? 0);
-  const phqScore = Number.isFinite(rawPhqScore) ? Math.max(0, Math.min(27, Math.round(rawPhqScore))) : 0;
+  const rawPhqScore = Number.isFinite(persistedPhqScore)
+    ? persistedPhqScore
+    : (calculatedPhq ?? 0);
+  const phqScore = Math.max(0, Math.min(27, Math.round(rawPhqScore)));
   const phqBand = getPhq9BandLabel(phqScore, lang);
   const riskConfig = {
     low: { label: t("risk.low"), color: "text-emerald-300", bg: "bg-emerald-500/10 border-emerald-500/20", bar: "from-emerald-400 to-emerald-500" },
@@ -75,7 +80,7 @@ export default function AssessmentResult() {
 
       {isPhq9 && <div className="bg-purple-500/10 rounded-2xl p-5 border border-purple-500/20"><div className="flex items-center gap-2 mb-2"><Brain className="w-4 h-4 text-purple-300" /><h2 className="text-sm font-semibold text-slate-100">PHQ-9</h2></div><p className="text-xs text-slate-400 leading-relaxed">{lang === "en" ? "This score is a screening indicator and should be interpreted with other information by a qualified professional." : "คะแนนนี้เป็นผลจากการคัดกรอง ควรตีความร่วมกับข้อมูลด้านอื่นโดยผู้เชี่ยวชาญ"}</p></div>}
 
-      {result.depression_chance && <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800"><div className="flex items-center gap-2 mb-3"><div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center"><Brain className="w-4 h-4 text-purple-300" /></div><h2 className="text-sm font-semibold text-slate-100">{t("result.aiAnalysis")}</h2></div><div className="text-xs text-slate-500 mb-1">{lang === "en" ? "Screening-based estimate" : "แนวโน้มจากแบบประเมิน"}</div><p className="text-sm text-slate-300 leading-relaxed">{result.depression_chance}</p>{result.similar_case && <><div className="text-xs text-slate-500 mt-4 mb-1">{lang === "en" ? "Factors reflected in your answers" : "ปัจจัยที่สะท้อนจากคำตอบ"}</div><p className="text-sm text-slate-300 leading-relaxed">{result.similar_case}</p></>}</div>}
+      {!isPhq9 && result.depression_chance && <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800"><div className="flex items-center gap-2 mb-3"><div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center"><Brain className="w-4 h-4 text-purple-300" /></div><h2 className="text-sm font-semibold text-slate-100">{t("result.aiAnalysis")}</h2></div><div className="text-xs text-slate-500 mb-1">{lang === "en" ? "Screening-based estimate" : "แนวโน้มจากแบบประเมิน"}</div><p className="text-sm text-slate-300 leading-relaxed">{result.depression_chance}</p>{result.similar_case && <><div className="text-xs text-slate-500 mt-4 mb-1">{lang === "en" ? "Factors reflected in your answers" : "ปัจจัยที่สะท้อนจากคำตอบ"}</div><p className="text-sm text-slate-300 leading-relaxed">{result.similar_case}</p></>}</div>}
       <div className="bg-amber-500/10 rounded-2xl p-4 border border-amber-500/20"><p className="text-xs text-amber-700 dark:text-amber-200 leading-relaxed">{disclaimer}</p></div>
       <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800"><div className="flex items-center gap-2 mb-3"><div className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500/80 to-sky-500/80 flex items-center justify-center"><Heart className="w-4 h-4 text-white" fill="white" /></div><h2 className="text-sm font-semibold text-slate-100">{t("result.summary")}</h2></div><p className="text-sm text-slate-300 leading-relaxed">{result.ai_summary}</p></div>
       {result.recommendations?.length > 0 && <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800"><div className="flex items-center gap-2 mb-3"><div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center"><Lightbulb className="w-4 h-4 text-sky-300" /></div><h2 className="text-sm font-semibold text-slate-100">{t("result.recommendations")}</h2></div><ul className="space-y-2">{result.recommendations.map((rec, i) => <li key={i} className="flex items-start gap-2 text-sm text-slate-300 leading-relaxed"><span className="w-5 h-5 rounded-full bg-slate-800 text-slate-300 text-xs flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span><span>{rec}</span></li>)}</ul></div>}
