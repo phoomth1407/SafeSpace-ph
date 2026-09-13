@@ -170,7 +170,7 @@ const translations = {
     "sound.subtitle": "เสียงบรรยากาศที่สร้างในเบราว์เซอร์",
     "sound.rain": "ฝน",
     "sound.ocean": "คลื่นทะเล",
-    "sound.forest": "สายลมในป่า",
+    "sound.forest": "ลม",
     "sound.fire": "กองไฟ",
     "sound.bowl": "เสียงกังวาน",
     "sound.lofi": "Lo-Fi",
