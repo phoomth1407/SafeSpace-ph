@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ClipboardList, Users, Phone, ArrowRight, Heart, ShieldCheck, Sparkles, Brain, TrendingUp } from "lucide-react";
 import StatsDashboard from "@/components/StatsDashboard";
+import MoodCheckInCard from "@/components/MoodCheckInCard";
 import TiltCard from "@/components/TiltCard";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
@@ -84,6 +85,9 @@ export default function Home() {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* Daily mood check-in */}
+      <MoodCheckInCard />
 
       {/* Quick stats */}
       <motion.section
