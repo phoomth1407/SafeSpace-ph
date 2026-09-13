@@ -191,7 +191,7 @@ export default function OAuthConsent() {
   return (
     <AuthLayout
       icon={ShieldCheck}
-      title="{t("oauth.title")}"
+      title={t("oauth.title")}
       subtitle={`${client} ${t("oauth.wantsAccess")} ${appName}`}
     >
       {error && (
