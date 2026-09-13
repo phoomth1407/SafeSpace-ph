@@ -28,7 +28,7 @@ export default function Register() {
     e.preventDefault();
     setError("");
     if (password !== confirmPassword) {
-      setError("{t("auth.passwordMismatch")}");
+      setError(t("auth.passwordMismatch"));
       return;
     }
     setLoading(true);
@@ -40,7 +40,7 @@ export default function Register() {
       }
       setShowOtp(true);
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.message || t("auth.registrationFailed"));
     } finally {
       setLoading(false);
     }
