@@ -100,25 +100,24 @@ const entities = new Proxy({}, { get: (_, name) => entity(name) });
 
 async function localGuestAssessment(payload) {
   const result = computeAssessmentResult(payload.answers || []);
-  return { ...result, id: makeId(), is_guest: true, analysis_source: "local-screening-fallback" };
+  return { ...result, id: makeId(), is_guest: true, analysis_source: "local-screening" };
 }
 
 const invoke = async (name, payload = {}) => {
   if (name === "analyzeAssessment") {
-    // Read the actual session at submit time. AuthContext can briefly lag behind
-    // Supabase's persisted session after refresh/OAuth, so do not trust only UI state.
+    // Baseline mode: no AI/server analysis. Use the deterministic local scorer.
+    const scored = await localGuestAssessment(payload);
     const authUser = await currentAuthUser();
-    if (!authUser) return { data: await localGuestAssessment(payload) };
+    if (!authUser) return { data: scored };
 
-    const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
-    if (error) {
-      // Never strand a user because a browser token went stale during submit.
-      if (/auth|session|jwt|unauthorized|401/i.test(error.message || "")) {
-        return { data: await localGuestAssessment(payload) };
-      }
-      throw error;
-    }
-    return { data: { ...(data || {}), is_guest: false } };
+    const saved = await entities.Assessment.create({
+      ...scored,
+      is_guest: false,
+      age: payload.age || null,
+      nationality: payload.nationality || null,
+      created_by_id: authUser.id,
+    });
+    return { data: { ...saved, is_guest: false } };
   }
 
   if (name === "analyzeCommunityPost") {
