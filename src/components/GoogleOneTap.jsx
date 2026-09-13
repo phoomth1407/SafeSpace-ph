@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 
 const GOOGLE_CLIENT_ID =
@@ -59,7 +59,7 @@ export default function GoogleOneTap({ returnTo = "/" }) {
           callback: async (response) => {
             if (!response?.credential) return;
             try {
-              await base44.auth.loginWithGoogleIdToken(response.credential, returnTo, raw);
+              await appClient.auth.loginWithGoogleIdToken(response.credential, returnTo, raw);
             } catch (error) {
               if (!cancelled) {
                 setMessage(error?.message || (lang === "en" ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ"));
