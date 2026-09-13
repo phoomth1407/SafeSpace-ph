@@ -182,16 +182,28 @@ export default function AssessmentResult() {
             <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextGround")}</div>
             <div className="text-xs !text-black dark:!text-black mt-1">{t("result.nextGroundDesc")}</div>
           </motion.button>
-          <motion.div><Link to="/community" className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-violet-300 dark:hover:border-violet-500/30 transition-colors">
-            <Users className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />
-            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextCommunity")}</div>
-            <div className="text-xs !text-black dark:!text-black mt-1">{t("result.nextCommunityDesc")}</div>
-          </Link></motion.div>
-          <motion.div><Link to="/resources" className="text-left p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-amber-300 dark:hover:border-amber-500/30 transition-colors">
-            <BookOpen className="w-4 h-4 text-amber-700 dark:text-amber-300 mb-2" />
-            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextResources")}</div>
-            <div className="text-xs !text-black dark:!text-black mt-1">{t("result.nextResourcesDesc")}</div>
-          </Link></motion.div>
+          <motion.div
+            whileHover={{ y: -3, scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
+          >
+            <Link to="/community" className="block text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-violet-300 dark:hover:border-violet-500/30 transition-colors">
+              <Users className="w-4 h-4 text-violet-700 dark:text-violet-300 mb-2" />
+              <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextCommunity")}</div>
+              <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextCommunityDesc")}</div>
+            </Link>
+          </motion.div>
+          <motion.div
+            whileHover={{ y: -3, scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
+          >
+            <Link to="/resources" className="block text-left w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-amber-300 dark:hover:border-amber-500/30 transition-colors">
+              <BookOpen className="w-4 h-4 text-amber-700 dark:text-amber-300 mb-2" />
+              <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("result.nextResources")}</div>
+              <div className="text-xs text-black dark:text-slate-400 mt-1">{t("result.nextResourcesDesc")}</div>
+            </Link>
+          </motion.div>
         </div>
       </div>
 
