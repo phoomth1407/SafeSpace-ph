@@ -6,6 +6,7 @@ import StatsDashboard from "@/components/StatsDashboard";
 import MoodCheckInCard from "@/components/MoodCheckInCard";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
+import WorryReleaseModal from "@/components/WorryReleaseModal";
 import TiltCard from "@/components/TiltCard";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
@@ -25,6 +26,7 @@ export default function Home() {
   const { t } = useTranslation();
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
+  const [worryOpen, setWorryOpen] = useState(false);
 
   return (
     <div className="space-y-12">
@@ -135,6 +137,30 @@ export default function Home() {
             <div className="flex-1">
               <h2 className="text-lg font-semibold !text-slate-900 dark:!text-slate-100">{t("ground.title")}</h2>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{t("ground.subtitle")}</p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </button>
+      </motion.section>
+
+      {/* Worry release */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        className="relative"
+      >
+        <button
+          onClick={() => setWorryOpen(true)}
+          className="w-full text-left bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-violet-300/60 dark:hover:border-violet-500/30 transition-colors group"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-violet-100 dark:bg-violet-500/10 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+              ✨
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold !text-slate-900 dark:!text-slate-100">{t("worry.title")}</h2>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{t("worry.subtitle")}</p>
             </div>
             <ArrowRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
           </div>
@@ -266,6 +292,7 @@ export default function Home() {
       </motion.section>
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
+      <WorryReleaseModal open={worryOpen} onClose={() => setWorryOpen(false)} />
     </div>
   );
 }
