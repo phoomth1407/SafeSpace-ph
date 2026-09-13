@@ -141,7 +141,7 @@ export default function Resources() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <h3 className="text-sm font-semibold text-slate-100">{link.title}</h3>
-                    <ExternalLink className="w-3 h-3 !text-black group-hover:!text-black transition-colors" />
+                    <ExternalLink className="w-3 h-3 !text-slate-900 dark:!text-white transition-colors" />
                   </div>
                   <p className="text-xs text-slate-900 dark:text-slate-100 mt-1 leading-relaxed">{link.desc}</p>
                 </div>
@@ -154,12 +154,12 @@ export default function Resources() {
       {/* Hotlines list */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <Phone className="w-4 h-4 !text-black" />
+          <Phone className="w-4 h-4 !text-slate-900 dark:!text-white" />
           <h2 className="text-sm font-semibold text-slate-100">{t("resources.hotlines.title")}</h2>
         </div>
         {loading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="w-6 h-6 !text-black animate-spin" />
+            <Loader2 className="w-6 h-6 !text-slate-900 dark:!text-white animate-spin" />
           </div>
         ) : (
           <div className="space-y-3">
