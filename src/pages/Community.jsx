@@ -8,6 +8,7 @@ import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Community() {
   const navigate = useNavigate();
@@ -48,6 +49,41 @@ export default function Community() {
     const params = new URLSearchParams(window.location.search);
     const focus = params.get("focus");
     if (focus) setFocusedPostId(focus);
+
+    const channel = supabase
+      .channel("community-posts-live")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "community_posts" },
+        ({ new: newPost }) => {
+          setPosts((current) => {
+            if (current.some((post) => post.id === newPost.id)) return current;
+            return [newPost, ...current].slice(0, 50);
+          });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "community_posts" },
+        ({ new: updatedPost }) => {
+          setPosts((current) =>
+            current.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+          );
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "community_posts" },
+        ({ old: deletedPost }) => {
+          setPosts((current) => current.filter((post) => post.id !== deletedPost.id));
+          setFocusedPostId((current) => (current === deletedPost.id ? null : current));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleDeletePost = async (id) => {
