@@ -184,18 +184,31 @@ const auth = {
   },
   async loginWithProvider(provider = "google", returnTo = "/") {
     try {
+      sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
+      const redirectTo = `${window.location.origin}${window.location.pathname}`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
-        options: {
-          redirectTo: `${window.location.origin}${window.location.pathname}#/login?returnTo=${encodeURIComponent(returnTo)}`,
-        },
+        options: { redirectTo },
       });
       if (error) throw error;
     } catch (error) {
+      sessionStorage.removeItem("safespace_auth_return_to");
       const message = error?.message || "Google sign-in failed";
       if (/provider.*not enabled|unsupported provider/i.test(message)) {
         throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet.");
       }
+      throw error;
+    }
+  },
+
+  async loginWithGoogleIdToken(idToken, returnTo = "/") {
+    sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
+    const { error } = await supabase.auth.signInWithIdToken({
+      provider: "google",
+      token: idToken,
+    });
+    if (error) {
+      sessionStorage.removeItem("safespace_auth_return_to");
       throw error;
     }
   },
