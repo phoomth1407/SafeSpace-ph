@@ -102,13 +102,13 @@ export default function Resources() {
       <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
         <h2 className="text-sm font-semibold !text-black dark:!text-white mb-1">{t("resources.toolsTitle")}</h2>
         <div className="grid grid-cols-3 gap-2 mt-3">
-          <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-900 dark:text-slate-100 hover:border-sky-300 dark:hover:border-sky-500/30">
+          <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white hover:border-sky-300 dark:hover:border-sky-500/30">
             🫧 {t("resources.toolsBreath")}
           </button>
-          <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-900 dark:text-slate-100 hover:border-emerald-300 dark:hover:border-emerald-500/30">
+          <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white hover:border-emerald-300 dark:hover:border-emerald-500/30">
             🌿 {t("resources.toolsGround")}
           </button>
-          <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-900 dark:text-slate-100 hover:border-violet-300 dark:hover:border-violet-500/30">
+          <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white hover:border-violet-300 dark:hover:border-violet-500/30">
             🎧 {t("resources.toolsSound")}
           </button>
         </div>
