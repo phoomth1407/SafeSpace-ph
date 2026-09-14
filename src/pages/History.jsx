@@ -103,7 +103,7 @@ export default function History() {
       <div className="text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("history.title")}</h1>
         <p className="text-sm text-slate-600 dark:text-slate-400 mt-1.5">{t("history.subtitle")}</p>
-        <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-1">{t("history.latestOnly")}</p>
+        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">{t("history.latestOnly")}</p>
       </div>
 
       {loading ? (
