@@ -320,6 +320,10 @@ const translations = {
     "resources.selfcare.subtitle": "แหล่งข้อมูลและเว็บไซต์ที่รวบรวมวิธีดูแลสุขภาพจิต บำบัดตนเอง และสร้างความเข้มแข็งในใจ",
     "resources.hotlines.title": "สายด่วนและหน่วยงาน",
 
+    "resources.loadError": "โหลดข้อมูลแหล่งช่วยเหลือไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+    "resources.retry": "ลองใหม่",
+    "history.error": "โหลดประวัติไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+    "history.retry": "ลองใหม่",
     "history.title": "ประวัติการประเมิน",
     "history.subtitle": "ย้อนดูผลการประเมินที่คุณเคยทำ",
     "history.loginPrompt": "เข้าสู่ระบบเพื่อบันทึกและดูประวัติการประเมินของคุณ",
@@ -791,6 +795,10 @@ const translations = {
     "resources.selfcare.subtitle": "Resources and websites with self-care, self-therapy, and mental resilience methods",
     "resources.hotlines.title": "Hotlines & agencies",
 
+    "resources.loadError": "Could not load support resources. Please try again.",
+    "resources.retry": "Try again",
+    "history.error": "Could not load your history. Please try again.",
+    "history.retry": "Try again",
     "history.title": "Assessment History",
     "history.subtitle": "Review the assessments you've taken",
     "history.loginPrompt": "Log in to save and view your assessment history",
