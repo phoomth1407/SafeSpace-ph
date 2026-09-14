@@ -35,7 +35,7 @@ export default function WorryReleaseModal({ open, onClose }) {
       <button aria-label={t("worry.close")} onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       <div className="relative w-full max-w-lg bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 overflow-hidden">
-        <button onClick={onClose} className="absolute right-4 top-4 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button type="button" aria-label={t("worry.close")} onClick={onClose} className="absolute right-4 top-4 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900">
           <X className="w-5 h-5" />
         </button>
 
