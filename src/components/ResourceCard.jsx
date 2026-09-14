@@ -33,9 +33,9 @@ export default function ResourceCard({ resource }) {
           <h3 className="text-sm font-semibold text-slate-100">{resource.name}</h3>
           <span className={`text-[10px] px-2 py-0.5 rounded-full border ${colorClass}`}>{categoryLabels[resource.category]}</span>
         </div>
-        <p className="text-xs text-slate-400 mt-1 leading-relaxed">{resource.description}</p>
+        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{resource.description}</p>
         {resource.available_hours && (
-          <div className="flex items-center gap-1 mt-2 text-xs text-slate-500">
+          <div className="flex items-center gap-1 mt-2 text-xs text-slate-400">
             <Clock className="w-3 h-3" />
             {resource.available_hours}
           </div>
