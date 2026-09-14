@@ -468,6 +468,12 @@ const translations = {
   },
   en: {
     "app.name": "SafeSpace",
+    "crisis.title": "Need help right now?",
+    "crisis.subtitle": "SafeSpace is not an emergency service. In Thailand, call Mental Health Hotline 1323 for 24/7 support.",
+    "crisis.call": "Call 1323",
+    "crisis.emergency": "Emergency: 1669",
+    "crisis.more": "View resources",
+    
     "nav.home": "Home",
     "nav.assessment": "Assessment",
     "nav.history": "History",
