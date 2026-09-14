@@ -112,3 +112,13 @@ Before deploying changes, verify:
 ## Notes
 
 Assessment results are intended for screening and supportive guidance. They are not medical diagnoses.
+
+## Security and development docs
+
+- [Security model](SECURITY.md)
+- [Supabase RLS audit](docs/RLS_AUDIT.md)
+- [.env.example](.env.example) — safe template for local frontend configuration; provider secrets stay in Supabase Edge Function secrets.
+
+## Crisis support
+
+SafeSpace is a screening and supportive-information tool, not an emergency service. In Thailand, the Department of Mental Health provides the 1323 hotline 24/7. In an immediate medical emergency, contact the appropriate local emergency service. citeturn652121search0turn652121search6turn652121search5
