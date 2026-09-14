@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { assessmentCategories } from "../src/lib/assessmentQuestions";
 import { computeAssessmentResult } from "../src/lib/assessmentScoring";
 
