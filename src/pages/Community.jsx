@@ -236,7 +236,7 @@ export default function Community() {
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center pt-2">
-        <h1 className="text-2xl font-bold text-slate-100">{t("community.title")}</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("community.title")}</h1>
         <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
         <button
           onClick={() => navigate("/contact-admin")}
