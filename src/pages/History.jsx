@@ -11,6 +11,7 @@ export default function History() {
   const { t, lang } = useTranslation();
   const [assessments, setAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -18,16 +19,21 @@ export default function History() {
         setLoading(false);
         return;
       }
+      setLoadError(false);
       try {
         const data = await appClient.entities.Assessment.list("-created_date", 20);
         setAssessments(data);
       } catch (err) {
         setAssessments([]);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
     };
     load();
+    const retry = () => load();
+    window.addEventListener("safespace:history-retry", retry);
+    return () => window.removeEventListener("safespace:history-retry", retry);
   }, [isAuthenticated]);
 
   const riskConfig = {
@@ -101,8 +107,23 @@ export default function History() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-10">
+        <div className="flex flex-col items-center justify-center py-12 text-center" role="status" aria-live="polite">
           <Loader2 className="w-6 h-6 text-slate-600 animate-spin" />
+          <p className="text-xs text-slate-500 mt-3">{lang === "en" ? "Loading your history..." : "กำลังโหลดประวัติของคุณ..."}</p>
+        </div>
+      ) : loadError ? (
+        <div className="text-center py-16">
+          <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 flex items-center justify-center mx-auto mb-3">
+            <ClipboardList className="w-6 h-6 text-red-700 dark:text-red-300" />
+          </div>
+          <p className="text-sm text-slate-700 dark:text-slate-200 mb-4">{t("history.error")}</p>
+          <button
+            type="button"
+            onClick={() => { setLoading(true); setLoadError(false); window.dispatchEvent(new Event("safespace:history-retry")); }}
+            className="inline-flex items-center gap-1.5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-semibold px-5 py-2.5 rounded-full"
+          >
+            {t("history.retry")}
+          </button>
         </div>
       ) : assessments.length === 0 ? (
         <div className="text-center py-16">
