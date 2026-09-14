@@ -1,6 +1,13 @@
 # SafeSpace — Changelog
 ## 2026-09-14
 
+### Visual & copy polish
+- Standardized heading and supporting-text hierarchy across key pages.
+- Improved bilingual microcopy for loading, community posting, and assessment results.
+- Reworded AI/result labels to make clear that SafeSpace provides screening and supportive interpretation, not a diagnosis.
+- Updated the built-in mental-health hotline entry to the Department of Mental Health's current 1323 service.
+
+
 ### Version 1.1.0
 - Added automated unit and component tests for scoring, authentication behavior, and AI fallback logic.
 - Added GitHub Actions CI for tests, accessibility linting, and production builds.
