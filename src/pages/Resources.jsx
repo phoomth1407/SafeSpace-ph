@@ -70,20 +70,20 @@ export default function Resources() {
       {/* Header */}
       <div className="text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("resources.title")}</h1>
-        <p className="text-sm text-black dark:text-slate-400 mt-1.5 leading-relaxed">
+        <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
           {t("resources.subtitle")}
         </p>
       </div>
 
       {/* Emergency banner */}
-      <div className="bg-gradient-to-br from-red-500/20 to-rose-600/20 rounded-2xl p-5 border border-red-500/30 text-slate-100">
+      <div className="bg-red-50 dark:bg-gradient-to-br dark:from-red-500/20 dark:to-rose-600/20 rounded-2xl p-5 border border-red-200 dark:border-red-500/30 text-red-950 dark:text-slate-100">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0">
-            <AlertCircle className="w-5 h-5 text-red-300" />
+          <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-500/20 flex items-center justify-center flex-shrink-0">
+            <AlertCircle className="w-5 h-5 text-red-700 dark:text-red-300" />
           </div>
           <div>
             <h2 className="text-sm font-semibold">{t("resources.emergency.title")}</h2>
-            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+            <p className="text-xs text-red-900 dark:text-slate-300 mt-1 leading-relaxed">
               {t("resources.emergency.desc")}
             </p>
             <div className="flex gap-2 mt-3">
