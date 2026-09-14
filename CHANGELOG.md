@@ -1,4 +1,16 @@
 # SafeSpace — Changelog
+## 2026-09-14
+
+### Version 1.1.0
+- Added automated unit and component tests for scoring, authentication behavior, and AI fallback logic.
+- Added GitHub Actions CI for tests, accessibility linting, and production builds.
+- Added JSX accessibility audit tooling.
+- Added route-level lazy loading with React Suspense.
+- Added Supabase RLS audit documentation and security documentation.
+- Added a safe .env.example template without provider secrets.
+- Added Dependabot with grouped non-major dependency updates.
+- Improved README documentation for development, security, and performance.
+
 ## 2026-09-13
 
 > Session summary grouped by user-facing changes instead of listing every micro-commit.
