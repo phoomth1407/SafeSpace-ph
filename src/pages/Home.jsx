@@ -96,7 +96,7 @@ export default function Home() {
       <MoodCheckInCard />
 
       <div className="text-center -mb-6">
-        <h2 className="text-xl font-semibold text-slate-100">{t("tools.title")}</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("tools.title")}</h2>
       </div>
 
       {/* Guided breathing */}
@@ -232,8 +232,8 @@ export default function Home() {
         transition={{ duration: 0.5 }}
       >
         <div className="text-center mb-4">
-          <h2 className="text-lg font-semibold text-slate-100">{t("home.why.title")}</h2>
-          <p className="text-xs text-slate-500 mt-1">{t("home.why.subtitle")}</p>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("home.why.title")}</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{t("home.why.subtitle")}</p>
         </div>
         <StatsDashboard />
       </motion.section>
