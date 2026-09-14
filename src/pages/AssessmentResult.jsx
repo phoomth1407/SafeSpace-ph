@@ -80,7 +80,7 @@ export default function AssessmentResult() {
     <div className="max-w-2xl mx-auto space-y-6">
       <button
         onClick={() => navigate("/")}
-        className="flex items-center gap-1 text-sm !text-black dark:!text-white hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+        className="flex items-center gap-1 text-sm text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         {t("result.back")}
@@ -89,7 +89,7 @@ export default function AssessmentResult() {
       {/* Risk summary card */}
       <div className={`rounded-2xl p-6 border ${risk.bg}`}>
         <div className="text-center">
-          <div className="text-xs text-black dark:text-slate-400 mb-1">{t("result.yourResult")}</div>
+          <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">{t("result.yourResult")}</div>
           <h1 className={`text-2xl font-bold ${risk.color}`}>{risk.label}</h1>
           <div className="mt-4 mx-auto max-w-xs">
             <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -100,7 +100,7 @@ export default function AssessmentResult() {
                 transition={{ duration: 1, ease: "easeOut" }}
               />
             </div>
-            <div className="text-xs text-black dark:text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1.5">{t("result.riskScore")}: {score}/100</div>
           </div>
         </div>
       </div>
