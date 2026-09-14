@@ -66,11 +66,23 @@ const entity = (name) => {
     },
     async create(input) {
       const authUser = await currentAuthUser();
+      if (!authUser) throw new Error("authentication required");
+
       const row = {
         ...input,
         id: input?.id || makeId(),
-        created_by_id: input?.created_by_id ?? authUser?.id ?? null,
+        created_by_id: input?.created_by_id ?? authUser.id,
       };
+
+      // contact_requests intentionally has no SELECT policy for normal users.
+      // Do not chain .select() after INSERT, because PostgREST would then
+      // require SELECT permission on the inserted row and RLS would reject it.
+      if (table === "contact_requests") {
+        const { error } = await supabase.from(table).insert(row);
+        if (error) throw error;
+        return row;
+      }
+
       const { data, error } = await supabase.from(table).insert(row).select("*").single();
       if (error) throw error;
       return data;
