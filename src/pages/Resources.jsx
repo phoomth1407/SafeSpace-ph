@@ -46,27 +46,47 @@ export default function Resources() {
   const { t, lang } = useTranslation();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
+      setLoadError(false);
+      setLoading(true);
       try {
         const data = await appClient.entities.EmergencyResource.list();
         setResources(data.length ? data : (defaultHotlines[lang] || defaultHotlines.th));
       } catch (err) {
         setResources([]);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
     };
     load();
-  }, []);
+    const retry = () => load();
+    window.addEventListener("safespace:resources-retry", retry);
+    return () => window.removeEventListener("safespace:resources-retry", retry);
+  }, [lang]);
 
   const links = selfCareLinks[lang] || selfCareLinks.th;
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
+      {loadError && !loading && (
+        <div className="rounded-2xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 p-4 flex items-center justify-between gap-3" role="alert">
+          <p className="text-sm text-red-900 dark:text-red-200">{t("resources.loadError")}</p>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("safespace:resources-retry"))}
+            className="shrink-0 rounded-full bg-red-900 text-white dark:bg-red-100 dark:text-red-950 px-3 py-1.5 text-xs font-semibold"
+          >
+            {t("resources.retry")}
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("resources.title")}</h1>
