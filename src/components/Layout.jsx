@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
-import { Home, Users, Phone, History as HistoryIcon, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon, HeartHandshake } from "lucide-react";
+import { Home, Users, Phone, History as HistoryIcon, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
@@ -148,30 +148,6 @@ export default function Layout() {
           </div>
         </div>
       </header>
-
-      <div className="border-b border-rose-500/20 bg-rose-950/30">
-        <div className="max-w-5xl mx-auto px-4 py-2.5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs">
-          <div className="flex items-center gap-2 text-rose-100 min-w-0">
-            <HeartHandshake className="w-4 h-4 shrink-0" />
-            <div className="min-w-0">
-              <p className="font-semibold">{t("crisis.title")}</p>
-              <p className="text-rose-200/70 leading-relaxed">{t("crisis.subtitle")}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 sm:ml-auto shrink-0">
-            <a href="tel:1323" className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 text-rose-950 px-3 py-1.5 font-semibold hover:bg-white transition-colors">
-              <Phone className="w-3.5 h-3.5" />
-              {t("crisis.call")}
-            </a>
-            <a href="tel:1669" className="inline-flex items-center gap-1.5 rounded-full border border-rose-300/30 text-rose-100 px-3 py-1.5 hover:bg-rose-900/40 transition-colors">
-              {t("crisis.emergency")}
-            </a>
-            <Link to="/resources" className="hidden sm:inline text-rose-200 hover:text-white transition-colors">
-              {t("crisis.more")}
-            </Link>
-          </div>
-        </div>
-      </div>
 
       <AmbientSoundPlayer />
 
