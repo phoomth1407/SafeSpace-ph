@@ -230,3 +230,20 @@
 /* Border on hover */
 .theme-light .hover\:border-slate-700:hover { border-color: #cbd5e1 !important; }
 .theme-light .hover\:border-slate-600:hover { border-color: #94a3b8 !important; }
+
+
+/* Accessibility polish */
+@layer base {
+  :where(button, a, input, textarea, select, [role="button"]):focus-visible {
+    outline: 3px solid #38bdf8;
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
