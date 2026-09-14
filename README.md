@@ -1,3 +1,8 @@
+![Tests](https://github.com/phoomth1407/SafeSpace-ph/actions/workflows/test.yml/badge.svg)
+![Deploy](https://github.com/phoomth1407/SafeSpace-ph/actions/workflows/deploy.yml/badge.svg)
+![React](https://img.shields.io/badge/React-18-61DAFB)
+![Supabase](https://img.shields.io/badge/Supabase-powered-3ECF8E)
+
 # SafeSpace
 
 SafeSpace is a Vite + React web application focused on youth mental-health screening, supportive self-care tools, community support, and trusted resources.
@@ -12,6 +17,10 @@ The current production stack is:
 - OpenAI as the primary assessment-analysis provider
 - Gemini as the AI fallback when configured
 - A local rule-based fallback when both AI providers are unavailable
+
+## Highlights
+
+SafeSpace is built as a real small-stack application rather than a static mockup. It includes authenticated and guest flows, Supabase RLS, AI fallback handling, bilingual UI, responsive themes, automated tests, route-level lazy loading, and an accessibility lint pass.
 
 ## Prerequisites
 
@@ -94,6 +103,14 @@ The `legacy/` directory contains archived files inherited from the original Base
 These files are kept only for historical/reference purposes and are not part of the current production backend.
 
 The active application uses Supabase instead.
+
+## Development quality
+
+GitHub Actions runs the test suite, an accessibility-focused ESLint audit, and a production build on pushes and pull requests. Dependabot is configured to check npm and GitHub Actions dependencies weekly.
+
+## Performance
+
+Application routes are lazy-loaded with React Suspense so the initial page does not need to download every page component up front.
 
 ## Deployment
 
