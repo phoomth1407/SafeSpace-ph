@@ -22,6 +22,6 @@ test("resources route reaches a usable page on a slow connection", async ({ page
   await page.goto("/#/resources", { waitUntil: "domcontentloaded" });
 
   await expect(
-    page.getByRole("heading", { name: /Hotlines|สายด่วน/ })
+    page.getByRole("heading", { name: /Hotlines and Resources|สายด่วนและแหล่งข้อมูล/ })
   ).toBeVisible({ timeout: 20_000 });
 });
