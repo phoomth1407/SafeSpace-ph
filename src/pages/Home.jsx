@@ -11,6 +11,7 @@ import TiltCard from "@/components/TiltCard";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
 import MagneticButton from "@/components/MagneticButton";
+import WellnessIllustration from "@/components/WellnessIllustration";
 import { useTranslation } from "@/lib/i18n";
 
 const fadeUp = {
@@ -114,13 +115,14 @@ export default function Home() {
           className="w-full text-left bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-sky-300/60 dark:hover:border-sky-500/30 transition-colors group shadow-sm hover:shadow-lg hover:shadow-sky-500/5"
         >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
-              <motion.span
-                animate={{ y: [0, -3, 0], scale: [1, 1.04, 1] }}
+            <div className="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-500/10 p-1.5 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
+              <motion.div
+                animate={{ y: [0, -2, 0], scale: [1, 1.03, 1] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="w-full h-full"
               >
-                🫧
-              </motion.span>
+                <WellnessIllustration type="breath" />
+              </motion.div>
             </div>
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-slate-100">{t("breath.title")}</h2>
@@ -146,13 +148,14 @@ export default function Home() {
           className="w-full text-left bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-emerald-300/60 dark:hover:border-emerald-500/30 transition-colors group shadow-sm hover:shadow-lg hover:shadow-emerald-500/5"
         >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
-              <motion.span
-                animate={{ rotate: [0, -4, 4, 0] }}
+            <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 p-1.5 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
+              <motion.div
+                animate={{ rotate: [0, -1.5, 1.5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="w-full h-full"
               >
-                🌿
-              </motion.span>
+                <WellnessIllustration type="ground" />
+              </motion.div>
             </div>
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-slate-100">{t("ground.title")}</h2>
@@ -178,13 +181,14 @@ export default function Home() {
           className="w-full text-left bg-white dark:bg-slate-900/60 rounded-3xl p-5 md:p-6 border border-slate-200 dark:border-slate-800 hover:border-violet-300/60 dark:hover:border-violet-500/30 transition-colors group shadow-sm hover:shadow-lg hover:shadow-violet-500/5"
         >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-violet-100 dark:bg-violet-500/10 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
-              <motion.span
-                animate={{ scale: [1, 1.08, 1], rotate: [0, 3, -3, 0] }}
+            <div className="w-14 h-14 rounded-2xl bg-violet-100 dark:bg-violet-500/10 p-1.5 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
+              <motion.div
+                animate={{ scale: [1, 1.03, 1], rotate: [0, 1, -1, 0] }}
                 transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                className="w-full h-full"
               >
-                ✨
-              </motion.span>
+                <WellnessIllustration type="worry" />
+              </motion.div>
             </div>
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-slate-100">{t("worry.title")}</h2>
