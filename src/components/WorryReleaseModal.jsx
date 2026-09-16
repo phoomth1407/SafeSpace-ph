@@ -45,8 +45,8 @@ export default function WorryReleaseModal({ open, onClose }) {
               <div className="w-11 h-11 rounded-2xl bg-violet-100 dark:bg-violet-500/10 flex items-center justify-center mx-auto mb-3">
                 <span className="text-xl">✨</span>
               </div>
-              <h2 className="text-xl font-semibold !text-slate-900 dark:!text-slate-100">{t("worry.title")}</h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{t("worry.subtitle")}</p>
+              <h2 className="text-xl font-semibold text-slate-100">{t("worry.title")}</h2>
+              <p className="text-xs text-slate-400 mt-1">{t("worry.subtitle")}</p>
             </div>
 
             <textarea
@@ -55,7 +55,7 @@ export default function WorryReleaseModal({ open, onClose }) {
               maxLength={500}
               rows={5}
               placeholder={t("worry.placeholder")}
-              className="mt-5 w-full resize-none rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4 text-sm text-slate-900 dark:text-slate-100 placeholder:text-black dark:placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-violet-300/50"
+              className="mt-5 w-full resize-none rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4 text-sm text-slate-200 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-violet-300/50"
             />
 
             <div className="mt-4">
@@ -159,7 +159,7 @@ export default function WorryReleaseModal({ open, onClose }) {
             </motion.div>
 
             <motion.h3
-              className="relative text-xl font-semibold !text-slate-900 dark:!text-slate-100"
+              className="relative text-xl font-semibold text-slate-100"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.6 }}
@@ -167,7 +167,7 @@ export default function WorryReleaseModal({ open, onClose }) {
               {t("worry.releasedTitle")}
             </motion.h3>
             <motion.p
-              className="relative max-w-sm text-sm !text-slate-800 dark:!text-slate-300 mt-2 leading-relaxed"
+              className="relative max-w-sm text-sm text-slate-300 mt-2 leading-relaxed"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.15, duration: 0.7 }}

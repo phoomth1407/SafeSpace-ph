@@ -48,8 +48,8 @@ export default function History() {
     return (
       <div className="space-y-6 max-w-2xl mx-auto">
         <div className="text-center pt-2">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("history.title")}</h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1.5">{t("history.subtitle")}</p>
+          <h1 className="text-2xl font-bold text-slate-100">{t("history.title")}</h1>
+          <p className="text-sm text-slate-400 mt-1.5">{t("history.subtitle")}</p>
         </div>
         <div className="text-center py-16">
           <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-3">
@@ -101,9 +101,9 @@ export default function History() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="text-center pt-2">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("history.title")}</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1.5">{t("history.subtitle")}</p>
-        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">{t("history.latestOnly")}</p>
+        <h1 className="text-2xl font-bold text-slate-100">{t("history.title")}</h1>
+        <p className="text-sm text-slate-400 mt-1.5">{t("history.subtitle")}</p>
+        <p className="text-xs text-slate-500 mt-1">{t("history.latestOnly")}</p>
       </div>
 
       {loading ? (
@@ -142,7 +142,7 @@ export default function History() {
           {trendData.length >= 2 && (
             <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t("history.trend")}</h3>
+                <h3 className="text-sm font-semibold text-slate-100">{t("history.trend")}</h3>
                 <span className={`flex items-center gap-1 text-xs font-medium ${trendColor}`}>
                   {trendIcon}
                   {trendLabel}

@@ -229,7 +229,7 @@ export default function AmbientSoundPlayer() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={t("sound.title")}
-        className="fixed right-4 bottom-20 md:bottom-6 z-[60] w-12 h-12 rounded-full !bg-white dark:!bg-slate-900 !text-slate-900 dark:!text-white shadow-lg border border-slate-300 dark:border-slate-700 flex items-center justify-center hover:scale-105 transition-transform"
+        className="fixed right-4 bottom-20 md:bottom-6 z-[60] w-12 h-12 rounded-full bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-lg border border-slate-300 dark:border-slate-700 flex items-center justify-center hover:scale-105 transition-transform"
       >
         {open ? <ChevronUp className="w-5 h-5" /> : <Headphones className="w-5 h-5" />}
       </button>
@@ -238,7 +238,7 @@ export default function AmbientSoundPlayer() {
         <div className="fixed right-4 bottom-36 md:bottom-20 z-[60] w-[min(92vw,360px)] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-4">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div>
-              <h3 className="font-semibold !text-slate-900 dark:!text-slate-100">{t("sound.title")}</h3>
+              <h3 className="font-semibold text-slate-100">{t("sound.title")}</h3>
             </div>
             <button onClick={() => setOpen(false)} className="text-slate-500"><X className="w-4 h-4" /></button>
           </div>

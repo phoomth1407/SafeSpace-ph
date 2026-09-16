@@ -10,8 +10,12 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     if (theme === "light") {
       document.body.classList.add("theme-light");
+      document.documentElement.classList.add("theme-light");
+      document.documentElement.classList.remove("dark");
     } else {
       document.body.classList.remove("theme-light");
+      document.documentElement.classList.remove("theme-light");
+      document.documentElement.classList.add("dark");
     }
   }, [theme]);
 

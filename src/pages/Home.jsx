@@ -96,7 +96,7 @@ export default function Home() {
       <MoodCheckInCard />
 
       <div className="text-center -mb-6">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("tools.title")}</h2>
+        <h2 className="text-lg font-semibold text-slate-100">{t("tools.title")}</h2>
       </div>
 
       {/* Guided breathing */}
@@ -123,8 +123,8 @@ export default function Home() {
               </motion.span>
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-semibold !text-slate-900 dark:!text-slate-100">{t("breath.title")}</h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{t("breath.subtitle")}</p>
+              <h2 className="text-lg font-semibold text-slate-100">{t("breath.title")}</h2>
+              <p className="text-xs text-slate-400 mt-1">{t("breath.subtitle")}</p>
             </div>
             <ArrowRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
           </div>
@@ -155,8 +155,8 @@ export default function Home() {
               </motion.span>
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-semibold !text-slate-900 dark:!text-slate-100">{t("ground.title")}</h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{t("ground.subtitle")}</p>
+              <h2 className="text-lg font-semibold text-slate-100">{t("ground.title")}</h2>
+              <p className="text-xs text-slate-400 mt-1">{t("ground.subtitle")}</p>
             </div>
             <ArrowRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
           </div>
@@ -187,8 +187,8 @@ export default function Home() {
               </motion.span>
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-semibold !text-slate-900 dark:!text-slate-100">{t("worry.title")}</h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{t("worry.subtitle")}</p>
+              <h2 className="text-lg font-semibold text-slate-100">{t("worry.title")}</h2>
+              <p className="text-xs text-slate-400 mt-1">{t("worry.subtitle")}</p>
             </div>
             <ArrowRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
           </div>
@@ -232,8 +232,8 @@ export default function Home() {
         transition={{ duration: 0.5 }}
       >
         <div className="text-center mb-4">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t("home.why.title")}</h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{t("home.why.subtitle")}</p>
+          <h2 className="text-lg font-semibold text-slate-100">{t("home.why.title")}</h2>
+          <p className="text-sm text-slate-400 mt-1">{t("home.why.subtitle")}</p>
         </div>
         <StatsDashboard />
       </motion.section>

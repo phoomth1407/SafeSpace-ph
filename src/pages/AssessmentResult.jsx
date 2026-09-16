@@ -49,8 +49,8 @@ export default function AssessmentResult() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 !text-slate-900 dark:!text-white animate-spin" />
-        <p className="text-sm !text-slate-900 dark:!text-white mt-3">{t("result.loading")}</p>
+        <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+        <p className="text-sm text-slate-300 mt-3">{t("result.loading")}</p>
       </div>
     );
   }
@@ -58,7 +58,7 @@ export default function AssessmentResult() {
   if (error || !result) {
     return (
       <div className="text-center py-20 space-y-4">
-        <p className="text-sm !text-slate-900 dark:!text-white">{error || t("result.notfound")}</p>
+        <p className="text-sm text-slate-300">{error || t("result.notfound")}</p>
         <Link to="/assessment" className="text-sm text-rose-300 font-medium underline">{t("result.retry")}</Link>
       </div>
     );

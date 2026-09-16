@@ -195,7 +195,7 @@ export default function Community() {
               disabled={anon}
               className="flex-1 text-sm text-slate-200 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:!text-slate-500 disabled:opacity-40"
             />
-            <label className="flex items-center gap-1.5 text-xs text-slate-900 dark:text-slate-100 cursor-pointer select-none">
+            <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none">
               <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
               {t("community.anonToggle")}
             </label>
@@ -204,7 +204,7 @@ export default function Community() {
             <input type="checkbox" checked={aiEnabled} onChange={(e) => setAiEnabled(e.target.checked)} className="accent-sky-500" />
             <div className="flex flex-col">
               <span className="text-slate-200">{t("community.aiToggle")}</span>
-              <span className="text-[10px] !text-slate-600 dark:!text-slate-400">{t("community.aiToggleDesc")}</span>
+              <span className="text-[10px] text-slate-400">{t("community.aiToggleDesc")}</span>
             </div>
           </label>
         </>
@@ -219,7 +219,7 @@ export default function Community() {
       />
       {error && <div className="text-xs text-red-400">{error}</div>}
       <div className="flex items-center justify-between">
-        <span className="text-xs text-slate-900 dark:text-slate-100">{content.length} {t("community.chars")}</span>
+        <span className="text-xs text-slate-400">{content.length} {t("community.chars")}</span>
         <button
           onClick={isAnnounce ? handleAnnounce : handleSubmit}
           disabled={submitting || content.trim().length < (isAnnounce ? 5 : 10)}
@@ -236,11 +236,11 @@ export default function Community() {
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center pt-2">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("community.title")}</h1>
+        <h1 className="text-2xl font-bold text-slate-100">{t("community.title")}</h1>
         <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
         <button
           onClick={() => navigate("/contact-admin")}
-          className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
         >
           <Mail className="w-3.5 h-3.5" />
           {t("contact.tab")}
@@ -250,15 +250,15 @@ export default function Community() {
       {/* Quick wellbeing tools */}
       {!focusedPostId && (
         <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
-          <h2 className="text-sm font-semibold !text-black dark:!text-white mb-3">{t("community.quickTitle")}</h2>
+          <h2 className="text-sm font-semibold text-slate-100 mb-3">{t("community.quickTitle")}</h2>
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white hover:border-sky-300 dark:hover:border-sky-500/30">
+            <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-sky-300 dark:hover:border-sky-500/30">
               🫧 {t("community.quickBreath")}
             </button>
-            <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white hover:border-emerald-300 dark:hover:border-emerald-500/30">
+            <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-emerald-300 dark:hover:border-emerald-500/30">
               🌿 {t("community.quickGround")}
             </button>
-            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs !text-slate-900 dark:!text-white hover:border-violet-300 dark:hover:border-violet-500/30">
+            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-violet-300 dark:hover:border-violet-500/30">
               🎧 {t("community.quickSound")}
             </button>
           </div>
@@ -317,7 +317,7 @@ export default function Community() {
       {/* Filter bar */}
       {!focusedPostId && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="flex items-center gap-1 text-xs text-slate-900 dark:text-slate-100">
+          <span className="flex items-center gap-1 text-xs text-slate-400">
             <Filter className="w-3.5 h-3.5" />
           </span>
           <button
@@ -342,7 +342,7 @@ export default function Community() {
       {focusedPostId && (
         <button
           onClick={() => setFocusedPostId(null)}
-          className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           {t("community.back")}
@@ -370,7 +370,7 @@ export default function Community() {
       <div className="space-y-3">
         {loading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="w-6 h-6 !text-slate-900 dark:!text-white animate-spin" />
+            <Loader2 className="w-6 h-6 text-slate-400 animate-spin" />
           </div>
         ) : focusedPostId ? (
           (() => {
@@ -390,7 +390,7 @@ export default function Community() {
         ) : sortedPosts.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-3">
-              <Heart className="w-6 h-6 !text-slate-900 dark:!text-white" />
+              <Heart className="w-6 h-6 text-slate-400" />
             </div>
             <p className="text-sm text-slate-400">{t("community.empty")}</p>
           </div>
