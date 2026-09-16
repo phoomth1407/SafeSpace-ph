@@ -1,44 +1,175 @@
-// Rule-based screening score used by the offline/GitHub Pages build.
+// Offline classical screening model.
+// Uses deterministic weighted features + safety rules. No API, model download, or quota.
 // This is a screening aid, not a medical diagnosis.
+
 import { assessmentCategories } from "./assessmentQuestions";
 
-export function computeAssessmentResult(answers) {
-  let totalScore=0,maxScore=0,hasSelfHarmRisk=false;
-  const categoryScores={};
-  assessmentCategories.forEach(cat=>{
-    let catScore=0,catMax=0;
-    ["th","en"].forEach(lang=>{
-      const qs=cat.questions[lang]||[];
-      qs.forEach((q,idx)=>{
-        if(lang!=="th"&&cat.questions.th?.[idx]?.q===undefined)return;
-        catMax+=lang==="th"?3:0;
-      });
+const CATEGORY_WEIGHTS = {
+  individual: 1.15,
+  bullying: 1.05,
+  family: 1.0,
+  study: 0.9,
+  social: 1.0,
+  health: 0.9,
+  lifeskills: 1.2,
+};
+
+const normalize = (value) => String(value || "").toLowerCase();
+
+const questionWeight = (question) => {
+  const text = normalize(question);
+  if (/ทำร้ายตัวเอง|ฆ่าตัวตาย|self[- ]?harm|suicide/.test(text)) return 3.0;
+  if (/เศร้า|หมดหวัง|ไม่มีคุณค่า|worthless|guilty|sad|hopeless/.test(text)) return 1.6;
+  if (/นอน|sleep|insomnia|กินอาหาร|appetite|eat/.test(text)) return 1.25;
+  if (/โดดเดี่ยว|เหงา|lonely|isolated/.test(text)) return 1.2;
+  return 1.0;
+};
+
+const answerSeverity = (question, answer, options) => {
+  const index = options.indexOf(answer);
+  if (index < 0) return { score: 0, selfRisk: false };
+  const maxIndex = Math.max(1, options.length - 1);
+  const normalized = index / maxIndex;
+  const selfRisk =
+    /ทำร้ายตัวเอง|ฆ่าตัวตาย|self[- ]?harm|suicide/.test(normalize(question)) &&
+    index >= 2;
+  return { score: normalized, selfRisk };
+};
+
+export function computeAssessmentResult(answers = []) {
+  let weightedSum = 0;
+  let totalWeight = 0;
+  let hasSelfHarmRisk = false;
+  const categoryScores = {};
+  const matchedPatterns = new Set();
+
+  for (const category of assessmentCategories) {
+    const qs = category.questions.th || category.questions.en || [];
+    let categoryWeighted = 0;
+    let categoryWeightTotal = 0;
+
+    qs.forEach((q, index) => {
+      const enQ = category.questions.en?.[index];
+      const found = answers.find(
+        (item) => item?.question === q.q || item?.question === enQ?.q
+      );
+      if (!found) return;
+
+      const sourceQuestion = found.question === enQ?.q ? enQ : q;
+      const options = sourceQuestion?.options || q.options || [];
+      const { score, selfRisk } = answerSeverity(sourceQuestion?.q, found.answer, options);
+      const weight = (CATEGORY_WEIGHTS[category.id] || 1) * questionWeight(sourceQuestion?.q);
+
+      weightedSum += score * weight;
+      totalWeight += weight;
+      categoryWeighted += score * weight;
+      categoryWeightTotal += weight;
+
+      if (selfRisk) hasSelfHarmRisk = true;
+
+      const text = normalize(`${sourceQuestion?.q} ${found.answer}`);
+      if (/กลั่นแกล้ง|bully/.test(text)) matchedPatterns.add("bullying");
+      if (/เรียน|school|study|exam/.test(text)) matchedPatterns.add("study");
+      if (/ครอบครัว|family|บ้าน/.test(text)) matchedPatterns.add("family");
+      if (/เพื่อน|friend|lonely|เหงา|โดดเดี่ยว/.test(text)) matchedPatterns.add("social");
+      if (/นอน|sleep|กิน|อาหาร|appetite/.test(text)) matchedPatterns.add("health");
+      if (/กังวล|เครียด|วิตก|worry|stress|anxious/.test(text)) matchedPatterns.add("stress");
     });
-    const qs=cat.questions.th||cat.questions.en||[];
-    catMax=qs.length*3;
-    qs.forEach((q,idx)=>{
-      const enQ=cat.questions.en?.[idx];
-      const answer=answers.find(a=>a.question===q.q||a.question===enQ?.q);
-      if(answer){
-        const options=(answer.question===enQ?.q?enQ:q).options;
-        const optionIndex=options.indexOf(answer.answer);
-        if(optionIndex>=0)catScore+=optionIndex;
-        if((/ทำร้ายตัวเอง|ฆ่าตัวตาย|self[- ]?harm|suicide/i.test(q.q)||/self[- ]?harm|suicide/i.test(enQ?.q||""))&&optionIndex>=2)hasSelfHarmRisk=true;
-      }
+
+    if (categoryWeightTotal > 0) {
+      categoryScores[category.id] = categoryWeighted / categoryWeightTotal;
+    }
+  }
+
+  let riskScore = totalWeight
+    ? Math.round((weightedSum / totalWeight) * 100)
+    : 0;
+
+  // Safety override: a high-severity self-harm answer is never averaged away.
+  if (hasSelfHarmRisk) riskScore = Math.max(riskScore, 76);
+
+  const risk_level =
+    riskScore >= 76
+      ? "severe"
+      : riskScore >= 51
+        ? "high"
+        : riskScore >= 26
+          ? "moderate"
+          : "low";
+
+  const highCategories = Object.entries(categoryScores)
+    .filter(([, value]) => value >= 0.6)
+    .map(([id]) => {
+      const category = assessmentCategories.find((item) => item.id === id);
+      return category?.title?.th || id;
     });
-    categoryScores[cat.title]={score:catScore,max:catMax,pct:catMax?catScore/catMax:0};
-    totalScore+=catScore;maxScore+=catMax;
-  });
-  const normalizedScore=maxScore?Math.round(totalScore/maxScore*100):0;
-  const risk_level=hasSelfHarmRisk||normalizedScore>=76?"severe":normalizedScore>=51?"high":normalizedScore>=26?"moderate":"low";
-  const highCategories=Object.entries(categoryScores).filter(([,v])=>v.pct>=.6).map(([k])=>k);
-  return {risk_level,risk_score:normalizedScore,ai_summary:generateSummary(risk_level,highCategories,hasSelfHarmRisk),recommendations:generateRecommendations(risk_level,highCategories,hasSelfHarmRisk),similar_case:null};
+
+  return {
+    risk_level,
+    risk_score: riskScore,
+    depression_chance: localLikelihood(risk_level),
+    ai_summary: generateSummary(risk_level, highCategories, hasSelfHarmRisk),
+    recommendations: generateRecommendations(risk_level, highCategories, hasSelfHarmRisk, matchedPatterns),
+    similar_case: generatePatternSummary(highCategories, matchedPatterns),
+    analysis_source: "offline-model",
+  };
 }
-function generateSummary(level,high,selfRisk){
-  const s={low:"จากการประเมิน คุณมีความเครียดในระดับค่อนข้างต่ำ ขอให้ดูแลสุขภาพกายและใจต่อไป",moderate:"จากการประเมิน คุณมีความเครียดหรือปัจจัยที่ควรให้ความสนใจในบางด้าน ลองพูดคุยกับคนที่ไว้ใจได้",high:"จากการประเมิน คุณมีความเครียดในระดับสูง ควรพูดคุยกับผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้",severe:"จากการประเมินพบสัญญาณของความเครียดในระดับสูงมาก ควรขอความช่วยเหลือจากผู้ใหญ่หรือผู้เชี่ยวชาญโดยเร็ว ผลนี้ไม่ใช่การวินิจฉัย"};
-  return s[level]+(high.length?` ด้านที่ควรให้ความสนใจ: ${high.join(", ")}`:"")+(selfRisk?" หากคำตอบบางข้อทำให้คุณรู้สึกไม่ปลอดภัย โปรดบอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้ทันที":"");
+
+function localLikelihood(level) {
+  const messages = {
+    low: "สัญญาณด้านอารมณ์และความเครียดโดยรวมอยู่ในระดับต่ำจากคำตอบที่ให้",
+    moderate: "พบสัญญาณบางด้านที่ควรติดตามและดูแลเพิ่มเติมจากคำตอบที่ให้",
+    high: "พบสัญญาณหลายด้านที่ควรได้รับความสนใจและการสนับสนุนเพิ่มเติม",
+    severe: "พบสัญญาณที่ควรได้รับการช่วยเหลือโดยเร็ว โดยเฉพาะเมื่อมีคำตอบเกี่ยวกับความไม่ปลอดภัยหรือการทำร้ายตัวเอง",
+  };
+  return messages[level];
 }
-function generateRecommendations(level,high,selfRisk){
-  const r={low:["พักผ่อนให้เพียงพอ","ทำกิจกรรมที่ช่วยให้ผ่อนคลาย","พูดคุยกับคนที่ไว้ใจได้"],moderate:["หาเวลาพักและทำกิจกรรมที่ช่วยลดความเครียด","พูดคุยกับคนที่ไว้ใจได้","หากความรู้สึกไม่ดีต่อเนื่อง ควรปรึกษาผู้เชี่ยวชาญ"],high:["พูดคุยกับผู้ปกครอง ครู หรือผู้เชี่ยวชาญที่ไว้ใจได้","อยู่ใกล้คนที่ทำให้รู้สึกปลอดภัย","พิจารณารับคำปรึกษาจากผู้เชี่ยวชาญ"],severe:["บอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้โดยเร็ว","พยายามอยู่กับคนที่ปลอดภัยและให้การสนับสนุน","หากไม่ปลอดภัยหรือเป็นเหตุฉุกเฉิน ให้ติดต่อบริการฉุกเฉินในพื้นที่"]};
-  const out=[...(r[level]||r.moderate)];if(high.includes("การถูกกลั่นแกล้ง"))out.push("หากถูกกลั่นแกล้ง ควรแจ้งครูหรือผู้ปกครองที่ไว้ใจได้");if(selfRisk)out.push("หากรู้สึกไม่ปลอดภัย โปรดขอความช่วยเหลือจากผู้ใหญ่ที่ไว้ใจได้ทันที");return out;
+
+function generateSummary(level, high, selfRisk) {
+  const base = {
+    low: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์ประเมินว่าสัญญาณด้านสุขภาพใจโดยรวมอยู่ในระดับต่ำ",
+    moderate: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบว่ามีบางด้านที่ควรให้ความสนใจและดูแลเพิ่มเติม",
+    high: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบสัญญาณหลายด้านที่อยู่ในระดับสูงและควรได้รับการสนับสนุนเพิ่มเติม",
+    severe: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบสัญญาณที่ควรได้รับความช่วยเหลือโดยเร็ว",
+  }[level];
+
+  const domain = high.length ? ` ด้านที่เด่นขึ้นมา ได้แก่ ${high.join(", ")}.` : "";
+  const safety = selfRisk
+    ? " เนื่องจากมีคำตอบที่เกี่ยวข้องกับการทำร้ายตัวเองหรือความไม่ปลอดภัย ควรบอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้โดยเร็ว."
+    : "";
+
+  return `${base}.${domain}${safety} ผลนี้เป็นการคัดกรองเบื้องต้น ไม่ใช่การวินิจฉัยทางการแพทย์`;
+}
+
+function generatePatternSummary(high, patterns) {
+  const parts = [];
+  if (high.length) parts.push(`รูปแบบที่เด่นในคำตอบคือ ${high.join(", ")}`);
+  if (patterns.has("stress")) parts.push("มีคำตอบที่สะท้อนความเครียดหรือความกังวล");
+  if (patterns.has("social")) parts.push("มีสัญญาณเกี่ยวกับความโดดเดี่ยวหรือความสัมพันธ์");
+  if (patterns.has("health")) parts.push("มีสัญญาณเกี่ยวกับการนอนหรือการกิน");
+  return parts.length
+    ? parts.join(" และ ") + ". นี่เป็นการอธิบายรูปแบบของคำตอบ ไม่ใช่การวินิจฉัยโรค"
+    : null;
+}
+
+function generateRecommendations(level, high, selfRisk, patterns) {
+  const result = [
+    "พักให้เพียงพอและแบ่งเวลาจากสิ่งที่กดดันออกเป็นช่วงสั้น ๆ",
+    "พูดคุยกับคนที่คุณไว้ใจ เช่น ผู้ปกครอง ครู เพื่อน หรือผู้ใหญ่ที่ปลอดภัย",
+  ];
+
+  if (patterns.has("study")) result.push("ถ้าการเรียนเป็นตัวกดดัน ลองคุยกับครูหรือผู้ปกครองเพื่อแบ่งภาระออกเป็นส่วนเล็ก ๆ");
+  if (patterns.has("bullying")) result.push("หากมีการกลั่นแกล้ง ให้บอกผู้ใหญ่ที่ไว้ใจได้และเก็บหลักฐานเมื่อทำได้");
+  if (patterns.has("social")) result.push("ลองอยู่ใกล้คนที่ทำให้รู้สึกปลอดภัยและไม่ต้องรับเรื่องทั้งหมดไว้คนเดียว");
+  if (patterns.has("health")) result.push("ลองจัดเวลานอน อาหาร และการพักให้สม่ำเสมอมากขึ้น");
+  if (patterns.has("stress")) result.push("ลองใช้การหายใจช้า ๆ หรือ grounding สั้น ๆ เมื่อความเครียดพุ่งขึ้น");
+
+  if (level === "high" || level === "severe") {
+    result.push("พิจารณาพูดคุยกับผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อประเมินเพิ่มเติม");
+  }
+  if (selfRisk) {
+    result.push("หากรู้สึกไม่ปลอดภัย ให้บอกผู้ใหญ่ที่ไว้ใจได้และขอความช่วยเหลือทันที");
+  }
+
+  return [...new Set(result)].slice(0, 5);
 }
