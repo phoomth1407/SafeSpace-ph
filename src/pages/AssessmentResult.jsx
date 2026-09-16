@@ -115,7 +115,7 @@ export default function AssessmentResult() {
             <h2 className="text-sm font-semibold !text-black dark:!text-white">{t("result.aiAnalysis")}</h2>
           </div>
           <div className="mb-2">
-            <span className="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+            <span className="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-1 text-[10px] font-semibold text-white">
               {result.analysis_source === "offline-model" ? t("result.source.offline") : t("result.source.ai")}
             </span>
           </div>
