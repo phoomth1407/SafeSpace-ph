@@ -1,15 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Smile, Meh, Frown, HeartCrack, CloudRain, SunMedium } from "lucide-react";
+import { MoodIllustration } from "@/components/WellnessIllustration";
 import { useTranslation } from "@/lib/i18n";
 
 const MOODS = [
-  { id:"great", icon:SunMedium, emoji:"😊", color:"text-emerald-300 bg-emerald-500/10 border-emerald-500/20" },
-  { id:"good", icon:Smile, emoji:"🙂", color:"text-sky-300 bg-sky-500/10 border-sky-500/20" },
-  { id:"okay", icon:Meh, emoji:"😐", color:"text-slate-300 bg-slate-500/10 border-slate-500/20" },
-  { id:"worried", icon:CloudRain, emoji:"😟", color:"text-amber-300 bg-amber-500/10 border-amber-500/20" },
-  { id:"sad", icon:Frown, emoji:"😔", color:"text-blue-300 bg-blue-500/10 border-blue-500/20" },
-  { id:"stressed", icon:CloudRain, emoji:"😣", color:"text-orange-300 bg-orange-500/10 border-orange-500/20" },
-  { id:"heavy", icon:HeartCrack, emoji:"😞", color:"text-rose-300 bg-rose-500/10 border-rose-500/20" },
+  { id:"great", icon:SunMedium, color:"text-emerald-300 bg-emerald-500/10 border-emerald-500/20" },
+  { id:"good", icon:Smile, color:"text-sky-300 bg-sky-500/10 border-sky-500/20" },
+  { id:"okay", icon:Meh, color:"text-slate-300 bg-slate-500/10 border-slate-500/20" },
+  { id:"worried", icon:CloudRain, color:"text-amber-300 bg-amber-500/10 border-amber-500/20" },
+  { id:"sad", icon:Frown, color:"text-blue-300 bg-blue-500/10 border-blue-500/20" },
+  { id:"stressed", icon:CloudRain, color:"text-orange-300 bg-orange-500/10 border-orange-500/20" },
+  { id:"heavy", icon:HeartCrack, color:"text-rose-300 bg-rose-500/10 border-rose-500/20" },
 ];
 
 const FACTORS = ["study","family","friends","sleep","health","relationships","other"];
@@ -50,7 +51,7 @@ export default function MoodCheckInCard() {
               className={`rounded-2xl border p-2.5 transition-all ${active ? item.color+" ring-2 ring-rose-300/30" : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700"}`}
               aria-label={t(`mood.${item.id}`)}
             >
-              <div className="text-2xl">{item.emoji}</div>
+              <div className="w-10 h-10 mx-auto rounded-xl overflow-hidden"><MoodIllustration mood={item.id} className="w-full h-full" /></div>
               <div className="mt-1 text-[10px] font-medium text-slate-600 dark:text-slate-300">{t(`mood.${item.id}`)}</div>
               <Icon className="w-3.5 h-3.5 mx-auto mt-1 opacity-70" />
             </button>
