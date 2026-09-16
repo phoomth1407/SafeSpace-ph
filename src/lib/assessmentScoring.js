@@ -68,12 +68,12 @@ export function computeAssessmentResult(answers = []) {
       if (selfRisk) hasSelfHarmRisk = true;
 
       const text = normalize(`${sourceQuestion?.q} ${found.answer}`);
-      if (/กลั่นแกล้ง|bully/.test(text)) matchedPatterns.add("bullying");
-      if (/เรียน|school|study|exam/.test(text)) matchedPatterns.add("study");
-      if (/ครอบครัว|family|บ้าน/.test(text)) matchedPatterns.add("family");
-      if (/เพื่อน|friend|lonely|เหงา|โดดเดี่ยว/.test(text)) matchedPatterns.add("social");
-      if (/นอน|sleep|กิน|อาหาร|appetite/.test(text)) matchedPatterns.add("health");
-      if (/กังวล|เครียด|วิตก|worry|stress|anxious/.test(text)) matchedPatterns.add("stress");
+      if (score > 0 && /กลั่นแกล้ง|bully/.test(text)) matchedPatterns.add("bullying");
+      if (score > 0 && /เรียน|school|study|exam/.test(text)) matchedPatterns.add("study");
+      if (score > 0 && /ครอบครัว|family|บ้าน/.test(text)) matchedPatterns.add("family");
+      if (score > 0 && /เพื่อน|friend|lonely|เหงา|โดดเดี่ยว/.test(text)) matchedPatterns.add("social");
+      if (score > 0 && /นอน|sleep|กิน|อาหาร|appetite/.test(text)) matchedPatterns.add("health");
+      if (score > 0 && /กังวล|เครียด|วิตก|worry|stress|anxious/.test(text)) matchedPatterns.add("stress");
     });
 
     if (categoryWeightTotal > 0) {
