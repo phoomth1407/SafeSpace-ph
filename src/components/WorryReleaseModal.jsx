@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, X, Wind, Star } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { WorryModeIllustration } from "@/components/WellnessIllustration";
 
 const MODES = [
-  { id: "lantern", icon: "🏮", iconComponent: Sparkles },
-  { id: "leaves", icon: "🍃", iconComponent: Wind },
-  { id: "stardust", icon: "✨", iconComponent: Star },
+  { id: "lantern", iconComponent: Sparkles },
+  { id: "leaves", iconComponent: Wind },
+  { id: "stardust", iconComponent: Star },
 ];
 
 export default function WorryReleaseModal({ open, onClose }) {
@@ -43,7 +44,7 @@ export default function WorryReleaseModal({ open, onClose }) {
           <>
             <div className="text-center pt-1">
               <div className="w-11 h-11 rounded-2xl bg-violet-100 dark:bg-violet-500/10 flex items-center justify-center mx-auto mb-3">
-                <span className="text-xl">✨</span>
+                <WorryModeIllustration mode="stardust" className="w-8 h-8" />
               </div>
               <h2 className="text-xl font-semibold text-slate-100">{t("worry.title")}</h2>
               <p className="text-xs text-slate-400 mt-1">{t("worry.subtitle")}</p>
@@ -61,13 +62,13 @@ export default function WorryReleaseModal({ open, onClose }) {
             <div className="mt-4">
               <div className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">{t("worry.chooseMode")}</div>
               <div className="grid grid-cols-3 gap-2">
-                {MODES.map(({ id, icon }) => (
+                {MODES.map(({ id }) => (
                   <button
                     key={id}
                     onClick={() => setMode(id)}
                     className={`rounded-2xl border p-3 text-center transition-colors ${mode === id ? "bg-violet-500/10 border-violet-400/40" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800"}`}
                   >
-                    <div className="text-2xl">{icon}</div>
+                    <div className="w-12 h-12 mx-auto rounded-xl overflow-hidden"><WorryModeIllustration mode={id} className="w-full h-full" /></div>
                     <div className="text-[11px] font-medium text-slate-700 dark:text-slate-300 mt-1">{t(`worry.mode.${id}`)}</div>
                   </button>
                 ))}
@@ -128,7 +129,7 @@ export default function WorryReleaseModal({ open, onClose }) {
               }
               transition={{ duration: 3.2, ease: "easeOut" }}
             >
-              {MODES.find((m) => m.id === mode)?.icon}
+              <WorryModeIllustration mode={mode} className="w-20 h-20" />
             </motion.div>
 
             <motion.div
