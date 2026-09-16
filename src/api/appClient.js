@@ -88,6 +88,7 @@ const entity = (name) => {
           recommendations: offline.recommendations,
           tool_recommendations: offline.tool_recommendations || [],
           analysis_source: "offline-model",
+          language: payload.language === "en" ? "en" : "th",
         };
         const { data: repaired, error: repairError } = await supabase
           .from("assessments")
@@ -201,6 +202,21 @@ const invoke = async (name, payload = {}) => {
         }
 
         return { data: { ...data, ...patch, is_guest: false, analysis_source: "offline-model" } };
+      }
+
+      if (data.id) {
+        const selectedLanguage = payload.language === "en" ? "en" : "th";
+        if (data.language !== selectedLanguage) {
+          const { data: localized } = await supabase
+            .from("assessments")
+            .update({ language: selectedLanguage })
+            .eq("id", data.id)
+            .select("*")
+            .single();
+          if (localized) {
+            return { data: { ...localized, is_guest: false, analysis_source: localized.analysis_source || data.analysis_source || "ai" } };
+          }
+        }
       }
 
       return { data: { ...data, is_guest: false, analysis_source: data.analysis_source || "ai" } };
