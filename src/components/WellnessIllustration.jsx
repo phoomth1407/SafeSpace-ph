@@ -97,7 +97,7 @@ function WorryIllustration() {
   );
 }
 
-function MoodIllustration({ mood }) {
+function MoodIllustrationSvg({ mood }) {
   const palettes = {
     great: ["#A7F3D0", "#10B981", "#F6C7B6"],
     good: ["#BAE6FD", "#38BDF8", "#F6C7B6"],
@@ -133,7 +133,7 @@ function MoodIllustration({ mood }) {
   );
 }
 
-function WorryModeIllustration({ mode }) {
+function WorryModeIllustrationSvg({ mode }) {
   return (
     <svg {...common} aria-hidden="true">
       <circle cx="60" cy="60" r="47" fill={mode === "lantern" ? "#FEF3C7" : mode === "leaves" ? "#DCFCE7" : "#EDE9FE"} opacity=".7" />
@@ -176,9 +176,11 @@ export function WellnessIllustration({ type, className = "" }) {
 }
 
 export function MoodIllustration({ mood, className = "" }) {
-  return <div className={className}><MoodIllustration mood={mood} /></div>;
+  return <div className={className}><MoodIllustrationSvg mood={mood} /></div>;
 }
 
 export function WorryModeIllustration({ mode, className = "" }) {
-  return <div className={className}><WorryModeIllustration mode={mode} /></div>;
+  return <div className={className}><WorryModeIllustrationSvg mode={mode} /></div>;
 }
+
+export default WellnessIllustration;
