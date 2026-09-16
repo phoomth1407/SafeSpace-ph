@@ -110,9 +110,14 @@ export default function AssessmentResult() {
         <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
-              <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">AI</div>
+              <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">{result.analysis_source === "offline-model" ? "LM" : "AI"}</div>
             </div>
             <h2 className="text-sm font-semibold !text-black dark:!text-white">{t("result.aiAnalysis")}</h2>
+          </div>
+          <div className="mb-2">
+            <span className="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+              {result.analysis_source === "offline-model" ? t("result.source.offline") : t("result.source.ai")}
+            </span>
           </div>
           <div className="text-xs text-black dark:text-slate-400 mb-1">{t("result.trend")}</div>
           <p className="text-sm !text-black dark:!text-white leading-relaxed">{result.depression_chance}</p>
