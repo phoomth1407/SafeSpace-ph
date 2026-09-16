@@ -141,7 +141,7 @@ const entity = (name) => {
 const entities = new Proxy({}, { get: (_, name) => entity(name) });
 
 async function localScreeningAssessment(payload, { isGuest = false } = {}) {
-  const result = computeAssessmentResult(payload.answers || []);
+  const result = computeAssessmentResult(payload.answers || [], payload.language || "th");
   const row = {
     ...result,
     id: makeId(),
