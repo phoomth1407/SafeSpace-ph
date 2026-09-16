@@ -169,6 +169,68 @@ function WorryModeIllustrationSvg({ mode }) {
   );
 }
 
+
+function SoundIllustration({ type }) {
+  const colors = {
+    rain: ["#DBEAFE", "#60A5FA"],
+    ocean: ["#CFFAFE", "#06B6D4"],
+    forest: ["#DCFCE7", "#22C55E"],
+    fire: ["#FFEDD5", "#F97316"],
+    bowl: ["#FEF3C7", "#EAB308"],
+    lofi: ["#EDE9FE", "#8B5CF6"],
+  };
+  const [bg, accent] = colors[type] || colors.rain;
+  return (
+    <svg {...common} aria-hidden="true">
+      <circle cx="60" cy="60" r="46" fill={bg} opacity=".65" />
+      {type === "rain" && (
+        <>
+          <path d="M33 57C35 47 45 41 54 44C58 35 72 34 77 44C88 43 94 51 91 60H33Z" fill={accent} opacity=".85" />
+          <path d="M43 70L40 80M55 70L52 80M67 70L64 80M79 70L76 80" stroke="#60A5FA" strokeWidth="3" strokeLinecap="round" />
+        </>
+      )}
+      {type === "ocean" && (
+        <>
+          <path d="M20 63C30 53 40 54 50 63C60 72 70 72 80 63C88 56 95 56 100 62" stroke={accent} strokeWidth="7" strokeLinecap="round" />
+          <path d="M20 78C30 68 40 69 50 78C60 87 70 87 80 78C88 71 95 71 100 77" stroke="#67E8F9" strokeWidth="5" strokeLinecap="round" opacity=".9" />
+          <circle cx="76" cy="36" r="10" fill="#E0F2FE" />
+          <circle cx="89" cy="26" r="5" fill="#BAE6FD" />
+        </>
+      )}
+      {type === "forest" && (
+        <>
+          <path d="M58 92C55 75 55 59 63 36" stroke="#15803D" strokeWidth="4" strokeLinecap="round" />
+          <path d="M60 61C49 59 42 53 40 44C50 44 57 49 60 56Z" fill={accent} />
+          <path d="M61 72C71 71 79 65 81 56C71 57 64 63 61 68Z" fill="#4ADE80" />
+          <path d="M57 49C50 45 45 38 45 30C53 33 58 39 59 45Z" fill="#86EFAC" />
+          <path d="M76 44C82 39 87 33 87 25" stroke="#166534" strokeWidth="3" strokeLinecap="round" />
+        </>
+      )}
+      {type === "fire" && (
+        <>
+          <path d="M60 91C48 91 42 83 45 73C47 66 52 63 53 54C63 59 63 67 61 71C68 66 72 58 70 48C84 58 87 72 82 82C78 89 70 92 60 91Z" fill={accent} />
+          <path d="M60 84C54 84 51 80 53 75C55 71 58 70 59 65C65 70 67 75 65 79C64 82 62 84 60 84Z" fill="#FED7AA" />
+        </>
+      )}
+      {type === "bowl" && (
+        <>
+          <path d="M35 63H85C83 79 74 88 60 88C46 88 37 79 35 63Z" fill="#FACC15" />
+          <ellipse cx="60" cy="63" rx="25" ry="7" fill="#FEF9C3" stroke="#CA8A04" strokeWidth="2" />
+          <path d="M52 48C57 40 63 40 68 48" stroke="#FDE68A" strokeWidth="3" strokeLinecap="round" opacity=".8" />
+        </>
+      )}
+      {type === "lofi" && (
+        <>
+          <rect x="35" y="42" width="50" height="38" rx="8" fill="#DDD6FE" />
+          <path d="M42 72L50 60L57 69L66 52L78 72" stroke={accent} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="45" cy="49" r="4" fill="#8B5CF6" />
+          <circle cx="76" cy="49" r="4" fill="#A78BFA" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function WellnessIllustration({ type, className = "" }) {
   if (type === "ground") return <div className={className}><GroundingIllustration /></div>;
   if (type === "worry") return <div className={className}><WorryIllustration /></div>;
@@ -182,5 +244,7 @@ export function MoodIllustration({ mood, className = "" }) {
 export function WorryModeIllustration({ mode, className = "" }) {
   return <div className={className}><WorryModeIllustrationSvg mode={mode} /></div>;
 }
+
+export function SoundIllustrationIcon({ type, className = "" }) { return <div className={className}><SoundIllustration type={type} /></div>; }
 
 export default WellnessIllustration;
