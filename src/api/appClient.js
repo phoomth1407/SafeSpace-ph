@@ -128,7 +128,10 @@ const invoke = async (name, payload = {}) => {
     try {
       const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
       if (error) throw error;
-      return { data: { ...(data || {}), is_guest: false, analysis_source: data?.analysis_source || "ai" } };
+      if (!data || data.error) {
+        throw new Error(data?.error || "remote AI analysis unavailable");
+      }
+      return { data: { ...data, is_guest: false, analysis_source: data.analysis_source || "ai" } };
     } catch (error) {
       // All remote AI providers unavailable/exhausted: use the local classical
       // screening model so the assessment still produces a usable result.
