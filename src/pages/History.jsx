@@ -5,6 +5,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaCh
 import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 export default function History() {
   const { isAuthenticated } = useAuth();
@@ -14,6 +15,7 @@ export default function History() {
   const [loadError, setLoadError] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -38,14 +40,19 @@ export default function History() {
     return () => window.removeEventListener("safespace:history-retry", retry);
   }, [isAuthenticated]);
 
-  const handleDelete = async (assessmentId) => {
-    if (!assessmentId) return;
-    if (!window.confirm(t("history.deleteConfirm"))) return;
-    setDeletingId(assessmentId);
+  const handleDelete = (assessment) => {
+    if (!assessment?.id) return;
+    setDeleteTarget(assessment);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget?.id) return;
+    setDeletingId(deleteTarget.id);
     setDeleteError(false);
     try {
-      await appClient.entities.Assessment.delete(assessmentId);
-      setAssessments((current) => current.filter((item) => item.id !== assessmentId));
+      await appClient.entities.Assessment.delete(deleteTarget.id);
+      setAssessments((current) => current.filter((item) => item.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } catch (err) {
       setDeleteError(true);
     } finally {
@@ -232,7 +239,7 @@ export default function History() {
                     type="button"
                     aria-label={t("history.delete")}
                     title={t("history.delete")}
-                    onClick={() => handleDelete(a.id)}
+                    onClick={() => handleDelete(a)}
                     disabled={deletingId === a.id}
                     className="shrink-0 p-2 rounded-full text-slate-500 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-40 transition-colors"
                   >
@@ -244,6 +251,23 @@ export default function History() {
           </div>
         </>
       )}
+      <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && !deletingId && setDeleteTarget(null)}>
+        <AlertDialogContent className="max-w-md rounded-2xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-slate-900 dark:text-slate-100">{t("history.deleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600 dark:text-slate-400">
+              {t("history.deleteConfirm")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={Boolean(deletingId)}>{t("history.deleteCancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} disabled={Boolean(deletingId)} className="bg-red-600 text-white hover:bg-red-700">
+              {deletingId ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+              {t("history.delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
