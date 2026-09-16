@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Headphones, Play, Pause, X, ChevronUp, Timer, Volume2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { SoundIllustrationIcon } from "@/components/WellnessIllustration";
 
 const CHANNELS = [
-  { id: "rain", emoji: "🌧️" },
-  { id: "ocean", emoji: "🌊" },
-  { id: "forest", emoji: "🍃" },
-  { id: "fire", emoji: "🔥" },
-  { id: "bowl", emoji: "🔔" },
-  { id: "lofi", emoji: "🎹" },
+  { id: "rain" },
+  { id: "ocean" },
+  { id: "forest" },
+  { id: "fire" },
+  { id: "bowl" },
+  { id: "lofi" },
 ];
 
 const PRESETS = {
@@ -264,7 +265,7 @@ export default function AmbientSoundPlayer() {
           <div className="space-y-2">
             {CHANNELS.map((ch) => (
               <div key={ch.id} className="flex items-center gap-2">
-                <span className="w-7 text-base">{ch.emoji}</span>
+                <span className="w-7 h-7 shrink-0"><SoundIllustrationIcon type={ch.id} className="w-full h-full" /></span>
                 <span className="w-20 text-[11px] text-slate-700 dark:text-slate-300">{t(`sound.${ch.id}`)}</span>
                 <input
                   aria-label={t(`sound.${ch.id}`)}
