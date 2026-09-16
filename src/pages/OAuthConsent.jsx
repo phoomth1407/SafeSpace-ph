@@ -201,7 +201,7 @@ export default function OAuthConsent() {
       )}
 
       <p className="text-sm font-medium text-foreground mb-2">
-        {tools.length ? `${t("oauth.toolsIntro")} ${appName}:` : "{t("oauth.noTools")}"}
+        {tools.length ? `${t("oauth.toolsIntro")} ${appName}:` : t("oauth.noTools")}
       </p>
       {tools.length > 0 && (
         <ul className="space-y-2 text-sm mb-6">
