@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, X, Wind, Cloud, Star } from "lucide-react";
+import { Sparkles, X, Wind, Star } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 
 const MODES = [
