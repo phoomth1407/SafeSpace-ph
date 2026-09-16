@@ -47,7 +47,7 @@ describe("computeAssessmentResult", () => {
     const result = computeAssessmentResult(answers);
 
     expect(result.risk_level).toBe("severe");
-    expect(result.risk_score).toBeLessThan(76);
+    expect(result.risk_score).toBeGreaterThanOrEqual(76);
     expect(result.ai_summary).toContain("สูงมาก");
   });
 
@@ -77,5 +77,23 @@ describe("computeAssessmentResult", () => {
         "similar_case",
       ]),
     );
+  });
+});
+
+
+describe("offline screening model", () => {
+  it("produces a non-trivial score from higher-severity answers", () => {
+    const answers = assessmentCategories.flatMap((cat) =>
+      (cat.questions.en || cat.questions.th).map((q) => ({
+        question: q.q,
+        answer: q.options[q.options.length - 1],
+      })),
+    );
+
+    const result = computeAssessmentResult(answers);
+
+    expect(result.analysis_source).toBe("offline-model");
+    expect(result.risk_score).toBeGreaterThan(25);
+    expect(result.ai_summary).not.toContain("AI");
   });
 });
