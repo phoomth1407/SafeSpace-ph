@@ -1,0 +1,19 @@
+{
+  "name": "SafeSpace",
+  "short_name": "SafeSpace",
+  "description": "A supportive mental-health screening and self-care app.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#60a5fa",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "./icons/safespace-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
