@@ -36,7 +36,8 @@ const answerSeverity = (question, answer, options) => {
   return { score: normalized, selfRisk };
 };
 
-export function computeAssessmentResult(answers = []) {
+export function computeAssessmentResult(answers = [], language = "th") {
+  const isEnglish = language === "en";
   let weightedSum = 0;
   let totalWeight = 0;
   let hasSelfHarmRisk = false;
@@ -101,75 +102,112 @@ export function computeAssessmentResult(answers = []) {
     .filter(([, value]) => value >= 0.6)
     .map(([id]) => {
       const category = assessmentCategories.find((item) => item.id === id);
-      return category?.title?.th || id;
+      return category?.title?.[isEnglish ? "en" : "th"] || category?.title?.th || id;
     });
 
   return {
     risk_level,
     risk_score: riskScore,
-    depression_chance: localLikelihood(risk_level),
-    ai_summary: generateSummary(risk_level, highCategories, hasSelfHarmRisk),
-    recommendations: generateRecommendations(risk_level, highCategories, hasSelfHarmRisk, matchedPatterns),
-    similar_case: generatePatternSummary(highCategories, matchedPatterns),
+    depression_chance: localLikelihood(risk_level, isEnglish),
+    ai_summary: generateSummary(risk_level, highCategories, hasSelfHarmRisk, isEnglish),
+    recommendations: generateRecommendations(risk_level, highCategories, hasSelfHarmRisk, matchedPatterns, isEnglish),
+    similar_case: generatePatternSummary(highCategories, matchedPatterns, isEnglish),
     analysis_source: "offline-model",
   };
 }
 
-function localLikelihood(level) {
-  const messages = {
+function localLikelihood(level, isEnglish) {
+  const th = {
     low: "สัญญาณด้านอารมณ์และความเครียดโดยรวมอยู่ในระดับต่ำจากคำตอบที่ให้",
     moderate: "พบสัญญาณบางด้านที่ควรติดตามและดูแลเพิ่มเติมจากคำตอบที่ให้",
     high: "พบสัญญาณหลายด้านที่ควรได้รับความสนใจและการสนับสนุนเพิ่มเติม",
     severe: "พบสัญญาณที่ควรได้รับการช่วยเหลือโดยเร็ว โดยเฉพาะเมื่อมีคำตอบเกี่ยวกับความไม่ปลอดภัยหรือการทำร้ายตัวเอง",
   };
-  return messages[level];
+  const en = {
+    low: "Overall emotional and stress-related signals are in a lower range based on the answers.",
+    moderate: "Some areas may need more attention and support based on the answers.",
+    high: "Several areas show higher levels of concern and may benefit from additional support.",
+    severe: "Some signals should receive support promptly, especially when answers indicate possible safety concerns.",
+  };
+  return (isEnglish ? en : th)[level];
 }
 
-function generateSummary(level, high, selfRisk) {
-  const base = {
-    low: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์ประเมินว่าสัญญาณด้านสุขภาพใจโดยรวมอยู่ในระดับต่ำ",
-    moderate: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบว่ามีบางด้านที่ควรให้ความสนใจและดูแลเพิ่มเติม",
-    high: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบสัญญาณหลายด้านที่อยู่ในระดับสูงและควรได้รับการสนับสนุนเพิ่มเติม",
-    severe: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบสัญญาณที่ควรได้รับความช่วยเหลือโดยเร็ว",
-  }[level];
+function generateSummary(level, high, selfRisk, isEnglish) {
+  const base = isEnglish
+    ? {
+        low: "Based on the answers, the offline screening model found overall signals in a lower range.",
+        moderate: "Based on the answers, the offline screening model found some areas that may need more attention and support.",
+        high: "Based on the answers, the offline screening model found several areas with higher levels of concern and a need for additional support.",
+        severe: "Based on the answers, the offline screening model found signs that should receive support promptly.",
+      }[level]
+    : {
+        low: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์ประเมินว่าสัญญาณด้านสุขภาพใจโดยรวมอยู่ในระดับต่ำ",
+        moderate: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบว่ามีบางด้านที่ควรให้ความสนใจและดูแลเพิ่มเติม",
+        high: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบสัญญาณหลายด้านที่อยู่ในระดับสูงและควรได้รับการสนับสนุนเพิ่มเติม",
+        severe: "จากคำตอบทั้งหมด ระบบคัดกรองแบบออฟไลน์พบสัญญาณที่ควรได้รับความช่วยเหลือโดยเร็ว",
+      }[level];
 
-  const domain = high.length ? ` ด้านที่เด่นขึ้นมา ได้แก่ ${high.join(", ")}.` : "";
-  const safety = selfRisk
-    ? " เนื่องจากมีคำตอบที่เกี่ยวข้องกับการทำร้ายตัวเองหรือความไม่ปลอดภัย ควรบอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้โดยเร็ว."
+  const domain = high.length
+    ? (isEnglish ? ` Main areas reflected in the answers include ${high.join(", ")}.` : ` ด้านที่เด่นขึ้นมา ได้แก่ ${high.join(", ")}.`)
     : "";
-
-  return `${base}.${domain}${safety} ผลนี้เป็นการคัดกรองเบื้องต้น ไม่ใช่การวินิจฉัยทางการแพทย์`;
+  const safety = selfRisk
+    ? (isEnglish
+        ? " Because an answer may indicate self-harm or safety concerns, tell a trusted adult or professional promptly."
+        : " เนื่องจากมีคำตอบที่เกี่ยวข้องกับการทำร้ายตัวเองหรือความไม่ปลอดภัย ควรบอกผู้ใหญ่หรือผู้เชี่ยวชาญที่ไว้ใจได้โดยเร็ว.")
+    : "";
+  return `${base}.${domain}${safety} ${isEnglish ? "This is a preliminary screening result, not a medical diagnosis." : "ผลนี้เป็นการคัดกรองเบื้องต้น ไม่ใช่การวินิจฉัยทางการแพทย์"}`;
 }
 
-function generatePatternSummary(high, patterns) {
-  const parts = [];
-  if (high.length) parts.push(`รูปแบบที่เด่นในคำตอบคือ ${high.join(", ")}`);
-  if (patterns.has("stress")) parts.push("มีคำตอบที่สะท้อนความเครียดหรือความกังวล");
-  if (patterns.has("social")) parts.push("มีสัญญาณเกี่ยวกับความโดดเดี่ยวหรือความสัมพันธ์");
-  if (patterns.has("health")) parts.push("มีสัญญาณเกี่ยวกับการนอนหรือการกิน");
-  return parts.length
-    ? parts.join(" และ ") + ". นี่เป็นการอธิบายรูปแบบของคำตอบ ไม่ใช่การวินิจฉัยโรค"
-    : null;
+function generatePatternSummary(high, patterns, isEnglish) {
+  const th = [];
+  const en = [];
+  if (patterns.has("stress")) { th.push("มีคำตอบที่สะท้อนความเครียดหรือความกังวล"); en.push("answers reflect stress or worry"); }
+  if (patterns.has("social")) { th.push("มีสัญญาณเกี่ยวกับความโดดเดี่ยวหรือความสัมพันธ์"); en.push("there are signals around loneliness or relationships"); }
+  if (patterns.has("health")) { th.push("มีสัญญาณเกี่ยวกับการนอนหรือการกิน"); en.push("there are signals around sleep or eating"); }
+
+  if (!high.length && !th.length) return null;
+  if (isEnglish) {
+    const domain = high.length ? `The main patterns reflected in the answers include ${high.join(", ")}.` : "";
+    const signals = en.length ? ` ${en.join(" and ")}.` : "";
+    return `${domain}${signals} This describes patterns in the answers and is not a diagnosis.`;
+  }
+  const domain = high.length ? `รูปแบบที่เด่นในคำตอบคือ ${high.join(", ")}` : "";
+  const signals = th.length ? ` ${th.join(" และ ")}.` : "";
+  return `${domain}${signals} นี่เป็นการอธิบายรูปแบบของคำตอบ ไม่ใช่การวินิจฉัยโรค`;
 }
 
-function generateRecommendations(level, high, selfRisk, patterns) {
-  const result = [
-    "พักให้เพียงพอและแบ่งเวลาจากสิ่งที่กดดันออกเป็นช่วงสั้น ๆ",
-    "พูดคุยกับคนที่คุณไว้ใจ เช่น ผู้ปกครอง ครู เพื่อน หรือผู้ใหญ่ที่ปลอดภัย",
-  ];
+function generateRecommendations(level, high, selfRisk, patterns, isEnglish) {
+  const result = isEnglish
+    ? [
+        "Take regular breaks and make time for sleep, meals, and recovery.",
+        "Talk with someone you trust, such as a parent, teacher, friend, or safe adult.",
+      ]
+    : [
+        "พักให้เพียงพอและแบ่งเวลาจากสิ่งที่กดดันออกเป็นช่วงสั้น ๆ",
+        "พูดคุยกับคนที่คุณไว้ใจ เช่น ผู้ปกครอง ครู เพื่อน หรือผู้ใหญ่ที่ปลอดภัย",
+      ];
 
-  if (patterns.has("study")) result.push("ถ้าการเรียนเป็นตัวกดดัน ลองคุยกับครูหรือผู้ปกครองเพื่อแบ่งภาระออกเป็นส่วนเล็ก ๆ");
-  if (patterns.has("bullying")) result.push("หากมีการกลั่นแกล้ง ให้บอกผู้ใหญ่ที่ไว้ใจได้และเก็บหลักฐานเมื่อทำได้");
-  if (patterns.has("social")) result.push("ลองอยู่ใกล้คนที่ทำให้รู้สึกปลอดภัยและไม่ต้องรับเรื่องทั้งหมดไว้คนเดียว");
-  if (patterns.has("health")) result.push("ลองจัดเวลานอน อาหาร และการพักให้สม่ำเสมอมากขึ้น");
-  if (patterns.has("stress")) result.push("ลองใช้การหายใจช้า ๆ หรือ grounding สั้น ๆ เมื่อความเครียดพุ่งขึ้น");
-
-  if (level === "high" || level === "severe") {
-    result.push("พิจารณาพูดคุยกับผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อประเมินเพิ่มเติม");
-  }
-  if (selfRisk) {
-    result.push("หากรู้สึกไม่ปลอดภัย ให้บอกผู้ใหญ่ที่ไว้ใจได้และขอความช่วยเหลือทันที");
-  }
-
+  if (patterns.has("study")) result.push(isEnglish
+    ? "If school pressure is a major stressor, break tasks into smaller steps and ask a teacher or parent for support."
+    : "ถ้าการเรียนเป็นตัวกดดัน ลองคุยกับครูหรือผู้ปกครองเพื่อแบ่งภาระออกเป็นส่วนเล็ก ๆ");
+  if (patterns.has("bullying")) result.push(isEnglish
+    ? "If bullying is happening, tell a trusted adult and keep relevant evidence when possible."
+    : "หากมีการกลั่นแกล้ง ให้บอกผู้ใหญ่ที่ไว้ใจได้และเก็บหลักฐานเมื่อทำได้");
+  if (patterns.has("social")) result.push(isEnglish
+    ? "Stay close to people who make you feel safe rather than carrying everything alone."
+    : "ลองอยู่ใกล้คนที่ทำให้รู้สึกปลอดภัยและไม่ต้องรับเรื่องทั้งหมดไว้คนเดียว");
+  if (patterns.has("health")) result.push(isEnglish
+    ? "Try to keep sleep, meals, and rest more regular."
+    : "ลองจัดเวลานอน อาหาร และการพักให้สม่ำเสมอมากขึ้น");
+  if (patterns.has("stress")) result.push(isEnglish
+    ? "Try a short breathing or grounding exercise when stress rises."
+    : "ลองใช้การหายใจช้า ๆ หรือ grounding สั้น ๆ เมื่อความเครียดพุ่งขึ้น");
+  if (level === "high" || level === "severe") result.push(isEnglish
+    ? "Consider talking with a mental-health professional for further support."
+    : "พิจารณาพูดคุยกับผู้เชี่ยวชาญด้านสุขภาพจิตเพื่อประเมินเพิ่มเติม");
+  if (selfRisk) result.push(isEnglish
+    ? "If you feel unsafe, seek immediate help from a trusted adult or local emergency service."
+    : "หากรู้สึกไม่ปลอดภัย ให้บอกผู้ใหญ่ที่ไว้ใจได้และขอความช่วยเหลือทันที");
   return [...new Set(result)].slice(0, 5);
 }
+
