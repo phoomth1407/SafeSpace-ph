@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ClipboardList, Users, Phone, ArrowRight, Heart, ShieldCheck, Sparkles, Brain, TrendingUp } from "lucide-react";
+import { ClipboardList, Users, ArrowRight, Heart, ShieldCheck, Sparkles, Brain, TrendingUp } from "lucide-react";
 import StatsDashboard from "@/components/StatsDashboard";
 import MoodCheckInCard from "@/components/MoodCheckInCard";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
