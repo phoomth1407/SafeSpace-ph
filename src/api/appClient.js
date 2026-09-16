@@ -102,18 +102,45 @@ const entity = (name) => {
 
 const entities = new Proxy({}, { get: (_, name) => entity(name) });
 
-async function localGuestAssessment(payload) {
+async function localScreeningAssessment(payload, { isGuest = false } = {}) {
   const result = computeAssessmentResult(payload.answers || []);
-  return { ...result, id: makeId(), is_guest: true, analysis_source: "local-screening" };
+  const row = {
+    ...result,
+    id: makeId(),
+    created_by_id: isGuest ? null : (await currentAuthUser())?.id || null,
+    created_by: isGuest ? null : (await currentAuthUser())?.email || null,
+    age: Number.isFinite(Number(payload.age)) ? Number(payload.age) : null,
+    nationality: payload.nationality || "thai",
+    screening_type: "wellbeing",
+    answers: payload.answers || [],
+  };
+  if (isGuest) return { ...row, is_guest: true };
+  const { data, error } = await supabase.from("assessments").insert(row).select("*").single();
+  if (error) throw error;
+  return { ...data, is_guest: false, analysis_source: "offline-model" };
 }
 
 const invoke = async (name, payload = {}) => {
   if (name === "analyzeAssessment") {
     const authUser = await currentAuthUser();
-    if (!authUser) return { data: await localGuestAssessment(payload) };
-    const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
-    if (error) throw error;
-    return { data: { ...(data || {}), is_guest: false } };
+    if (!authUser) return { data: await localScreeningAssessment(payload, { isGuest: true }) };
+
+    try {
+      const { data, error } = await supabase.functions.invoke("analyze-assessment", { body: payload });
+      if (error) throw error;
+      return { data: { ...(data || {}), is_guest: false, analysis_source: data?.analysis_source || "ai" } };
+    } catch (error) {
+      // All remote AI providers unavailable/exhausted: use the local classical
+      // screening model so the assessment still produces a usable result.
+      const fallback = await localScreeningAssessment(payload, { isGuest: false });
+      return {
+        data: {
+          ...fallback,
+          fallback_reason: error?.message || "remote AI unavailable",
+          analysis_source: "offline-model",
+        },
+      };
+    }
   }
 
   if (name === "analyzeCommunityPost") {
