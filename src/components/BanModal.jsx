@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2, UserX, ShieldCheck, Ban } from "lucide-react";
+import { X, Loader2, ShieldCheck, Ban } from "lucide-react";
 import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 
