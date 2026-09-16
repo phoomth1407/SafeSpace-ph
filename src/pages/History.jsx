@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, ClipboardList, ChevronRight, Calendar, LogIn, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Loader2, ClipboardList, ChevronRight, Calendar, LogIn, TrendingUp, TrendingDown, Minus, Trash2 } from "lucide-react";
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from "recharts";
 import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -12,6 +12,8 @@ export default function History() {
   const [assessments, setAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [deleteError, setDeleteError] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -35,6 +37,21 @@ export default function History() {
     window.addEventListener("safespace:history-retry", retry);
     return () => window.removeEventListener("safespace:history-retry", retry);
   }, [isAuthenticated]);
+
+  const handleDelete = async (assessmentId) => {
+    if (!assessmentId) return;
+    if (!window.confirm(t("history.deleteConfirm"))) return;
+    setDeletingId(assessmentId);
+    setDeleteError(false);
+    try {
+      await appClient.entities.Assessment.delete(assessmentId);
+      setAssessments((current) => current.filter((item) => item.id !== assessmentId));
+    } catch (err) {
+      setDeleteError(true);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const riskConfig = {
     low: { label: t("risk.low.short"), color: "text-emerald-300 bg-emerald-500/10" },
@@ -172,22 +189,36 @@ export default function History() {
           )}
 
           {/* Assessment list */}
+          {deleteError && (
+            <div role="alert" className="rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-800 dark:text-red-200">
+              {t("history.deleteError")}
+            </div>
+          )}
+
           <div className="space-y-3">
             {assessments.map((a) => {
               const risk = riskConfig[a.risk_level] || riskConfig.moderate;
               return (
-                <Link
+                <div
                   key={a.id}
-                  to={`/result/${a.id}`}
                   className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800 hover:border-slate-700 transition-colors flex items-center gap-3"
                 >
+                  <Link
+                    to={`/result/${a.id}`}
+                    className="min-w-0 flex-1 flex items-center gap-3"
+                  >
                   <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${risk.color}`}>
                     <ClipboardList className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className={`text-xs px-2 py-0.5 rounded-full ${risk.color}`}>{risk.label}</span>
                       <span className="text-xs text-slate-600 dark:text-slate-400">{a.risk_score || 0}</span>
+                      {a.analysis_source === "offline-model" && (
+                        <span className="inline-flex items-center rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-white">
+                          {t("result.source.offline")}
+                        </span>
+                      )}
                     </div>
                     <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 line-clamp-2 leading-relaxed">{a.ai_summary}</p>
                     <div className="flex items-center gap-1 mt-1.5 text-[10px] text-slate-500 dark:text-slate-500">
@@ -195,8 +226,19 @@ export default function History() {
                       {new Date(a.created_date).toLocaleDateString(lang === "en" ? "en-US" : "th-TH", { day: "numeric", month: "short", year: "numeric" })}
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-600 flex-shrink-0" />
-                </Link>
+                    <ChevronRight className="w-4 h-4 text-slate-600 flex-shrink-0" />
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label={t("history.delete")}
+                    title={t("history.delete")}
+                    onClick={() => handleDelete(a.id)}
+                    disabled={deletingId === a.id}
+                    className="shrink-0 p-2 rounded-full text-slate-500 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-40 transition-colors"
+                  >
+                    {deletingId === a.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                  </button>
+                </div>
               );
             })}
           </div>
