@@ -28,7 +28,7 @@ describe("computeAssessmentResult", () => {
     let used = 0;
     for (const cat of assessmentCategories) {
       for (const q of cat.questions.th) {
-        const index = used < 17 ? 1 : 0;
+        const index = used < 20 ? 1 : 0;
         answers.push({ question: q.q, answer: q.options[index] });
         used++;
       }
@@ -48,7 +48,7 @@ describe("computeAssessmentResult", () => {
 
     expect(result.risk_level).toBe("severe");
     expect(result.risk_score).toBeGreaterThanOrEqual(76);
-    expect(result.ai_summary).toContain("สูงมาก");
+    expect(result.ai_summary).toContain("ควรได้รับความช่วยเหลือโดยเร็ว");
   });
 
   it("recognizes English answers too", () => {
