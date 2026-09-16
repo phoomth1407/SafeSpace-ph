@@ -131,6 +131,39 @@ const invoke = async (name, payload = {}) => {
       if (!data || data.error) {
         throw new Error(data?.error || "remote AI analysis unavailable");
       }
+
+      // The current Supabase function may have its own legacy local fallback.
+      // Replace that result with the newer offline model and update the same
+      // database row so the user does not get a duplicate history entry.
+      if (data.analysis_source === "fallback") {
+        const offline = computeAssessmentResult(payload.answers || []);
+        const patch = {
+          risk_level: offline.risk_level,
+          risk_score: offline.risk_score,
+          depression_chance: offline.depression_chance,
+          ai_summary: offline.ai_summary,
+          similar_case: offline.similar_case,
+          recommendations: offline.recommendations,
+          tool_recommendations: offline.tool_recommendations || [],
+          analysis_source: "offline-model",
+        };
+
+        if (data.id) {
+          const { data: updated, error: updateError } = await supabase
+            .from("assessments")
+            .update(patch)
+            .eq("id", data.id)
+            .select("*")
+            .single();
+
+          if (!updateError && updated) {
+            return { data: { ...updated, is_guest: false, analysis_source: "offline-model" } };
+          }
+        }
+
+        return { data: { ...data, ...patch, is_guest: false, analysis_source: "offline-model" } };
+      }
+
       return { data: { ...data, is_guest: false, analysis_source: data.analysis_source || "ai" } };
     } catch (error) {
       // All remote AI providers unavailable/exhausted: use the local classical
