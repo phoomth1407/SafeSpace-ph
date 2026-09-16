@@ -1,4 +1,4 @@
-name: Test SafeSpace
+name: Test and Deploy SafeSpace
 
 on:
   push:
@@ -7,6 +7,12 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: safespace-pages
+  cancel-in-progress: true
 
 jobs:
   quality:
@@ -36,3 +42,20 @@ jobs:
 
       - name: Slow-network browser smoke test
         run: npm run test:e2e
+
+      - name: Upload tested build
+        if: github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    if: github.event_name == 'push'
+    needs: quality
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
