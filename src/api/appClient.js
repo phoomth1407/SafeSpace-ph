@@ -62,7 +62,45 @@ const entity = (name) => {
     async get(id) {
       const { data, error } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
       if (error) throw error;
-      return data || null;
+      if (!data) return null;
+
+      // Repair legacy assessment rows created by the old "fallback" implementation.
+      // This also makes previously-created result links show the new offline model
+      // instead of the old "Unable to complete AI analysis" placeholder.
+      if (
+        table === "assessments" &&
+        Array.isArray(data.answers) &&
+        data.answers.length &&
+        (
+          data.analysis_source === "fallback" ||
+          /Unable to complete AI analysis|ไม่สามารถวิเคราะห์โดย AI ได้ในขณะนี้|ระบบ AI ไม่สามารถวิเคราะห์แบบประเมินได้ครบถ้วน/i.test(
+            `${data.depression_chance || ""} ${data.ai_summary || ""}`
+          )
+        )
+      ) {
+        const offline = computeAssessmentResult(data.answers);
+        const patch = {
+          risk_level: offline.risk_level,
+          risk_score: offline.risk_score,
+          depression_chance: offline.depression_chance,
+          ai_summary: offline.ai_summary,
+          similar_case: offline.similar_case,
+          recommendations: offline.recommendations,
+          tool_recommendations: offline.tool_recommendations || [],
+          analysis_source: "offline-model",
+        };
+        const { data: repaired, error: repairError } = await supabase
+          .from("assessments")
+          .update(patch)
+          .eq("id", id)
+          .select("*")
+          .single();
+
+        if (!repairError && repaired) return repaired;
+        return { ...data, ...patch };
+      }
+
+      return data;
     },
     async create(input) {
       const authUser = await currentAuthUser();
