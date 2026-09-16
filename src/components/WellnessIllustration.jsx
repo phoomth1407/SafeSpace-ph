@@ -97,8 +97,88 @@ function WorryIllustration() {
   );
 }
 
-export default function WellnessIllustration({ type }) {
-  if (type === "ground") return <GroundingIllustration />;
-  if (type === "worry") return <WorryIllustration />;
-  return <BreathingIllustration />;
+function MoodIllustration({ mood }) {
+  const palettes = {
+    great: ["#A7F3D0", "#10B981", "#F6C7B6"],
+    good: ["#BAE6FD", "#38BDF8", "#F6C7B6"],
+    okay: ["#E2E8F0", "#94A3B8", "#F6C7B6"],
+    worried: ["#FEF3C7", "#F59E0B", "#F6C7B6"],
+    sad: ["#DBEAFE", "#60A5FA", "#F6C7B6"],
+    stressed: ["#FED7AA", "#F97316", "#F6C7B6"],
+    heavy: ["#FFE4E6", "#FB7185", "#F6C7B6"],
+  };
+  const [bg, accent, skin] = palettes[mood] || palettes.okay;
+  const mouth = {
+    great: "M52 63 Q60 71 68 63",
+    good: "M54 64 Q60 68 66 64",
+    okay: "M54 66 H66",
+    worried: "M54 68 Q60 63 66 68",
+    sad: "M54 69 Q60 63 66 69",
+    stressed: "M54 68 Q60 64 66 68",
+    heavy: "M53 69 Q60 61 67 69",
+  }[mood] || "M54 66 H66";
+  return (
+    <svg {...common} aria-hidden="true">
+      <circle cx="60" cy="60" r="48" fill={bg} opacity=".75" />
+      <circle cx="60" cy="45" r="15" fill={skin} />
+      <path d="M45 45C46 33 53 27 61 27C70 27 76 34 75 46C71 40 67 38 61 38C54 38 50 40 45 45Z" fill={accent} />
+      <circle cx="54" cy="55" r="1.8" fill="#334155" />
+      <circle cx="66" cy="55" r="1.8" fill="#334155" />
+      <path d={mouth} stroke="#334155" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      <path d="M45 67C49 73 53 77 60 78C67 77 71 73 75 67L79 92H41L45 67Z" fill="white" opacity=".92" />
+      <path d="M42 78C35 80 30 85 28 92M78 78C85 80 90 85 92 92" stroke={accent} strokeWidth="5" strokeLinecap="round" />
+      <circle cx="28" cy="92" r="2.5" fill={accent} />
+      <circle cx="92" cy="92" r="2.5" fill={accent} />
+    </svg>
+  );
+}
+
+function WorryModeIllustration({ mode }) {
+  return (
+    <svg {...common} aria-hidden="true">
+      <circle cx="60" cy="60" r="47" fill={mode === "lantern" ? "#FEF3C7" : mode === "leaves" ? "#DCFCE7" : "#EDE9FE"} opacity=".7" />
+      {mode === "lantern" && (
+        <>
+          <path d="M45 38H75L70 78H50L45 38Z" fill="#F59E0B" />
+          <path d="M47 45H73M49 70H71" stroke="#7C2D12" strokeWidth="2.5" opacity=".55" />
+          <path d="M52 32C54 27 66 27 68 32" stroke="#B45309" strokeWidth="3" strokeLinecap="round" />
+          <path d="M60 78V88" stroke="#92400E" strokeWidth="3" strokeLinecap="round" />
+          <path d="M55 88H65" stroke="#92400E" strokeWidth="3" strokeLinecap="round" />
+          <circle cx="60" cy="57" r="10" fill="#FFF7ED" opacity=".8" />
+        </>
+      )}
+      {mode === "leaves" && (
+        <>
+          <path d="M58 88C55 70 56 53 64 35" stroke="#16A34A" strokeWidth="4" strokeLinecap="round" />
+          <path d="M60 59C49 58 43 53 41 44C50 44 57 48 60 55Z" fill="#4ADE80" />
+          <path d="M61 72C70 70 77 65 80 56C70 57 64 62 61 68Z" fill="#22C55E" />
+          <path d="M55 48C47 45 42 39 42 31C50 33 55 38 57 44Z" fill="#86EFAC" />
+          <circle cx="29" cy="73" r="3" fill="#86EFAC" opacity=".9" />
+          <circle cx="92" cy="40" r="4" fill="#BBF7D0" opacity=".9" />
+        </>
+      )}
+      {mode === "stardust" && (
+        <>
+          <circle cx="60" cy="61" r="15" fill="#C4B5FD" opacity=".7" />
+          <path d="M60 26L64 42L80 46L64 50L60 66L56 50L40 46L56 42L60 26Z" fill="#A78BFA" />
+          <path d="M31 63L33 71L41 73L33 75L31 83L29 75L21 73L29 71L31 63Z" fill="#DDD6FE" />
+          <path d="M87 70L89 77L96 79L89 81L87 88L85 81L78 79L85 77L87 70Z" fill="#C4B5FD" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+export function WellnessIllustration({ type, className = "" }) {
+  if (type === "ground") return <div className={className}><GroundingIllustration /></div>;
+  if (type === "worry") return <div className={className}><WorryIllustration /></div>;
+  return <div className={className}><BreathingIllustration /></div>;
+}
+
+export function MoodIllustration({ mood, className = "" }) {
+  return <div className={className}><MoodIllustration mood={mood} /></div>;
+}
+
+export function WorryModeIllustration({ mode, className = "" }) {
+  return <div className={className}><WorryModeIllustration mode={mode} /></div>;
 }
