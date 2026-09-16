@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, X, Wind, Star } from "lucide-react";
+import { X } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { WorryModeIllustration } from "@/components/WellnessIllustration";
 
 const MODES = [
-  { id: "lantern", iconComponent: Sparkles },
-  { id: "leaves", iconComponent: Wind },
-  { id: "stardust", iconComponent: Star },
+  { id: "lantern" },
+  { id: "leaves" },
+  { id: "stardust" },
 ];
 
 export default function WorryReleaseModal({ open, onClose }) {
