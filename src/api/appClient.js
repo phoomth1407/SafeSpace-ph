@@ -78,7 +78,7 @@ const entity = (name) => {
           )
         )
       ) {
-        const offline = computeAssessmentResult(data.answers);
+        const offline = computeAssessmentResult(data.answers, data.language || "th");
         const patch = {
           risk_level: offline.risk_level,
           risk_score: offline.risk_score,
@@ -150,6 +150,7 @@ async function localScreeningAssessment(payload, { isGuest = false } = {}) {
     age: Number.isFinite(Number(payload.age)) ? Number(payload.age) : null,
     nationality: payload.nationality || "thai",
     screening_type: "wellbeing",
+    language: payload.language === "en" ? "en" : "th",
     answers: payload.answers || [],
   };
   if (isGuest) return { ...row, is_guest: true };
