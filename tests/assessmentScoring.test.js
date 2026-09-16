@@ -97,3 +97,22 @@ describe("offline screening model", () => {
     expect(result.ai_summary).not.toContain("AI");
   });
 });
+
+
+describe("offline screening language", () => {
+  it("returns English result text when English is selected", () => {
+    const answers = assessmentCategories.flatMap((cat) =>
+      (cat.questions.en || cat.questions.th).map((q) => ({
+        question: q.q,
+        answer: q.options[0],
+      })),
+    );
+
+    const result = computeAssessmentResult(answers, "en");
+
+    expect(result.analysis_source).toBe("offline-model");
+    expect(result.depression_chance).toMatch(/overall|signals|range/i);
+    expect(result.ai_summary).not.toMatch(/จากคำตอบ|ระบบคัดกรอง|การวินิจฉัยทางการแพทย์/);
+    expect(result.recommendations.every((item) => !/ควร|ลอง|พูดคุย|พัก/i.test(item))).toBe(true);
+  });
+});
