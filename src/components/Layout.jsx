@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
-import { Home, Users, Phone, History as HistoryIcon, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon, Info } from "lucide-react";
+import { Home, Users, Phone, History as HistoryIcon, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
@@ -22,8 +22,6 @@ export default function Layout() {
     { to: "/community", label: t("nav.community"), icon: Users },
     { to: "/resources", label: t("nav.resources"), icon: Phone }
   ];
-
-  const aboutHref = `${import.meta.env.BASE_URL}about/`;
 
   const handleLogout = () => {
     logout();
@@ -51,10 +49,6 @@ export default function Layout() {
                   </Link>
                 );
               })}
-              <a href={aboutHref} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors" title="About SafeSpace">
-                <Info className="w-4 h-4" />
-                About
-              </a>
             </nav>
 
             <div className="flex items-center gap-1.5 ml-auto">
@@ -103,11 +97,7 @@ export default function Layout() {
       </main>
 
       <footer className="max-w-5xl mx-auto px-4 pb-28 md:pb-8 pt-2">
-        <div className="border-t border-slate-800 pt-5 text-center">
-          <a href={aboutHref} className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-200 transition-colors">
-            <Info className="w-3.5 h-3.5" /> About SafeSpace
-          </a>
-        </div>
+        <div className="border-t border-slate-800 pt-5 text-center" />
       </footer>
 
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800">
