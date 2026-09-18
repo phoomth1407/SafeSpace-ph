@@ -322,6 +322,18 @@ export default function Home() {
           </MagneticButton>
         </div>
       </motion.section>
+      {/* Standalone project introduction */}
+      <section className="flex flex-col items-center gap-3 pt-2 pb-4 text-center">
+        <p className="text-xs text-slate-500">{t("home.about.hint")}</p>
+        <a
+          href={`${import.meta.env.BASE_URL}about.html`}
+          className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-5 py-3 text-sm font-semibold text-slate-200 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-600 hover:bg-slate-800 hover:text-white"
+        >
+          {t("home.about.button")}
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </section>
+
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
       <WorryReleaseModal open={worryOpen} onClose={() => setWorryOpen(false)} />
