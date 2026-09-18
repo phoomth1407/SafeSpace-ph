@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SafeSpace — Project Introduction</title>
 <meta name="description" content="How SafeSpace works: a bilingual (Thai/English) mental-health screening, self-care, and community app — with the breathing exercise, worry release, and ambient sound mixer rebuilt as live, interactive demos.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='84'%3E%F0%9F%AB%A7%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='8' y='8' width='84' height='84' rx='24' fill='%236FE7DD'/%3E%3Cpath d='M27 39c10-13 36-13 46 0v22c-10 13-36 13-46 0z' fill='%230B171C'/%3E%3Ccircle cx='39' cy='51' r='5' fill='%236FE7DD'/%3E%3Ccircle cx='61' cy='51' r='5' fill='%236FE7DD'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -495,6 +495,7 @@ p{ margin:0; }
   font-family:var(--font-body); font-size:0.95rem; outline:none; min-height:90px;
 }
 .worry-textarea::placeholder{ color:var(--muted-2); }
+.worry-particle .ui-icon{ width:1.15em; height:1.15em; vertical-align:-0.18em; }
 .worry-particle{
   position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
   font-size:0.92rem; color:var(--text); background:rgba(0,0,0,0.0);
@@ -506,6 +507,7 @@ p{ margin:0; }
   70%{ opacity:.9; }
   100%{ opacity:0; transform:translate(-50%,-180px) scale(0.85); }
 }
+.sparkle .ui-icon{ width:1em; height:1em; }
 .sparkle{
   position:absolute; bottom:24px; font-size:0.9rem; pointer-events:none;
   animation:sparkleUp 2.4s ease-out forwards;
@@ -675,6 +677,24 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
 .top-link:hover{ transform:translateY(-3px); }
 
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.icon-slot{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:1.15em; height:1.15em; flex:0 0 auto;
+  color:currentColor; vertical-align:-0.16em;
+}
+.ui-icon{ width:100%; height:100%; display:block; overflow:visible; }
+.pill .icon-slot{ color:var(--mint); }
+.arch-root .icon-slot{ color:var(--mint); width:1.25em; height:1.25em; }
+.arch-node .icon-slot{ width:1.25em; height:1.25em; color:var(--mint); flex:0 0 1.25em; }
+.mood-icon{ width:2rem; height:2rem; margin-bottom:2px; color:var(--text); }
+.mood-btn.picked .mood-icon{ color:var(--mint); }
+.ground-icon{ color:var(--mint); width:2.9rem; height:2.9rem; margin:0 auto 14px; }
+.worry-style-btn .icon-slot{ width:1.45rem; height:1.45rem; color:var(--text); margin:auto; }
+.channel .cicon{ width:1.3rem; height:1.3rem; color:var(--mint); flex:0 0 1.3rem; }
+.mixer-static .pill .icon-slot{ width:1rem; height:1rem; }
+.mini-card h4 .icon-slot{ width:1.1em; height:1.1em; margin-right:4px; color:var(--mint); }
+.lang-toggle .knob{ transform:none !important; background:var(--lavender) !important; font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.02em; }
+
 </style>
 </head>
 <body>
@@ -690,7 +710,10 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     </div>
     <div class="nav-actions">
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" aria-pressed="false">
-        <span class="knob">🌙</span>
+        <span class="knob" id="themeKnob"></span>
+      </button>
+      <button class="theme-toggle lang-toggle" id="langToggle" aria-label="Switch language" aria-pressed="false">
+        <span class="knob" id="langKnob">TH</span>
       </button>
       <a class="btn btn-ghost nav-mobile-hide" href="https://github.com/phoomth1407/SafeSpace-ph" target="_blank" rel="noopener">View code</a>
     </div>
@@ -712,10 +735,10 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <h1>Take a breath.<br>Then meet SafeSpace.</h1>
       <p class="hero-sub">A bilingual (Thai / English) web app for teens and young adults: a mental-health screening check-in, six self-care tools, a quiet anonymous community, and real hotlines — built solo over about a month with React, Vite, and Supabase.</p>
       <div class="hero-badges">
-        <span class="pill">⚛️ <b>React + Vite</b></span>
-        <span class="pill">🗄️ <b>Supabase</b></span>
-        <span class="pill">🤖 <b>OpenAI → Gemini fallback</b></span>
-        <span class="pill">🌐 <b>TH / EN</b></span>
+        <span class="pill"><span class="icon-slot" data-icon="atom" aria-hidden="true"></span><b>React + Vite</b></span>
+        <span class="pill"><span class="icon-slot" data-icon="database" aria-hidden="true"></span><b>Supabase</b></span>
+        <span class="pill"><span class="icon-slot" data-icon="bot" aria-hidden="true"></span><b>OpenAI → Gemini fallback</b></span>
+        <span class="pill"><span class="icon-slot" data-icon="globe" aria-hidden="true"></span><b>TH / EN</b></span>
       </div>
       <div class="hero-cta">
         <a class="btn" href="https://phoomth1407.github.io/SafeSpace-ph" target="_blank" rel="noopener">Open the live app</a>
@@ -764,14 +787,14 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <p class="kicker">Hover or tap a branch — it's the same map the feature walkthrough below follows.</p>
     </div>
     <div class="arch-tree reveal">
-      <div class="arch-root">🏡 SafeSpace</div>
+      <div class="arch-root"><span class="icon-slot" data-icon="home" aria-hidden="true"></span>SafeSpace</div>
       <div class="arch-branch">
-        <a class="arch-node" href="#feat-mood"><span class="icon">🏠</span><span><span class="label">Home</span><span class="sub">Mood check-in, Breathe, Grounding, Worry Release, Community preview</span></span></a>
-        <a class="arch-node" href="#feat-ai"><span class="icon">📝</span><span><span class="label">Assessment → Result</span><span class="sub">AI analysis, summary, recommendations, personalized next-step tools</span></span></a>
-        <a class="arch-node" href="#feat-community"><span class="icon">💬</span><span><span class="label">Community</span><span class="sub">Anonymous posts + quick wellbeing tools</span></span></a>
-        <a class="arch-node" href="#feat-resources"><span class="icon">📚</span><span><span class="label">Resources / Hotlines</span><span class="sub">Curated support lines + quick wellbeing tools</span></span></a>
-        <a class="arch-node" href="#feat-history"><span class="icon">📈</span><span><span class="label">History</span><span class="sub">Private assessment history &amp; trend visualization</span></span></a>
-        <a class="arch-node" href="#more"><span class="icon">🌐</span><span><span class="label">Global layer</span><span class="sub">Light/dark theme, Thai/English, ambient sound player — everywhere</span></span></a>
+        <a class="arch-node" href="#feat-mood"><span class="icon icon-slot" data-icon="home" aria-hidden="true"></span><span><span class="label">Home</span><span class="sub">Mood check-in, Breathe, Grounding, Worry Release, Community preview</span></span></a>
+        <a class="arch-node" href="#feat-ai"><span class="icon icon-slot" data-icon="note" aria-hidden="true"></span><span><span class="label">Assessment → Result</span><span class="sub">AI analysis, summary, recommendations, personalized next-step tools</span></span></a>
+        <a class="arch-node" href="#feat-community"><span class="icon icon-slot" data-icon="chat" aria-hidden="true"></span><span><span class="label">Community</span><span class="sub">Anonymous posts + quick wellbeing tools</span></span></a>
+        <a class="arch-node" href="#feat-resources"><span class="icon icon-slot" data-icon="book" aria-hidden="true"></span><span><span class="label">Resources / Hotlines</span><span class="sub">Curated support lines + quick wellbeing tools</span></span></a>
+        <a class="arch-node" href="#feat-history"><span class="icon icon-slot" data-icon="chart" aria-hidden="true"></span><span><span class="label">History</span><span class="sub">Private assessment history &amp; trend visualization</span></span></a>
+        <a class="arch-node" href="#more"><span class="icon icon-slot" data-icon="globe" aria-hidden="true"></span><span><span class="label">Global layer</span><span class="sub">Light/dark theme, Thai/English, ambient sound player — everywhere</span></span></a>
       </div>
     </div>
   </div>
@@ -836,11 +859,11 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <div class="stage-demo">
         <p class="demo-label">Try it</p>
         <div class="mood-row" role="group" aria-label="Mood check-in">
-          <button class="mood-btn" data-mood="Struggling">😔<span class="lbl">Struggling</span></button>
-          <button class="mood-btn" data-mood="Low">😕<span class="lbl">Low</span></button>
-          <button class="mood-btn" data-mood="Okay">😐<span class="lbl">Okay</span></button>
-          <button class="mood-btn" data-mood="Good">🙂<span class="lbl">Good</span></button>
-          <button class="mood-btn" data-mood="Great">😄<span class="lbl">Great</span></button>
+          <button class="mood-btn" data-mood="Struggling"><span class="mood-icon icon-slot" data-icon="face-sad" aria-hidden="true"></span><span class="lbl">Struggling</span></button>
+          <button class="mood-btn" data-mood="Low"><span class="mood-icon icon-slot" data-icon="face-low" aria-hidden="true"></span><span class="lbl">Low</span></button>
+          <button class="mood-btn" data-mood="Okay"><span class="mood-icon icon-slot" data-icon="face-neutral" aria-hidden="true"></span><span class="lbl">Okay</span></button>
+          <button class="mood-btn" data-mood="Good"><span class="mood-icon icon-slot" data-icon="face-good" aria-hidden="true"></span><span class="lbl">Good</span></button>
+          <button class="mood-btn" data-mood="Great"><span class="mood-icon icon-slot" data-icon="face-great" aria-hidden="true"></span><span class="lbl">Great</span></button>
         </div>
         <p class="mood-msg" id="moodMsg" aria-live="polite">Tap however you're actually feeling right now.</p>
       </div>
@@ -895,7 +918,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <div class="stage-demo">
         <div class="ground-step">
           <p class="ground-count" id="groundCount">Step 1 of 5</p>
-          <div class="ground-icon" id="groundIcon">👀</div>
+          <div class="ground-icon icon-slot" id="groundIcon" data-icon="eye" aria-hidden="true"></div>
           <p class="ground-text" id="groundText">Name 5 things you can see around you</p>
           <div class="ground-dots" id="groundDots"></div>
           <div class="ground-nav">
@@ -923,9 +946,9 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <div class="stage-demo">
         <p class="demo-label">Try it</p>
         <div class="worry-styles" role="group" aria-label="Release style">
-          <button class="worry-style-btn active" data-style="lantern" aria-label="Sky lantern">🏮</button>
-          <button class="worry-style-btn" data-style="leaves" aria-label="Breeze into leaves">🍃</button>
-          <button class="worry-style-btn" data-style="stardust" aria-label="Stardust">✨</button>
+          <button class="worry-style-btn active" data-style="lantern" aria-label="Sky lantern"><span class="icon-slot" data-icon="lantern" aria-hidden="true"></span></button>
+          <button class="worry-style-btn" data-style="leaves" aria-label="Breeze into leaves"><span class="icon-slot" data-icon="leaf" aria-hidden="true"></span></button>
+          <button class="worry-style-btn" data-style="stardust" aria-label="Stardust"><span class="icon-slot" data-icon="sparkle" aria-hidden="true"></span></button>
         </div>
         <div class="worry-area" id="worryArea">
           <textarea class="worry-textarea" id="worryText" placeholder="Type what's weighing on you…" maxlength="90"></textarea>
@@ -961,13 +984,13 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
             <button class="ai-tab" id="presetOff">Reset</button>
           </div>
         </div>
-        <div class="channel"><span class="cicon">🌧️</span><span class="cname">Rain</span><input type="range" min="0" max="100" value="0" id="chRain"></div>
-        <div class="channel"><span class="cicon">🌊</span><span class="cname">Ocean</span><input type="range" min="0" max="100" value="0" id="chOcean"></div>
-        <div class="channel"><span class="cicon">🍃</span><span class="cname">Wind</span><input type="range" min="0" max="100" value="0" id="chWind"></div>
+        <div class="channel"><span class="cicon icon-slot" data-icon="rain" aria-hidden="true"></span><span class="cname">Rain</span><input type="range" min="0" max="100" value="0" id="chRain"></div>
+        <div class="channel"><span class="cicon icon-slot" data-icon="wave" aria-hidden="true"></span><span class="cname">Ocean</span><input type="range" min="0" max="100" value="0" id="chOcean"></div>
+        <div class="channel"><span class="cicon icon-slot" data-icon="wind" aria-hidden="true"></span><span class="cname">Wind</span><input type="range" min="0" max="100" value="0" id="chWind"></div>
         <div class="mixer-static">
-          <span class="pill">🔥 Fireplace</span>
-          <span class="pill">🎶 432 Hz Bowl</span>
-          <span class="pill">🎧 Lo-Fi</span>
+          <span class="pill"><span class="icon-slot" data-icon="fire" aria-hidden="true"></span>Fireplace</span>
+          <span class="pill"><span class="icon-slot" data-icon="music" aria-hidden="true"></span>432 Hz Bowl</span>
+          <span class="pill"><span class="icon-slot" data-icon="headphones" aria-hidden="true"></span>Lo-Fi</span>
         </div>
         <p class="mixer-note">Fireplace, Bowl, and Lo-Fi are more involved synths — hear them in the full app. Tap play, then raise a slider above.</p>
       </div>
@@ -1072,7 +1095,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     </div>
     <div class="grid3 reveal">
       <div class="card mini-card">
-        <h4>🌐 Bilingual, top to bottom</h4>
+        <h4><span class="icon-slot" data-icon="globe" aria-hidden="true"></span> Bilingual, top to bottom</h4>
         <p>Assessment, breathing, grounding, community, resources — every screen ships in Thai and English, not just a handful of labels.</p>
         <div class="mini-demo">
           <div class="lang-demo-toggle" role="group" aria-label="Sample string language">
@@ -1083,14 +1106,14 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
         </div>
       </div>
       <div class="card mini-card">
-        <h4>🌓 Light &amp; dark, actually readable</h4>
+        <h4><span class="icon-slot" data-icon="theme" aria-hidden="true"></span> Light &amp; dark, actually readable</h4>
         <p>Both themes were rebuilt after early versions had gray text disappearing in light mode and black text vanishing in dark mode.</p>
         <div class="mini-demo">
           <p class="theme-pointer">↖ try the switch in the top nav</p>
         </div>
       </div>
       <div class="card mini-card">
-        <h4>🔐 One-tap sign-in</h4>
+        <h4><span class="icon-slot" data-icon="lock" aria-hidden="true"></span> One-tap sign-in</h4>
         <p>Google OAuth, including Google One Tap, so starting the app takes one tap instead of filling out a form.</p>
         <div class="mini-demo">
           <div class="google-btn">
@@ -1246,7 +1269,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
         <ul class="ci-list">
           <li><span class="ic">→</span> Frontend builds with Vite and deploys to GitHub Pages</li>
           <li><span class="ic">→</span> Supabase Edge Functions deploy separately to the connected Supabase project</li>
-          <li><span class="ic">→</span> A safe <code style="font-family:var(--font-mono); font-size:0.85em;">.env.example</code> ships with no real provider secrets</li>
+          <li><span class="ic">→</span> ไฟล์ <code style="font-family:var(--font-mono); font-size:0.85em;">.env.example</code> ships with no real provider secrets</li>
           <li><span class="ic">→</span> Pre-deploy checklist: build succeeds → CI green → light/dark checked → Thai/English checked</li>
         </ul>
       </div>
@@ -1320,13 +1343,193 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   "use strict";
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Standalone icon system ---------- */
+  const ICONS = {
+    moon: '<path d="M20.8 15.3A8.9 8.9 0 0 1 8.7 3.2 8.4 8.4 0 1 0 20.8 15.3Z"/>',
+    sun: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/>',
+    database: '<ellipse cx="12" cy="5.5" rx="7" ry="3.2"/><path d="M5 5.5v6c0 1.8 3.1 3.2 7 3.2s7-1.4 7-3.2v-6M5 11.5v6c0 1.8 3.1 3.2 7 3.2s7-1.4 7-3.2v-6"/>',
+    bot: '<rect x="4" y="6" width="16" height="13" rx="3"/><path d="M9 6V4h6v2M8.5 12h.01M15.5 12h.01M9 16h6"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.7 2.4 4.1 5.4 4.1 9S14.7 18.6 12 21M12 3c-2.7 2.4-4.1 5.4-4.1 9S9.3 18.6 12 21"/>',
+    home: '<path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-6h6v6"/>',
+    note: '<path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4M9 11h6M9 15h6M9 7h2"/>',
+    chat: '<path d="M5 5h14v10H9l-4 4z"/><path d="M8 9h8M8 12h5"/>',
+    book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v17H6.5A2.5 2.5 0 0 0 4 22zM20 5.5A2.5 2.5 0 0 0 17.5 3H12v17h5.5A2.5 2.5 0 0 1 20 22z"/>',
+    chart: '<path d="M4 19V5M4 19h16"/><path d="m6 15 4-4 3 2 5-6"/>',
+    theme: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z"/>',
+    lock: '<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+    rain: '<path d="M7 14a4 4 0 0 1 0-8 5 5 0 0 1 9.5 1.2A3.5 3.5 0 1 1 17 14H7z"/><path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/>',
+    wave: '<path d="M3 10c3-4 6-4 9 0s6 4 9 0M3 15c3-4 6-4 9 0s6 4 9 0"/>',
+    wind: '<path d="M4 8h10a2 2 0 1 0-2-2M4 12h14a2 2 0 1 1-2 2M4 16h9"/>',
+    fire: '<path d="M12 21c4.4 0 7-2.7 7-6.4 0-3.1-1.7-5.1-4.1-7.1.1 2.4-1.1 3.7-2.3 4.4.2-3.3-1.5-6.1-4-7.9.4 3-2.6 5.1-2.6 8.7C6 17.8 8.7 21 12 21Z"/><path d="M12 17.5c1.3 0 2.2-.8 2.2-2 0-.8-.5-1.4-1.1-2-.1.8-.6 1.2-1 1.4-.1-1-.7-1.7-1.4-2.1.1 1-.8 1.6-.8 2.7 0 1.2.8 2 2.1 2Z"/>',
+    atom: '<ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(28 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-28 12 12)"/><circle cx="12" cy="12" r="2"/>',
+    music: '<path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
+    headphones: '<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="7" rx="2"/><rect x="17" y="13" width="4" height="7" rx="2"/>',
+    lantern: '<path d="M9 3h6M8 6h8l-1 11H9zM7 6h10M10 19h4M8 9h8"/>',
+    leaf: '<path d="M20 4C11 4 6 8 6 14c0 3.9 3.1 6 6.7 6C18.2 20 20 12.5 20 4Z"/><path d="M5 19c3-4 6-7 11-10"/>',
+    sparkle: '<path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7Z"/><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7Z"/>',
+    eye: '<path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2.3"/>',
+    hand: '<path d="M7 12V6a1.5 1.5 0 0 1 3 0v5-7a1.5 1.5 0 0 1 3 0v7-6a1.5 1.5 0 0 1 3 0v7l1.1-2a1.5 1.5 0 0 1 2.7 1.3L18 17c-1.5 2.7-3.5 4-6.7 4H9.7c-2.1 0-3.8-1.3-4.4-3.3L4 13.5A1.7 1.7 0 0 1 7 12Z"/>',
+    ear: '<path d="M15.5 17.5c-1.3 2.5-5.5 2.1-5.5-.9 0-2.2 2.1-2.5 3.2-3.7 1.3-1.3 1.4-4.4-1.6-4.8-2.9-.4-5 1.7-5 4.7"/><path d="M17 5.5A7.5 7.5 0 0 0 7 4"/>',
+    nose: '<path d="M12 4c0 4-3 8-3 11 0 1.4 1.2 2 3 2s3-.6 3-2c0-3-3-7-3-11Z"/><path d="M9.5 17.5c1.4 1 3.6 1 5 0"/>',
+    mouth: '<path d="M6 13c2 4 10 4 12 0"/><path d="M9 15c1.8.7 4.2.7 6 0"/>',
+    'face-sad': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M8.5 16c2-2 5-2 7 0"/>',
+    'face-low': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M9 15.5c2-.8 4-.8 6 0"/>',
+    'face-neutral': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M9 15h6"/>',
+    'face-good': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M9 14.5c2 1.6 4 1.6 6 0"/>',
+    'face-great': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M8.5 13.8c2.2 2.7 4.8 2.7 7 0"/>',
+  };
+  function iconSvg(name, className='ui-icon'){
+    const body = ICONS[name] || ICONS.sparkle;
+    return `<svg class="${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+  }
+  document.querySelectorAll('[data-icon]').forEach(el=>{ el.innerHTML = iconSvg(el.dataset.icon); });
+
+  /* ---------- Standalone bilingual system ---------- */
+  const TH = {
+    'SafeSpace — Project Introduction':'SafeSpace — แนะนำโครงการ',
+    'Overview':'ภาพรวม','Features':'ฟีเจอร์','For developers':'สำหรับนักพัฒนา','Build timeline':'ไทม์ไลน์การพัฒนา','View code':'ดูโค้ด',
+    'A school capstone project, in production':'โครงงานปลายภาคของนักเรียนที่นำมาใช้งานจริง',
+    'Take a breath.':'พักหายใจสักครู่','Then meet SafeSpace.':'แล้วมาทำความรู้จัก SafeSpace',
+    'A bilingual (Thai / English) web app for teens and young adults: a mental-health screening check-in, six self-care tools, a quiet anonymous community, and real hotlines — built solo over about a month with React, Vite, and Supabase.':'เว็บแอปสองภาษา (ไทย / อังกฤษ) สำหรับวัยรุ่นและคนหนุ่มสาว มีแบบคัดกรองสุขภาวะทางใจ เครื่องมือดูแลตัวเอง 6 แบบ ชุมชนนิรนาม และสายด่วนจริง — พัฒนาเดี่ยวด้วย React, Vite และ Supabase ประมาณหนึ่งเดือน',
+    'Open the live app':'เปิดแอปจริง','Explore what it does':'ดูว่า SafeSpace ทำอะไรได้บ้าง',
+    "Everything below is interactive — small, honest rebuilds of the app's real tools, not screenshots. Try the breathing ring, mix some ambient sound, or let a worry float away.":'เนื้อหาด้านล่างเป็นตัวอย่างแบบโต้ตอบที่สร้างขึ้นจากแนวคิดของเครื่องมือจริง ไม่ใช่ภาพหน้าจอ ลองวงแหวนฝึกหายใจ มิกซ์เสียงบรรยากาศ หรือปล่อยความกังวลออกไป',
+    'breathe in…':'หายใจเข้า…','…and out':'…และผ่อนออก',
+    'tools & features':'เครื่องมือและฟีเจอร์','languages, everywhere':'ภาษาที่รองรับทั่วทั้งหน้า','tiers of AI fallback':'ระดับการสำรองของ AI','ambient sound channels':'ช่องเสียงบรรยากาศ','developer, ~1 month':'นักพัฒนา 1 คน · ประมาณ 1 เดือน',
+    'SafeSpace exists for the moment right before someone decides whether to ask for help — the quiet, private, "I don\'t know what this is or if it\'s serious" moment. It\'s not a diagnosis tool. It\'s a soft landing.':'SafeSpace ถูกออกแบบมาสำหรับช่วงเวลาก่อนที่คนหนึ่งจะตัดสินใจขอความช่วยเหลือ — ช่วงเวลาที่เงียบและเป็นส่วนตัว ซึ่งอาจคิดว่า “ฉันไม่รู้ว่านี่คืออะไรหรือมันร้ายแรงแค่ไหน” มันไม่ใช่เครื่องมือวินิจฉัย แต่เป็นจุดเริ่มต้นที่อ่อนโยน',
+    "A short screening gives language to what someone's feeling. From there, the app hands them something to actually do right now — breathe, ground, let a worry go, listen to something calm — plus a place to be heard anonymously, and a real hotline if it's more than the app can hold.":'แบบคัดกรองสั้น ๆ ช่วยให้เราอธิบายสิ่งที่กำลังรู้สึกได้ชัดขึ้น จากนั้นแอปจะเสนอสิ่งที่ทำได้ตอนนี้ เช่น ฝึกหายใจ ทำ Grounding ปล่อยความกังวล หรือฟังเสียงผ่อนคลาย พร้อมพื้นที่พูดคุยแบบนิรนาม และสายด่วนจริงเมื่อเรื่องนั้นเกินกว่าที่แอปจะรองรับได้',
+    "Screening and supportive guidance, never a medical diagnosis — said plainly, in the product's own words, in both languages.":'การคัดกรองและคำแนะนำเพื่อช่วยเหลือ ไม่ใช่การวินิจฉัยทางการแพทย์ — อธิบายอย่างตรงไปตรงมาในทั้งสองภาษา',
+    "How it's put together":'โครงสร้างของระบบ','One app, six areas, all wrapped in the same global layer':'หนึ่งแอป 6 ส่วน ห่อหุ้มด้วยระบบกลางเดียวกัน',
+    "Hover or tap a branch — it's the same map the feature walkthrough below follows.":'ชี้หรือแตะสาขาต่าง ๆ — แผนที่นี้คือโครงสร้างเดียวกับที่ใช้ในส่วนอธิบายฟีเจอร์ด้านล่าง',
+    'Home':'หน้าแรก','Mood check-in, Breathe, Grounding, Worry Release, Community preview':'เช็กอารมณ์ ฝึกหายใจ Grounding ปล่อยความกังวล และตัวอย่างชุมชน',
+    'Assessment → Result':'แบบประเมิน → ผลลัพธ์','AI analysis, summary, recommendations, personalized next-step tools':'การวิเคราะห์ด้วย AI สรุปผล คำแนะนำ และเครื่องมือถัดไปที่เหมาะกับแต่ละคน',
+    'Community':'ชุมชน','Anonymous posts + quick wellbeing tools':'โพสต์แบบนิรนามและเครื่องมือดูแลใจแบบด่วน',
+    'Resources / Hotlines':'แหล่งข้อมูล / สายด่วน','Curated support lines + quick wellbeing tools':'แหล่งช่วยเหลือที่คัดไว้และเครื่องมือดูแลใจแบบด่วน',
+    'History':'ประวัติ','Private assessment history & trend visualization':'ประวัติแบบประเมินส่วนตัวและกราฟแนวโน้ม',
+    'Global layer':'ระบบกลาง','Light/dark theme, Thai/English, ambient sound player — everywhere':'ธีมสว่าง/มืด ภาษาไทย/อังกฤษ และเครื่องเล่นเสียงบรรยากาศ — ใช้ได้ทั่วทั้งระบบ',
+    'The tools themselves':'เครื่องมือที่ใช้งานจริง','Ten things SafeSpace actually does':'10 สิ่งที่ SafeSpace ทำได้จริง','Each one below is a working, simplified rebuild — click around.':'แต่ละส่วนด้านล่างเป็นตัวอย่างที่โต้ตอบได้ ลองกดดูได้เลย',
+    'FEATURE 1: AI assessment':'ฟีเจอร์ 1: แบบประเมินและ AI','01 · Assessment & AI analysis':'01 · แบบประเมินและการวิเคราะห์ด้วย AI','A screening that explains itself, and never goes down':'แบบคัดกรองที่อธิบายผลได้และยังใช้งานต่อได้แม้ AI บางตัวไม่พร้อม',
+    "A short, PHQ-9-informed questionnaire opens the flow. The result isn't just a score — it's explained in plain language: concern level, likely reasons, and the patterns behind the answers.":'แบบสอบถามสั้น ๆ ที่อ้างอิงแนวคิดจาก PHQ-9 จะเริ่มกระบวนการ ผลลัพธ์ไม่ได้มีแค่คะแนน แต่จะอธิบายเป็นภาษาที่เข้าใจง่าย ทั้งระดับความกังวล เหตุผลที่อาจเกี่ยวข้อง และรูปแบบที่สะท้อนจากคำตอบ',
+    'An AI reads the answer pattern and suggests 2–4 next-step tools, each with its own short reason':'AI อ่านรูปแบบคำตอบและเสนอเครื่องมือถัดไป 2–4 แบบ พร้อมเหตุผลสั้น ๆ ของแต่ละตัว',
+    'If OpenAI is unavailable, the app quietly retries with Gemini':'ถ้า OpenAI ไม่พร้อมใช้งาน แอปจะลอง Gemini ต่อโดยอัตโนมัติ',
+    'If both AI providers are down, a local rule-based recommender still returns something useful':'ถ้า AI ทั้งสองตัวไม่พร้อมใช้งาน ระบบกฎภายในเครื่องยังสามารถสร้างคำแนะนำที่ใช้งานได้',
+    'Nobody using the app ever sees a raw error — just a result':'ผู้ใช้ไม่ต้องเห็นข้อความ error ดิบ ๆ — จะได้รับผลลัพธ์แทน',
+    'Try it — pick a scenario':'ลองดู — เลือกสถานการณ์','A normal day':'วันปกติ','OpenAI is busy':'OpenAI ไม่พร้อม','Both AI providers down':'AI ทั้งสองตัวไม่พร้อมใช้งาน','OpenAI':'OpenAI','waiting…':'กำลังรอ…','Gemini':'Gemini','fallback':'สำรอง','Local rules':'กฎภายในระบบ','final fallback':'สำรองขั้นสุดท้าย','Choose a scenario above to send a sample request.':'เลือกสถานการณ์ด้านบนเพื่อส่งคำขอตัวอย่าง',
+    'FEATURE 2: Mood check-in':'ฟีเจอร์ 2: เช็กอารมณ์','02 · Daily mood check-in':'02 · เช็กอารมณ์ประจำวัน','A five-second honest snapshot':'เช็กความรู้สึกจริง ๆ ในไม่กี่วินาที',
+    "Five taps, no essay required. It's designed to lower the bar for checking in with yourself on an ordinary day, not just a bad one.":'แตะเพียงไม่กี่ครั้ง ไม่ต้องเขียนยาว ออกแบบมาเพื่อให้เช็กอินกับตัวเองได้ง่ายในทุกวัน ไม่ใช่เฉพาะวันที่รู้สึกแย่',
+    'Five-point scale, one tap to log':'มาตราส่วน 5 ระดับ แตะครั้งเดียวเพื่อบันทึก','No streaks, no "you missed a day" guilt — the team deliberately left streaks out':'ไม่มี streak และไม่มีความรู้สึกผิดจากการพลาดวันหนึ่ง — ตั้งใจไม่ใส่ระบบนี้',
+    'Lives right on the Home screen, next to the other quick tools':'อยู่บนหน้าแรกข้าง ๆ เครื่องมือด่วนอื่น ๆ','Try it':'ลองใช้','Struggling':'หนักมาก','Low':'ค่อนข้างแย่','Okay':'ปกติ','Good':'ดี','Great':'ดีมาก',
+    "Tap however you're actually feeling right now.":'แตะระดับที่ตรงกับความรู้สึกจริงของคุณตอนนี้',
+    'FEATURE 3: Breathing':'ฟีเจอร์ 3: การฝึกหายใจ','03 · Guided breathing':'03 · ฝึกหายใจแบบมีจังหวะ','A real breathing exercise, in two languages':'แบบฝึกหายใจจริงที่รองรับสองภาษา',
+    'A paced inhale–hold–exhale cycle meant to nudge the nervous system down a notch. Fully bilingual, with the labels switching between Thai and English mid-exercise.':'จังหวะหายใจเข้า–กลั้น–ผ่อนออกที่ออกแบบมาให้ร่างกายค่อย ๆ ผ่อนลง รองรับสองภาษาและสลับภาษาได้ขณะฝึก',
+    '4-second inhale, 4-second hold, 4-second exhale, on a loop':'หายใจเข้า 4 วินาที กลั้น 4 วินาที ผ่อนออก 4 วินาที และวนซ้ำ','Thai and English labels, switchable live':'ป้ายกำกับภาษาไทยและอังกฤษ สลับได้ทันที',
+    'Part of the same "Quick tools" set embedded in Home, Community, and Resources':'เป็นส่วนหนึ่งของชุด “เครื่องมือด่วน” ที่อยู่ในหน้าแรก ชุมชน และแหล่งข้อมูล',
+    'English':'อังกฤษ','ไทย':'ไทย','Start':'เริ่ม','Press start when you\'re ready.':'กดเริ่มเมื่อพร้อม','Start breathing':'เริ่มฝึกหายใจ',
+    'FEATURE 4: Grounding':'ฟีเจอร์ 4: Grounding','04 · 5-4-3-2-1 grounding':'04 · Grounding 5-4-3-2-1','The classic technique, stepped through slowly':'เทคนิคคลาสสิกที่ค่อย ๆ ทำทีละขั้น',
+    'A well-known grounding exercise for anxiety: work backward through your senses, one at a time, to pull attention back into the present room.':'แบบฝึก Grounding ที่ใช้กับความกังวล โดยค่อย ๆ สังเกตประสาทสัมผัสทีละอย่างเพื่อดึงความสนใจกลับมาสู่สิ่งที่อยู่ตรงหน้า',
+    'Five steps, one sense each, with its own icon and prompt':'5 ขั้นตอน แต่ละขั้นใช้ประสาทสัมผัสหนึ่งอย่าง พร้อมไอคอนและคำแนะนำ',
+    'Available in Thai and English':'รองรับภาษาไทยและอังกฤษ','Same "quick tool" embed pattern used across Home, Community, and Resources':'ใช้รูปแบบเครื่องมือด่วนแบบเดียวกันในหน้าแรก ชุมชน และแหล่งข้อมูล',
+    'Step 1 of 5':'ขั้นที่ 1 จาก 5','Name 5 things you can see around you':'ลองบอก 5 สิ่งที่คุณมองเห็นรอบตัว','Back':'ย้อนกลับ','Next':'ถัดไป',
+    'FEATURE 5: Worry release':'ฟีเจอร์ 5: ปล่อยความกังวล','05 · Worry release':'05 · ปล่อยความกังวล','Write it down, then watch it go':'เขียนลงไป แล้วปล่อยให้มันลอยออกไป',
+    "Type whatever's weighing on you, pick a release style, and it drifts off screen. It's built as a release, not a journal — the point is letting go of the sentence, not archiving it.":'พิมพ์สิ่งที่กำลังหนักใจ เลือกรูปแบบการปล่อย แล้วปล่อยให้ข้อความค่อย ๆ ลอยออกไป นี่ออกแบบมาเพื่อ “ปล่อย” ไม่ใช่ไดอารี จุดสำคัญคือการวางประโยคนั้นลง ไม่ใช่เก็บมันไว้',
+    'Three release effects: Sky Lantern, Breeze into Leaves, and Stardust':'เอฟเฟกต์ 3 แบบ: โคมลอย ใบไม้ตามสายลม และละอองดาว','Custom animation per effect, tuned separately for light and dark mode':'แต่ละเอฟเฟกต์มีแอนิเมชันเฉพาะ และปรับให้เหมาะกับโหมดสว่างและมืด','Nothing here is saved.':'สิ่งที่เขียนตรงนี้จะไม่ถูกบันทึก','Let it go':'ปล่อยออกไป',
+    'FEATURE 6: Sound mixer':'ฟีเจอร์ 6: มิกซ์เสียง','06 · Ambient sound mixer':'06 · มิกซ์เสียงบรรยากาศ','Six channels, built live in the browser — no audio files':'6 ช่องเสียง สร้างสดในเบราว์เซอร์ — ไม่ใช้ไฟล์เสียง',
+    'A procedural ambient mixer using the Web Audio API: Rain, Ocean, Wind, Fireplace, a 432 Hz singing bowl, and Lo-Fi, each generated from filtered noise rather than a sound file.':'มิกซ์เสียงบรรยากาศด้วย Web Audio API: ฝน คลื่นทะเล ลม กองไฟ เสียงกังวาน 432 Hz และ Lo-Fi ทั้งหมดสร้างจากเสียง noise ที่ผ่านการกรอง ไม่ใช่ไฟล์เสียง',
+    'Per-track and master volume, play/pause, and 15/30/60-minute sleep timers':'ปรับเสียงแต่ละแทร็กและเสียงรวม เล่น/พัก และตั้งเวลานอน 15/30/60 นาที','Four one-tap presets: Deep Focus, Rainy Cabin, Zen, and Sleep':'พรีเซ็ตแตะครั้งเดียว 4 แบบ: โฟกัสลึก ห้องฝนตก Zen และเตรียมนอน',
+    'The player persists globally — it keeps playing while you browse Community or Resources':'เครื่องเล่นทำงานต่อทั่วทั้งหน้า — เสียงยังเล่นขณะเปิดชุมชนหรือแหล่งข้อมูล',
+    'Real audio — Rain, Ocean, and Wind are actually synthesized below':'เสียงจริง — ฝน คลื่นทะเล และลมถูกสร้างขึ้นแบบสดด้านล่าง','Rainy Cabin':'ห้องฝนตก','Zen':'Zen','Reset':'รีเซ็ต','Rain':'ฝน','Ocean':'คลื่นทะเล','Wind':'ลม','Fireplace':'กองไฟ','432 Hz Bowl':'เสียงกังวาน 432 Hz','Lo-Fi':'Lo-Fi',
+    'Fireplace, Bowl, and Lo-Fi are more involved synths — hear them in the full app. Tap play, then raise a slider above.':'กองไฟ เสียงกังวาน และ Lo-Fi เป็นซินธ์ที่ซับซ้อนกว่า — ไปลองฟังในแอปจริงได้ แตะเล่นแล้วเพิ่มระดับเสียงด้านบน',
+    'FEATURE 7: Community':'ฟีเจอร์ 7: ชุมชน','07 · Anonymous community':'07 · ชุมชนนิรนาม','A place to post without a name attached':'พื้นที่โพสต์โดยไม่ต้องติดชื่อ',
+    "No profile photo, no username tied to your assessment history — just a space to say what's going on and read what other people are going through.":'ไม่มีรูปโปรไฟล์และไม่มีชื่อผู้ใช้ที่ผูกกับประวัติแบบประเมิน — มีเพียงพื้นที่ให้เล่าสิ่งที่กำลังเจอและอ่านประสบการณ์ของคนอื่น',
+    'Posts appear live, no refresh needed':'โพสต์ใหม่แสดงแบบสดโดยไม่ต้องรีเฟรช','Quick Breathe, Grounding, and Sounds tools sit right in the feed':'เครื่องมือด่วนสำหรับหายใจ Grounding และเสียงอยู่ในฟีดเลย',
+    'Kept separate from personal Assessment History — nothing here is linked back to an account':'แยกจากประวัติแบบประเมินส่วนตัว — เนื้อหาที่นี่ไม่เชื่อมกลับไปยังบัญชี',
+    'Sample feed — new posts arrive as you watch':'ตัวอย่างฟีด — โพสต์ใหม่จะค่อย ๆ เข้ามาขณะคุณดู',
+    'FEATURE 8: Resources':'ฟีเจอร์ 8: แหล่งข้อมูล','08 · Resources & hotlines':'08 · แหล่งข้อมูลและสายด่วน','Real help, one tap away':'ความช่วยเหลือจริงที่เข้าถึงได้ในแตะเดียว',
+    'A curated resource list with safe fallback data, so the hotline numbers still show up even if the network request fails.':'รายการแหล่งข้อมูลที่คัดไว้พร้อมข้อมูลสำรอง เพื่อให้หมายเลขสายด่วนยังแสดงได้แม้การเชื่อมต่อเครือข่ายล้มเหลว',
+    "Kept current — the hotline entry was updated to Thailand's present-day Department of Mental Health line":'ข้อมูลถูกอัปเดต — รายการสายด่วนใช้หมายเลขของกรมสุขภาพจิตประเทศไทยในปัจจุบัน',
+    'Breathe, Grounding, and Sounds are one tap away here too':'ฝึกหายใจ Grounding และเสียงก็เข้าถึงได้ในแตะเดียวจากหน้านี้','Sits alongside Community as the two places you can go without opening an assessment':'อยู่คู่กับชุมชน เป็นสองส่วนที่เข้าได้โดยไม่ต้องเปิดแบบประเมิน',
+    'Department of Mental Health Hotline · Thailand · 24/7':'สายด่วนกรมสุขภาพจิต · ประเทศไทย · 24/7','Crisis & emergency support':'ความช่วยเหลือเมื่อเร่งด่วน','Fastest paths when something feels urgent — including the 1323 line above.':'ช่องทางที่เร็วที่สุดเมื่อรู้สึกว่าเรื่องนั้นเร่งด่วน รวมถึงสายด่วน 1323 ด้านบน',
+    'Counseling services':'บริการให้คำปรึกษา','Longer-term, ongoing support beyond a single hotline call.':'ความช่วยเหลือระยะยาวที่ต่อเนื่อง นอกเหนือจากการโทรสายด่วนเพียงครั้งเดียว','Youth-focused resources':'แหล่งช่วยเหลือสำหรับเยาวชน','Support specifically aimed at teens and young adults.':'แหล่งช่วยเหลือที่ออกแบบสำหรับวัยรุ่นและคนหนุ่มสาวโดยเฉพาะ',
+    'FEATURE 9: History':'ฟีเจอร์ 9: ประวัติ','09 · Assessment history & trends':'09 · ประวัติและแนวโน้มการประเมิน','A private trend line, just for you':'กราฟแนวโน้มส่วนตัวสำหรับคุณ',
+    "Every assessment is saved to the student's own account and plotted over time — not to grade progress, just to make the pattern visible.":'ทุกแบบประเมินจะถูกบันทึกไว้ในบัญชีของนักเรียนและแสดงเป็นแนวโน้มตามเวลา — ไม่ได้มีไว้ให้คะแนนความก้าวหน้า แต่เพื่อให้เห็นรูปแบบได้ชัดขึ้น',
+    'For the account holder only — nothing here reaches Community':'สำหรับเจ้าของบัญชีเท่านั้น — ข้อมูลส่วนนี้จะไม่ไปถึงชุมชน','Focused deliberately on assessment history, kept separate from daily mood logging':'ตั้งใจโฟกัสที่ประวัติแบบประเมินและแยกออกจากการเช็กอารมณ์ประจำวัน','Light/dark contrast was specifically tuned here after early readability bugs':'ปรับคอนทราสต์โหมดสว่าง/มืดในส่วนนี้เป็นพิเศษ หลังพบปัญหาเรื่องการอ่านในช่วงแรก',
+    'Sample trend — not real data':'ตัวอย่างแนวโน้ม — ไม่ใช่ข้อมูลจริง','Week 1 → Week 6 · lower marks less concern on this illustrative sample.':'สัปดาห์ 1 → สัปดาห์ 6 · ในตัวอย่างนี้ค่าที่ต่ำลงหมายถึงระดับความกังวลที่น้อยลง',
+    'Woven through everything else':'สิ่งที่ถักทออยู่ทั่วทั้งระบบ','Three things that aren\'t features on their own — they\'re everywhere':'3 สิ่งที่ไม่ใช่ฟีเจอร์เดี่ยว ๆ แต่มีอยู่ทั่วทั้งระบบ',
+    'Bilingual, top to bottom':'สองภาษาตั้งแต่ต้นจนจบ','Assessment, breathing, grounding, community, resources — every screen ships in Thai and English, not just a handful of labels.':'แบบประเมิน การหายใจ Grounding ชุมชน และแหล่งข้อมูล — ทุกหน้ารองรับไทยและอังกฤษ ไม่ใช่แค่บางป้ายข้อความ',
+    'EN':'EN','TH':'TH','"How are you feeling today?"':'“วันนี้คุณรู้สึกอย่างไรบ้าง?”','Light & dark, actually readable':'โหมดสว่างและมืดที่อ่านได้จริง','Both themes were rebuilt after early versions had gray text disappearing in light mode and black text vanishing in dark mode.':'ทั้งสองธีมถูกปรับใหม่ หลังเวอร์ชันแรกมีปัญหาข้อความสีเทาจางหายไปในโหมดสว่างและข้อความสีดำหายไปในโหมดมืด','↖ try the switch in the top nav':'↖ ลองใช้สวิตช์ด้านบน','One-tap sign-in':'เข้าสู่ระบบในแตะเดียว','Google OAuth, including Google One Tap, so starting the app takes one tap instead of filling out a form.':'Google OAuth รวมถึง Google One Tap เพื่อให้เริ่มใช้งานได้ในแตะเดียวแทนการกรอกแบบฟอร์ม','Continue with Google — illustrative only':'ดำเนินการต่อด้วย Google — ตัวอย่างประกอบเท่านั้น',
+    'Developer notes':'บันทึกสำหรับนักพัฒนา',"What's actually running under the hood":'สิ่งที่ทำงานอยู่เบื้องหลังจริง ๆ','For anyone building something similar — or the future me who forgets again. Code below is written to illustrate the pattern, not copy-pasted from the real source.':'สำหรับคนที่กำลังสร้างสิ่งที่คล้ายกัน — หรือสำหรับตัวฉันเองในอนาคตที่อาจลืมอีกครั้ง โค้ดด้านล่างเป็นตัวอย่างเพื่ออธิบายแนวทาง ไม่ใช่การคัดลอกจากซอร์สจริง',
+    'Core':'แกนหลัก','TypeScript checking via jsconfig':'ตรวจสอบ TypeScript ผ่าน jsconfig','Data & forms':'ข้อมูลและฟอร์ม','UI kit':'ชุด UI','Motion & output':'แอนิเมชันและเอาต์พุต','Backend':'แบ็กเอนด์','Quality & delivery':'คุณภาพและการส่งมอบ',
+    'The AI fallback, sketched out':'ภาพรวมการสำรอง AI','Deployed as a Supabase Edge Function, kept behind a JWT so it can\'t be called anonymously.':'ติดตั้งเป็น Supabase Edge Function และใช้ JWT เพื่อไม่ให้เรียกใช้งานแบบนิรนาม',
+    'How the noise channels above are made':'วิธีสร้างช่องเสียงด้านบน','Rain uses a bandpass filter, Ocean a lowpass with a slow LFO on cutoff, Wind a bandpass with its own slower LFO.':'Rain ใช้ bandpass filter, Ocean ใช้ lowpass พร้อม LFO ช้า ๆ ที่ cutoff และ Wind ใช้ bandpass พร้อม LFO ที่ช้ากว่า',
+    'The bilingual string pattern':'รูปแบบสตริงสองภาษา','A representative pattern for the bilingual strings used across the app — the real dictionary is much larger.':'ตัวอย่างรูปแบบสตริงสองภาษาที่ใช้ทั่วทั้งแอป — dictionary จริงมีขนาดใหญ่กว่านี้มาก',
+    'Row-level security, the shape of it':'ภาพรวมของ Row-Level Security','Supabase RLS keeps every assessment and history row scoped to the signed-in user by default.':'Supabase RLS ทำให้ข้อมูลแบบประเมินและประวัติแต่ละแถวถูกจำกัดไว้กับผู้ใช้ที่เข้าสู่ระบบตามค่าเริ่มต้น',
+    'Testing & CI':'การทดสอบและ CI','Vitest unit + component tests cover scoring logic, authentication behavior, and the AI fallback chain':'Vitest ทดสอบ logic การให้คะแนน พฤติกรรมการยืนยันตัวตน และลำดับการสำรองของ AI','Playwright drives end-to-end tests against the built app':'Playwright ทดสอบการทำงานแบบ end-to-end กับแอปที่ build แล้ว','eslint-plugin-jsx-a11y runs as a dedicated accessibility lint pass':'eslint-plugin-jsx-a11y ทำหน้าที่ตรวจ accessibility โดยเฉพาะ','GitHub Actions runs tests, a11y lint, and a production build on every change':'GitHub Actions รันการทดสอบ a11y lint และ production build ทุกครั้งที่มีการเปลี่ยนแปลง','Dependabot groups non-major dependency updates automatically':'Dependabot จัดกลุ่มการอัปเดต dependency ที่ไม่ใช่ major ให้อัตโนมัติ','Route-level code splitting via React Suspense lazy loading':'แบ่งโค้ดระดับ route ด้วย React Suspense และ lazy loading',
+    'Deployment':'การนำขึ้นระบบ','Frontend builds with Vite and deploys to GitHub Pages':'Frontend build ด้วย Vite และ deploy ไปที่ GitHub Pages','Supabase Edge Functions deploy separately to the connected Supabase project':'Supabase Edge Functions ถูก deploy แยกไปยังโปรเจกต์ Supabase ที่เชื่อมต่อ','ships with no real provider secrets':'ไม่มี secret จริงของผู้ให้บริการติดมาด้วย','Pre-deploy checklist: build succeeds → CI green → light/dark checked → Thai/English checked':'เช็กลิสต์ก่อน deploy: build ผ่าน → CI เขียว → ตรวจโหมดสว่าง/มืด → ตรวจไทย/อังกฤษ',
+    'How it actually got built':'SafeSpace ถูกสร้างขึ้นอย่างไร','Two days on the changelog, about a month in real time':'สองวันใน changelog กับเวลาพัฒนาจริงประมาณหนึ่งเดือน','Pulled straight from CHANGELOG.md — the record for whenever this gets forgotten again.':'ดึงมาจาก CHANGELOG.md โดยตรง — บันทึกไว้สำหรับวันที่ลืมรายละเอียดอีกครั้ง',
+    'The build day':'วันพัฒนา','Wellbeing & Home':'สุขภาวะและหน้าแรก','— Mood check-in, guided breathing, 5-4-3-2-1 grounding, and Worry Release shipped together, with Sky Lantern / Leaves / Stardust release animations.':'— เช็กอารมณ์ ฝึกหายใจ Grounding 5-4-3-2-1 และ Worry Release ถูกปล่อยพร้อมกัน พร้อมแอนิเมชัน Sky Lantern / Leaves / Stardust',
+    'Ambient sound':'เสียงบรรยากาศ','— The procedural mixer was built from scratch on the Web Audio API, with six channels and four presets.':'— มิกเซอร์เสียงถูกสร้างขึ้นใหม่ด้วย Web Audio API มี 6 ช่องเสียงและ 4 พรีเซ็ต',
+    'Assessment & AI':'แบบประเมินและ AI','— AI analysis was restored and expanded into the three-tier OpenAI → Gemini → local fallback, plus AI-personalized next-step tools.':'— การวิเคราะห์ด้วย AI ถูกนำกลับมาและขยายเป็นระบบ 3 ระดับ OpenAI → Gemini → local fallback พร้อมเครื่องมือถัดไปที่ปรับตามผู้ใช้',
+    '— Made live with no refresh needed, plus quick wellbeing tools embedded in the feed.':'— ทำให้ชุมชนอัปเดตแบบสดโดยไม่ต้องรีเฟรช และฝังเครื่องมือดูแลใจด่วนไว้ในฟีด',
+    'Resources':'แหล่งข้อมูล','— Hotline list restored with safe fallback data.':'— นำรายการสายด่วนกลับมาพร้อมข้อมูลสำรองที่ปลอดภัย','Theme & language':'ธีมและภาษา','— A full light/dark contrast pass, plus a bilingual pass across Authentication, Assessment, Result, and every wellbeing tool.':'— ปรับคอนทราสต์สว่าง/มืดทั้งหมด และปรับสองภาษาครอบคลุม Authentication, Assessment, Result และเครื่องมือดูแลใจทุกส่วน','Auth':'การยืนยันตัวตน','— Google One Tap sign-in added, alongside the existing authentication.':'— เพิ่ม Google One Tap ควบคู่กับระบบยืนยันตัวตนเดิม',
+    'The polish day — v1.1.0':'วันเก็บรายละเอียด — v1.1.0','Copy & hierarchy':'ข้อความและลำดับชั้น','— Headings and supporting text standardized across key pages, with clearer bilingual microcopy.':'— ปรับหัวข้อและข้อความสนับสนุนให้เป็นมาตรฐานในหน้าหลัก พร้อม microcopy สองภาษาที่ชัดเจนขึ้น','Honesty pass':'ปรับถ้อยคำให้ตรงไปตรงมา','— AI/result language reworded to make clear SafeSpace offers screening and support, not a diagnosis.':'— ปรับถ้อยคำของ AI และผลลัพธ์ให้ชัดเจนว่า SafeSpace ให้การคัดกรองและการสนับสนุน ไม่ใช่การวินิจฉัย','Hotline update':'อัปเดตสายด่วน','— Updated to the current 1323 Department of Mental Health service.':'— อัปเดตเป็นบริการ 1323 ของกรมสุขภาพจิตในปัจจุบัน','Testing':'การทดสอบ','— Automated unit and component tests added for scoring, auth, and AI fallback logic, plus a Playwright e2e pass.':'— เพิ่ม unit/component tests อัตโนมัติสำหรับ scoring, auth และ logic การสำรอง AI พร้อม Playwright e2e','CI':'CI','— GitHub Actions added for tests, accessibility linting, and production builds; Dependabot configured.':'— เพิ่ม GitHub Actions สำหรับการทดสอบ accessibility linting และ production builds พร้อมตั้งค่า Dependabot','Performance':'ประสิทธิภาพ','— Route-level lazy loading with React Suspense.':'— lazy loading ระดับ route ด้วย React Suspense',
+    'A youth mental-health companion built as a school project — screening, self-care tools, community, and real resources, in Thai and English.':'เครื่องมือช่วยสำรวจสุขภาพใจสำหรับเยาวชนที่สร้างเป็นโครงงานโรงเรียน — มีการคัดกรอง เครื่องมือดูแลตัวเอง ชุมชน และแหล่งช่วยเหลือจริง ทั้งไทยและอังกฤษ',
+    'Live app ↗':'แอปจริง ↗','GitHub repo ↗':'GitHub ↗','Full changelog ↗':'CHANGELOG ฉบับเต็ม ↗','README ↗':'README ↗',
+    "SafeSpace's assessment results are intended for screening and supportive guidance — they are not medical diagnoses. This introduction page is an unofficial companion built to explain the project; all product details are drawn from the repository's own README and changelog.":'ผลการประเมินของ SafeSpace มีไว้เพื่อการคัดกรองและคำแนะนำเพื่อช่วยเหลือเท่านั้น ไม่ใช่การวินิจฉัยทางการแพทย์ หน้านี้เป็นหน้าแนะนำโครงการที่จัดทำขึ้นเพื่ออธิบายโปรเจกต์ โดยรายละเอียดมาจาก README และ changelog ของ repository',
+    'Built by phoomth1407 · introduction page generated with Claude':'สร้างโดย phoomth1407 · หน้าแนะนำสร้างด้วย Claude',
+    'Back to top':'กลับด้านบน',
+  };
+
+  const ATTR_TH = {
+    'Toggle light and dark theme':'สลับโหมดสว่างและมืด','Switch language':'เปลี่ยนภาษา','AI fallback scenario':'สถานการณ์การสำรอง AI','Mood check-in':'เช็กอารมณ์','Breathing exercise language':'ภาษาสำหรับแบบฝึกหายใจ','Sky lantern':'โคมลอย','Breeze into leaves':'ใบไม้ตามสายลม','Stardust':'ละอองดาว','Play ambient mix':'เล่นเสียงบรรยากาศ','Back to top':'กลับด้านบน',
+    "Type what's weighing on you…":'มีอะไรที่กำลังหนักใจอยู่ตอนนี้?'
+  };
+  const META = {
+    en:{title:'SafeSpace — Project Introduction',description:'How SafeSpace works: a bilingual (Thai/English) mental-health screening, self-care, and community app — with the breathing exercise, worry release, and ambient sound mixer rebuilt as live, interactive demos.'},
+    th:{title:'SafeSpace — แนะนำโครงการ',description:'ดูว่า SafeSpace ทำงานอย่างไร: แอปสองภาษาสำหรับการคัดกรองสุขภาวะทางใจ เครื่องมือดูแลตัวเอง ชุมชน และตัวอย่างแบบโต้ตอบของการฝึกหายใจ การปล่อยความกังวล และมิกซ์เสียงบรรยากาศ'}
+  };
+  const staticTextNodes = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  while(walker.nextNode()){
+    const node = walker.currentNode;
+    const parent = node.parentElement;
+    if(!parent || ['SCRIPT','STYLE','CODE','PRE','NOSCRIPT'].includes(parent.tagName)) continue;
+    const trimmed = node.nodeValue.trim();
+    if(trimmed && (TH[trimmed] || trimmed === 'SafeSpace')) staticTextNodes.push({node, original:node.nodeValue});
+  }
+  const originalAttrs = [];
+  document.querySelectorAll('*').forEach(el=>{
+    ['aria-label','placeholder','title'].forEach(attr=>{
+      const val = el.getAttribute(attr);
+      if(val) originalAttrs.push({el,attr,val});
+    });
+  });
+  function applyStaticLanguage(lang){
+    document.documentElement.lang = lang;
+    staticTextNodes.forEach(({node,original})=>{
+      const core = original.trim();
+      const leading = original.match(/^\s*/)?.[0] || '';
+      const trailing = original.match(/\s*$/)?.[0] || '';
+      const translated = lang === 'th' && TH[core] ? TH[core] : core;
+      node.nodeValue = leading + translated + trailing;
+    });
+    originalAttrs.forEach(({el,attr,val})=>{
+      if(lang === 'th' && ATTR_TH[val]) el.setAttribute(attr, ATTR_TH[val]);
+      else el.setAttribute(attr, val);
+    });
+    document.title = META[lang].title;
+    const desc = document.querySelector('meta[name="description"]');
+    if(desc) desc.setAttribute('content', META[lang].description);
+  }
+
+  let introLang = 'en';
+  try{ introLang = localStorage.getItem('safespace-intro-lang') || 'en'; }catch(e){}
+
   /* ---------- Theme ---------- */
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
   function applyTheme(t){
     root.setAttribute('data-theme', t);
     themeToggle.setAttribute('aria-pressed', String(t === 'light'));
-    themeToggle.querySelector('.knob').textContent = t === 'light' ? '☀️' : '🌙';
+    document.getElementById('themeKnob').innerHTML = iconSvg(t === 'light' ? 'sun' : 'moon');
   }
   let saved = null;
   try{ saved = localStorage.getItem('safespace-intro-theme'); }catch(e){}
@@ -1335,6 +1538,59 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     applyTheme(next);
     try{ localStorage.setItem('safespace-intro-theme', next); }catch(e){}
+  });
+
+
+  /* ---------- Language toggle ---------- */
+  const langToggle = document.getElementById('langToggle');
+  const langKnob = document.getElementById('langKnob');
+  function aiText(key){
+    const en = {
+      choose:'Choose a scenario above to send a sample request.',
+      sending:'Sending assessment for analysis…',
+      openaiOk:'✓ Analyzed by OpenAI — personalized result ready.',
+      timeout:'OpenAI timed out — retrying with Gemini…',
+      geminiOk:'✓ Analyzed by Gemini — personalized result ready.',
+      openaiDown:'OpenAI unavailable — retrying with Gemini…',
+      bothDown:'Both AI providers unavailable — using local rule-based analysis…',
+      localOk:'✓ Local rule-based analysis — a result still reaches the student.',
+      waiting:'waiting…', fallback:'fallback', final:'final fallback', trying:'trying…', succeeded:'succeeded', unavailable:'unavailable', running:'running…'
+    };
+    const th = {choose:'เลือกสถานการณ์ด้านบนเพื่อส่งคำขอตัวอย่าง',sending:'กำลังส่งแบบประเมินเพื่อวิเคราะห์…',openaiOk:'✓ วิเคราะห์ด้วย OpenAI แล้ว — พร้อมผลลัพธ์เฉพาะบุคคล',timeout:'OpenAI ใช้เวลานานเกินไป — กำลังลอง Gemini…',geminiOk:'✓ วิเคราะห์ด้วย Gemini แล้ว — พร้อมผลลัพธ์เฉพาะบุคคล',openaiDown:'OpenAI ไม่พร้อมใช้งาน — กำลังลอง Gemini…',bothDown:'AI ทั้งสองตัวไม่พร้อมใช้งาน — กำลังใช้การวิเคราะห์ด้วยกฎภายในระบบ…',localOk:'✓ การวิเคราะห์ด้วยกฎภายในระบบ — ผู้ใช้ยังได้รับผลลัพธ์',waiting:'กำลังรอ…',fallback:'สำรอง',final:'สำรองขั้นสุดท้าย',trying:'กำลังลอง…',succeeded:'สำเร็จ',unavailable:'ไม่พร้อมใช้งาน',running:'กำลังทำงาน…'};
+    return (introLang === 'th' ? th : en)[key];
+  }
+  function translateDynamicUI(){
+    // AI initial state and active scenario labels/statuses
+    aiResult.textContent = aiText('choose');
+    document.querySelector('[data-node="openai"] [data-status]').textContent = aiText('waiting');
+    document.querySelector('[data-node="gemini"] [data-status]').textContent = aiText('fallback');
+    document.querySelector('[data-node="local"] [data-status]').textContent = aiText('final');
+    moodMsg.textContent = introLang === 'th' ? 'แตะระดับที่ตรงกับความรู้สึกจริงของคุณตอนนี้' : "Tap however you're actually feeling right now.";
+    langKnob.textContent = introLang === 'th' ? 'EN' : 'TH';
+    langToggle.setAttribute('aria-pressed', String(introLang === 'th'));
+    // Breathing defaults
+    breatheLang = introLang === 'th' ? 'th' : 'en';
+    document.querySelectorAll('.lang-mini button').forEach(btn=>btn.classList.toggle('active', btn.dataset.lang === breatheLang));
+    const s = breatheStrings[breatheLang];
+    if(!breatheRunning){
+      breathePhase.textContent = introLang === 'th' ? 'เริ่ม' : 'Start';
+      breatheLabel.textContent = s.ready;
+      breatheToggle.textContent = s.start;
+    } else {
+      breatheToggle.textContent = s.stop;
+    }
+    renderGround();
+    worryMsg.textContent = introLang === 'th' ? 'สิ่งที่เขียนตรงนี้จะไม่ถูกบันทึก' : 'Nothing here is saved.';
+    langSample.textContent = introLang === 'th' ? '“วันนี้คุณรู้สึกอย่างไรบ้าง?”' : '"How are you feeling today?"';
+    document.querySelectorAll('[data-langdemo]').forEach(btn=>btn.classList.toggle('active', btn.dataset.langdemo === (introLang === 'th' ? 'th':'en')));
+    document.querySelectorAll('.acc-head').forEach(h=>h.setAttribute('aria-expanded', h.parentElement.classList.contains('open') ? 'true' : 'false'));
+    if(feed){ feed.innerHTML = ''; samplePosts.slice(0,3).forEach(p=>feed.appendChild(renderPost(p))); feedIdx = 3; }
+  }
+  langToggle.addEventListener('click', ()=>{
+    introLang = introLang === 'th' ? 'en' : 'th';
+    applyStaticLanguage(introLang);
+    translateDynamicUI();
+    try{ localStorage.setItem('safespace-intro-lang', introLang); }catch(e){}
   });
 
   /* ---------- Scroll reveal ---------- */
@@ -1368,28 +1624,28 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   function resetAI(){
     Object.entries(aiNodes).forEach(([k,n])=>{
       n.classList.remove('trying','active','down');
-      n.querySelector('[data-status]').textContent = k==='openai' ? 'waiting…' : (k==='gemini' ? 'fallback' : 'final fallback');
+      n.querySelector('[data-status]').textContent = k==='openai' ? aiText('waiting') : (k==='gemini' ? aiText('fallback') : aiText('final'));
     });
     aiResult.classList.remove('ready');
-    aiResult.textContent = 'Choose a scenario above to send a sample request.';
+    aiResult.textContent = aiText('choose');
   }
   function runScenario(idx){
     clearTimeout(aiTimer);
     resetAI();
-    aiResult.textContent = 'Sending assessment for analysis…';
+    aiResult.textContent = aiText('sending');
     const steps = [];
     if(idx === 0){
-      steps.push([700, ()=>{ aiNodes.openai.classList.add('trying'); aiNodes.openai.querySelector('[data-status]').textContent='trying…'; }]);
-      steps.push([1500, ()=>{ aiNodes.openai.classList.remove('trying'); aiNodes.openai.classList.add('active'); aiNodes.openai.querySelector('[data-status]').textContent='succeeded'; aiResult.classList.add('ready'); aiResult.textContent='✓ Analyzed by OpenAI — personalized result ready.'; }]);
+      steps.push([700, ()=>{ aiNodes.openai.classList.add('trying'); aiNodes.openai.querySelector('[data-status]').textContent=aiText('trying'); }]);
+      steps.push([1500, ()=>{ aiNodes.openai.classList.remove('trying'); aiNodes.openai.classList.add('active'); aiNodes.openai.querySelector('[data-status]').textContent=aiText('succeeded'); aiResult.classList.add('ready'); aiResult.textContent=aiText('openaiOk'); }]);
     } else if(idx === 1){
-      steps.push([600, ()=>{ aiNodes.openai.classList.add('trying'); aiNodes.openai.querySelector('[data-status]').textContent='trying…'; }]);
-      steps.push([1300, ()=>{ aiNodes.openai.classList.remove('trying'); aiNodes.openai.classList.add('down'); aiNodes.openai.querySelector('[data-status]').textContent='unavailable'; aiNodes.gemini.classList.add('trying'); aiNodes.gemini.querySelector('[data-status]').textContent='trying…'; aiResult.textContent='OpenAI timed out — retrying with Gemini…'; }]);
-      steps.push([2200, ()=>{ aiNodes.gemini.classList.remove('trying'); aiNodes.gemini.classList.add('active'); aiNodes.gemini.querySelector('[data-status]').textContent='succeeded'; aiResult.classList.add('ready'); aiResult.textContent='✓ Analyzed by Gemini — personalized result ready.'; }]);
+      steps.push([600, ()=>{ aiNodes.openai.classList.add('trying'); aiNodes.openai.querySelector('[data-status]').textContent=aiText('trying'); }]);
+      steps.push([1300, ()=>{ aiNodes.openai.classList.remove('trying'); aiNodes.openai.classList.add('down'); aiNodes.openai.querySelector('[data-status]').textContent=aiText('unavailable'); aiNodes.gemini.classList.add('trying'); aiNodes.gemini.querySelector('[data-status]').textContent=aiText('trying'); aiResult.textContent=aiText('timeout'); }]);
+      steps.push([2200, ()=>{ aiNodes.gemini.classList.remove('trying'); aiNodes.gemini.classList.add('active'); aiNodes.gemini.querySelector('[data-status]').textContent=aiText('succeeded'); aiResult.classList.add('ready'); aiResult.textContent=aiText('geminiOk'); }]);
     } else {
-      steps.push([550, ()=>{ aiNodes.openai.classList.add('trying'); aiNodes.openai.querySelector('[data-status]').textContent='trying…'; }]);
-      steps.push([1150, ()=>{ aiNodes.openai.classList.remove('trying'); aiNodes.openai.classList.add('down'); aiNodes.openai.querySelector('[data-status]').textContent='unavailable'; aiNodes.gemini.classList.add('trying'); aiNodes.gemini.querySelector('[data-status]').textContent='trying…'; aiResult.textContent='OpenAI unavailable — retrying with Gemini…'; }]);
-      steps.push([1850, ()=>{ aiNodes.gemini.classList.remove('trying'); aiNodes.gemini.classList.add('down'); aiNodes.gemini.querySelector('[data-status]').textContent='unavailable'; aiNodes.local.classList.add('trying'); aiNodes.local.querySelector('[data-status]').textContent='running…'; aiResult.textContent='Both AI providers unavailable — using local rule-based analysis…'; }]);
-      steps.push([2500, ()=>{ aiNodes.local.classList.remove('trying'); aiNodes.local.classList.add('active'); aiNodes.local.querySelector('[data-status]').textContent='succeeded'; aiResult.classList.add('ready'); aiResult.textContent='✓ Local rule-based analysis — a result still reaches the student.'; }]);
+      steps.push([550, ()=>{ aiNodes.openai.classList.add('trying'); aiNodes.openai.querySelector('[data-status]').textContent=aiText('trying'); }]);
+      steps.push([1150, ()=>{ aiNodes.openai.classList.remove('trying'); aiNodes.openai.classList.add('down'); aiNodes.openai.querySelector('[data-status]').textContent=aiText('unavailable'); aiNodes.gemini.classList.add('trying'); aiNodes.gemini.querySelector('[data-status]').textContent=aiText('trying'); aiResult.textContent=aiText('openaiDown'); }]);
+      steps.push([1850, ()=>{ aiNodes.gemini.classList.remove('trying'); aiNodes.gemini.classList.add('down'); aiNodes.gemini.querySelector('[data-status]').textContent=aiText('unavailable'); aiNodes.local.classList.add('trying'); aiNodes.local.querySelector('[data-status]').textContent=aiText('running'); aiResult.textContent=aiText('bothDown'); }]);
+      steps.push([2500, ()=>{ aiNodes.local.classList.remove('trying'); aiNodes.local.classList.add('active'); aiNodes.local.querySelector('[data-status]').textContent=aiText('succeeded'); aiResult.classList.add('ready'); aiResult.textContent=aiText('localOk'); }]);
     }
     steps.forEach(([t,fn])=>{ aiTimer = setTimeout(fn, t); });
   }
@@ -1405,17 +1661,17 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   const moodBtns = document.querySelectorAll('.mood-btn');
   const moodMsg = document.getElementById('moodMsg');
   const moodReplies = {
-    Struggling: "Logged. That's allowed to be true — Breathe or Grounding are one tap away on the real Home screen.",
-    Low: "Logged. Some days are just low — no explanation required.",
-    Okay: "Logged. A steady, unremarkable day counts too.",
-    Good: "Logged. Nice.",
-    Great: "Logged. Hold onto that."
+    Struggling: { en:"Logged. That's allowed to be true — Breathe or Grounding are one tap away on the real Home screen.", th:'บันทึกแล้ว ความรู้สึกแบบนี้เกิดขึ้นได้ — ในแอปจริงมี Breathe และ Grounding ให้เปิดใช้ได้ในแตะเดียว' },
+    Low: { en:"Logged. Some days are just low — no explanation required.", th:'บันทึกแล้ว บางวันก็เป็นวันที่รู้สึกไม่ค่อยดีได้ — ไม่จำเป็นต้องอธิบายอะไรเพิ่มเติม' },
+    Okay: { en:"Logged. A steady, unremarkable day counts too.", th:'บันทึกแล้ว วันที่ธรรมดาและคงที่ก็มีความหมายเหมือนกัน' },
+    Good: { en:"Logged. Nice.", th:'บันทึกแล้ว ดีเลย' },
+    Great: { en:"Logged. Hold onto that.", th:'บันทึกแล้ว เก็บความรู้สึกดี ๆ นี้ไว้กับตัวเองนะ' }
   };
   moodBtns.forEach(btn=>{
     btn.addEventListener('click', ()=>{
       moodBtns.forEach(b=>b.classList.remove('picked'));
       btn.classList.add('picked');
-      moodMsg.textContent = moodReplies[btn.dataset.mood];
+      moodMsg.textContent = moodReplies[btn.dataset.mood][introLang];
     });
   });
 
@@ -1469,11 +1725,11 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
 
   /* ---------- Grounding ---------- */
   const groundSteps = [
-    { icon:'👀', text:'Name 5 things you can see around you' },
-    { icon:'✋', text:'Notice 4 things you can touch' },
-    { icon:'👂', text:'Listen for 3 things you can hear' },
-    { icon:'👃', text:'Notice 2 things you can smell' },
-    { icon:'👅', text:'Name 1 thing you can taste' }
+    { icon:'eye', text:{en:'Name 5 things you can see around you', th:'ลองบอก 5 สิ่งที่คุณมองเห็นรอบตัว'} },
+    { icon:'hand', text:{en:'Notice 4 things you can touch', th:'สังเกต 4 สิ่งที่คุณสัมผัสได้'} },
+    { icon:'ear', text:{en:'Listen for 3 things you can hear', th:'ตั้งใจฟัง 3 เสียงที่คุณได้ยินรอบตัว'} },
+    { icon:'nose', text:{en:'Notice 2 things you can smell', th:'สังเกต 2 กลิ่นที่คุณรับรู้ได้ตอนนี้'} },
+    { icon:'mouth', text:{en:'Name 1 thing you can taste', th:'ลองบอก 1 รสชาติที่คุณกำลังรับรู้'} }
   ];
   let groundIdx = 0;
   const groundIcon = document.getElementById('groundIcon');
@@ -1486,11 +1742,12 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     groundDots.appendChild(d);
   });
   function renderGround(){
-    groundIcon.textContent = groundSteps[groundIdx].icon;
-    groundText.textContent = groundSteps[groundIdx].text;
-    groundCount.textContent = `Step ${groundIdx+1} of ${groundSteps.length}`;
+    groundIcon.innerHTML = iconSvg(groundSteps[groundIdx].icon);
+    groundText.textContent = groundSteps[groundIdx].text[introLang];
+    groundCount.textContent = introLang === 'th' ? `ขั้นที่ ${groundIdx+1} จาก ${groundSteps.length}` : `Step ${groundIdx+1} of ${groundSteps.length}`;
     [...groundDots.children].forEach((d,i)=>d.classList.toggle('on', i===groundIdx));
   }
+  renderGround();
   document.getElementById('groundNext').addEventListener('click', ()=>{
     groundIdx = (groundIdx + 1) % groundSteps.length; renderGround();
   });
@@ -1510,13 +1767,17 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   const worryArea = document.getElementById('worryArea');
   const worryTextEl = document.getElementById('worryText');
   const worryMsg = document.getElementById('worryMsg');
-  const styleEmoji = { lantern:'🏮', leaves:'🍃', stardust:'✨' };
+  const styleIcon = { lantern:'lantern', leaves:'leaf', stardust:'sparkle' };
   document.getElementById('worryRelease').addEventListener('click', ()=>{
     const val = worryTextEl.value.trim();
-    if(!val){ worryMsg.textContent = 'Type something first — even one word.'; return; }
+    if(!val){ worryMsg.textContent = introLang === 'th' ? 'พิมพ์อย่างน้อยหนึ่งคำก่อนก็ได้' : 'Type something first — even one word.'; return; }
     const p = document.createElement('div');
     p.className = 'worry-particle';
-    p.textContent = styleEmoji[worryStyle] + ' ' + val;
+    p.innerHTML = iconSvg(styleIcon[worryStyle]);
+    const textSpan = document.createElement('span');
+    textSpan.textContent = val;
+    p.appendChild(document.createTextNode(' '));
+    p.appendChild(textSpan);
     worryArea.appendChild(p);
     if(worryStyle === 'stardust' || worryStyle === 'leaves'){
       for(let i=0;i<6;i++){
@@ -1525,14 +1786,14 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
         sp.style.left = (20 + Math.random()*60) + '%';
         sp.style.setProperty('--dx', (Math.random()*80-40)+'px');
         sp.style.animationDelay = (Math.random()*0.6)+'s';
-        sp.textContent = worryStyle === 'stardust' ? '✨' : '🍃';
+        sp.innerHTML = iconSvg(worryStyle === 'stardust' ? 'sparkle' : 'leaf');
         worryArea.appendChild(sp);
         setTimeout(()=>sp.remove(), 3200);
       }
     }
     worryTextEl.value = '';
-    worryMsg.textContent = 'Letting it go…';
-    setTimeout(()=>{ p.remove(); worryMsg.textContent = "Gone. You can always come back to it, or not."; }, 2700);
+    worryMsg.textContent = introLang === 'th' ? 'กำลังปล่อยออกไป…' : 'Letting it go…';
+    setTimeout(()=>{ p.remove(); worryMsg.textContent = introLang === 'th' ? 'ปล่อยไปแล้ว คุณจะกลับมาดูอีกครั้งหรือไม่ก็ได้' : "Gone. You can always come back to it, or not."; }, 2700);
   });
 
   /* ---------- Ambient sound mixer (real Web Audio) ---------- */
@@ -1621,19 +1882,19 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   /* ---------- Community feed (ambient loop) ---------- */
   const feed = document.getElementById('feed');
   const samplePosts = [
-    { badge:'Anonymous', time:'2h ago', text:"Midterms have me so anxious lately. Ran through the grounding exercise before my exam today and it actually helped.", tools:['Grounding'] },
-    { badge:'Anonymous', time:'5h ago', text:"First time posting here. Just needed somewhere to say today was hard without explaining it to anyone.", tools:[] },
-    { badge:'Anonymous', time:'1d ago', text:"The rain sounds have been on repeat while I study. Small thing but it helps.", tools:['Sounds'] },
-    { badge:'Anonymous', time:'just now', text:"Checked in feeling low today. Writing it here somehow makes it feel more okay.", tools:['Breathe'] },
-    { badge:'Anonymous', time:'just now', text:"Trying the worry release for the first time — surprisingly satisfying to watch it float away.", tools:['Worry Release'] }
+    { badge:{en:'Anonymous',th:'นิรนาม'}, time:{en:'2h ago',th:'2 ชม.ที่แล้ว'}, text:{en:"Midterms have me so anxious lately. Ran through the grounding exercise before my exam today and it actually helped.", th:'ช่วงสอบกลางภาคทำให้ฉันกังวลมากช่วงนี้ ลองทำ grounding ก่อนสอบวันนี้ และมันช่วยได้จริง ๆ'}, tools:{en:['Grounding'],th:['Grounding']} },
+    { badge:{en:'Anonymous',th:'นิรนาม'}, time:{en:'5h ago',th:'5 ชม.ที่แล้ว'}, text:{en:"First time posting here. Just needed somewhere to say today was hard without explaining it to anyone.", th:'นี่เป็นครั้งแรกที่โพสต์ที่นี่ แค่อยากมีที่ให้บอกว่าวันนี้มันหนัก โดยไม่ต้องอธิบายให้ใครฟัง'}, tools:{en:[],th:[]} },
+    { badge:{en:'Anonymous',th:'นิรนาม'}, time:{en:'1d ago',th:'1 วันที่แล้ว'}, text:{en:"The rain sounds have been on repeat while I study. Small thing but it helps.", th:'เปิดเสียงฝนวนไปตอนอ่านหนังสือ เรื่องเล็ก ๆ แต่ช่วยได้จริง'}, tools:{en:['Sounds'],th:['เสียง']} },
+    { badge:{en:'Anonymous',th:'นิรนาม'}, time:{en:'just now',th:'เมื่อสักครู่นี้'}, text:{en:"Checked in feeling low today. Writing it here somehow makes it feel more okay.", th:'วันนี้เช็กอินแล้วรู้สึกค่อนข้างแย่ พอเขียนไว้ตรงนี้กลับรู้สึกโอเคขึ้นนิดหนึ่ง'}, tools:{en:['Breathe'],th:['หายใจ']} },
+    { badge:{en:'Anonymous',th:'นิรนาม'}, time:{en:'just now',th:'เมื่อสักครู่นี้'}, text:{en:"Trying the worry release for the first time — surprisingly satisfying to watch it float away.", th:'ลองปล่อยความกังวลครั้งแรก รู้สึกดีอย่างไม่น่าเชื่อที่ได้เห็นมันค่อย ๆ ลอยออกไป'}, tools:{en:['Worry Release'],th:['ปล่อยความกังวล']} }
   ];
   function renderPost(p){
     const el = document.createElement('div');
     el.className = 'post';
-    el.innerHTML = `<div class="post-meta"><span class="post-badge">${p.badge}</span><span class="post-time">${p.time}</span></div><div class="post-text">${p.text}</div>` + (p.tools.length ? `<div class="post-tools">${p.tools.map(t=>`<span>${t}</span>`).join('')}</div>` : '');
+    el.innerHTML = `<div class="post-meta"><span class="post-badge">${p.badge[introLang]}</span><span class="post-time">${p.time[introLang]}</span></div><div class="post-text">${p.text[introLang]}</div>` + (p.tools[introLang].length ? `<div class="post-tools">${p.tools[introLang].map(t=>`<span>${t}</span>`).join('')}</div>` : '');
     return el;
   }
-  samplePosts.slice(0,3).forEach(p=>feed.appendChild(renderPost(p)));
+  if(feed.children.length === 0) samplePosts.slice(0,3).forEach(p=>feed.appendChild(renderPost(p)));
   let feedIdx = 3;
   if(!reduceMotion){
     setInterval(()=>{
@@ -1683,6 +1944,12 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       langSample.textContent = langSamples[b.dataset.langdemo];
     });
   });
+
+  // Apply the saved standalone language only after every interactive subsystem is ready.
+  applyStaticLanguage(introLang);
+  translateDynamicUI();
+  samplePosts.slice(0,3).forEach(()=>{});
+  if(feed.children.length === 0){ samplePosts.slice(0,3).forEach(p=>feed.appendChild(renderPost(p))); }
 
 })();
 </script>
