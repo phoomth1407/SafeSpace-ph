@@ -45,7 +45,7 @@ Vite will print the local development URL in the terminal.
 # Website URL
 
 website=https://phoomth1407.github.io/SafeSpace-ph
-=website introduction=https://phoomth1407.github.io/SafeSpace-ph/about.html
+website introduction=https://phoomth1407.github.io/SafeSpace-ph/about.html
 
 ## Supabase
 
