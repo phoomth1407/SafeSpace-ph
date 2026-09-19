@@ -136,6 +136,18 @@ async function main(req: Request) {
     return new Response(JSON.stringify({ error: "authentication required" }), { status: 401, headers: corsHeaders });
   }
 
+  const { data: allowed, error: rateLimitError } = await userClient.rpc("consume_rate_limit", {
+    p_endpoint: "analyze-assessment",
+    p_window_seconds: 60,
+    p_max_requests: 5,
+  });
+  if (rateLimitError || allowed !== true) {
+    return new Response(JSON.stringify({ error: "rate limit exceeded" }), {
+      status: 429,
+      headers: { ...corsHeaders, "Retry-After": "60" },
+    });
+  }
+
   const answersText = answers.map((a: any, i: number) =>
     `${i + 1}. [${a?.category || ""}] ${a?.question || ""}\n   ตอบ: ${a?.answer || ""}`
   ).join("\n\n");
