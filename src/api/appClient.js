@@ -216,7 +216,7 @@ const invoke = async (name, payload = {}) => {
       // Replace that result with the newer offline model and update the same
       // database row so the user does not get a duplicate history entry.
       if (data.analysis_source === "fallback") {
-        const offline = computeAssessmentResult(payload.answers || []);
+        const offline = computeAssessmentResult(payload.answers || [], payload.language || "th");
         const patch = {
           risk_level: offline.risk_level,
           risk_score: offline.risk_score,
