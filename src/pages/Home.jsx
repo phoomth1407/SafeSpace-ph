@@ -12,6 +12,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
 import MagneticButton from "@/components/MagneticButton";
 import WellnessIllustration from "@/components/WellnessIllustration";
+import ScenicBackdrop from "@/components/ScenicBackdrop";
 import { useTranslation } from "@/lib/i18n";
 
 const fadeUp = {
@@ -33,12 +34,13 @@ export default function Home() {
     <div className="space-y-16 md:space-y-20 home-page">
       {/* Hero */}
       <section className="relative text-center pt-8 md:pt-12 pb-8 overflow-hidden hero-panel rounded-[2rem] md:rounded-[2.75rem] border border-white/10 bg-slate-900/35 dark:bg-slate-900/35 shadow-2xl shadow-slate-950/30">
+        <ScenicBackdrop className="absolute inset-0 w-full h-full object-cover opacity-95 home-scenic" />
         <FloatingOrbs />
         <motion.div
           initial="hidden"
           animate="show"
           variants={stagger}
-          className="relative z-10 px-5 md:px-10"
+          className="relative z-10 px-5 md:px-10 home-hero-content"
         >
           <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-white/5 text-slate-200 text-xs px-3.5 py-1.5 rounded-full mb-5 border border-rose-500/15 shadow-lg shadow-slate-950/20 backdrop-blur-md">
             <motion.span
@@ -105,10 +107,10 @@ export default function Home() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        className="relative"
+        className="relative wellness-tool-card wellness-tool-card--breath"
       >
         <motion.button
-          onClick={() => setBreathingOpen(true)}
+          onClick={() => setBreathingOpen(true)
           whileHover={{ y: -4, scale: 1.01 }}
           whileTap={{ scale: 0.985 }}
           transition={{ type: "spring", stiffness: 320, damping: 22 }}
@@ -138,10 +140,10 @@ export default function Home() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        className="relative"
+        className="relative wellness-tool-card wellness-tool-card--ground"
       >
         <motion.button
-          onClick={() => setGroundingOpen(true)}
+          onClick={() => setGroundingOpen(true)
           whileHover={{ y: -4, scale: 1.01 }}
           whileTap={{ scale: 0.985 }}
           transition={{ type: "spring", stiffness: 320, damping: 22 }}
@@ -171,10 +173,10 @@ export default function Home() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        className="relative"
+        className="relative wellness-tool-card wellness-tool-card--worry"
       >
         <motion.button
-          onClick={() => setWorryOpen(true)}
+          onClick={() => setWorryOpen(true)
           whileHover={{ y: -4, scale: 1.01 }}
           whileTap={{ scale: 0.985 }}
           transition={{ type: "spring", stiffness: 320, damping: 22 }}
