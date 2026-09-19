@@ -732,3 +732,101 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 @media(prefers-reduced-motion:reduce){
   .admin-page .grid.grid-cols-2.md\:grid-cols-4>div,.assessment-question-card .space-y-2>button{transition:none;transform:none;}
 }
+
+
+/* History: give the condition trend a true long-form wave treatment. */
+.history-overview-grid{
+  grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr);
+  align-items:stretch;
+}
+.history-trend-reveal{
+  grid-column:1 / -1;
+}
+.history-trend-card{
+  min-width:0;
+  overflow:hidden;
+}
+.history-chart-wrap--wide{
+  position:relative;
+  min-height:255px;
+  margin-top:.8rem;
+  padding:.15rem 0 0;
+}
+.history-chart-wrap--wide .recharts-wrapper,
+.history-chart-wrap--wide .recharts-surface{
+  overflow:visible;
+}
+.history-chart-direction{
+  margin:.25rem 0 0;
+  color:#94a3b8;
+  font-size:.68rem;
+  font-weight:500;
+  letter-spacing:0;
+  text-transform:none;
+}
+.history-chart-scale{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:.75rem;
+  margin-top:.1rem;
+  padding-top:.7rem;
+  border-top:1px solid rgb(148 163 184/.10);
+  color:#94a3b8;
+  font-size:.68rem;
+}
+.history-chart-scale span:nth-child(2){
+  color:#cbd5e1;
+  font-weight:600;
+}
+.history-chart-scale span:last-child{text-align:right;}
+.theme-light .history-chart-direction{color:#64748b;}
+.theme-light .history-chart-scale{color:#64748b;border-color:rgb(148 163 184/.16);}
+.theme-light .history-chart-scale span:nth-child(2){color:#475569;}
+
+@media(max-width:760px){
+  .history-overview-grid{grid-template-columns:1fr;}
+  .history-trend-reveal{grid-column:auto;}
+  .history-chart-wrap--wide{min-height:230px;}
+  .history-chart-scale{grid-template-columns:1fr 1fr;gap:.45rem;}
+  .history-chart-scale span:nth-child(2){grid-column:1 / -1;grid-row:1;text-align:center;order:-1;}
+  .history-chart-scale span:last-child{text-align:right;}
+}
+
+/* Assessment: the light theme should actually look light, not like a dark page
+   underneath white cards. */
+.theme-light.ss-page-assessment .ss-backdrop{
+  background:
+    radial-gradient(ellipse at 50% -18%,rgb(244 114 182/.10),transparent 42%),
+    radial-gradient(ellipse at 12% 42%,rgb(125 211 252/.10),transparent 34%),
+    linear-gradient(155deg,#fbfdff 0%,#f5f8fc 52%,#f8fbff 100%);
+}
+.theme-light.ss-page-assessment .ss-orb--a{background:radial-gradient(closest-side,rgb(244 114 182/.12),transparent);}
+.theme-light.ss-page-assessment .ss-orb--b{background:radial-gradient(closest-side,rgb(125 211 252/.13),transparent);}
+.theme-light.ss-page-assessment .ss-orb--c{background:radial-gradient(closest-side,rgb(167 139 250/.09),transparent);}
+.theme-light .assessment-page::before{
+  background:radial-gradient(closest-side,rgb(244 114 182/.08),transparent 72%);
+}
+.theme-light .assessment-flow-header{color:#64748b;}
+.theme-light .assessment-kicker{color:#0284c7;}
+.theme-light .assessment-flow .h-2{
+  background:rgb(226 232 240/.82)!important;
+  border-color:rgb(148 163 184/.16);
+  box-shadow:inset 0 2px 5px rgb(100 116 139/.12);
+}
+.theme-light .assessment-flow .h-2>div{box-shadow:0 0 20px rgb(14 165 233/.22);}
+.theme-light .assessment-intro-card,
+.theme-light .assessment-gate-card,
+.theme-light .assessment-chapter-card,
+.theme-light .assessment-question-card{
+  color:#334155;
+}
+.theme-light .assessment-intro-card p,
+.theme-light .assessment-gate-card p,
+.theme-light .assessment-chapter-card p,
+.theme-light .assessment-question-card p{
+  color:#52627d;
+}
+.theme-light .assessment-question-card .space-y-2>button{
+  color:#334155;
+}
