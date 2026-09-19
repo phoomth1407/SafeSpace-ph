@@ -53,8 +53,9 @@ export default function Layout() {
                 );
               })}
             </nav>
+          </div>
 
-            <div className="header-actions flex items-center gap-1.5 ml-auto flex-shrink-0">
+          <div className="header-actions flex items-center justify-end gap-1.5 flex-shrink-0 ml-auto">
               <button onClick={toggle} title={t("theme.toggle")} className="flex items-center gap-1 text-xs text-slate-400 px-2.5 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors">
                 {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
               </button>
