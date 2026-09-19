@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -40,7 +40,7 @@ export default function Admin() {
   const [contactRequests, setContactRequests] = useState([]);
   const [resolvingContact, setResolvingContact] = useState(null);
 
-  useEffect(() => {
+  if (user?.role !== "admin") return <Navigate to="/" replace />;\n\n  useEffect(() => {
     const load = async () => {
       try {
         const [a, g, p, r, cr] = await Promise.all([
@@ -136,7 +136,7 @@ export default function Admin() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
+      <div className="admin-page admin-loading flex flex-col items-center justify-center py-20">
         <Loader2 className="w-8 h-8 text-slate-600 animate-spin" />
         <p className="text-sm text-slate-500 mt-3">{t("admin.loading")}</p>
       </div>
@@ -221,10 +221,10 @@ export default function Admin() {
   ];
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="admin-page space-y-6 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-3 pt-2">
-        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+      <div className="admin-hero flex items-center gap-3 pt-2">
+        <div className="admin-hero-icon w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
           <Shield className="w-5 h-5 text-slate-900" />
         </div>
         <div>
@@ -234,7 +234,7 @@ export default function Admin() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 bg-slate-900/60 rounded-xl p-1 border border-slate-800 w-fit">
+      <div className="admin-tabs flex items-center gap-1 bg-slate-900/60 rounded-xl p-1 border border-slate-800 w-fit">
         {tabs.map((tb) => (
           <button
             key={tb.id}
@@ -251,7 +251,7 @@ export default function Admin() {
       {tab === "overview" ? (
         <>
           {/* Segment filter */}
-          <div className="flex items-center gap-1 bg-slate-900/60 rounded-xl p-1 border border-slate-800 w-fit flex-wrap">
+          <div className="admin-segments flex items-center gap-1 bg-slate-900/60 rounded-xl p-1 border border-slate-800 w-fit flex-wrap">
             <span className="text-xs text-slate-500 px-2">{t("admin.segLabel")}</span>
             {segments.map((sg) => (
               <button
