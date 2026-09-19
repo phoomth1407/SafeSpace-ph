@@ -54,3 +54,123 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 .theme-light.ss-page-resources .ss-backdrop{background:linear-gradient(150deg,rgb(255 241 242) 0%,rgb(245 243 255) 100%)}
 .ss-page-history .ss-surface,.ss-page-social .ss-surface,.ss-page-resources .ss-surface{box-shadow:inset 0 1px 0 rgb(255 255 255/.12),0 16px 40px -18px rgb(var(--ss-shadow)/.20)}
 @media(prefers-reduced-motion:reduce){.ss-page-history .ss-orb,.ss-page-social .ss-orb,.ss-page-resources .ss-orb{animation:none}}
+
+
+/* Rich ambient depth — decorative only, never blocks interaction. */
+.ss-backdrop::before,
+.ss-backdrop::after{
+  content:"";
+  position:absolute;
+  inset:-18%;
+  pointer-events:none;
+}
+.ss-backdrop::before{
+  background:
+    radial-gradient(ellipse at 18% 18%,rgb(255 255 255/.14),transparent 24%),
+    radial-gradient(ellipse at 82% 72%,rgb(255 255 255/.08),transparent 28%);
+  mix-blend-mode:screen;
+  opacity:.65;
+  animation:ss-ambient-float 24s ease-in-out infinite alternate;
+}
+.ss-backdrop::after{
+  background:
+    linear-gradient(115deg,transparent 0 35%,rgb(255 255 255/.035) 45%,transparent 55%),
+    repeating-linear-gradient(90deg,transparent 0 78px,rgb(255 255 255/.018) 79px,transparent 80px);
+  opacity:.35;
+  transform:rotate(-3deg) scale(1.08);
+}
+@keyframes ss-ambient-float{
+  0%{transform:translate3d(-2%,-1%,0) scale(1)}
+  100%{transform:translate3d(2%,2%,0) scale(1.04)}
+}
+
+/* Home: warm, welcoming aurora. */
+.ss-page-home .ss-backdrop{
+  background:
+    radial-gradient(circle at 14% 12%,rgb(244 114 182/.12),transparent 30%),
+    radial-gradient(circle at 86% 24%,rgb(139 92 246/.11),transparent 32%),
+    linear-gradient(180deg,rgb(var(--ss-bg)) 0%,rgb(var(--ss-bg-deep)) 100%);
+}
+.ss-page-home .ss-backdrop::after{
+  background:
+    radial-gradient(ellipse at 50% 110%,rgb(56 189 248/.09),transparent 45%),
+    linear-gradient(125deg,transparent 35%,rgb(255 255 255/.035) 50%,transparent 65%);
+  filter:blur(8px);
+}
+
+/* History: subtle data-grid / cool analytical depth. */
+.ss-page-history .ss-backdrop{
+  background:
+    radial-gradient(circle at 18% 16%,rgb(96 165 250/.14),transparent 30%),
+    radial-gradient(circle at 84% 78%,rgb(45 212 191/.10),transparent 32%),
+    linear-gradient(155deg,rgb(12 23 42) 0%,rgb(17 24 39) 52%,rgb(15 23 42) 100%);
+}
+.ss-page-history .ss-backdrop::after{
+  background:
+    linear-gradient(rgb(96 165 250/.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgb(96 165 250/.035) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 82%);
+  -webkit-mask-image:linear-gradient(to bottom,black,transparent 82%);
+  transform:none;
+  opacity:.55;
+}
+
+/* Social: flowing connected/community atmosphere. */
+.ss-page-social .ss-backdrop{
+  background:
+    radial-gradient(circle at 12% 25%,rgb(45 212 191/.13),transparent 28%),
+    radial-gradient(circle at 88% 18%,rgb(56 189 248/.12),transparent 30%),
+    radial-gradient(circle at 62% 92%,rgb(52 211 153/.08),transparent 28%),
+    linear-gradient(145deg,rgb(10 20 31) 0%,rgb(10 25 35) 48%,rgb(16 24 39) 100%);
+}
+.ss-page-social .ss-backdrop::after{
+  background:
+    radial-gradient(circle at 20% 35%,rgb(45 212 191/.10) 0 2px,transparent 3px),
+    radial-gradient(circle at 65% 62%,rgb(56 189 248/.10) 0 2px,transparent 3px);
+  background-size:120px 120px,160px 160px;
+  transform:none;
+  opacity:.55;
+}
+
+/* Resources: softer layered library / knowledge glow. */
+.ss-page-resources .ss-backdrop{
+  background:
+    radial-gradient(circle at 18% 20%,rgb(251 113 133/.11),transparent 29%),
+    radial-gradient(circle at 82% 25%,rgb(167 139 250/.13),transparent 32%),
+    radial-gradient(circle at 55% 92%,rgb(45 212 191/.08),transparent 30%),
+    linear-gradient(150deg,rgb(20 18 28) 0%,rgb(24 25 42) 52%,rgb(15 23 42) 100%);
+}
+.ss-page-resources .ss-backdrop::after{
+  background:
+    linear-gradient(135deg,transparent 0 42%,rgb(167 139 250/.045) 50%,transparent 58%),
+    linear-gradient(45deg,transparent 0 44%,rgb(45 212 191/.035) 50%,transparent 56%);
+  filter:blur(2px);
+}
+
+/* Light mode keeps the same identities without becoming washed out. */
+.theme-light.ss-page-home .ss-backdrop::before,
+.theme-light.ss-page-history .ss-backdrop::before,
+.theme-light.ss-page-social .ss-backdrop::before,
+.theme-light.ss-page-resources .ss-backdrop::before{mix-blend-mode:multiply;opacity:.28}
+.theme-light.ss-page-history .ss-backdrop{
+  background:
+    radial-gradient(circle at 18% 16%,rgb(96 165 250/.16),transparent 30%),
+    radial-gradient(circle at 84% 78%,rgb(45 212 191/.12),transparent 32%),
+    linear-gradient(155deg,rgb(239 246 255) 0%,rgb(236 253 245) 100%);
+}
+.theme-light.ss-page-social .ss-backdrop{
+  background:
+    radial-gradient(circle at 12% 25%,rgb(45 212 191/.14),transparent 28%),
+    radial-gradient(circle at 88% 18%,rgb(56 189 248/.12),transparent 30%),
+    linear-gradient(145deg,rgb(236 253 245) 0%,rgb(239 246 255) 100%);
+}
+.theme-light.ss-page-resources .ss-backdrop{
+  background:
+    radial-gradient(circle at 18% 20%,rgb(251 113 133/.12),transparent 29%),
+    radial-gradient(circle at 82% 25%,rgb(167 139 250/.13),transparent 32%),
+    linear-gradient(150deg,rgb(255 241 242) 0%,rgb(245 243 255) 100%);
+}
+@media(prefers-reduced-motion:reduce){
+  .ss-backdrop::before{animation:none}
+}
