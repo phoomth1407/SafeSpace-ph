@@ -381,3 +381,50 @@ body {
   .visual-orb { display: none; }
   .page-shell { animation: none; }
 }
+
+/* ===== Feedback fixes ===== */
+.desktop-header-brand { position: relative; z-index: 2; }
+.desktop-centered-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: .5rem;
+  white-space: nowrap;
+}
+.hero-panel { position: relative; isolation: isolate; }
+.theme-light .hero-panel {
+  background: rgba(255,255,255,.78) !important;
+  border-color: rgba(148,163,184,.22) !important;
+  box-shadow: 0 24px 70px rgba(15,23,42,.10) !important;
+}
+.theme-light .hero-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(251,113,133,.09), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(168,85,247,.08), transparent 28%),
+    radial-gradient(circle at 50% 100%, rgba(56,189,248,.07), transparent 35%);
+}
+.theme-light .hero-panel .text-slate-100 { color: #0f172a !important; }
+.theme-light .hero-panel .text-slate-300 { color: #475569 !important; }
+.theme-light .hero-panel .text-slate-200 { color: #334155 !important; }
+.theme-light .hero-panel .bg-white\/5 { background: rgba(255,255,255,.72) !important; }
+.theme-light .hero-panel .border-white\/10 { border-color: rgba(148,163,184,.20) !important; }
+.theme-light .visual-vignette {
+  background: radial-gradient(circle at center, transparent 55%, rgba(226,232,240,.20) 100%);
+}
+.theme-light .visual-atmosphere {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(56,189,248,.06), transparent 32rem),
+    radial-gradient(circle at 92% 8%, rgba(167,139,250,.05), transparent 30rem),
+    linear-gradient(180deg, rgba(255,255,255,.35), transparent 45%);
+}
+.theme-light .visual-orb-a { background: rgba(56,189,248,.07); }
+.theme-light .visual-orb-b { background: rgba(167,139,250,.06); }
+.theme-light .visual-orb-c { background: rgba(244,63,94,.05); }
+@media (max-width: 767px) {
+  .desktop-centered-nav { position: static; transform: none; }
+}
