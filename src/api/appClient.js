@@ -88,7 +88,7 @@ const entity = (name) => {
           recommendations: offline.recommendations,
           tool_recommendations: offline.tool_recommendations || [],
           analysis_source: "offline-model",
-          language: payload.language === "en" ? "en" : "th",
+          language: data.language === "en" ? "en" : "th",
         };
         const { data: repaired, error: repairError } = await supabase
           .from("assessments")
