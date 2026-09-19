@@ -34,7 +34,7 @@ const VersionGate = ({ children }) => {
 
     const checkForNewVersion = async () => {
       try {
-        const response = await fetch(`./version.json?current=${encodeURIComponent(APP_VERSION)}`, {
+        const response = await fetch(`./version.json?ts=${Date.now()}`, {
           cache: 'no-store',
           headers: { 'Cache-Control': 'no-cache' },
         });
