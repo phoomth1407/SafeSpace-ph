@@ -35,7 +35,15 @@ jobs:
         run: npm run lint:a11y
 
       - name: Production build
+        env:
+          VITE_APP_VERSION: ${{ github.sha }}
         run: npm run build
+
+      - name: Publish deployment version marker
+        env:
+          APP_VERSION: ${{ github.sha }}
+        run: |
+          printf '{"version":"%s"}\n' "$APP_VERSION" > ./dist/version.json
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
