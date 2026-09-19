@@ -15,7 +15,7 @@ export default function Layout() {
   const { t, lang, setLang } = useTranslation();
   const { theme, toggle } = useTheme();
   const isAdmin = user?.role === "admin";
-  const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : "ss-page-default";
+  const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : location.pathname === "/assessment" ? "ss-page-assessment" : location.pathname.startsWith("/result") ? "ss-page-result" : location.pathname === "/admin" ? "ss-page-admin" : "ss-page-default";
   const [langOpen, setLangOpen] = useState(false);
 
   const navItems = [
