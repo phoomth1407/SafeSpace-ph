@@ -428,3 +428,46 @@ body {
 @media (max-width: 767px) {
   .desktop-centered-nav { position: static; transform: none; }
 }
+
+/* ===== Wellness tool viewport layer ===== */
+.wellness-modal-root {
+  isolation: isolate;
+  overscroll-behavior: contain;
+  animation: wellness-modal-in .28s cubic-bezier(.22,1,.36,1) both;
+}
+.wellness-modal-backdrop {
+  border: 0;
+  padding: 0;
+  cursor: default;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.52), transparent 30%),
+    radial-gradient(circle at 82% 20%, rgba(224,231,255,.34), transparent 32%),
+    rgba(241,245,249,.36);
+  backdrop-filter: blur(22px) saturate(125%);
+  -webkit-backdrop-filter: blur(22px) saturate(125%);
+}
+.dark .wellness-modal-backdrop {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(125,211,252,.07), transparent 30%),
+    radial-gradient(circle at 82% 20%, rgba(196,181,253,.08), transparent 32%),
+    rgba(2,6,23,.34);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
+}
+.wellness-modal-root > :not(.wellness-modal-backdrop) {
+  position: relative;
+  z-index: 1;
+  animation: wellness-card-in .34s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes wellness-modal-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes wellness-card-in {
+  from { opacity: 0; transform: translateY(10px) scale(.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wellness-modal-root,
+  .wellness-modal-root > :not(.wellness-modal-backdrop) { animation: none; }
+}
