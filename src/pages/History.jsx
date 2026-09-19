@@ -184,7 +184,7 @@ export default function History() {
                   <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#64748b" }} />
                   <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "#64748b" }} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #1e293b", background: "#0f172a", fontSize: 12, color: "#e2e8f0" }} />
-                  <Area type="monotone" dataKey="score" stroke="#f0a8b0" strokeWidth={2} fill="url(#scoreGrad)" />
+                  <Area type="monotone" dataKey="score" stroke="#f0a8b0" strokeWidth={2} fill="url(#scoreGrad)" isAnimationActive={true} animationDuration={1100} animationEasing="ease-out" />
                 </AreaChart>
               </ResponsiveContainer>
               <p className="text-[10px] text-slate-600 mt-2 text-center">
