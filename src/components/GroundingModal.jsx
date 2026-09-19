@@ -44,7 +44,7 @@ export default function GroundingModal({ open, onClose }) {
           <div className="w-11 h-11 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
             <span className="text-xl">🌿</span>
           </div>
-          <h2 className="text-xl font-semibold text-slate-100">{t("ground.title")}</h2>
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{t("ground.title")}</h2>
           <p className="text-xs text-slate-400 mt-1">{t("ground.subtitle")}</p>
         </div>
 
@@ -60,7 +60,7 @@ export default function GroundingModal({ open, onClose }) {
               {React.createElement(current.icon, { className: "w-7 h-7 text-emerald-700 dark:text-emerald-300" })}
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-5">{stepLabel}</div>
-            <h3 className="text-lg font-semibold text-slate-100 mt-2">{t(`ground.step.${current.id}.title`)}</h3>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mt-2">{t(`ground.step.${current.id}.title`)}</h3>
             <div className="text-4xl font-bold text-emerald-700 dark:text-emerald-300 mt-3">{current.count}</div>
             <p className="text-sm text-slate-300 mt-2 leading-relaxed">{t(`ground.step.${current.id}.desc`)}</p>
             <button
@@ -76,7 +76,7 @@ export default function GroundingModal({ open, onClose }) {
             <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center mx-auto">
               <Check className="w-8 h-8 text-emerald-700 dark:text-emerald-300" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-100 mt-4">{t("ground.completeTitle")}</h3>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mt-4">{t("ground.completeTitle")}</h3>
             <p className="text-sm text-slate-300 mt-2 leading-relaxed">{t("ground.completeDesc")}</p>
             <button
               onClick={() => setCompleted([])}
