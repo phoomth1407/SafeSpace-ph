@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import AmbientSoundPlayer from "@/components/AmbientSoundPlayer";
-import VisualAtmosphere from "@/components/VisualAtmosphere";
+import { BreathingBackdrop } from "@/components/fx";
 
 export default function Layout() {
   const location = useLocation();
@@ -98,7 +98,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-2">
+      <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-2">
         <div className="border-t border-white/10 pt-5 text-center" />
       </footer>
 
