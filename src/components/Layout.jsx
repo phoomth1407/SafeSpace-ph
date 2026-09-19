@@ -30,8 +30,8 @@ export default function Layout() {
   };
 
   return (
-    <div className={cn("min-h-screen bg-slate-950 relative overflow-x-clip", theme === "light" && "theme-light")}>
-      <VisualAtmosphere />
+    <div className={cn("min-h-screen relative overflow-x-clip", theme === "light" && "theme-light")}>
+      <BreathingBackdrop />
       <header className="site-header sticky top-0 z-40">
         <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="brand-lockup flex items-center gap-2.5 desktop-header-brand">
