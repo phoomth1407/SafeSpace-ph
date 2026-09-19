@@ -46,6 +46,7 @@ export default function Assessment() {
   const [ageInput, setAgeInput] = useState("");
   const [nationality, setNationality] = useState(lang === "en" ? "" : "thai");
   const [mascotMessage, setMascotMessage] = useState(null);
+  const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
 
   const showGate = !isAuthenticated && !guestMode;
 
@@ -226,7 +227,7 @@ export default function Assessment() {
 
   // Intro step — ask age (and nationality if English) before questions
   if (step === "intro") {
-    const canStart = ageInput && Number(ageInput) > 0 && (lang !== "en" || nationality);
+    const canStart = ageInput && Number(ageInput) >= 1 && Number(ageInput) <= 120 && (lang !== "en" || nationality) && privacyAcknowledged;
     return (
       <div className="max-w-md mx-auto flex flex-col items-center justify-center min-h-[60vh]">
         <motion.div
@@ -281,6 +282,30 @@ export default function Assessment() {
             </div>
           )}
 
+          <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-3 text-xs text-slate-400 leading-relaxed">
+            <div className="flex items-start gap-2">
+              <Shield className="w-4 h-4 text-sky-300 mt-0.5 flex-shrink-0" />
+              <p>
+                {lang === "en"
+                  ? "Privacy notice: your assessment answers and the age/nationality you provide are sensitive information. Signed-in assessments are saved to your SafeSpace account, and the AI analysis service may process the submitted answers. Guest results are kept only in this browser session and are not saved to your account."
+                  : "แจ้งเรื่องความเป็นส่วนตัว: คำตอบแบบประเมิน รวมถึงอายุและสัญชาติ เป็นข้อมูลที่อ่อนไหว หากเข้าสู่ระบบ ผลการประเมินจะถูกบันทึกในบัญชี SafeSpace และบริการ AI อาจประมวลผลคำตอบที่ส่งไป ส่วนโหมดผู้เยี่ยมชมจะไม่บันทึกผลเข้าบัญชีของคุณ"}
+              </p>
+            </div>
+            <label className="mt-3 flex items-start gap-2 cursor-pointer text-slate-300">
+              <input
+                type="checkbox"
+                checked={privacyAcknowledged}
+                onChange={(e) => setPrivacyAcknowledged(e.target.checked)}
+                className="mt-0.5"
+              />
+              <span>
+                {lang === "en"
+                  ? "I understand what information this assessment sends and stores."
+                  : "ฉันเข้าใจว่าข้อมูลใดจะถูกส่งและจัดเก็บจากแบบประเมินนี้"}
+              </span>
+            </label>
+          </div>
+
           {error && (
             <div className="bg-red-500/10 text-red-400 text-sm p-3 rounded-xl text-center border border-red-500/20">
               {error}
@@ -291,8 +316,12 @@ export default function Assessment() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              if (!ageInput || Number(ageInput) <= 0) {
+              if (!ageInput || Number(ageInput) < 1 || Number(ageInput) > 120) {
                 setError(t("assess.intro.ageRequired"));
+                return;
+              }
+              if (!privacyAcknowledged) {
+                setError(lang === "en" ? "Please acknowledge the privacy notice before continuing." : "กรุณารับทราบข้อมูลความเป็นส่วนตัวก่อนดำเนินการต่อ");
                 return;
               }
               if (lang === "en" && !nationality) {
