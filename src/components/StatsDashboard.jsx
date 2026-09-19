@@ -33,7 +33,7 @@ export default function StatsDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 stats-dashboard">
       {/* Chart 1: New patient incidence rate */}
       <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800">
         <h3 className="text-sm font-semibold text-slate-100 mb-1">{t("stats.incidence")}</h3>
@@ -49,7 +49,7 @@ export default function StatsDashboard() {
               contentStyle={tooltipStyle}
               labelStyle={{ color: axisColor }}
             />
-            <Bar dataKey="rate" name={t("stats.incidence")} radius={[6, 6, 0, 0]}>
+            <Bar dataKey="rate" name={t("stats.incidence")} radius={[8, 8, 2, 2]} animationDuration={900} animationEasing="ease-out" isAnimationActive="auto">
               {incidenceData.map((_, i) => (
                 <Cell key={i} fill={barColors[i]} />
               ))}
@@ -73,7 +73,7 @@ export default function StatsDashboard() {
               contentStyle={tooltipStyle}
               labelStyle={{ color: axisColor }}
             />
-            <Bar dataKey="rate" name={t("stats.prevalence")} radius={[6, 6, 0, 0]}>
+            <Bar dataKey="rate" name={t("stats.prevalence")} radius={[8, 8, 2, 2]} animationBegin={120} animationDuration={1000} animationEasing="ease-out" isAnimationActive="auto">
               {prevalenceData.map((_, i) => (
                 <Cell key={i} fill={barColors[i]} />
               ))}
