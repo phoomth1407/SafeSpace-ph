@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import AmbientSoundPlayer from "@/components/AmbientSoundPlayer";
+import VisualAtmosphere from "@/components/VisualAtmosphere";
 
 export default function Layout() {
   const location = useLocation();
@@ -29,21 +30,22 @@ export default function Layout() {
   };
 
   return (
-    <div className={cn("min-h-screen bg-slate-950", theme === "light" && "theme-light")}>
-      <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="https://media.base44.com/images/public/6a7e9bed0e0b77fa2b165b69/5e7c91a19_ChatGPTImageSep9202609_49_25PM.png" alt="SafeSpace" className="w-8 h-8 rounded-xl object-cover" />
-            <span className="font-semibold text-slate-100 text-sm">SafeSpace</span>
+    <div className={cn("min-h-screen bg-slate-950 relative overflow-x-clip", theme === "light" && "theme-light")}>
+      <VisualAtmosphere />
+      <header className="site-header sticky top-0 z-40">
+        <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="brand-lockup flex items-center gap-2.5">
+            <img src="https://media.base44.com/images/public/6a7e9bed0e0b77fa2b165b69/5e7c91a19_ChatGPTImageSep9202609_49_25PM.png" alt="SafeSpace" className="w-9 h-9 rounded-2xl object-cover ring-1 ring-white/15 shadow-lg" />
+            <span className="font-semibold tracking-tight text-slate-100 text-sm">SafeSpace<span className="text-sky-300">.</span></span>
           </Link>
 
           <div className="flex items-center gap-3">
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1 nav-rail">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = location.pathname === item.to;
                 return (
-                  <Link key={item.to} to={item.to} className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors", active ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:bg-slate-800 hover:text-slate-200")}>
+                  <Link key={item.to} to={item.to} className={cn("nav-link flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm transition-all", active ? "nav-link-active" : "text-slate-400 hover:text-slate-100")}>
                     <Icon className="w-4 h-4" />
                     {item.label}
                   </Link>
@@ -92,20 +94,20 @@ export default function Layout() {
 
       <AmbientSoundPlayer />
 
-      <main className="max-w-5xl mx-auto px-4 py-6 pb-24 md:pb-8">
+      <main className="page-shell max-w-6xl mx-auto px-4 py-8 md:py-10 pb-24 md:pb-10">
         <Outlet />
       </main>
 
-      <footer className="max-w-5xl mx-auto px-4 pb-28 md:pb-8 pt-2">
-        <div className="border-t border-slate-800 pt-5 text-center" />
+      <footer className="max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-2">
+        <div className="border-t border-white/10 pt-5 text-center" />
       </footer>
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800">
+      <nav className="mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-40">
         <div className="flex items-center justify-around h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = location.pathname === item.to;
-            return <Link key={item.to} to={item.to} className={cn("flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors", active ? "text-slate-100" : "text-slate-500")}><Icon className="w-5 h-5" /><span className="text-[10px] font-medium">{item.label}</span></Link>;
+            return <Link key={item.to} to={item.to} className={cn("flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all", active ? "mobile-nav-active" : "text-slate-500")}><Icon className="w-5 h-5" /><span className="text-[10px] font-medium">{item.label}</span></Link>;
           })}
         </div>
       </nav>
