@@ -10,7 +10,7 @@ export default function Mascot({ show, message }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 120, opacity: 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="fixed bottom-6 right-6 z-50 flex items-end gap-2 pointer-events-none"
+          className="fixed bottom-24 right-5 sm:right-6 z-[55] flex items-end gap-2 pointer-events-none"
         >
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
@@ -30,8 +30,8 @@ export default function Mascot({ show, message }) {
           >
             <defs>
               <linearGradient id="mascotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f9a8d4" />
-                <stop offset="100%" stopColor="#c084fc" />
+                <stop offset="0%" stopColor="#fb7185" />
+                <stop offset="100%" stopColor="#f43f5e" />
               </linearGradient>
             </defs>
             <circle cx="50" cy="50" r="40" fill="url(#mascotGrad)" />
