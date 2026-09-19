@@ -71,7 +71,7 @@ export default function Resources() {
   const links = selfCareLinks[lang] || selfCareLinks.th;
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="resources-page space-y-6 max-w-5xl mx-auto">
       {loadError && !loading && (
         <div className="rounded-2xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 p-4 flex items-center justify-between gap-3" role="alert">
           <p className="text-sm text-red-900 dark:text-red-200">{t("resources.loadError")}</p>
@@ -86,7 +86,7 @@ export default function Resources() {
       )}
 
       {/* Header */}
-      <div className="text-center pt-2">
+      <div className="resources-hero text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("resources.title")}</h1>
         <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
           {t("resources.subtitle")}
@@ -94,7 +94,7 @@ export default function Resources() {
       </div>
 
       {/* Emergency banner */}
-      <div className="bg-red-50 dark:bg-gradient-to-br dark:from-red-500/20 dark:to-rose-600/20 rounded-2xl p-5 border border-red-200 dark:border-red-500/30 text-red-950 dark:text-slate-100">
+      <div className="resources-emergency bg-red-50 dark:bg-gradient-to-br dark:from-red-500/20 dark:to-rose-600/20 rounded-2xl p-5 border border-red-200 dark:border-red-500/30 text-red-950 dark:text-slate-100">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-500/20 flex items-center justify-center flex-shrink-0">
             <AlertCircle className="w-5 h-5 text-red-700 dark:text-red-300" />
@@ -117,7 +117,7 @@ export default function Resources() {
       </div>
 
       {/* Interactive self-care tools */}
-      <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
+      <div className="resources-tools bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
         <h2 className="text-sm font-semibold text-slate-100 mb-1">{t("resources.toolsTitle")}</h2>
         <div className="grid grid-cols-3 gap-2 mt-3">
           <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-sky-300 dark:hover:border-sky-500/30">
