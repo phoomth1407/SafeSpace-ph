@@ -1,4 +1,26 @@
 # SafeSpace — Changelog
+
+## 2026-09-19
+
+### Security hardening
+- Restricted anonymous access to private assessment, report, contact-request, user, and guest-assessment tables.
+- Added owner/admin RLS checks and hardened `private.is_admin()` search path.
+- Added database-backed per-user rate limiting for expensive AI Edge Functions.
+- Hardened `analyze-assessment` with JWT authentication, request validation, a 64 KB request limit, and a 5-request/60-second rate limit.
+- Hardened `analyze-community-post` with JWT authentication, request validation, a 64 KB request limit, and a 5-request/60-second rate limit.
+- Hardened `analyze-phq9` with JWT authentication, request validation, a 32 KB request limit, and a 5-request/60-second rate limit.
+- Added assessment age and risk-score database constraints.
+- Added an application-level signup password policy and breached-password screening.
+- Added a browser Content Security Policy.
+- Switched CI dependency installation from `npm install` to `npm ci`.
+- Refreshed security/RLS documentation and added architecture, environment, deployment, and Edge Function documentation.
+
+### Current production backend
+- `analyze-assessment` is active at version 13.
+- `analyze-community-post` is active at version 5.
+- `analyze-phq9` is active at version 5.
+- The live Supabase project has the security/rate-limit migrations applied; two of the latest rate-limit migration files and the three current AI function source files still need to be mirrored into the repository.
+
 ## 2026-09-14
 
 ### Visual & copy polish
@@ -7,14 +29,13 @@
 - Reworded AI/result labels to make clear that SafeSpace provides screening and supportive interpretation, not a diagnosis.
 - Updated the built-in mental-health hotline entry to the Department of Mental Health's current 1323 service.
 
-
 ### Version 1.1.0
 - Added automated unit and component tests for scoring, authentication behavior, and AI fallback logic.
 - Added GitHub Actions CI for tests, accessibility linting, and production builds.
 - Added JSX accessibility audit tooling.
 - Added route-level lazy loading with React Suspense.
 - Added Supabase RLS audit documentation and security documentation.
-- Added a safe .env.example template without provider secrets.
+- Added a safe `.env.example` template without provider secrets.
 - Added Dependabot with grouped non-major dependency updates.
 - Improved README documentation for development, security, and performance.
 
@@ -56,14 +77,14 @@
 - Added better AI error logging.
 - Increased AI output capacity to reduce truncation.
 - Deployed the assessment Edge Function through multiple hardened versions.
-- Gemini fallback expects the Supabase secret GEMINI_API_KEY.
+- Gemini fallback expects the Supabase secret `GEMINI_API_KEY`.
 
 ### Community
 - Added Quick wellbeing tools: Breathe, Grounding, and Sounds.
 - Improved Community text hierarchy and Dark Mode readability.
 - Improved descriptive and empty-state text contrast.
 - Preserved the original button appearance after theme cleanup.
-- Now it's Live, No refresh needed
+- Now it's Live, No refresh needed.
 
 ### Resources / Hotlines
 - Restored the hotline list with safe fallback data.
