@@ -1,73 +1,98 @@
 # SafeSpace Security Notes
 
-SafeSpace handles sensitive mental-health screening information. This document describes the current security model for the school-project deployment.
+Last reviewed: 2026-09-19
+
+SafeSpace handles sensitive wellbeing/mental-health screening information. This document describes the current security model for the school-project deployment.
 
 ## Authentication
 
-Supabase Auth is used for email/password and Google authentication. Guest users can use guest-safe parts of the application, but protected actions require an authenticated Supabase session.
+Supabase Auth is used for email/password, Google OAuth, and Google One Tap / Google ID-token sign-in. Protected database writes require an authenticated Supabase session. Current AI Edge Functions require a valid JWT.
 
-The client uses the Supabase publishable key only. Provider secrets such as OpenAI and Gemini keys must stay in Supabase Edge Function secret storage.
+### Password policy
 
-## Row Level Security (RLS)
+Signup applies an application-level password policy before calling Supabase Auth:
 
-RLS is enabled on all current public application tables:
+- 12–128 characters
+- lowercase + uppercase + number + symbol
+- breached-password screening through the Have I Been Pwned range API
 
-- assessments
-- community_comments
-- community_posts
-- contact_requests
-- emergency_resources
-- guest_assessments
-- reports
-- users
+The breached-password check hashes the password locally with SHA-1 and sends only the first five hash characters to the range endpoint. The plaintext password and full hash are not sent.
 
-### Current access model
+This is not equivalent to Supabase's server-side leaked-password protection. A direct API caller can bypass a client-side check, so server-side protection should be enabled when the project plan/configuration supports it.
 
-**Assessments**
-- Authenticated users can create records for themselves.
-- Users can read/update/delete their own assessment records.
-- Admins can manage assessment records.
+## Database authorization
 
-**Community posts/comments**
-- Everyone can read community posts/comments.
-- Authenticated users create content as themselves.
-- Users can manage their own content; admins can moderate/manage content.
+RLS is enabled on the current public application tables.
 
-**Contact requests**
-- Only authenticated users can create contact requests.
-- Normal users cannot read contact requests.
-- Admins can read, update, and delete contact requests.
-- The client intentionally performs an INSERT without chaining .select(), because normal users do not have SELECT permission on this private table.
+| Table | Normal user | Anonymous user | Admin |
+| --- | --- | --- | --- |
+| assessments | Own CRUD | No access | Manage |
+| community_posts | Public read; own CRUD | Read | Manage |
+| community_comments | Public read; own CRUD | Read | Manage |
+| contact_requests | Create own | No access | Read/manage |
+| emergency_resources | Read | Read | Manage |
+| guest_assessments | No access | No access | Manage |
+| reports | Create own | No access | Manage |
+| users | Read own profile | No access | Manage |
+| edge_rate_limits | Own rate-limit rows through restricted policies | No access | Not intended for client management |
 
-**Emergency resources**
-- Everyone can read resources.
-- Only admins can create/update/delete resources.
+The `private.is_admin()` helper uses a trusted search path (`pg_catalog, auth, private`).
 
-**Guest assessments**
-- Guest assessment storage is admin-only at the database layer.
+## Edge Function protection
 
-**Reports**
-- Authenticated users can create reports as themselves.
-- Admins can review/manage reports.
+Current AI functions:
 
-**Users**
-- A user can read their own profile.
-- Admins can manage user records.
+- `analyze-assessment` — version 13
+- `analyze-community-post` — version 5
+- `analyze-phq9` — version 5
 
-## Data minimization
+Controls include JWT verification, authenticated-user lookup, request validation, request-size limits, and per-user rate limiting.
 
-The application should collect only information needed for its screening and support features. Assessment results should not be treated as a medical diagnosis.
+| Function | Request-size limit | Rate limit |
+| --- | ---: | --- |
+| analyze-assessment | 64 KB | 5 / 60 sec / user |
+| analyze-community-post | 64 KB | 5 / 60 sec / user |
+| analyze-phq9 | 32 KB | 5 / 60 sec / user |
 
-## Retention and deletion
+`analyze-assessment` also limits answer objects to 100, caps answer text fields at 2,000 characters, and validates age 1–120 when supplied.
 
-This project is a school demonstration. Test data should be cleared before public demonstrations. Production-like retention policies should be established before using the application with real users in a real clinical or school setting.
+## Browser security
 
-## Crisis support
+`index.html` contains a browser Content Security Policy restricting scripts, connections, frames, objects, forms, and base URLs. It is currently implemented as a meta tag; an HTTP response-header CSP would be stronger when the hosting platform makes that practical.
 
-SafeSpace is not an emergency service and does not replace a qualified mental-health professional.
+## Secrets
 
-For people in Thailand, the Department of Mental Health provides hotline 1323, available 24/7. In an immediate medical emergency, use the appropriate local emergency service.
+The browser receives only the Supabase URL and publishable key.
 
-## Important limitations
+Never commit OpenAI API keys, Gemini API keys, Supabase service-role keys, OAuth client secrets, database passwords, or private tokens. AI provider keys belong in Supabase Edge Function secret storage.
 
-This document describes the application's current configuration; it is not a legal, clinical, or regulatory compliance certification.
+## Data minimization and retention
+
+Assessment answers, age, nationality, and generated results can be sensitive. The assessment UI displays a privacy notice before starting. Guest results are kept in browser navigation state rather than saved to the user's account.
+
+This is a school demonstration, not a clinical or regulatory data platform. Before real-world deployment, define retention/deletion rules, access procedures, incident response, consent requirements, and applicable legal/compliance requirements.
+
+## Operational limitations
+
+Security hardening reduces common abuse paths but does not make the application impossible to attack.
+
+Known limitations:
+
+- client-side password screening is bypassable by direct API callers
+- CSP is currently a meta tag rather than an HTTP response header
+- current Community AI and PHQ-9 production source is not yet mirrored in `main`
+- two production rate-limit migrations are not yet mirrored in `main`
+- current AI functions allow `Access-Control-Allow-Origin: *`; JWT authorization remains the primary access control, while origin restriction could further reduce unwanted browser callers
+
+## Security maintenance checklist
+
+1. Keep RLS enabled on every new public table.
+2. Add explicit ownership/admin policies.
+3. Revoke anonymous access to sensitive tables.
+4. Keep AI functions JWT-protected unless a deliberate public/webhook design is documented.
+5. Validate request size and input shape at Edge Function boundaries.
+6. Rate-limit expensive AI endpoints.
+7. Keep secrets in Supabase secret storage.
+8. Run tests/build/accessibility checks before deployment.
+9. Re-run Supabase security advisors after schema changes.
+10. Keep production-only migrations/functions synchronized with Git where possible.
