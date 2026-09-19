@@ -81,7 +81,7 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-amber-500/10 to-indigo-500/10 rounded-2xl p-4 border border-amber-500/30 space-y-3"
+        className="community-post-card community-announcement-card bg-gradient-to-br from-amber-500/10 to-indigo-500/10 rounded-2xl p-4 border border-amber-500/30 space-y-3"
       >
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 flex items-center gap-1 font-medium">
@@ -121,7 +121,7 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800 space-y-3"
+      className="community-post-card bg-slate-900/60 rounded-2xl p-4 border border-slate-800 space-y-3"
     >
       <div className="flex items-center gap-2 flex-wrap">
         <span className={`text-[10px] px-2 py-0.5 rounded-full ${catColor}`}>{catLabel}</span>
