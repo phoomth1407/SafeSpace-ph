@@ -830,3 +830,25 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 .theme-light .assessment-question-card .space-y-2>button{
   color:#334155;
 }
+
+
+/* Assessment result: light theme uses a clean white canvas rather than the
+   ambient blue background used elsewhere. */
+.theme-light.ss-page-result{
+  background:#fff;
+}
+.theme-light.ss-page-result .ss-backdrop{
+  background:#fff;
+}
+.theme-light.ss-page-result .ss-orb,
+.theme-light.ss-page-result .ss-grain{
+  opacity:0;
+}
+.theme-light.ss-page-result .assessment-result-page{
+  color:#17233b;
+}
+.theme-light.ss-page-result .result-hero{
+  background:linear-gradient(145deg,rgb(255 255 255/.98),rgb(248 250 252/.96))!important;
+  border-color:#e2e8f0!important;
+  box-shadow:0 18px 45px -28px rgb(30 50 100/.18);
+}
