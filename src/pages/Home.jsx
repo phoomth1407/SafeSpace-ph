@@ -30,17 +30,17 @@ export default function Home() {
   const [worryOpen, setWorryOpen] = useState(false);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16 md:space-y-20 home-page">
       {/* Hero */}
-      <section className="relative text-center pt-6 pb-4 overflow-hidden">
+      <section className="relative text-center pt-8 md:pt-12 pb-8 overflow-hidden hero-panel rounded-[2rem] md:rounded-[2.75rem] border border-white/10 bg-slate-900/35 dark:bg-slate-900/35 shadow-2xl shadow-slate-950/30">
         <FloatingOrbs />
         <motion.div
           initial="hidden"
           animate="show"
           variants={stagger}
-          className="relative"
+          className="relative z-10 px-5 md:px-10"
         >
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-1.5 bg-rose-500/10 text-rose-300 text-xs px-3 py-1 rounded-full mb-4 border border-rose-500/20">
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-white/5 text-slate-200 text-xs px-3.5 py-1.5 rounded-full mb-5 border border-white/10 shadow-lg shadow-slate-950/20 backdrop-blur-md">
             <motion.span
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -52,7 +52,7 @@ export default function Home() {
 
           <motion.h1
             variants={fadeUp}
-            className="text-3xl md:text-5xl font-bold text-slate-100 leading-tight"
+            className="text-4xl md:text-6xl font-black text-slate-100 leading-[1.02] tracking-[-0.04em] max-w-4xl mx-auto"
           >
             {t("home.title1")}
             <br />
@@ -65,15 +65,15 @@ export default function Home() {
             </motion.span>
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="text-sm text-slate-400 mt-4 max-w-md mx-auto leading-relaxed">
+          <motion.p variants={fadeUp} className="text-sm md:text-base text-slate-300/80 mt-5 max-w-2xl mx-auto leading-7">
             {t("home.subtitle")}
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mt-8">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-9">
             <MagneticButton>
               <Link
                 to="/assessment"
-                className="group bg-slate-100 text-slate-900 text-sm font-semibold px-6 py-3 rounded-full hover:bg-white transition-colors flex items-center gap-2 shadow-lg shadow-slate-900/40"
+                className="group bg-white text-slate-950 text-sm font-semibold px-6 py-3.5 rounded-2xl hover:bg-slate-100 transition-all flex items-center gap-2 shadow-xl shadow-slate-950/30 ring-1 ring-white/40"
               >
                 <ClipboardList className="w-4 h-4" />
                 {t("home.cta.assessment")}
@@ -83,7 +83,7 @@ export default function Home() {
             <MagneticButton>
               <Link
                 to="/community"
-                className="bg-slate-900 text-slate-200 text-sm font-semibold px-6 py-3 rounded-full border border-slate-700 hover:bg-slate-800 transition-colors flex items-center gap-2"
+                className="bg-white/5 text-slate-100 text-sm font-semibold px-6 py-3.5 rounded-2xl border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2 backdrop-blur-md"
               >
                 <Users className="w-4 h-4" />
                 {t("home.cta.community")}
