@@ -3,284 +3,314 @@
 **Version:** 1.0  
 **Last updated:** 19 September 2026
 
-This policy explains, in plain language, what happens when someone uses the SafeSpace Assessment, what information the assessment uses, why that information is needed, how AI may be involved, how signed-in and guest results differ, and what important limitations users should understand before continuing.
+Welcome to SafeSpace. Before starting the assessment, please read this policy carefully.
 
-SafeSpace Assessment is a wellbeing screening and reflection tool. It is a school-project application and is **not** a medical provider, diagnostic service, therapy service, emergency service, or replacement for qualified professional care.
+SafeSpace Assessment is a wellbeing tool designed to help you reflect on your current feelings, experiences, and general wellbeing. The assessment uses your answers to produce an AI-assisted result that may help you understand your current situation and identify areas that you may want to pay attention to.
 
-## 1. What SafeSpace Assessment is
+SafeSpace is not a medical service, psychological diagnosis, emergency service, or replacement for a qualified professional. Your result should be treated as information and guidance, not as a definitive statement about your mental health.
 
-SafeSpace Assessment asks questions about areas of a person's life and wellbeing and uses the submitted answers to produce an assessment result.
+## 1. What happens when you take the assessment?
 
-The purpose is to help a user reflect on their current situation, notice areas that may deserve attention, and consider supportive next steps.
+The assessment asks you a series of questions about areas that may affect your wellbeing.
 
-The assessment does not determine a person's value, character, future, or identity.
+Depending on the assessment, questions may relate to things such as:
 
-## 2. What happens from start to finish
+- Your feelings and emotions
+- Experiences at school or home
+- Relationships with other people
+- Stress and everyday difficulties
+- Your general wellbeing
+- Other experiences relevant to the assessment
 
-The assessment flow is:
+You choose the answers yourself.
 
-1. Read this SafeSpace Assessment Policy.
-2. Scroll to the end and choose whether to **Agree & Accept**.
-3. Read the **Before you begin** information.
-4. Enter the requested age and nationality.
-5. Start the assessment.
-6. Answer the questions.
-7. Submit the completed assessment.
-8. Receive an assessment result.
+You should not provide information that is unnecessary for the assessment, such as your password, home address, phone number, school address, or other information that could directly identify you.
 
-Participation is voluntary. A user can choose not to continue.
+You may stop using the assessment if you no longer want to continue.
 
-## 3. What the assessment may ask about
+## 2. Why do we ask for your age?
 
-Questions can cover topics such as:
+Your age is requested because wellbeing experiences can differ between different age groups.
 
-- feelings and emotions;
-- stress;
-- school or home experiences;
-- relationships;
-- social experiences;
-- everyday difficulties;
-- general wellbeing; and
-- other topics relevant to the assessment.
+Age may be used to:
 
-The exact questions may change as the project is improved.
+- Provide context for your assessment
+- Help interpret your answers appropriately
+- Help the system understand which age group the assessment relates to
+- Support safer and more appropriate presentation of information
 
-Users should answer honestly if they are comfortable doing so, but they should not provide information that is unnecessary for the question.
+Your age is not intended to be used to judge you as a person.
 
-## 4. Information the assessment may collect
+## 3. Why do we ask for nationality?
 
-Depending on how the assessment is used, SafeSpace may process:
+Nationality may provide additional context when interpreting an assessment.
 
-- assessment answers;
-- age;
-- selected nationality;
-- language preference;
-- the generated assessment result; and
-- account information needed to associate a result with a signed-in account.
+It may help SafeSpace understand the background in which the assessment is being completed.
 
-The assessment does not require a real name, home address, precise location, password, payment information, or government identification number.
+You should provide only the information requested by the assessment.
 
-Users should not intentionally place unnecessary identifying information into assessment answers.
+SafeSpace does not need your exact home location for this assessment.
 
-## 5. Why age and nationality are requested
+## 4. How are my answers processed?
 
-### Age
+After you submit the assessment, your answers may be processed by the SafeSpace application and its AI analysis system.
 
-Age provides context because wellbeing experiences can differ between age groups.
+The system can use your answers to generate things such as:
 
-Age is used to provide context for the assessment and is not intended to judge a user's value, identity, personality, or worth.
+- An overall assessment result
+- Explanations of patterns in your answers
+- Areas that may deserve attention
+- General suggestions that may be useful
 
-### Nationality
+AI systems can make mistakes.
 
-Nationality can provide additional context for interpreting an assessment.
+Therefore, an AI-generated result should never be treated as a diagnosis or as absolute truth about you.
 
-It is not intended to determine a user's value or character.
+If the result seems incorrect, confusing, or does not match how you actually feel, you should not assume that the system is necessarily correct.
 
-Users should provide only the information requested by the form.
+## 5. Does SafeSpace make decisions about me?
 
-## 6. Information users should not submit
+The assessment is intended to provide information to you.
 
-Do not put the following into assessment answers unless a feature explicitly requires it:
+It should not be treated as a system that determines your value, character, future, or medical condition.
 
-- passwords;
-- payment or banking information;
-- exact home addresses;
-- government identification numbers;
-- private account credentials;
-- unnecessary contact information; or
-- another person's private information.
+An assessment result does not define who you are.
 
-If describing an experience, users can normally describe what happened without including names, addresses, phone numbers, usernames, or other information that directly identifies someone.
+Where AI is used, its output is generated from the information provided to the system and may contain errors or limitations. AI-related processing should be explained clearly, particularly for younger users.
 
-## 7. How assessment information is used
+## 6. What information does SafeSpace receive?
 
-Assessment information is used to:
+Depending on how you use the application, information may include:
 
-- generate the assessment result;
-- provide explanations related to the result;
-- provide general supportive suggestions;
-- operate the assessment;
-- maintain authenticated assessment history when applicable;
-- troubleshoot and improve reliability; and
-- protect the service against abuse and malformed or excessive requests.
+### Information you enter
 
-The assessment result is not intended to be used as a judgment of the user's identity or personal worth.
+- Age
+- Nationality
+- Assessment answers
+- Information you voluntarily provide in relevant features
 
-## 8. AI processing
+### Account information
 
-Some assessment information may be processed by AI services to generate the assessment result and related explanations.
+If you create an account, information associated with that account may also be processed.
 
-The current assessment system can use OpenAI and Gemini as configured AI providers, with local fallback logic when remote AI is unavailable.
+### Technical information
 
-AI processing is used to support the assessment experience. AI systems can produce inaccurate, incomplete, or misleading results.
+The service may also receive technical information necessary for the website or application to function, such as authentication/session information and requests sent to the service.
 
-For this reason:
+SafeSpace does not need you to provide unnecessary identifying information inside assessment answers.
 
-- an AI result is not a medical diagnosis;
-- an AI result is not professional psychological advice;
-- an AI result should not be treated as absolute truth; and
-- users should consider their own experience and seek appropriate human support when needed.
+## 7. What should I NOT put in my answers?
 
-Users should also avoid putting unnecessary identifying information into answers that may be processed by AI.
+Please avoid entering information that is not necessary for the assessment.
 
-## 9. Third-party services
+For example, do not intentionally include:
 
-SafeSpace depends on technical services to operate some parts of the application.
+- Passwords
+- Bank or payment information
+- Exact home addresses
+- Personal identification numbers
+- Private account credentials
+- Someone else's private information
 
-The current project uses:
+If a question asks about an experience, you can describe the experience without including identifying information about yourself or another person.
 
-- **Supabase** for core authentication, database, and server-side functions;
-- **Google** when Google sign-in is used; and
-- **AI providers** when AI analysis is enabled.
+## 8. What happens if I am signed in?
 
-These providers have their own systems, terms, and privacy practices.
+When you are signed in, assessment information may be associated with your account so that the application can provide account-related features such as accessing relevant assessment information.
 
-SafeSpace does not claim that third-party processing is completely risk-free.
+This means your assessment should be treated as private account information, not as a public post.
 
-The purpose of this section is to make it clear that some information may need to pass through technical services that allow the application to function.
+Other users should not automatically be able to view your private assessment answers simply because they use SafeSpace.
 
-## 10. Signed-in assessment results
+## 9. What happens if I use SafeSpace as a guest?
 
-When a user is signed in, an assessment result may be stored with their SafeSpace account.
+Guest assessment results are handled differently from signed-in account data.
 
-This allows account-related features such as assessment history to function.
+The application can provide a result without requiring you to create an account.
 
-Private assessment information is not intended to become a public post simply because someone uses SafeSpace.
+Guest results are intended to remain within the guest/session experience rather than becoming a permanent account record.
 
-Access controls are used to restrict access to private records.
+However, browser storage and technical systems can behave differently depending on the device, browser, network, and application configuration. Therefore, do not treat guest mode as a guarantee of complete anonymity.
 
-## 11. Guest assessment results
-
-Guest assessment results are intended to remain within the current browser/session experience rather than being saved to a SafeSpace account.
-
-Guest mode should **not** be interpreted as a guarantee of complete anonymity.
-
-Browser storage, device settings, network conditions, application logs, and other technical systems can behave differently depending on the environment.
-
-Users should therefore avoid submitting information that they would not want associated with their assessment experience.
-
-## 12. Assessment information and Community information are different
-
-The private assessment is separate from SafeSpace Community posts and comments.
-
-Information that a user deliberately publishes in Community may be visible to other users and may be moderated.
-
-Accepting this assessment policy does not make information voluntarily published in Community private.
-
-Users should never publish:
-
-- passwords;
-- private contact information;
-- unnecessary sensitive health information; or
-- another person's personal information.
-
-## 13. Security
-
-SafeSpace uses technical controls intended to reduce unauthorized access and misuse, including:
-
-- authentication;
-- database access controls;
-- Row Level Security;
-- server-side validation;
-- request-size validation;
-- rate limiting;
-- protected server functions; and
-- other application security controls.
-
-These measures reduce risk, but no internet service can honestly guarantee perfect security.
-
-Users should:
-
-- use a strong and unique password;
-- avoid sharing account credentials;
-- sign out when using a shared device; and
-- avoid entering unnecessary sensitive information.
-
-## 14. Children and teenagers
-
-SafeSpace may be accessed by teenagers and other younger users.
-
-The assessment is designed to explain its data use clearly and to avoid requesting unnecessary identifying information.
-
-If a user is unsure what information they should provide, or if a question makes them uncomfortable, they should consider speaking with a parent, guardian, teacher, counselor, or another trusted adult.
-
-SafeSpace should not be treated as a replacement for professional care.
-
-## 15. Is the result a diagnosis?
+## 10. Is my assessment public?
 
 **No.**
 
-SafeSpace Assessment does not diagnose depression, anxiety, or another medical or psychological condition.
+Your assessment information is separate from SafeSpace's community features.
 
-The result is an AI-assisted interpretation of the answers submitted to the assessment.
+An assessment answer should not automatically become a community post, comment, or public profile.
 
-A qualified professional is needed for professional evaluation, diagnosis, or treatment.
+Community content is a separate feature with its own rules and processing.
 
-## 16. What if the result is wrong?
+If you voluntarily post something publicly, that information should be treated differently from your private assessment.
 
-AI-generated results can be inaccurate or incomplete.
+## 11. What about the SafeSpace community?
 
-A user's own experience is important. Users should not force themselves to accept a result that does not seem accurate.
+The community area allows users to interact with other users.
 
-If a result causes concern, confusion, or suggests that additional support may be appropriate, the user should consider discussing the situation with a trusted adult or an appropriate qualified professional.
+This is different from the private assessment.
 
-## 17. Retention and deletion
+Do not post private assessment information publicly unless you genuinely understand that other people may be able to see it.
 
-Authenticated assessment records may remain associated with an account until they are deleted through available account functionality or an authorized administrative process.
+Do not publish:
 
-Guest results are not intentionally stored as account records.
+- Your home address
+- Passwords
+- Private contact information
+- Another person's private information
+- Information that could put you or another person at risk
 
-SafeSpace is currently a school project. Its retention and deletion capabilities may therefore be more limited than those of a commercial clinical platform.
+SafeSpace may use AI-assisted processing for certain community features, but community processing and assessment processing are separate parts of the application.
 
-SafeSpace does not promise instant removal from every technical system unless the application actually provides that capability.
+## 12. Who can see my information?
 
-## 18. User choices
+SafeSpace is designed so that private assessment information is not intentionally made public to other users.
 
-Taking the assessment is voluntary.
+Some information must be processed by technical services that allow the application to operate.
 
-A user can:
+For example, the application may use:
 
-- choose not to start;
-- close the policy without accepting it;
-- leave before submitting answers; or
-- stop using the assessment.
+- Authentication services
+- Database/storage services
+- AI processing services
+- Hosting or infrastructure services
 
-The user should continue only if they understand this policy and are comfortable with the processing described here.
+These services exist to provide specific technical functions.
 
-## 19. Emergencies and urgent situations
+SafeSpace should not represent third-party processing as completely risk-free. Third-party services can have their own infrastructure, security practices, and terms.
 
-SafeSpace is not an emergency service and cannot continuously monitor or protect users.
+Where third parties process personal information, users should be informed about that processing rather than being left to guess what happens to their data.
 
-If a user or another person is in immediate danger or needs urgent help, they should not wait for an assessment result.
+## 13. How does SafeSpace protect information?
 
-They should contact an appropriate local emergency service, a trusted adult, or an appropriate professional support service.
+SafeSpace uses technical protections intended to reduce unauthorized access and misuse.
+
+Depending on the feature, these can include:
+
+- Authentication
+- Database access controls
+- Row-level security
+- Restricted access to private data
+- Server-side validation
+- Request/rate limiting
+- Input validation
+- Protection against oversized or malformed requests
+- Security controls around AI processing
+
+These measures reduce risk, but no website or online service can honestly promise that security risk is zero.
+
+You should therefore avoid submitting information that does not need to be submitted.
+
+## 14. Does SafeSpace sell my assessment information?
+
+Assessment information should not be treated as advertising material or as something that should simply be sold to other users.
+
+The assessment exists to provide the SafeSpace service.
+
+SafeSpace should only use information for purposes that are explained to users and supported by the project's actual implementation.
+
+## 15. Is my information used to advertise to me?
+
+The assessment is not designed around using your private wellbeing answers to target advertising.
+
+If the service introduces a new type of data use in the future, the relevant privacy information should be updated before users are expected to rely on the new behavior.
+
+## 16. Can SafeSpace identify me from my answers?
+
+You should assume that information you provide can potentially become associated with your account when you are signed in.
+
+For that reason, do not assume that writing something inside an assessment makes it anonymous.
+
+Even when an application does not directly ask for your name, combinations of information can sometimes make a person identifiable.
+
+This is why SafeSpace asks users not to include unnecessary identifying information.
+
+## 17. What happens to my information after the assessment?
+
+The exact handling depends on how you use SafeSpace.
+
+For signed-in users, assessment records may remain associated with the account until they are deleted through available account functionality or an applicable administrative process.
+
+For guest users, results are intended to be handled within the guest/session experience rather than being stored as an account record.
+
+SafeSpace should not claim that information is immediately and permanently erased from every technical system unless the application actually guarantees that.
+
+## 18. Can I stop or leave the assessment?
+
+**Yes.**
+
+Participation is voluntary.
+
+You can leave the assessment before submitting it.
+
+You do not have to answer a question simply because it appears on the screen.
+
+If a question makes you uncomfortable, you should consider whether continuing is appropriate for you.
+
+## 19. What if I am under 18?
+
+SafeSpace may be used by teenagers and other younger users.
+
+Because younger users can require stronger privacy protections, SafeSpace aims to use high-privacy defaults and clear explanations rather than encouraging users to disclose unnecessary personal information.
+
+If you are unsure about what information you should provide, consider talking with a parent, guardian, teacher, counselor, or another trusted adult before continuing.
+
+## 20. Is this a diagnosis?
+
+**No.**
+
+A SafeSpace result does not diagnose depression, anxiety, or another medical or psychological condition.
+
+It is an AI-assisted interpretation of the answers you provided.
+
+Only an appropriately qualified professional can provide a professional assessment or diagnosis.
+
+## 21. What if my result is wrong?
+
+AI-generated results can be incomplete or incorrect.
+
+Your own experience matters.
+
+If your result does not seem to describe you accurately, do not force yourself to accept it simply because the system produced it.
+
+You can discuss your concerns with someone you trust or with an appropriate qualified professional.
+
+## 22. What if I need urgent help?
+
+SafeSpace is not an emergency service.
+
+If you believe you or another person is in immediate danger, do not wait for an AI assessment result or rely on SafeSpace to handle the situation.
+
+Contact a trusted adult or an appropriate local emergency or professional support service.
 
 In Thailand, the Department of Mental Health hotline is **1323**.
 
-## 20. Changes to this policy
+## 23. Changes to SafeSpace
 
-SafeSpace may change its assessment questions, AI systems, security controls, storage behavior, or third-party services as the project develops.
+SafeSpace is an evolving project.
 
-This policy may therefore be updated.
+The application, assessment questions, AI systems, security measures, and other features may change over time.
 
-Important changes to how assessment information is handled should be reflected in the published policy, and users may be asked to review the policy again before a future assessment.
+If a change materially affects how personal information is handled, the relevant policy information should be updated accordingly.
 
-## 21. What accepting this policy means
+The policy should always show its current version and update date so users can understand which version they are accepting.
 
-By selecting **Agree & Accept** after reaching the end of this policy, the user confirms that they have had an opportunity to understand:
+## 24. Your acceptance
 
-- what the assessment does;
-- what information it uses;
-- why age and nationality are requested;
-- how answers may be processed by AI;
-- how signed-in and guest results differ;
-- how assessment and Community information differ;
-- the security measures and their limitations;
-- the limitations of AI-generated results;
-- the voluntary nature of the assessment; and
-- the circumstances in which additional human support may be appropriate.
+Before beginning the assessment, you are given an opportunity to read this policy.
 
-The user then voluntarily chooses whether to continue with the assessment under these conditions.
+By selecting **Agree & Accept**, you confirm that:
+
+- You have read the policy.
+- You understand what the assessment does.
+- You understand that AI may process your answers.
+- You understand that the assessment is not a medical diagnosis.
+- You understand how your answers may be handled.
+- You understand that participation is voluntary.
+- You understand that you should not submit unnecessary sensitive information.
+- You want to continue to the assessment.
+
+If you do not agree, you can leave the assessment without continuing.
 
 ---
 
