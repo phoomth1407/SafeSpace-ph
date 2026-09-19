@@ -37,6 +37,7 @@
   --radius-m:16px;
   --radius-l:26px;
   --maxw:1180px;
+  --maxw-wide:1240px;
   color-scheme: dark;
 }
 :root[data-theme="light"]{
@@ -695,6 +696,45 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
 .mini-card h4 .icon-slot{ width:1.1em; height:1.1em; margin-right:4px; color:var(--mint); }
 .lang-toggle .knob{ transform:none !important; background:var(--lavender) !important; font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.02em; }
 
+
+/* ============================================================
+   CURRENT STATUS
+============================================================ */
+.status-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+}
+@media (max-width:880px){ .status-grid{ grid-template-columns:1fr; } }
+.status-card{
+  position:relative; overflow:hidden;
+  background:var(--tide); border:1px solid var(--border);
+  border-radius:var(--radius-l); padding:26px;
+  transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.status-card::before{
+  content:""; position:absolute; inset:0 auto 0 0; width:3px;
+  background:linear-gradient(180deg,var(--mint),var(--lavender),var(--coral));
+  opacity:.9;
+}
+.status-card:hover{
+  transform:translateY(-4px); border-color:var(--border-strong); box-shadow:var(--shadow);
+}
+.status-card .status-icon{
+  width:42px; height:42px; border-radius:13px; display:flex;
+  align-items:center; justify-content:center; margin-bottom:18px;
+  background:var(--tide-2); color:var(--mint);
+}
+.status-card h3{ font-size:1.05rem; margin-bottom:9px; }
+.status-card p{ color:var(--muted); font-size:.9rem; }
+.status-card .status-link{
+  display:inline-flex; align-items:center; gap:6px; margin-top:16px;
+  color:var(--mint); text-decoration:none; font-size:.85rem; font-weight:600;
+}
+.status-card .status-link:hover{ text-decoration:underline; }
+.status-meta{
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:26px;
+}
+.status-meta .pill{ font-family:var(--font-mono); font-size:.76rem; }
+
 </style>
 </head>
 <body>
@@ -706,6 +746,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <a href="#architecture">Overview</a>
       <a href="#features">Features</a>
       <a href="#dev">For developers</a>
+      <a href="#status">Current status</a>
       <a href="#timeline">Build timeline</a>
     </div>
     <div class="nav-actions">
@@ -733,18 +774,18 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     <div>
       <span class="eyebrow"><span class="dot"></span>A school capstone project, in production</span>
       <h1>Take a breath.<br>Then meet SafeSpace.</h1>
-      <p class="hero-sub">A bilingual (Thai / English) web app for teens and young adults: a mental-health screening check-in, six self-care tools, a quiet anonymous community, and real hotlines — built solo over about a month with React, Vite, and Supabase.</p>
+      <p class="hero-sub">A bilingual (Thai / English) web app for teens and young adults: wellbeing screening, self-care tools, a community space, resources, and AI-assisted guidance — built as a school project with React, Vite, and Supabase.</p>
       <div class="hero-badges">
         <span class="pill"><span class="icon-slot" data-icon="atom" aria-hidden="true"></span><b>React + Vite</b></span>
         <span class="pill"><span class="icon-slot" data-icon="database" aria-hidden="true"></span><b>Supabase</b></span>
-        <span class="pill"><span class="icon-slot" data-icon="bot" aria-hidden="true"></span><b>OpenAI → Gemini fallback</b></span>
+        <span class="pill"><span class="icon-slot" data-icon="bot" aria-hidden="true"></span><b>AI analysis + fallback</b></span>
         <span class="pill"><span class="icon-slot" data-icon="globe" aria-hidden="true"></span><b>TH / EN</b></span>
       </div>
       <div class="hero-cta">
         <a class="btn" href="https://phoomth1407.github.io/SafeSpace-ph" target="_blank" rel="noopener">Open the live app</a>
         <a class="btn btn-ghost" href="#features">Explore what it does</a>
       </div>
-      <p class="hero-note">Everything below is interactive — small, honest rebuilds of the app's real tools, not screenshots. Try the breathing ring, mix some ambient sound, or let a worry float away.</p>
+      <p class="hero-note">Everything below is interactive — small, honest rebuilds of the app's real tools, not screenshots. Try the breathing ring, mix some ambient sound, or let a worry float away. The project documentation and assessment policy are linked below.</p>
     </div>
     <div class="orb-stage" aria-hidden="true">
       <div class="orb-ring-wrap">
@@ -1126,6 +1167,48 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   </div>
 </section>
 
+
+<!-- ============================================================ CURRENT STATUS ============================================================ -->
+<section class="section section-tight" id="status">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>Current project status</span>
+      <h2>What is current in SafeSpace now</h2>
+      <p class="kicker">This section is kept intentionally factual: it describes the project as it exists in the repository, including the newer privacy, security, and documentation work.</p>
+    </div>
+
+    <div class="status-grid reveal">
+      <article class="status-card">
+        <div class="status-icon"><span class="icon-slot" data-icon="lock" aria-hidden="true"></span></div>
+        <h3>Privacy-first assessment flow</h3>
+        <p>The assessment now opens with the SafeSpace Assessment Policy. Users must review the policy and reach the end before they can accept and continue. The current policy is version 1.0, dated 19 September 2026.</p>
+        <a class="status-link" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/ASSESSMENT_POLICY.md" target="_blank" rel="noopener">Read the full policy ↗</a>
+      </article>
+
+      <article class="status-card">
+        <div class="status-icon"><span class="icon-slot" data-icon="database" aria-hidden="true"></span></div>
+        <h3>Backend security controls</h3>
+        <p>Private assessment data is protected with authenticated access controls and Supabase Row-Level Security. The project also uses server-side validation, request limits, and protected AI Edge Functions rather than trusting the browser alone.</p>
+        <a class="status-link" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/RLS_AUDIT.md" target="_blank" rel="noopener">See the RLS audit ↗</a>
+      </article>
+
+      <article class="status-card">
+        <div class="status-icon"><span class="icon-slot" data-icon="bot" aria-hidden="true"></span></div>
+        <h3>AI-assisted, with fallbacks</h3>
+        <p>Assessment, community, and PHQ-9-related AI processing is handled through authenticated Supabase Edge Functions with input-size validation and per-user rate limiting. AI output is presented as screening/support information, not a diagnosis.</p>
+        <a class="status-link" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/EDGE_FUNCTIONS.md" target="_blank" rel="noopener">Read the Edge Functions notes ↗</a>
+      </article>
+    </div>
+
+    <div class="status-meta reveal">
+      <span class="pill"><b>Version marker</b> detects newer frontend builds</span>
+      <span class="pill"><b>GitHub Actions</b> runs the project checks and production build</span>
+      <span class="pill"><b>Thai / English</b> across the main experience</span>
+      <span class="pill"><b>Guest + signed-in</b> assessment flows</span>
+    </div>
+  </div>
+</section>
+
 <!-- ============================================================ DEV SECTION ============================================================ -->
 <section class="section dev-section" id="dev">
   <div class="wrap">
@@ -1300,6 +1383,18 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
         </div>
       </div>
       <div class="tl-stop">
+        <p class="tl-date">2026-09-19</p>
+        <p class="tl-title">Privacy &amp; security hardening</p>
+        <div class="tl-groups">
+          <p class="tl-group"><b>Assessment policy</b> — Expanded the assessment policy into a complete 24-section document and synchronized the website policy flow with it.</p>
+          <p class="tl-group"><b>Database security</b> — Tightened authenticated access to private tables, reinforced RLS, and added validation constraints for assessment data.</p>
+          <p class="tl-group"><b>AI functions</b> — Added authenticated request handling, input-size validation, JSON validation, and per-user rate limiting to protected AI functions.</p>
+          <p class="tl-group"><b>Password protection</b> — Added app-level breached-password checking during signup without sending plaintext passwords to the breach-check service.</p>
+          <p class="tl-group"><b>Stale frontend protection</b> — Production builds publish a version marker so an open older client can detect a newer deployment and reload.</p>
+          <p class="tl-group"><b>Documentation</b> — Security, assessment policy, Edge Functions, deployment, and RLS documentation are version-controlled in the repository.</p>
+        </div>
+      </div>
+      <div class="tl-stop">
         <p class="tl-date">2026-09-14</p>
         <p class="tl-title">The polish day — v1.1.0</p>
         <div class="tl-groups">
@@ -1329,9 +1424,10 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
         <a href="https://github.com/phoomth1407/SafeSpace-ph" target="_blank" rel="noopener">GitHub repo ↗</a>
         <a href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog ↗</a>
         <a href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/README.md" target="_blank" rel="noopener">README ↗</a>
+        <a href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/ASSESSMENT_POLICY.md" target="_blank" rel="noopener">Assessment policy ↗</a>
       </div>
     </div>
-    <p class="footer-disclaimer">SafeSpace's assessment results are intended for screening and supportive guidance — they are not medical diagnoses. This introduction page is an unofficial companion built to explain the project; all product details are drawn from the repository's own README and changelog.</p>
+    <p class="footer-disclaimer">SafeSpace's assessment results are intended for screening and supportive guidance — they are not medical diagnoses. This introduction page is an unofficial companion built to explain the project. Product details should be read together with the current repository documentation and assessment policy, because the project is actively evolving.</p>
     <p class="footer-credit">Built by phoomth1407</p>
   </div>
 </footer>
@@ -1464,7 +1560,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     'Row-level security, the shape of it':'ภาพรวมของ Row-Level Security','Supabase RLS keeps every assessment and history row scoped to the signed-in user by default.':'Supabase RLS ทำให้ข้อมูลแบบประเมินและประวัติแต่ละแถวถูกจำกัดไว้กับผู้ใช้ที่เข้าสู่ระบบตามค่าเริ่มต้น',
     'Testing & CI':'การทดสอบและ CI','Vitest unit + component tests cover scoring logic, authentication behavior, and the AI fallback chain':'Vitest ทดสอบ logic การให้คะแนน พฤติกรรมการยืนยันตัวตน และลำดับการสำรองของ AI','Playwright drives end-to-end tests against the built app':'Playwright ทดสอบการทำงานแบบ end-to-end กับแอปที่ build แล้ว','eslint-plugin-jsx-a11y runs as a dedicated accessibility lint pass':'eslint-plugin-jsx-a11y ทำหน้าที่ตรวจ accessibility โดยเฉพาะ','GitHub Actions runs tests, a11y lint, and a production build on every change':'GitHub Actions รันการทดสอบ a11y lint และ production build ทุกครั้งที่มีการเปลี่ยนแปลง','Dependabot groups non-major dependency updates automatically':'Dependabot จัดกลุ่มการอัปเดต dependency ที่ไม่ใช่ major ให้อัตโนมัติ','Route-level code splitting via React Suspense lazy loading':'แบ่งโค้ดระดับ route ด้วย React Suspense และ lazy loading',
     'Deployment':'การนำขึ้นระบบ','Frontend builds with Vite and deploys to GitHub Pages':'Frontend build ด้วย Vite และ deploy ไปที่ GitHub Pages','Supabase Edge Functions deploy separately to the connected Supabase project':'Supabase Edge Functions ถูก deploy แยกไปยังโปรเจกต์ Supabase ที่เชื่อมต่อ','ships with no real provider secrets':'ไม่มี secret จริงของผู้ให้บริการติดมาด้วย','Pre-deploy checklist: build succeeds → CI green → light/dark checked → Thai/English checked':'เช็กลิสต์ก่อน deploy: build ผ่าน → CI เขียว → ตรวจโหมดสว่าง/มืด → ตรวจไทย/อังกฤษ',
-    'How it actually got built':'SafeSpace ถูกสร้างขึ้นอย่างไร','Two days on the changelog, about a month in real time':'สองวันใน changelog กับเวลาพัฒนาจริงประมาณหนึ่งเดือน','Pulled straight from CHANGELOG.md — the record for whenever this gets forgotten again.':'ดึงมาจาก CHANGELOG.md โดยตรง — บันทึกไว้สำหรับวันที่ลืมรายละเอียดอีกครั้ง',
+    'Current project status':'สถานะโครงการปัจจุบัน','What is current in SafeSpace now':'สิ่งที่เป็นปัจจุบันใน SafeSpace ตอนนี้','Privacy-first assessment flow':'ขั้นตอนแบบประเมินที่เน้นความเป็นส่วนตัว','Backend security controls':'มาตรการความปลอดภัยฝั่งระบบ','AI-assisted, with fallbacks':'AI พร้อมระบบสำรอง','Read the full policy ↗':'อ่านนโยบายฉบับเต็ม ↗','See the RLS audit ↗':'ดู RLS audit ↗','Read the Edge Functions notes ↗':'อ่านรายละเอียด Edge Functions ↗','Version marker':'ตัวระบุเวอร์ชัน','detects newer frontend builds':'ตรวจพบ frontend รุ่นใหม่','GitHub Actions':'GitHub Actions','runs the project checks and production build':'รันการตรวจสอบและ production build','Guest + signed-in':'ผู้เยี่ยมชม + เข้าสู่ระบบ','assessment flows':'รูปแบบการทำแบบประเมิน','Privacy & security hardening':'การเสริมความเป็นส่วนตัวและความปลอดภัย','Assessment policy':'นโยบายแบบประเมิน','Database security':'ความปลอดภัยของฐานข้อมูล','AI functions':'ฟังก์ชัน AI','Password protection':'การปกป้องรหัสผ่าน','Stale frontend protection':'การป้องกัน frontend รุ่นเก่า','Documentation':'เอกสาร','How it actually got built':'SafeSpace ถูกสร้างขึ้นอย่างไร','Two days on the changelog, about a month in real time':'สองวันใน changelog กับเวลาพัฒนาจริงประมาณหนึ่งเดือน','Pulled straight from CHANGELOG.md — the record for whenever this gets forgotten again.':'ดึงมาจาก CHANGELOG.md โดยตรง — บันทึกไว้สำหรับวันที่ลืมรายละเอียดอีกครั้ง',
     'The build day':'วันพัฒนา','Wellbeing & Home':'สุขภาวะและหน้าแรก','— Mood check-in, guided breathing, 5-4-3-2-1 grounding, and Worry Release shipped together, with Sky Lantern / Leaves / Stardust release animations.':'— เช็กอารมณ์ ฝึกหายใจ Grounding 5-4-3-2-1 และ Worry Release ถูกปล่อยพร้อมกัน พร้อมแอนิเมชัน Sky Lantern / Leaves / Stardust',
     'Ambient sound':'เสียงบรรยากาศ','— The procedural mixer was built from scratch on the Web Audio API, with six channels and four presets.':'— มิกเซอร์เสียงถูกสร้างขึ้นใหม่ด้วย Web Audio API มี 6 ช่องเสียงและ 4 พรีเซ็ต',
     'Assessment & AI':'แบบประเมินและ AI','— AI analysis was restored and expanded into the three-tier OpenAI → Gemini → local fallback, plus AI-personalized next-step tools.':'— การวิเคราะห์ด้วย AI ถูกนำกลับมาและขยายเป็นระบบ 3 ระดับ OpenAI → Gemini → local fallback พร้อมเครื่องมือถัดไปที่ปรับตามผู้ใช้',
