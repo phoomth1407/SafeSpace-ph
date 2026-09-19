@@ -99,7 +99,7 @@ export default function BreathingExerciseModal({ open, onClose }) {
           <div className="w-11 h-11 rounded-2xl bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center mx-auto mb-3">
             <Wind className="w-5 h-5 text-sky-700 dark:text-sky-300" />
           </div>
-          <h2 className="text-xl font-semibold text-slate-100">{t("breath.title")}</h2>
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{t("breath.title")}</h2>
           <p className="text-xs text-slate-400 mt-1">{t("breath.subtitle")}</p>
         </div>
 
@@ -128,7 +128,7 @@ export default function BreathingExerciseModal({ open, onClose }) {
             className="relative w-36 h-36 rounded-full bg-gradient-to-br from-sky-100 to-rose-100 dark:from-sky-950/70 dark:to-rose-950/70 border border-sky-300/50 dark:border-sky-500/30 flex flex-col items-center justify-center shadow-inner"
             style={{ transform: `scale(${scale})`, transition: "transform 900ms ease-in-out" }}
           >
-            <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{t(`breath.phase.${phase.key}`)}</span>
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-900 dark:text-slate-100">{t(`breath.phase.${phase.key}`)}</span>
             <span className="text-4xl font-bold text-sky-700 dark:text-sky-300 mt-1">{remaining}</span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">{t("breath.seconds")}</span>
           </div>
