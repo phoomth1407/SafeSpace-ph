@@ -24,7 +24,7 @@ export default function ResourceCard({ resource }) {
   const colorClass = categoryColors[resource.category] || categoryColors.general;
 
   return (
-    <div className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800 flex items-start gap-3">
+    <div className="resource-card bg-slate-900/60 rounded-2xl p-4 border border-slate-800 flex items-start gap-3">
       <div className={`w-11 h-11 rounded-xl flex items-center justify-center border ${colorClass} flex-shrink-0`}>
         <Phone className="w-5 h-5" />
       </div>
