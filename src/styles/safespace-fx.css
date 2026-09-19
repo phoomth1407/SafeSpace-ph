@@ -174,3 +174,85 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 @media(prefers-reduced-motion:reduce){
   .ss-backdrop::before{animation:none}
 }
+
+
+/* Home composition — soft scenic hero + premium glass surfaces. */
+.home-page .hero-panel{
+  isolation:isolate;
+  min-height:420px;
+  background:linear-gradient(180deg,rgb(255 255 255/.10),rgb(255 255 255/.035)) !important;
+  border-color:rgb(255 255 255/.22) !important;
+  box-shadow:0 32px 90px -42px rgb(15 23 42/.45),inset 0 1px 0 rgb(255 255 255/.30);
+}
+.home-page .hero-panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgb(15 23 42/.08),rgb(15 23 42/.28)),
+    radial-gradient(circle at 50% 12%,transparent 0 30%,rgb(15 23 42/.16) 100%);
+}
+.home-scenic{z-index:0;pointer-events:none;transform:scale(1.03);filter:saturate(1.05) contrast(1.02);}
+.home-hero-content{z-index:3;}
+.home-page .hero-panel h1{filter:drop-shadow(0 4px 18px rgb(15 23 42/.22));}
+.home-page .hero-panel p{color:rgb(248 250 252/.86) !important;text-shadow:0 2px 12px rgb(15 23 42/.22);}
+.home-page .hero-panel .bg-white\/5{background:rgb(255 255 255/.16) !important;border-color:rgb(255 255 255/.22) !important;}
+.home-page .hero-panel .bg-white:not(.dark\:bg-slate-900\/60){box-shadow:0 16px 40px -18px rgb(15 23 42/.35);}
+
+/* Tool cards become a compact, airy glass trio. */
+.home-page .wellness-tool-card > button{
+  min-height:132px;
+  padding:1.25rem 1.35rem;
+  border-color:rgb(255 255 255/.16) !important;
+  background:linear-gradient(135deg,rgb(255 255 255/.78),rgb(255 255 255/.52)) !important;
+  box-shadow:0 18px 44px -24px rgb(30 50 100/.30),inset 0 1px 0 rgb(255 255 255/.95);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  backdrop-filter:blur(18px) saturate(150%);
+}
+.dark .home-page .wellness-tool-card > button{
+  background:linear-gradient(135deg,rgb(15 23 42/.72),rgb(30 41 59/.58)) !important;
+  border-color:rgb(255 255 255/.10) !important;
+  box-shadow:0 18px 44px -24px rgb(0 0 0/.45),inset 0 1px 0 rgb(255 255 255/.10);
+}
+.home-page .wellness-tool-card > button h2{color:rgb(15 23 42) !important;}
+.dark .home-page .wellness-tool-card > button h2{color:rgb(241 245 249) !important;}
+.home-page .wellness-tool-card > button p{color:rgb(71 85 105) !important;}
+.dark .home-page .wellness-tool-card > button p{color:rgb(148 163 184) !important;}
+.home-page .wellness-tool-card--breath > button{box-shadow:0 18px 44px -24px rgb(14 165 233/.22),inset 0 1px 0 rgb(255 255 255/.95);}
+.home-page .wellness-tool-card--ground > button{box-shadow:0 18px 44px -24px rgb(16 185 129/.20),inset 0 1px 0 rgb(255 255 255/.95);}
+.home-page .wellness-tool-card--worry > button{box-shadow:0 18px 44px -24px rgb(139 92 246/.20),inset 0 1px 0 rgb(255 255 255/.95);}
+
+/* Existing charts get the same visual language without changing their data. */
+.home-page .stats-dashboard > div{
+  border-color:rgb(255 255 255/.68) !important;
+  background:linear-gradient(145deg,rgb(255 255 255/.78),rgb(255 255 255/.55)) !important;
+  box-shadow:0 18px 48px -28px rgb(30 50 100/.24),inset 0 1px 0 rgb(255 255 255/.90);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  backdrop-filter:blur(16px) saturate(140%);
+}
+.dark .home-page .stats-dashboard > div{
+  border-color:rgb(255 255 255/.08) !important;
+  background:linear-gradient(145deg,rgb(15 23 42/.70),rgb(30 41 59/.50)) !important;
+  box-shadow:0 18px 48px -28px rgb(0 0 0/.42),inset 0 1px 0 rgb(255 255 255/.08);
+}
+.home-page .stats-dashboard h3{color:rgb(15 23 42) !important;}
+.dark .home-page .stats-dashboard h3{color:rgb(241 245 249) !important;}
+.home-page .stats-dashboard .recharts-wrapper{filter:drop-shadow(0 8px 16px rgb(99 102 241/.07));}
+
+/* More intentional page rhythm on wide screens. */
+@media(min-width:1024px){
+  .home-page{max-width:1080px;margin-inline:auto;}
+  .home-page .wellness-tool-card{transition:transform .45s var(--ss-ease);}
+  .home-page .wellness-tool-card:hover{transform:translateY(-3px);}
+}
+@media(max-width:640px){
+  .home-page .hero-panel{min-height:390px;}
+  .home-scenic{transform:scale(1.18);opacity:.82;}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-page .wellness-tool-card{transition:none;}
+  .home-page .wellness-tool-card:hover{transform:none;}
+  .home-scenic{transform:none;}
+}
