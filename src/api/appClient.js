@@ -16,6 +16,58 @@ const tableFor = (name) => ({
 
 const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+async function validatePasswordBeforeSignup(password) {
+  if (typeof password !== "string" || password.length < 12) {
+    throw new Error("Password must be at least 12 characters long.");
+  }
+  if (password.length > 128) {
+    throw new Error("Password is too long.");
+  }
+  if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+    throw new Error("Password must include uppercase, lowercase, a number, and a symbol.");
+  }
+
+  // Check the password against the Pwned Passwords database using k-anonymity.
+  // Only the first 5 characters of the SHA-1 hash leave the browser; the
+  // plaintext password and full hash are never sent to the service.
+  try {
+    const digest = await crypto.subtle.digest(
+      "SHA-1",
+      new TextEncoder().encode(password)
+    );
+    const hash = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase();
+    const prefix = hash.slice(0, 5);
+    const suffix = hash.slice(5);
+
+    const response = await fetch(
+      `https://api.pwnedpasswords.com/range/${prefix}`,
+      {
+        headers: {
+          "Add-Padding": "true",
+        },
+      }
+    );
+    if (!response.ok) {
+      // Do not block registration if the external reputation service is
+      // temporarily unavailable; local password requirements still apply.
+      return;
+    }
+
+    const lines = (await response.text()).split("\n");
+    const match = lines.find((line) => line.trim().toUpperCase().startsWith(`${suffix}:`));
+    if (match) {
+      throw new Error("This password has appeared in known data breaches. Please choose a different password.");
+    }
+  } catch (error) {
+    if (/appeared in known data breaches/i.test(error?.message || "")) throw error;
+    // Network/service failures do not expose the password and do not prevent
+    // registration; the local strength policy remains enforced.
+  }
+}
+
 const currentAuthUser = async () => {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   if (sessionError) throw sessionError;
@@ -281,6 +333,7 @@ const auth = {
     return currentAppUser();
   },
   async register({ email, password }) {
+    await validatePasswordBeforeSignup(password);
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
     return data.user ? currentAppUser() : data;
