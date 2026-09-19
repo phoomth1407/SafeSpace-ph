@@ -239,9 +239,9 @@ export default function Community() {
   );
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="community-page space-y-6 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="text-center pt-2">
+      <div className="community-hero text-center pt-2">
         <h1 className="text-2xl font-bold text-slate-100">{t("community.title")}</h1>
         <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
         <button
@@ -255,7 +255,7 @@ export default function Community() {
 
       {/* Quick wellbeing tools */}
       {!focusedPostId && (
-        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
+        <div className="community-tools bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
           <h2 className="text-sm font-semibold text-slate-100 mb-3">{t("community.quickTitle")}</h2>
           <div className="grid grid-cols-3 gap-2">
             <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-sky-300 dark:hover:border-sky-500/30">
