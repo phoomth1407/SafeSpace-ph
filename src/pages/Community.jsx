@@ -112,7 +112,13 @@ export default function Community() {
         language: lang,
       });
       if (res.data?.error) {
-        setError(res.data.error === "banned" ? t("community.banned") : res.data.error);
+        if (res.data.error === "auth_required" || /unauthorized|authentication required/i.test(res.data.error)) {
+          setError(t("community.loginPrompt"));
+        } else if (/rate limit exceeded/i.test(res.data.error)) {
+          setError(lang === "en" ? "You have posted several times recently. Please wait a minute and try again." : "คุณโพสต์หลายครั้งในช่วงที่ผ่านมา กรุณารอสักครู่แล้วลองใหม่");
+        } else {
+          setError(res.data.error === "banned" ? t("community.banned") : res.data.error);
+        }
       } else {
         setContent("");
         setCategory("other");
