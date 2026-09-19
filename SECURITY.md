@@ -69,7 +69,7 @@ The CSP is currently a meta tag because the frontend is deployed on GitHub Pages
 
 ## Edge Function boundary
 
-The deployed Supabase Edge Function source was not present in this repository during the security-hardening review. Therefore this repository does **not** claim that server-side request-size limits, rate limiting, schema validation, or abuse controls have been verified.
+The deployed `analyze-assessment` Edge Function is now version-controlled and hardened with JWT verification, bounded request/body validation, age validation, answer-count/text-length limits, generic client-safe errors, and a per-user rate limit of 5 requests per 60 seconds. Other deployed Edge Functions were not found in this repository during the review, so their server-side protections still need separate verification.
 
 Before accepting real user/minor data, verify each sensitive Edge Function server-side:
 
@@ -83,7 +83,7 @@ Before accepting real user/minor data, verify each sensitive Edge Function serve
 
 ## Password protection
 
-Supabase's leaked-password protection was reported as disabled during the live security review. Enable Supabase Auth's leaked-password protection before using real accounts.
+Supabase's leaked-password protection is still reported as disabled. Supabase documents this as an Auth setting that checks passwords against known compromised-password lists; enable it before using real accounts. urlSupabase password security documentationhttps://supabase.com/docs/guides/auth/password-security
 
 ## RLS verification checklist
 
