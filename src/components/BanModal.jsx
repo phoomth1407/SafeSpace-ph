@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, ShieldCheck, Ban } from "lucide-react";
 import { appClient } from "@/api/appClient";
@@ -41,7 +42,9 @@ export default function BanModal({ userId, onClose }) {
     setBanning(false);
   };
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {userId && (
         <motion.div
@@ -49,14 +52,14 @@ export default function BanModal({ userId, onClose }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/55 backdrop-blur-sm p-4 overflow-y-auto"
         >
           <motion.div
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm mx-4 space-y-4"
+            className="bg-card border border-border rounded-2xl p-6 w-full max-w-sm mx-auto my-auto max-h-[calc(100dvh-2rem)] overflow-y-auto space-y-4 shadow-2xl"
           >
             <div className="flex items-center justify-between">
               <h3 className="text-base font-semibold text-foreground">{t("ban.title")}</h3>
@@ -155,6 +158,7 @@ export default function BanModal({ userId, onClose }) {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
