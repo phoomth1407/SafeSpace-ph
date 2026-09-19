@@ -2,39 +2,56 @@
 
 ## Current stack
 
-- Frontend: React + Vite
+- Frontend: React 18 + Vite
 - Backend: Supabase
 - Database: Supabase Postgres
 - Authentication: Supabase Auth
 - Server-side logic: Supabase Edge Functions
-- Deployment: GitHub Pages
-- AI: OpenAI primary, Gemini fallback, local fallback
+- Frontend deployment: GitHub Pages
+- AI: OpenAI primary, Gemini fallback for the main assessment function, local/offline fallbacks
 
 ## Development
 
-Run the frontend locally with:
+Use Node.js 22 and install from the lockfile:
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-The active backend lives in Supabase. Do not add new Base44 dependencies or Base44-specific runtime behavior.
+Quality commands:
+
+```bash
+npm test
+npm run lint:a11y
+npm run build
+npm run test:e2e
+```
+
+The active backend lives in Supabase. Do not add new Base44 runtime dependencies or revive Base44-specific backend behavior.
 
 ## Repository structure
 
-- `src/`: frontend application
-- `src/api/base44Client.js`: compatibility adapter currently used by older page code; the implementation inside it talks to Supabase
+- `src/api/appClient.js`: current Supabase-backed compatibility/data adapter used by page code
 - `src/lib/supabaseClient.js`: Supabase client
-- `supabase/`: current Supabase-side project assets when present
-- `legacy/`: archived files from the original Base44 project; not used by production
+- `src/pages/`: application pages
+- `supabase/migrations/`: database migrations tracked in Git
+- `docs/`: architecture, deployment, environment, Edge Function, and RLS documentation
+- `legacy/`: archived Base44-era files; not part of production
+
+There is no active `src/api/base44Client.js` dependency in the current repository; do not document or add one as part of new work.
 
 ## Important rules
 
 - Keep authentication on Supabase Auth.
-- Keep Edge Functions JWT-protected unless the function itself implements explicit authentication or a safe webhook pattern.
-- Store AI API keys in Supabase secrets, never in frontend code.
+- Keep AI Edge Functions JWT-protected.
+- Keep provider API keys in Supabase secrets, never frontend code.
 - Preserve Thai/English support.
 - Preserve Light/Dark theme support.
-- Avoid changing established button colors unless explicitly requested.
+- Preserve existing user-facing behavior unless the requested change is explicitly behavioral.
 - Assessment AI is a screening/support feature, not a diagnostic system.
+- Treat assessment answers, age, nationality, and generated results as sensitive.
+- For sensitive database tables, use RLS as the final authorization boundary.
+- Expensive AI endpoints should retain request-size validation and per-user rate limiting.
+- When adding a database table, document its RLS policy and add the migration to source control.
+- When deploying an Edge Function, update `docs/EDGE_FUNCTIONS.md` and keep the source in `supabase/functions/` when possible.
