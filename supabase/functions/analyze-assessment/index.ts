@@ -14,7 +14,7 @@ function normalizeLanguage(value: unknown): "th" | "en" {
 }
 
 function hasThaiText(value: unknown): boolean {
-  return /[\\u0E00-\\u0E7F]/.test(toText(value));
+  return /[\u0E00-\u0E7F]/.test(toText(value));
 }
 
 function assertOutputLanguage(ai: any, language: "th" | "en") {
