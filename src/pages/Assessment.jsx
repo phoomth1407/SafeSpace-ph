@@ -292,7 +292,7 @@ const policySections = [["1. What happens when you take the assessment?","The as
         {typeof document !== "undefined" && createPortal(
           <AnimatePresence>
             {policyOpen && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="assessment-policy-overlay fixed inset-0 z-[100] w-screen h-screen min-h-dvh flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-[24px]" role="dialog" aria-modal="true" aria-labelledby="assessment-policy-title">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={"assessment-policy-overlay fixed inset-0 z-[100] w-screen h-screen min-h-dvh flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-[24px] " + (document.documentElement.classList.contains("dark") ? "" : "theme-light-policy")} role="dialog" aria-modal="true" aria-labelledby="assessment-policy-title">
               <motion.div initial={{ opacity: 0, scale: 0.97, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98, y: 8 }} transition={{ duration: 0.2 }} className="assessment-policy-shell w-full max-w-3xl max-h-[86vh] overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-950 shadow-2xl shadow-black/50 flex flex-col">
                 <div className="px-6 py-5 border-b border-slate-800 flex items-start justify-between gap-4">
                   <div>
