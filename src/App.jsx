@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientInstance } from '@/lib/query-client';
@@ -23,6 +23,43 @@ const Register = lazy(() => import("@/pages/Register"));
 const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const LanguageSelect = lazy(() => import("@/pages/LanguageSelect"));
+
+const APP_VERSION = import.meta.env.VITE_APP_VERSION || 'development';
+
+const VersionGate = ({ children }) => {
+  useEffect(() => {
+    if (APP_VERSION === 'development') return undefined;
+
+    let cancelled = false;
+
+    const checkForNewVersion = async () => {
+      try {
+        const response = await fetch(`./version.json?current=${encodeURIComponent(APP_VERSION)}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' },
+        });
+        if (!response.ok) return;
+
+        const latest = await response.json();
+        if (!cancelled && latest.version && latest.version !== APP_VERSION) {
+          window.location.reload();
+        }
+      } catch {
+        // A failed version check must never prevent the app from loading.
+      }
+    };
+
+    checkForNewVersion();
+    const interval = window.setInterval(checkForNewVersion, 60_000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  return children;
+};
 
 const RouteLoading = () => (
   <div className="min-h-[40vh] flex items-center justify-center" role="status" aria-live="polite">
@@ -71,7 +108,9 @@ export default function App() {
           <QueryClientProvider client={queryClientInstance}>
             <Router>
               <ScrollToTop />
-              <AppGate />
+              <VersionGate>
+                <AppGate />
+              </VersionGate>
             </Router>
             <Toaster />
           </QueryClientProvider>
