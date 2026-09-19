@@ -1,142 +1,146 @@
-![Tests](https://github.com/phoomth1407/SafeSpace-ph/actions/workflows/test.yml/badge.svg)
-![Deploy](https://github.com/phoomth1407/SafeSpace-ph/actions/workflows/deploy.yml/badge.svg)
-![React](https://img.shields.io/badge/React-18-61DAFB)
-![Supabase](https://img.shields.io/badge/Supabase-powered-3ECF8E)
-
 # SafeSpace
 
-SafeSpace is a Vite + React web application focused on youth mental-health screening, supportive self-care tools, community support, and trusted resources.
+SafeSpace is a Vite + React web application for youth wellbeing screening, supportive self-care tools, community support, and trusted resources.
 
-The current production stack is:
+> **Important:** SafeSpace is a school-project screening/support tool. Its results are not medical diagnoses.
 
-- React + Vite
+## Current stack
+
+- React 18 + Vite
 - Supabase Auth
-- Supabase Postgres
+- Supabase Postgres + Row Level Security (RLS)
 - Supabase Edge Functions
 - GitHub Pages for the frontend
-- OpenAI as the primary assessment-analysis provider
-- Gemini as the AI fallback when configured
-- A local rule-based fallback when both AI providers are unavailable
+- OpenAI for AI analysis when configured
+- Gemini fallback for the main assessment function when configured
+- Local/offline fallback logic
 
-## Highlights
+## Live website
 
-SafeSpace is built as a real small-stack application rather than a static mockup. It includes authenticated and guest flows, Supabase RLS, AI fallback handling, bilingual UI, responsive themes, automated tests, route-level lazy loading, and an accessibility lint pass.
+- https://phoomth1407.github.io/SafeSpace-ph
+- https://phoomth1407.github.io/SafeSpace-ph/about.html
 
-## Prerequisites
+## Main features
 
-- Node.js
-- npm
-- A configured Supabase project for authentication, database access, and Edge Functions
+- Wellbeing assessment with age and nationality context
+- Guest assessment flow with browser-only result state
+- Authenticated assessment history
+- AI-assisted assessment analysis
+- Personalized next-step wellbeing tools
+- Daily Mood Check-in, Breathing, Grounding, Worry Release
+- Procedural Ambient Sound Mixer
+- Anonymous Community with realtime updates
+- Mental-health resources and hotlines
+- Thai/English UI and Light/Dark themes
+- Email/password, Google OAuth, and Google One Tap authentication
+- Admin moderation/resource management
 
-## Install
+## Assessment data flow
 
-```bash
-npm install
+```text
+Assessment.jsx
+   -> appClient.functions.invoke("analyze-assessment")
+   -> JWT authentication + request validation
+   -> rate limit: 5 requests / 60 seconds / user
+   -> OpenAI -> Gemini fallback -> local fallback
+   -> public.assessments
+   -> Assessment Result
 ```
 
-## Run locally
+Guest assessment results are kept in browser navigation state and are not saved to the user's account. The assessment UI requires acknowledgement of its privacy notice before starting.
 
-```bash
-npm run dev
-```
+## Current production AI functions
 
-Vite will print the local development URL in the terminal.
+- `analyze-assessment` — active version 13
+- `analyze-community-post` — active version 5
+- `analyze-phq9` — active version 5
 
-# Website URL
+All three are JWT-protected. Community AI and PHQ-9 also enforce request-size limits and a 5-request/60-second per-user rate limit.
 
-website=https://phoomth1407.github.io/SafeSpace-ph
-website introduction=https://phoomth1407.github.io/SafeSpace-ph/about.html
+See [Edge Functions](docs/EDGE_FUNCTIONS.md).
 
 ## Supabase
 
-The frontend uses Supabase for:
+Supabase provides authentication, user profiles, assessments, community posts/comments, emergency resources, reports, contact requests, Realtime updates, and Edge Functions.
 
-- Authentication
-- User profiles
-- Assessments and assessment history
-- Community posts and comments
-- Emergency resources
-- Edge Functions for AI analysis and community moderation
+The browser uses only the Supabase URL and publishable key. Provider secrets stay in Supabase Edge Function secret storage.
 
-The assessment AI Edge Function is:
+## Security
 
-```
-analyze-assessment
-```
+Current controls include RLS, owner/admin authorization, JWT-protected AI functions, request validation, request-size limits, per-user rate limiting, assessment database constraints, client-side signup password screening, and a browser Content Security Policy.
 
-AI processing is designed as:
+See [SECURITY.md](SECURITY.md) and [RLS audit](docs/RLS_AUDIT.md).
 
-```
-OpenAI
-  -> Gemini fallback
-  -> Local fallback
+## Local development
+
+Recommended Node.js version: 22.
+
+```bash
+npm ci
+npm run dev
 ```
 
-Gemini fallback requires the Supabase Edge Function secret:
+Quality checks:
 
+```bash
+npm test
+npm run lint:a11y
+npm run build
+npm run test:e2e
 ```
-GEMINI_API_KEY
+
+Copy `.env.example` to `.env.local` and provide the frontend-safe Supabase values. Never put provider secrets in frontend environment variables.
+
+See [Environment](docs/ENVIRONMENT.md) and [Deployment](docs/DEPLOYMENT.md).
+
+## Repository structure
+
+```text
+src/
+  api/          Supabase-backed compatibility/data adapter
+  components/   Reusable UI
+  hooks/        React hooks
+  lib/          Supabase client, auth, i18n, scoring
+  pages/        Application routes
+  utils/        Utilities
+supabase/
+  migrations/   Database migrations tracked in Git
+docs/           Architecture, deployment, environment, Edge Functions, RLS
+legacy/         Archived Base44-era files; not the active backend
 ```
 
-Other secrets such as the OpenAI API key must also remain in Supabase secret storage and must never be committed to the repository.
+## CI/CD
 
-## Frontend features
+GitHub Actions installs with `npm ci`, runs tests, accessibility linting, the production build, and the Playwright smoke test. Successful pushes to `main` deploy the tested build to GitHub Pages.
 
-- Assessment with PHQ-9-related screening context
-- AI-assisted assessment analysis
-- Personalized next-step wellbeing tools
-- Daily Mood Check-in
-- Guided Breathing
-- 5-4-3-2-1 Grounding
-- Worry Release
-- Procedural Ambient Sound Mixer
-- Anonymous Community
-- Mental-health resources and hotlines
-- Assessment History and trend visualization
-- Thai and English language support
-- Light and Dark themes
-- Google OAuth and Google One Tap authentication
+Supabase Edge Functions and database migrations are deployed separately.
+
+## Production/source-control note
+
+The live Supabase project currently has these recent migrations applied:
+
+- `security_hardening_20260919`
+- `add_edge_rate_limit_20260919`
+- `fix_edge_rate_limit_security_20260919`
+
+Only the first is currently mirrored under `supabase/migrations/` on `main`. The two rate-limit migration files are live but not yet mirrored in the repository. The three current AI function source files are also deployed in Supabase but are not yet present under `supabase/functions/` on `main`.
+
+This is documented explicitly so the repository does not falsely claim to be a complete backup of the live backend.
 
 ## Legacy folder
 
-The `legacy/` directory contains archived files inherited from the original Base44 version of the project.
-
-These files are kept only for historical/reference purposes and are not part of the current production backend.
-
-The active application uses Supabase instead.
-
-## Development quality
-
-GitHub Actions runs the test suite, an accessibility-focused ESLint audit, and a production build on pushes and pull requests. Dependabot is configured to check npm and GitHub Actions dependencies weekly.
-
-## Performance
-
-Application routes are lazy-loaded with React Suspense so the initial page does not need to download every page component up front.
-
-## Deployment
-
-The frontend is deployed from the GitHub repository to GitHub Pages.
-
-Supabase Edge Functions are deployed to the connected Supabase project.
-
-Before deploying changes, verify:
-
-1. `npm run build` succeeds.
-2. GitHub Actions completes successfully.
-3. Supabase Edge Functions are deployed successfully.
-4. Light/Dark theme behavior is checked.
-5. Thai/English language behavior is checked.
-
-## Notes
-
-Assessment results are intended for screening and supportive guidance. They are not medical diagnoses.
-
-## Security and development docs
-
-- [Security model](SECURITY.md)
-- [Supabase RLS audit](docs/RLS_AUDIT.md)
-- [.env.example](.env.example) — safe template for local frontend configuration; provider secrets stay in Supabase Edge Function secrets.
+`legacy/` contains archived Base44-era files for historical/reference purposes. The active backend is Supabase.
 
 ## Crisis support
 
-SafeSpace is a screening and supportive-information tool, not an emergency service. In Thailand, the Department of Mental Health provides the 1323 hotline 24/7. In an immediate medical emergency, contact the appropriate local emergency service. citeturn652121search0turn652121search6turn652121search5
+SafeSpace is not an emergency service. In Thailand, users can contact the Department of Mental Health hotline 1323. For an immediate emergency, use the appropriate local emergency service.
+
+## Documentation
+
+- [Security model](SECURITY.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Environment](docs/ENVIRONMENT.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Edge Functions](docs/EDGE_FUNCTIONS.md)
+- [RLS audit](docs/RLS_AUDIT.md)
+- [Changelog](CHANGELOG.md)
