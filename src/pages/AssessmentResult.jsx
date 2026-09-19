@@ -77,7 +77,7 @@ export default function AssessmentResult() {
   const isGuest = !id || location.state?.isGuest;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="assessment-result-page max-w-3xl mx-auto space-y-6">
       <button
         onClick={() => navigate("/")}
         className="flex items-center gap-1 text-sm text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white transition-colors"
@@ -87,7 +87,7 @@ export default function AssessmentResult() {
       </button>
 
       {/* Risk summary card */}
-      <div className={`rounded-2xl p-6 border ${risk.bg}`}>
+      <div className={`result-hero rounded-3xl p-6 sm:p-8 border ${risk.bg}`}>
         <div className="text-center">
           <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">{t("result.yourResult")}</div>
           <h1 className={`text-2xl font-bold ${risk.color}`}>{risk.label}</h1>
@@ -107,7 +107,7 @@ export default function AssessmentResult() {
 
       {/* AI analysis */}
       {result.depression_chance && (
-        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
+        <div className="result-surface bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center">
               <div className="text-purple-700 dark:text-purple-300 text-sm font-bold">{result.analysis_source === "offline-model" ? "LM" : "AI"}</div>
@@ -131,7 +131,7 @@ export default function AssessmentResult() {
       )}
 
       {/* Screening note */}
-      <div className="bg-amber-50 dark:bg-amber-500/10 rounded-2xl p-4 border border-amber-200 dark:border-amber-500/20">
+      <div className="result-note bg-amber-50 dark:bg-amber-500/10 rounded-2xl p-4 border border-amber-200 dark:border-amber-500/20">
         <p className="text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
           <strong>{t("result.noteTitle")}:</strong> {t("result.note")}
         </p>
@@ -245,7 +245,7 @@ export default function AssessmentResult() {
 
       {/* Emergency alert for high risk */}
       {isHighRisk && (
-        <div className="bg-red-50 dark:bg-red-500/10 rounded-2xl p-5 border border-red-200 dark:border-red-500/20">
+        <div className="result-emergency bg-red-50 dark:bg-red-500/10 rounded-2xl p-5 border border-red-200 dark:border-red-500/20">
           <div className="flex items-center gap-2 mb-2">
             <Phone className="w-5 h-5 text-red-400" />
             <h2 className="text-sm font-semibold text-red-700 dark:text-red-300">{t("result.emergency.title")}</h2>
@@ -266,7 +266,7 @@ export default function AssessmentResult() {
 
       {/* Guest prompt */}
       {isGuest && (
-        <div className="bg-sky-50 dark:bg-sky-500/10 rounded-2xl p-5 border border-sky-200 dark:border-sky-500/20 text-center">
+        <div className="result-guest bg-sky-50 dark:bg-sky-500/10 rounded-2xl p-5 border border-sky-200 dark:border-sky-500/20 text-center">
           <p className="text-sm text-sky-700 dark:text-sky-200 mb-3">
             <AlertTriangle className="w-4 h-4 inline mr-1" />
             {t("result.guest.prompt")}
