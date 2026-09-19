@@ -239,7 +239,7 @@ export default function AmbientSoundPlayer() {
         <div className="fixed right-4 bottom-36 md:bottom-20 z-[120] w-[min(92vw,360px)] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-4">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div>
-              <h3 className="font-semibold text-slate-100">{t("sound.title")}</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">{t("sound.title")}</h3>
             </div>
             <button onClick={() => setOpen(false)} className="text-slate-500"><X className="w-4 h-4" /></button>
           </div>
