@@ -40,7 +40,7 @@ export default function Admin() {
   const [contactRequests, setContactRequests] = useState([]);
   const [resolvingContact, setResolvingContact] = useState(null);
 
-  if (user?.role !== "admin") return <Navigate to="/" replace />;\n\n  useEffect(() => {
+  useEffect(() => {\n    if (user?.role !== "admin") { setLoading(false); return; }
     const load = async () => {
       try {
         const [a, g, p, r, cr] = await Promise.all([
