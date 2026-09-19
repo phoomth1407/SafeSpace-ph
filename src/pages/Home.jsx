@@ -40,12 +40,12 @@ export default function Home() {
           variants={stagger}
           className="relative z-10 px-5 md:px-10"
         >
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-white/5 text-slate-200 text-xs px-3.5 py-1.5 rounded-full mb-5 border border-white/10 shadow-lg shadow-slate-950/20 backdrop-blur-md">
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-white/5 text-slate-200 text-xs px-3.5 py-1.5 rounded-full mb-5 border border-rose-500/15 shadow-lg shadow-slate-950/20 backdrop-blur-md">
             <motion.span
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <Heart className="w-3 h-3" fill="currentColor" />
+              <Heart className="w-3 h-3 text-rose-500" fill="currentColor" />
             </motion.span>
             {t("home.badge")}
           </motion.div>
