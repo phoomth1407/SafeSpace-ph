@@ -34,14 +34,14 @@ export default function Layout() {
     <div className={cn("min-h-screen relative overflow-x-clip", theme === "light" && "theme-light", pageTheme)}>
       <BreathingBackdrop />
       <header className="site-header sticky top-0 z-40">
-        <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center gap-2 min-w-0">
           <Link to="/" className="brand-lockup flex items-center gap-2.5 desktop-header-brand">
             <img src="https://media.base44.com/images/public/6a7e9bed0e0b77fa2b165b69/5e7c91a19_ChatGPTImageSep9202609_49_25PM.png" alt="SafeSpace" className="w-9 h-9 rounded-2xl object-cover ring-1 ring-white/15 shadow-lg" />
             <span className="font-semibold tracking-tight text-slate-100 text-sm">SafeSpace<span className="text-rose-500">.</span></span>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <nav className="hidden md:flex items-center gap-1 nav-rail desktop-centered-nav">
+          <div className="header-main flex items-center gap-2 min-w-0 flex-1">
+            <nav className="hidden md:flex items-center gap-1 nav-rail desktop-centered-nav min-w-0 flex-1 justify-center">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = location.pathname === item.to;
@@ -54,7 +54,7 @@ export default function Layout() {
               })}
             </nav>
 
-            <div className="flex items-center gap-1.5 ml-auto">
+            <div className="header-actions flex items-center gap-1.5 ml-auto flex-shrink-0">
               <button onClick={toggle} title={t("theme.toggle")} className="flex items-center gap-1 text-xs text-slate-400 px-2.5 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors">
                 {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
               </button>
@@ -75,12 +75,12 @@ export default function Layout() {
               {isAuthenticated ? (
                 <div className="flex items-center gap-2 ml-1 pl-2 border-l border-slate-800">
                   {isAdmin && (
-                    <Link to="/admin" className={cn("flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors", location.pathname === "/admin" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:bg-slate-800 hover:text-slate-200")}>
+                    <Link to="/admin" className={cn("admin-nav-link flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors", location.pathname === "/admin" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:bg-slate-800 hover:text-slate-200")}>
                       <Shield className="w-3.5 h-3.5" /><span className="hidden sm:inline">{t("nav.admin")}</span>
                     </Link>
                   )}
-                  <span className="hidden sm:block text-xs text-slate-500 max-w-[120px] truncate">{user?.full_name || user?.email}</span>
-                  <button onClick={handleLogout} className="flex items-center gap-1 text-xs text-slate-400 px-3 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"><LogOut className="w-3.5 h-3.5" />{t("nav.logout")}</button>
+                  <span className="header-user hidden sm:block text-xs text-slate-500 max-w-[120px] truncate">{user?.full_name || user?.email}</span>
+                  <button onClick={handleLogout} className="header-logout flex items-center gap-1 text-xs text-slate-400 px-3 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors"><LogOut className="w-3.5 h-3.5" />{t("nav.logout")}</button>
                 </div>
               ) : (
                 <div className="flex items-center gap-1.5 ml-1 pl-2 border-l border-slate-800">
