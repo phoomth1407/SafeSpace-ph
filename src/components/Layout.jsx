@@ -34,13 +34,13 @@ export default function Layout() {
       <VisualAtmosphere />
       <header className="site-header sticky top-0 z-40">
         <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="brand-lockup flex items-center gap-2.5">
+          <Link to="/" className="brand-lockup flex items-center gap-2.5 desktop-header-brand">
             <img src="https://media.base44.com/images/public/6a7e9bed0e0b77fa2b165b69/5e7c91a19_ChatGPTImageSep9202609_49_25PM.png" alt="SafeSpace" className="w-9 h-9 rounded-2xl object-cover ring-1 ring-white/15 shadow-lg" />
-            <span className="font-semibold tracking-tight text-slate-100 text-sm">SafeSpace<span className="text-sky-300">.</span></span>
+            <span className="font-semibold tracking-tight text-slate-100 text-sm">SafeSpace<span className="text-rose-500">.</span></span>
           </Link>
 
           <div className="flex items-center gap-3">
-            <nav className="hidden md:flex items-center gap-1 nav-rail">
+            <nav className="hidden md:flex items-center gap-1 nav-rail desktop-centered-nav">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = location.pathname === item.to;
