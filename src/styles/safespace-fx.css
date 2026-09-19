@@ -194,7 +194,7 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
     linear-gradient(180deg,rgb(15 23 42/.08),rgb(15 23 42/.28)),
     radial-gradient(circle at 50% 12%,transparent 0 30%,rgb(15 23 42/.16) 100%);
 }
-.home-scenic{z-index:0;pointer-events:none;transform:scale(1.03);filter:saturate(1.05) contrast(1.02);}
+.home-scenic{z-index:0;pointer-events:none;transform:scale(1.065);filter:blur(10px) saturate(1.04) contrast(1.01);opacity:.92;will-change:transform,filter;}
 .home-hero-content{z-index:3;}
 .home-page .hero-panel h1{filter:drop-shadow(0 4px 18px rgb(15 23 42/.22));}
 .home-page .hero-panel p{color:rgb(248 250 252/.86) !important;text-shadow:0 2px 12px rgb(15 23 42/.22);}
@@ -249,7 +249,7 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 }
 @media(max-width:640px){
   .home-page .hero-panel{min-height:390px;}
-  .home-scenic{transform:scale(1.18);opacity:.82;}
+  .home-scenic{transform:scale(1.20);filter:blur(8px) saturate(1.03);opacity:.80;}
 }
 @media(prefers-reduced-motion:reduce){
   .home-page .wellness-tool-card{transition:none;}
