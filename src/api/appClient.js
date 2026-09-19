@@ -275,9 +275,19 @@ const invoke = async (name, payload = {}) => {
   }
 
   if (name === "analyzeCommunityPost") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+
     const { data, error } = await supabase.functions.invoke("analyze-community-post", { body: payload });
-    if (error) throw error;
-    return { data };
+    if (error) {
+      let message = error.message || "Community post could not be submitted.";
+      try {
+        const body = await error.context?.json?.();
+        if (body?.error) message = body.error;
+      } catch {}
+      return { data: { error: message } };
+    }
+    return { data: data || {} };
   }
 
   if (name === "communityInteract") {
