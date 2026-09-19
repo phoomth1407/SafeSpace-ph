@@ -172,12 +172,12 @@ export default function Assessment() {
   // Login gate for unauthenticated users
   if (showGate) {
     return (
-      <div className="max-w-md mx-auto flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="assessment-page assessment-gate max-w-md mx-auto flex flex-col items-center justify-center min-h-[60vh]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-slate-900/60 rounded-3xl p-8 border border-slate-800 text-center space-y-6 w-full"
+          className="assessment-gate-card bg-slate-900/60 rounded-3xl p-8 border border-slate-800 text-center space-y-6 w-full"
         >
           <motion.div
             initial={{ scale: 0.8 }}
@@ -248,7 +248,7 @@ const policySections = [["1. What happens when you take the assessment?","The as
 
     return (
       <div className="max-w-md mx-auto flex flex-col items-center justify-center min-h-[60vh]">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="bg-slate-900/60 rounded-3xl p-8 border border-slate-800 w-full space-y-5">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="assessment-intro-card bg-slate-900/60 rounded-3xl p-8 border border-slate-800 w-full space-y-5">
           <div className="text-center space-y-1">
             <h2 className="text-xl font-bold text-slate-100">{t("assess.intro.title")}</h2>
             <p className="text-sm text-slate-400 leading-relaxed">{t("assess.intro.subtitle")}</p>
@@ -293,7 +293,7 @@ const policySections = [["1. What happens when you take the assessment?","The as
           <AnimatePresence>
             {policyOpen && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="assessment-policy-overlay fixed inset-0 z-[100] w-screen h-screen min-h-dvh flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-[24px]" role="dialog" aria-modal="true" aria-labelledby="assessment-policy-title">
-              <motion.div initial={{ opacity: 0, scale: 0.97, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98, y: 8 }} transition={{ duration: 0.2 }} className="w-full max-w-3xl max-h-[86vh] overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-950 shadow-2xl shadow-black/50 flex flex-col">
+              <motion.div initial={{ opacity: 0, scale: 0.97, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98, y: 8 }} transition={{ duration: 0.2 }} className="assessment-policy-shell w-full max-w-3xl max-h-[86vh] overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-950 shadow-2xl shadow-black/50 flex flex-col">
                 <div className="px-6 py-5 border-b border-slate-800 flex items-start justify-between gap-4">
                   <div>
                     <div className="text-xs uppercase tracking-[0.18em] text-sky-300 mb-1">SafeSpace</div>
@@ -347,7 +347,7 @@ const policySections = [["1. What happens when you take the assessment?","The as
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-slate-900/60 rounded-3xl p-8 border border-slate-800 w-full text-center space-y-5"
+          className="assessment-chapter-card bg-slate-900/60 rounded-3xl p-8 border border-slate-800 w-full text-center space-y-5"
         >
           <div className="text-xs text-slate-500">
             {lang === "en" ? `Chapter ${chapterNum} of ${totalChapters}` : `บทที่ ${chapterNum} จาก ${totalChapters}`}
@@ -450,7 +450,7 @@ const policySections = [["1. What happens when you take the assessment?","The as
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800"
+          className="assessment-question-card bg-slate-900/60 rounded-2xl p-6 border border-slate-800"
         >
           <div className="text-xs text-slate-500 mb-1">
             {category.title[lang] || category.title.th} · {category.subtitle[lang] || category.subtitle.th}
