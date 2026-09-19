@@ -47,7 +47,7 @@ export default function WorryReleaseModal({ open, onClose }) {
               <div className="w-11 h-11 rounded-2xl bg-violet-100 dark:bg-violet-500/10 flex items-center justify-center mx-auto mb-3">
                 <WorryModeIllustration mode="stardust" className="w-8 h-8" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-100">{t("worry.title")}</h2>
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{t("worry.title")}</h2>
               <p className="text-xs text-slate-400 mt-1">{t("worry.subtitle")}</p>
             </div>
 
