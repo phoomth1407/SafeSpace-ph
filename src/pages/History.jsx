@@ -145,22 +145,42 @@ export default function History() {
               </Surface>
             </Reveal>
             {trendData.length >= 2 && (
-              <Reveal delay={0.09}>
-                <Surface className="history-trend-card p-5 h-full" as="section">
-                  <div className="history-card-label"><span>{t("history.trend")}</span><span className={"history-trend-status " + trendColor}>{trendIcon}{trendLabel}</span></div>
-                  <div className="history-chart-wrap">
-                    <ResponsiveContainer width="100%" height={205}>
-                      <AreaChart data={trendData} margin={{ top: 10, right: 6, left: -26, bottom: 0 }}>
-                        <defs><linearGradient id="historyScoreGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7dd3fc" stopOpacity={0.34} /><stop offset="100%" stopColor="#7dd3fc" stopOpacity={0} /></linearGradient></defs>
-                        <CartesianGrid strokeDasharray="3 6" stroke="rgba(148,163,184,.13)" />
-                        <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
-                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{ borderRadius: 14, border: "1px solid rgba(148,163,184,.18)", background: "rgba(15,23,42,.94)", fontSize: 12, color: "#e2e8f0", boxShadow: "0 18px 45px rgba(2,6,23,.35)" }} />
-                        <Area type="monotone" dataKey="score" stroke="#7dd3fc" strokeWidth={2.5} fill="url(#historyScoreGradient)" isAnimationActive="auto" animationDuration={1100} animationBegin={120} animationEasing="ease-out" />
+              <Reveal delay={0.09} className="history-trend-reveal">
+                <Surface className="history-trend-card p-5 sm:p-6" as="section">
+                  <div className="history-card-label">
+                    <div>
+                      <span>{t("history.trend")}</span>
+                      <p className="history-chart-direction">{lang === "en" ? "Higher = worse · Lower = better" : "สูงขึ้น = แย่ลง · ต่ำลง = ดีขึ้น"}</p>
+                    </div>
+                    <span className={"history-trend-status " + trendColor}>{trendIcon}{trendLabel}</span>
+                  </div>
+                  <div className="history-chart-wrap history-chart-wrap--wide">
+                    <ResponsiveContainer width="100%" height={255}>
+                      <AreaChart data={trendData} margin={{ top: 16, right: 12, left: -18, bottom: 4 }}>
+                        <defs>
+                          <linearGradient id="historyScoreGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#7dd3fc" stopOpacity={0.38} />
+                            <stop offset="68%" stopColor="#a78bfa" stopOpacity={0.13} />
+                            <stop offset="100%" stopColor="#7dd3fc" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="2 8" stroke="rgba(148,163,184,.12)" vertical={false} />
+                        <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} dy={8} />
+                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} width={28} />
+                        <Tooltip
+                          cursor={{ stroke: "rgba(125,211,252,.22)", strokeWidth: 1 }}
+                          contentStyle={{ borderRadius: 14, border: "1px solid rgba(148,163,184,.18)", background: "rgba(15,23,42,.94)", fontSize: 12, color: "#e2e8f0", boxShadow: "0 18px 45px rgba(2,6,23,.35)" }}
+                          formatter={(value) => [value + "/100", lang === "en" ? "Condition score" : "คะแนนสภาวะ"]}
+                        />
+                        <Area type="natural" dataKey="score" stroke="#7dd3fc" strokeWidth={3} fill="url(#historyScoreGradient)" dot={{ r: 3, strokeWidth: 2, fill: "#0f172a", stroke: "#7dd3fc" }} activeDot={{ r: 5, strokeWidth: 2 }} isAnimationActive="auto" animationDuration={1300} animationBegin={120} animationEasing="ease-out" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
-                  <p className="history-chart-note">{trendLabel} · {trendData[0].score} → {trendData[trendData.length - 1].score}</p>
+                  <div className="history-chart-scale">
+                    <span>{lang === "en" ? "100 · worse" : "100 · แย่ลง"}</span>
+                    <span>{trendLabel} · {trendData[0].score} → {trendData[trendData.length - 1].score}</span>
+                    <span>{lang === "en" ? "0 · better" : "0 · ดีขึ้น"}</span>
+                  </div>
                 </Surface>
               </Reveal>
             )}
