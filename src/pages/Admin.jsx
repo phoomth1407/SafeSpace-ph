@@ -40,7 +40,8 @@ export default function Admin() {
   const [contactRequests, setContactRequests] = useState([]);
   const [resolvingContact, setResolvingContact] = useState(null);
 
-  useEffect(() => {\n    if (user?.role !== "admin") { setLoading(false); return; }
+  useEffect(() => {
+    if (user?.role !== "admin") { setLoading(false); return; }
     const load = async () => {
       try {
         const [a, g, p, r, cr] = await Promise.all([
@@ -66,7 +67,11 @@ export default function Admin() {
       }
     };
     load();
-  }, [user?.role]);\n\n  if (user?.role !== "admin") return <Navigate to="/" replace />;\n\n  const handleBan = async (u) => {
+  }, [user?.role]);
+
+  if (user?.role !== "admin") return <Navigate to="/" replace />;
+
+  const handleBan = async (u) => {
     setBanning(u.id);
     try {
       if (u.banned) {
