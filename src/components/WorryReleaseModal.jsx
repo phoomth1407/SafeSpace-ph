@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
@@ -31,9 +32,9 @@ export default function WorryReleaseModal({ open, onClose }) {
     setReleased(true);
   };
 
-  return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-      <button aria-label={t("worry.close")} onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+  return createPortal(
+    <div className="wellness-modal-root fixed inset-0 z-[100] w-screen h-screen min-h-dvh flex items-center justify-center p-4 sm:p-6">
+      <button aria-label={t("worry.close")} onClick={onClose} className="wellness-modal-backdrop absolute inset-0" />
 
       <div className="relative w-full max-w-lg bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 overflow-hidden">
         <button type="button" aria-label={t("worry.close")} onClick={onClose} className="absolute right-4 top-4 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900">
@@ -185,6 +186,7 @@ export default function WorryReleaseModal({ open, onClose }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
