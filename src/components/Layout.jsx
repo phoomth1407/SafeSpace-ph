@@ -15,6 +15,7 @@ export default function Layout() {
   const { t, lang, setLang } = useTranslation();
   const { theme, toggle } = useTheme();
   const isAdmin = user?.role === "admin";
+  const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : "ss-page-default";
   const [langOpen, setLangOpen] = useState(false);
 
   const navItems = [
@@ -30,7 +31,7 @@ export default function Layout() {
   };
 
   return (
-    <div className={cn("min-h-screen relative overflow-x-clip", theme === "light" && "theme-light")}>
+    <div className={cn("min-h-screen relative overflow-x-clip", theme === "light" && "theme-light", pageTheme)}>
       <BreathingBackdrop />
       <header className="site-header sticky top-0 z-40">
         <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
