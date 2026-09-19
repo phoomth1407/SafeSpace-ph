@@ -135,6 +135,10 @@ This is documented explicitly so the repository does not falsely claim to be a c
 
 SafeSpace is not an emergency service. In Thailand, users can contact the Department of Mental Health hotline 1323. For an immediate emergency, use the appropriate local emergency service.
 
+## Assessment Policy
+
+The complete SafeSpace Assessment Policy is published in [docs/ASSESSMENT_POLICY.md](docs/ASSESSMENT_POLICY.md). The website requires users to review the policy before starting an assessment.
+
 ## Documentation
 
 - [Security model](SECURITY.md)
