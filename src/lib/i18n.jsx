@@ -971,7 +971,16 @@ export const LanguageProvider = ({ children }) => {
   const setLang = (l) => {
     setLangState(l);
     localStorage.setItem("safespace_lang", l);
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = l === "th" ? "th" : "en";
+    }
   };
+
+  useEffect(() => {
+    if (typeof document !== "undefined" && lang) {
+      document.documentElement.lang = lang === "th" ? "th" : "en";
+    }
+  }, [lang]);
 
   const t = (key) => {
     return translations[lang]?.[key] ?? translations.th[key] ?? key;
