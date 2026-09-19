@@ -31,11 +31,19 @@ async function main(req: Request) {
   const apiKey = Deno.env.get("OPENAI_API_KEY");
   if (apiKey && body.ai_enabled !== false) {
     const prompt = `You are a supportive youth wellbeing assistant. Reply in ${lang === "en" ? "English" : "Thai"}. Do not diagnose or predict self-harm. Be empathetic, concise, and practical. Classify as safe, moderate, or high concern. Avoid graphic details. User post:\n${content}`;
-    const response = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: Deno.env.get("OPENAI_MODEL") || "gpt-5.6-luna", input: prompt, max_output_tokens: 300 }) });
-    if (response.ok) {
-      const payload = await response.json();
-      const text = payload.output_text || "";
-      if (text.trim()) aiResponse = text.trim();
+    try {
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" },
+        body: JSON.stringify({ model: Deno.env.get("OPENAI_MODEL") || "gpt-5.6-luna", input: prompt, max_output_tokens: 300 }),
+      });
+      if (response.ok) {
+        const payload = await response.json();
+        const text = payload.output_text || "";
+        if (text.trim()) aiResponse = text.trim();
+      }
+    } catch {
+      // AI is optional for community posting; keep the safe local fallback response.
     }
   }
 
