@@ -149,26 +149,55 @@ function WorryMode({ mode }) {
 }
 
 function Sound({ type }) {
-  const data = {
-    rain:["#E0F2FE","#60A5FA"], ocean:["#CFFAFE","#06B6D4"], forest:["#DCFCE7","#16A34A"],
-    fire:["#FFEDD5","#F97316"], bowl:["#FEF3C7","#EAB308"], lofi:["#EDE9FE","#8B5CF6"]
+  const colors = {
+    rain: ["#38BDF8", "#0EA5E9"],
+    ocean: ["#22D3EE", "#0891B2"],
+    forest: ["#34D399", "#059669"],
+    fire: ["#FB923C", "#EA580C"],
+    bowl: ["#FACC15", "#CA8A04"],
+    lofi: ["#A78BFA", "#7C3AED"],
   };
-  const [bg, accent] = data[type] || data.rain;
+  const [a, b] = colors[type] || colors.rain;
   return (
-    <svg {...shell} aria-hidden="true">
-      <defs><linearGradient id="sound-bg" x1="18" y1="8" x2="182" y2="152"><stop stopColor={bg}/><stop offset="1" stopColor="#FFFFFF"/></linearGradient></defs>
-      <rect x="7" y="7" width="186" height="146" rx="36" fill="url(#sound-bg)"/>
-      <circle cx="51" cy="42" r="35" fill="#FFFFFF" opacity=".3"/>
-      {type === "rain" && <><path d="M48 80C51 63 67 55 81 61C89 47 111 48 119 63C134 61 147 72 143 87H48Z" fill={accent} opacity=".82"/><path d="M66 102L61 119M91 102L86 119M116 102L111 119" stroke="#60A5FA" strokeWidth="5" strokeLinecap="round"/></>}
-      {type === "ocean" && <><path d="M25 79C43 61 61 64 79 79C96 93 113 94 130 79C143 68 157 69 175 81" stroke={accent} strokeWidth="9" strokeLinecap="round"/><path d="M25 105C43 88 61 90 79 105C96 119 113 120 130 105C143 94 157 95 175 107" stroke="#67E8F9" strokeWidth="5" strokeLinecap="round"/></>}
-      {type === "forest" && <><path d="M101 128C96 101 99 75 113 43" stroke="#166534" strokeWidth="6" strokeLinecap="round"/><path d="M101 87C84 83 73 72 70 57C87 59 98 69 102 79Z" fill={accent}/><path d="M105 106C122 102 135 90 139 75C123 77 111 87 105 97Z" fill="#4ADE80"/><path d="M97 72C86 66 80 56 80 43C92 46 99 55 100 65Z" fill="#86EFAC"/></>}
-      {type === "fire" && <><path d="M100 128C76 128 64 113 70 96C73 85 84 79 86 64C103 73 104 87 100 96C111 87 116 73 112 55C135 74 142 99 134 115C128 125 116 128 100 128Z" fill={accent}/><path d="M100 116C89 116 84 109 87 101C90 95 96 94 98 86C108 96 110 104 106 110C104 114 102 115 100 116Z" fill="#FED7AA"/></>}
-      {type === "bowl" && <><path d="M62 83H138C134 111 120 125 100 125C80 125 66 111 62 83Z" fill="#FACC15"/><ellipse cx="100" cy="83" rx="38" ry="10" fill="#FEF9C3" stroke="#CA8A04" strokeWidth="3"/><path d="M87 60C93 48 107 48 113 60" stroke="#FDE68A" strokeWidth="5" strokeLinecap="round"/></>}
-      {type === "lofi" && <><rect x="54" y="53" width="92" height="65" rx="16" fill="#DDD6FE"/><path d="M65 105L79 81L93 97L110 66L133 105" stroke={accent} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/><circle cx="70" cy="65" r="6" fill="#8B5CF6"/><circle cx="130" cy="65" r="6" fill="#A78BFA"/></>}
+    <svg viewBox="0 0 48 48" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id={"sound-icon-" + type} x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse">
+          <stop stopColor={a} />
+          <stop offset="1" stopColor={b} />
+        </linearGradient>
+      </defs>
+      <circle cx="24" cy="24" r="20" fill={"url(#sound-icon-" + type + ")"} fillOpacity=".10" />
+      {type === "rain" && <>
+        <path d="M13 24c1.3-5.1 5.1-8 10-8 3.8 0 7 1.7 8.5 4.8C36.3 20.7 39 23.1 39 27c0 4.3-3.2 7-8 7H16c-4 0-6-2.2-6-5.5 0-2.4 1.1-3.7 3-4.5Z" fill={"url(#sound-icon-" + type + ")"} fillOpacity=".9"/>
+        <path d="M17 36l-1.8 4M25 36l-1.8 4M33 36l-1.8 4" stroke={b} strokeWidth="2.2" strokeLinecap="round"/>
+      </>}
+      {type === "ocean" && <>
+        <path d="M7 22c5-5 9-5 14 0s9 5 14 0 9-5 14 0" stroke={b} strokeWidth="3.2" strokeLinecap="round"/>
+        <path d="M7 31c5-5 9-5 14 0s9 5 14 0 9-5 14 0" stroke={a} strokeOpacity=".55" strokeWidth="2.2" strokeLinecap="round"/>
+      </>}
+      {type === "forest" && <>
+        <path d="M24 39V16" stroke={b} strokeWidth="2.6" strokeLinecap="round"/>
+        <path d="M23 27c-6 0-10-3.2-11-8 6 .2 10.2 2.8 11 8Z" fill={a}/>
+        <path d="M25 33c6-.4 10-3.5 11-8.5-5.8.3-10 3.1-11 8.5Z" fill={b}/>
+        <path d="M23 22c-4.2-.8-7-3.5-7.8-7.5 4.4.5 7.3 2.8 7.8 7.5Z" fill="#86EFAC"/>
+      </>}
+      {type === "fire" && <>
+        <path d="M25 40c-7.2-.7-11-5.2-9.4-11.2 1.1-4 4.9-6.6 6-11.4 5.7 3.8 6.5 8.2 5.5 11.7 2.4-2.3 3.5-5 3-8.4 5.2 5.2 6.1 11.6 2.7 16-1.7 2.1-4.2 3.1-7.8 3.3Z" fill={a}/>
+        <path d="M24.5 35c-2.9-.3-4.5-2.1-3.7-4.5.5-1.5 1.9-2.5 2.5-4.4 2.2 1.5 2.7 3.2 2.2 4.7 1-.9 1.4-1.9 1.2-3.1 2 2.2 2.2 5 .8 6.4-.8.7-1.7 1-3 1Z" fill="#FED7AA"/>
+      </>}
+      {type === "bowl" && <>
+        <path d="M11 23h26c-.7 9.4-5.3 14.8-13 14.8S11.7 32.4 11 23Z" fill={a} fillOpacity=".25" stroke={b} strokeWidth="2"/>
+        <path d="M9 22c0-2.5 6.7-4.8 15-4.8s15 2.3 15 4.8-6.7 4.8-15 4.8S9 24.5 9 22Z" fill="#FEF9C3" stroke={b} strokeWidth="2"/>
+        <path d="M19 13c1-3 2.7-4.5 5-4.5s4 1.5 5 4.5" stroke={a} strokeWidth="2" strokeLinecap="round"/>
+      </>}
+      {type === "lofi" && <>
+        <rect x="10" y="12" width="28" height="24" rx="6" fill={a} fillOpacity=".14" stroke={a} strokeWidth="2"/>
+        <path d="M14 31l6-8 5 5 5-9 5 12" stroke={b} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="17" cy="18" r="2.2" fill={a}/><circle cx="33" cy="18" r="2.2" fill={b}/>
+      </>}
     </svg>
   );
 }
-
 export function WellnessIllustration({ type, className = "" }) {
   const Art = type === "ground" ? Ground : type === "worry" ? Worry : Breath;
   return <div className={className}><Art /></div>;
