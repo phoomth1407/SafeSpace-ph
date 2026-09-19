@@ -63,7 +63,7 @@ export default function GroundingModal({ open, onClose }) {
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-5">{stepLabel}</div>
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mt-2">{t(`ground.step.${current.id}.title`)}</h3>
             <div className="text-4xl font-bold text-emerald-700 dark:text-emerald-300 mt-3">{current.count}</div>
-            <p className="text-sm text-slate-300 mt-2 leading-relaxed">{t(`ground.step.${current.id}.desc`)}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">{t(`ground.step.${current.id}.desc`)}</p>
             <button
               onClick={completeCurrent}
               className="w-full mt-6 h-12 rounded-2xl !bg-slate-900 !text-white dark:!bg-slate-100 dark:!text-slate-900 font-semibold flex items-center justify-center gap-2 hover:!bg-slate-800 dark:hover:!bg-white transition-colors"
@@ -78,7 +78,7 @@ export default function GroundingModal({ open, onClose }) {
               <Check className="w-8 h-8 text-emerald-700 dark:text-emerald-300" />
             </div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mt-4">{t("ground.completeTitle")}</h3>
-            <p className="text-sm text-slate-300 mt-2 leading-relaxed">{t("ground.completeDesc")}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">{t("ground.completeDesc")}</p>
             <button
               onClick={() => setCompleted([])}
               className="w-full mt-6 h-10 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-xs flex items-center justify-center gap-2"
