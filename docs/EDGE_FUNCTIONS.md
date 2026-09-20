@@ -94,3 +94,8 @@ When changing an Edge Function:
 7. Preserve response fields expected by the frontend.
 8. Test success and rejected-request paths.
 9. Record the deployed version here.
+
+
+## Related database controls
+
+The AI functions are only one part of the current abuse controls. Community posting is also protected by the database-side `create_community_post` path and rolling-limit migrations. The rate-limit RPC uses restricted execution and a hardened search path.
