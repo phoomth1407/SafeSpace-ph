@@ -893,5 +893,5 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
   .community-page .community-post-card{-webkit-backdrop-filter:blur(11px);backdrop-filter:blur(11px);}
   .resources-emergency,.resources-tools{-webkit-backdrop-filter:blur(11px);backdrop-filter:blur(11px);}
   .resources-library>div:last-child>a,.resources-hotlines .resource-card{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
-  .assessment-gate-card,.assessment-intro-card,.assessment-chapter-card,.assessment-question-card,.result-hero,.result-surface,.result-note,.result-emergency,.result-guest,.admin-hero,.admin-tabs,.admin-segments,.admin-page .bg-slate-900\\/60{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+  .assessment-gate-card,.assessment-intro-card,.assessment-chapter-card,.assessment-question-card,.result-hero,.result-surface,.result-note,.result-emergency,.result-guest,.admin-hero,.admin-tabs,.admin-segments,.admin-page .bg-slate-900\/60{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
 }
