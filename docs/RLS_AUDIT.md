@@ -57,13 +57,7 @@ The frontend should never solve a database authorization problem by exposing mor
 
 ## Production and source-control note
 
-The live Supabase project has these recent migrations applied:
-
-- `security_hardening_20260919`
-- `add_edge_rate_limit_20260919`
-- `fix_edge_rate_limit_security_20260919`
-
-The first is currently tracked under `supabase/migrations/` in `main`. The two rate-limit migration files are applied in production but are not yet mirrored in the repository. This should be synchronized before using the repository as the sole source for rebuilding the database.
+The current security/rate-limit migrations used by this project are tracked under `supabase/migrations/`, including the September 2026 hardening, rate-limit RPC, Community posting-limit, and SECURITY DEFINER search-path changes. The live Supabase project can still drift if changes are made directly in the dashboard, so production state should still be checked before rebuilding the backend.
 
 ## After adding a new table or function
 
