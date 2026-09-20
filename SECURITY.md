@@ -1,6 +1,6 @@
 # SafeSpace Security Notes
 
-Last reviewed: 2026-09-19
+Last reviewed: 2026-09-20
 
 SafeSpace handles sensitive wellbeing/mental-health screening information. This document describes the current security model for the school-project deployment.
 
@@ -42,8 +42,8 @@ The `private.is_admin()` helper uses a trusted search path (`pg_catalog, auth, p
 
 Current AI functions:
 
-- `analyze-assessment` — version 13
-- `analyze-community-post` — version 5
+- `analyze-assessment` — version 14
+- `analyze-community-post` — version 7
 - `analyze-phq9` — version 5
 
 Controls include JWT verification, authenticated-user lookup, request validation, request-size limits, and per-user rate limiting.
@@ -80,9 +80,9 @@ Known limitations:
 
 - client-side password screening is bypassable by direct API callers
 - CSP is currently a meta tag rather than an HTTP response header
-- current Community AI and PHQ-9 production source is not yet mirrored in `main`
-- two production rate-limit migrations are not yet mirrored in `main`
 - current AI functions allow `Access-Control-Allow-Origin: *`; JWT authorization remains the primary access control, while origin restriction could further reduce unwanted browser callers
+- the repository is still a school-project deployment rather than a clinical or regulated health-data system
+- some older compatibility Edge Functions remain deployed while the migration away from the legacy function names is completed
 
 ## Security maintenance checklist
 
