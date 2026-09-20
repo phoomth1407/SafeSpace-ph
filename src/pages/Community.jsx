@@ -123,6 +123,11 @@ export default function Community() {
         return;
       }
 
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+
       setContent("");
       setCategory("other");
       setShowForm(false);
