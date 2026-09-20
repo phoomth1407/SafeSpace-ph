@@ -1,6 +1,6 @@
 # SafeSpace Supabase RLS Audit
 
-Audit date: 2026-09-19
+Audit date: 2026-09-20
 
 ## What I checked
 
@@ -10,7 +10,7 @@ RLS is enabled on the current public application tables, including the rate-limi
 | --- | --- | --- |
 | assessments | ON | Owner + admin |
 | community_comments | ON | Public read; authenticated write; owner/admin manage |
-| community_posts | ON | Public read; authenticated write; owner/admin manage |
+| community_posts | ON | Public read; controlled authenticated create; owner/admin manage |
 | contact_requests | ON | Authenticated create; admin read/update/delete |
 | edge_rate_limits | ON | Authenticated user can maintain only their own rate-limit rows |
 | emergency_resources | ON | Public read; admin manage |
