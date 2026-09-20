@@ -31,9 +31,10 @@ SafeSpace is a Vite + React project focused on youth wellbeing. I built it aroun
 - Procedural Ambient Sound Mixer
 - Anonymous Community with realtime updates
 - Mental-health resources and hotlines
+- PHQ-9-style screening flow and assessment history deletion
 - Thai/English UI and Light/Dark themes
 - Email/password, Google OAuth, and Google One Tap authentication
-- Admin moderation/resource management
+- Admin moderation/resource management, reports, and contact requests
 
 ## How the assessment works behind the scenes
 
@@ -51,8 +52,8 @@ Guest assessment results are kept in browser navigation state and are not saved 
 
 ## AI functions currently used in production
 
-- `analyze-assessment` — active version 13
-- `analyze-community-post` — active version 5
+- `analyze-assessment` — active version 14
+- `analyze-community-post` — active version 7
 - `analyze-phq9` — active version 5
 
 All three are JWT-protected. Community AI and PHQ-9 also enforce request-size limits and a 5-request/60-second per-user rate limit.
@@ -127,19 +128,22 @@ Supabase Edge Functions and database migrations are deployed separately.
 
 ## Production and source-control note
 
-The live Supabase project currently has these recent migrations applied:
+The repository now tracks the Supabase security and rate-limit changes that were added during the September 2026 hardening work. The current migration folder includes:
 
-- `security_hardening_20260919`
-- `add_edge_rate_limit_20260919`
-- `fix_edge_rate_limit_security_20260919`
+- `20260919000000_security_hardening.sql`
+- `20260919000003_lock_rate_limit_rpc_grants.sql`
+- `20260919000004_community_post_rolling_limit.sql`
+- `20260919000005_community_post_limit_index.sql`
+- `20260920000000_enforce_community_post_limit_rpc.sql`
+- `20260920000001_harden_security_definer_search_paths.sql`
 
-Only the first is currently mirrored under `supabase/migrations/` on `main`. The two rate-limit migration files are live but not yet mirrored in the repository. The three current AI function source files are also deployed in Supabase but are not yet present under `supabase/functions/` on `main`.
+The current AI function sources are tracked under `supabase/functions/`. The active functions are `analyze-assessment` v14, `analyze-community-post` v7, and `analyze-phq9` v5. The repository also keeps `communityInteract` as an active compatibility function and `analyzeCommunityPost` as a legacy endpoint being retired.
 
-This is documented explicitly so the repository does not falsely claim to be a complete backup of the live backend.
+The live Supabase project and this repository can still drift if a change is made directly in the Supabase dashboard. When that happens, I document it here rather than pretending Git is a complete backup.
 
 ## Legacy folder
 
-`legacy/` contains archived Base44-era files for historical/reference purposes. The active backend is Supabase.
+`legacy/` contains archived Base44-era files for historical/reference purposes. The active backend is Supabase. The old Base44-era files are kept only as historical/reference material and are not part of the current request path.
 
 ## Crisis support
 
