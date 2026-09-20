@@ -65,6 +65,7 @@ declare
   v_recent_count integer := 0;
   v_oldest timestamptz;
   v_post public.community_posts%rowtype;
+  v_risk_flag text;
 begin
   if v_user is null then
     raise exception using errcode = '42501', message = 'authentication required';
@@ -94,6 +95,15 @@ begin
     raise exception using errcode = '22023', message = 'Invalid AI risk flag.';
   end if;
 
+  -- Never trust a client-supplied "safe" flag for obviously high-risk phrases.
+  -- The Edge Function performs the same lightweight check, but this keeps the
+  -- database write safe if somebody calls the RPC directly.
+  v_risk_flag := case
+    when btrim(p_content) ~* '(suicide|self[- ]?harm|ฆ่าตัวตาย|ทำร้ายตัวเอง|ไม่อยากมีชีวิต)' then 'high'
+    when btrim(p_content) ~* '(hopeless|worthless|โดดเดี่ยว|สิ้นหวัง|เครียดมาก|ไม่ไหว)' then 'moderate'
+    else p_ai_risk_flag
+  end;
+
   perform pg_advisory_xact_lock(hashtextextended(v_user::text, 0));
 
   select count(*)::integer, min(created_date)
@@ -121,7 +131,7 @@ begin
     btrim(p_content),
     coalesce(nullif(btrim(p_category), ''), 'other'),
     p_ai_response,
-    p_ai_risk_flag,
+    v_risk_flag,
     coalesce(p_ai_enabled, true),
     false,
     0,
