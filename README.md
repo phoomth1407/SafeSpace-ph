@@ -65,6 +65,16 @@ Supabase provides authentication, user profiles, assessments, community posts/co
 
 The browser uses only the Supabase URL and publishable key. Provider secrets stay in Supabase Edge Function secret storage.
 
+## License
+
+SafeSpace is shared under the **SafeSpace Non-Commercial Attribution License**.
+
+You may use, study, modify, and share the code for non-commercial purposes, provided that the original copyright notice and attribution to **SafeSpace by phoomth1407** are retained.
+
+Commercial use requires separate written permission from the copyright holder.
+
+See [LICENSE](LICENSE) for the complete terms.
+
 ## Security
 
 Current controls include RLS, owner/admin authorization, JWT-protected AI functions, request validation, request-size limits, per-user rate limiting, assessment database constraints, client-side signup password screening, and a browser Content Security Policy.
