@@ -20,7 +20,7 @@ The breached-password check hashes the password locally with SHA-1 and sends onl
 
 This is not equivalent to Supabase's server-side leaked-password protection. A direct API caller can bypass a client-side check, so server-side protection should be enabled when the project plan/configuration supports it.
 
-## Database authorization
+## Database access
 
 RLS is enabled on the current public application tables.
 
@@ -72,7 +72,7 @@ Assessment answers, age, nationality, and generated results can be sensitive. Th
 
 This is a school demonstration, not a clinical or regulatory data platform. Before real-world deployment, define retention/deletion rules, access procedures, incident response, consent requirements, and applicable legal/compliance requirements.
 
-## Operational limitations
+## Current limitations
 
 Security hardening reduces common abuse paths but does not make the application impossible to attack.
 
