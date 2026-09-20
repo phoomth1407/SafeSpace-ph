@@ -1,5 +1,14 @@
 # SafeSpace — Changelog
 
+## 2026-09-20 — Current backend and project cleanup
+
+- Added the SafeSpace Non-Commercial Attribution License and documented the reuse/attribution rules.
+- Brightened the Community and Resources backgrounds without changing their card/content styling.
+- Tracked the current Community posting protections and hardened security-definer functions in the Supabase migrations.
+- Updated project documentation to match the current Supabase functions, migrations, authentication flows, guest assessment behavior, and frontend structure.
+- Refreshed the standalone About page so it describes the current project instead of older implementation snapshots.
+
+
 ## 2026-09-19 — Current state and security hardening
 
 - Completed the security-hardening pass for sensitive Supabase data and AI endpoints.
