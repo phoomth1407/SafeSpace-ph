@@ -2,7 +2,23 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 function useIsPhone() {
-  c
+  const [isPhone, setIsPhone] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px) and (pointer: coarse)");
+    const update = () => setIsPhone(media.matches);
+    update();
+    media.addEventListener?.("change", update);
+    return () => media.removeEventListener?.("change", update);
+  }, []);
+
+  return isPhone;
+}
+
+export default function FloatingOrbs() {
+  const isPhone = useIsPhone();
+
+  return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
       {isPhone ? (
         <>
@@ -29,17 +45,6 @@ function useIsPhone() {
           />
         </>
       )}
-    </div> top-20 right-5 w-80 h-80 bg-sky-300/20 dark:bg-sky-500/10 rounded-full blur-3xl"
-      />
-      <motion.div
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -40, 0],
-          scale: [1, 1.15, 1],
-        }}
-        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-        className="absolute bottom-0 left-1/3 w-64 h-64 bg-purple-300/15 dark:bg-purple-500/10 rounded-full blur-3xl"
-      />
     </div>
   );
 }
