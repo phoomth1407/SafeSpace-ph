@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Heart, Trash2, Loader2, TrendingUp, Megaphone } from "lucide-react";
 import { categoryLabels } from "@/lib/assessmentQuestions";
@@ -8,8 +8,23 @@ import CommentSection from "@/components/CommentSection";
 import ReportButton from "@/components/ReportButton";
 import BanModal from "@/components/BanModal";
 
-export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncement, focused, onFocus }) {
+function useIsPhone() {
+  const [isPhone, setIsPhone] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px) and (pointer: coarse)");
+    const update = () => setIsPhone(media.matches);
+    update();
+    media.addEventListener?.("change", update);
+    return () => media.removeEventListener?.("change", update);
+  }, []);
+  return isPhone;
+}
+
+function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncement, focused, onFocus }) {
   const { t, lang } = useTranslation();
+  const isPhone = useIsPhone();
+  const Card = isPhone ? "div" : motion.div;
+  const motionProps = isPhone ? {} : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 } };
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [hearts, setHearts] = useState(post.hearts || 0);
@@ -78,9 +93,8 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
 
   if (isAnnouncement) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+      <Card
+        {...motionProps}
         className="community-post-card community-announcement-card bg-gradient-to-br from-amber-500/10 to-indigo-500/10 rounded-2xl p-4 border border-amber-500/30 space-y-3"
       >
         <div className="flex items-center gap-2 flex-wrap">
@@ -113,14 +127,13 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
         </p>
 
         <BanModal userId={banUserId} onClose={() => setBanUserId(null)} />
-      </motion.div>
+      </Card>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+    <Card
+      {...motionProps}
       className="community-post-card bg-slate-900/60 rounded-2xl p-4 border border-slate-800 space-y-3"
     >
       <div className="flex items-center gap-2 flex-wrap">
@@ -209,6 +222,15 @@ export default function CommunityPostCard({ post, isAdmin, isOwner, user, onDele
       />
 
       <BanModal userId={banUserId} onClose={() => setBanUserId(null)} />
-    </motion.div>
+    </Card>
   );
 }
+
+export default React.memo(CommunityPostCard, (prev, next) => (
+  prev.post === next.post &&
+  prev.isAdmin === next.isAdmin &&
+  prev.isOwner === next.isOwner &&
+  prev.user?.id === next.user?.id &&
+  prev.isAnnouncement === next.isAnnouncement &&
+  prev.focused === next.focused
+));
