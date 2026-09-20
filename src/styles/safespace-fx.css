@@ -1075,3 +1075,23 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
   .stats-chart-card{animation:none;opacity:1;transform:none;}
   .stats-card-glow{animation:none;}
 }
+
+ 
+/* Tone down Community + Resources background color without changing their content surfaces. */
+.ss-page-social .ss-backdrop,
+.ss-page-resources .ss-backdrop{
+  filter:saturate(.78);
+}
+.ss-page-social .ss-backdrop::before,
+.ss-page-resources .ss-backdrop::before{
+  opacity:.38;
+}
+.ss-page-social .ss-backdrop::after,
+.ss-page-resources .ss-backdrop::after{
+  opacity:.18;
+}
+.community-page::before,
+.resources-page::before{
+  opacity:.48;
+  filter:blur(12px) saturate(.72);
+}
