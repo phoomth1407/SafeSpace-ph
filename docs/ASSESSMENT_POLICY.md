@@ -317,3 +317,8 @@ If you do not agree, you can leave the assessment without continuing.
 **SafeSpace Assessment Policy**  
 **Version 1.0**  
 **Last updated: 19 September 2026**
+
+
+### Saved assessment deletion
+
+Signed-in users can delete saved assessment history from the History page. Guest assessment results are not written to the signed-in assessment history.
