@@ -42,7 +42,6 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
         post_id: post.id,
         content: content.trim(),
         author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
-        language: lang,
       });
       const created = res.data;
       if (created?.error) {
