@@ -161,4 +161,7 @@ The complete SafeSpace Assessment Policy is published in [docs/ASSESSMENT_POLICY
 - [Deployment](docs/DEPLOYMENT.md)
 - [Edge Functions](docs/EDGE_FUNCTIONS.md)
 - [RLS audit](docs/RLS_AUDIT.md)
+- [AI](docs/AI.md)
+- [Data model](docs/DATA_MODEL.md)
+- [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
