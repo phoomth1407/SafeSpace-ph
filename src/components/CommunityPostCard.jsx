@@ -47,15 +47,8 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
     other: "bg-slate-700/40 text-slate-300"
   };
 
-  const riskBadge = {
-    safe: { label: t("riskflag.safe"), class: "bg-emerald-500/10 text-emerald-300" },
-    moderate: { label: t("riskflag.moderate"), class: "bg-amber-500/10 text-amber-300" },
-    high: { label: t("riskflag.high"), class: "bg-red-500/10 text-red-300" }
-  };
-
   const catColor = categoryColors[post.category] || categoryColors.other;
   const catLabel = categoryLabels[post.category]?.[lang] || categoryLabels.other[lang];
-  const risk = riskBadge[post.ai_risk_flag] || riskBadge.safe;
   const canDelete = isAdmin || isOwner;
   const authorDisplay = post.author_name || (isAnnouncement ? t("community.admin") : t("community.anon"));
 
@@ -138,7 +131,6 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
     >
       <div className="flex items-center gap-2 flex-wrap">
         <span className={`text-[10px] px-2 py-0.5 rounded-full ${catColor}`}>{catLabel}</span>
-        <span className={`text-[10px] px-2 py-0.5 rounded-full ${risk.class}`}>{risk.label}</span>
         {isAdmin && post.created_by_id ? (
   <button onClick={() => setBanUserId(post.created_by_id)} className="text-[10px] text-slate-500 ml-auto hover:text-rose-300 underline transition-colors">
     {authorDisplay}
@@ -172,18 +164,6 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
       <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
         {post.content}
       </p>
-
-      {post.ai_response && (
-        <div className="bg-gradient-to-br from-sky-500/10 to-rose-500/10 rounded-xl p-3 border border-slate-800">
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-rose-500/80 to-sky-500/80 flex items-center justify-center">
-              <Heart className="w-2.5 h-2.5 text-white" fill="white" />
-            </div>
-            <span className="text-xs font-semibold text-slate-200">{t("community.aiSupport")}</span>
-          </div>
-          <p className="text-xs text-slate-300 leading-relaxed">{post.ai_response}</p>
-        </div>
-      )}
 
       {/* Interactions */}
       <div className="flex items-center gap-2 pt-1">
