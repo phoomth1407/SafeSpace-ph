@@ -2,7 +2,7 @@
 
 Last reviewed: 2026-09-20
 
-## Current production inventory
+## What is currently deployed
 
 | Function | Status | Version | JWT |
 | --- | --- | ---: | --- |
@@ -75,13 +75,13 @@ The current AI endpoints call `consume_rate_limit` with a 60-second window and m
 
 The rate-limit state is stored in `public.edge_rate_limits` and protected by RLS. The database function is intentionally SECURITY DEFINER because it writes the protected counter table on behalf of an authenticated caller; its `search_path` is pinned to an empty path and EXECUTE is restricted to `authenticated`.
 
-## Source-control status
+## Keeping the source and production in sync
 
 As of 2026-09-20, the three current AI function source files under `supabase/functions/` match the deployed Supabase `index.ts` byte-for-byte for the active functions `analyze-assessment` (v14), `analyze-community-post` (v7), and `analyze-phq9` (v5).
 
 `analyzeCommunityPost` remains deployed as a legacy compatibility function (v3) but is no longer used by the current application flow. `communityInteract` remains deployed and is still used by the Community UI. The current connector can inspect and deploy Edge Functions but does not expose a delete operation, so the legacy `analyzeCommunityPost` endpoint is documented for later retirement rather than removed blindly.
 
-## Operational guidance
+## When changing an Edge Function
 
 When changing an Edge Function:
 
