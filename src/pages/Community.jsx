@@ -103,15 +103,26 @@ export default function Community() {
     setSubmitting(true);
     setError(null);
     try {
-      await appClient.entities.CommunityPost.create({
+      const { data: result } = await appClient.functions.invoke("createCommunityPost", {
         content: content.trim(),
         category,
         author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
-        ai_enabled: false,
         ai_response: "",
         ai_risk_flag: "safe",
-        is_announcement: false,
       });
+
+      if (result?.allowed === false) {
+        const nextAllowed = result.next_allowed_at
+          ? new Date(result.next_allowed_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : null;
+        setError(
+          nextAllowed
+            ? `${t("community.error")} ${nextAllowed}`
+            : t("community.error")
+        );
+        return;
+      }
+
       setContent("");
       setCategory("other");
       setShowForm(false);
