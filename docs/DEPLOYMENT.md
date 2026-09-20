@@ -4,7 +4,7 @@ Last reviewed: 2026-09-19
 
 ## Frontend deployment
 
-The frontend is deployed to GitHub Pages from `main` using `.github/workflows/test.yml`.
+The frontend is deployed to GitHub Pages from `main` through `.github/workflows/test.yml`.
 
 The workflow runs:
 
@@ -35,7 +35,7 @@ Recent production migrations:
 
 The repository currently contains the first migration but not the two rate-limit migration files. This is a source-control drift item and should be resolved before treating Git as a complete infrastructure backup.
 
-## Pre-deployment checklist
+## Before deploying
 
 ### Frontend
 
@@ -60,7 +60,7 @@ The repository currently contains the first migration but not the two rate-limit
 - [ ] Confirm provider secrets exist only in Supabase
 - [ ] Run Supabase security advisors after schema changes
 
-## Rollback
+## If a deployment needs to be rolled back
 
 ### Frontend
 
@@ -74,6 +74,6 @@ Deploy the previously known-good function source/version. Do not disable JWT ver
 
 Database changes should be delivered through versioned migrations. Because the live project currently has two rate-limit migrations not mirrored in `main`, take extra care before rebuilding/resetting a database from repository migrations.
 
-## Important
+## One important limitation
 
 A successful frontend build does not prove that the live Supabase schema/functions are synchronized with Git. Check both deployment surfaces.
