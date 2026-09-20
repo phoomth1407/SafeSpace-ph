@@ -471,3 +471,97 @@ body {
   .wellness-modal-root,
   .wellness-modal-root > :not(.wellness-modal-backdrop) { animation: none; }
 }
+
+/* ===== Mobile performance pass =====
+   Keep the same visual language while reducing GPU/compositing pressure on phones.
+   Desktop rules above are intentionally unchanged. */
+@media (max-width: 767px) and (pointer: coarse) {
+  .visual-orb {
+    filter: blur(52px);
+    will-change: auto;
+  }
+
+  .visual-orb-mobile {
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    transform: translateZ(0);
+  }
+
+  .visual-orb-mobile-a {
+    animation: visual-orb-mobile-a 18s ease-in-out infinite;
+  }
+
+  .visual-orb-mobile-b {
+    animation: visual-orb-mobile-b 22s ease-in-out infinite;
+  }
+
+  .visual-orb-mobile-c {
+    animation: visual-orb-mobile-c 16s ease-in-out infinite;
+  }
+
+  .site-header {
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .mobile-nav {
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .page-shell .bg-slate-900\/60,
+  .page-shell .bg-slate-900\/80 {
+    backdrop-filter: blur(11px);
+    -webkit-backdrop-filter: blur(11px);
+  }
+
+  .wellness-modal-backdrop {
+    backdrop-filter: blur(8px) saturate(110%);
+    -webkit-backdrop-filter: blur(8px) saturate(110%);
+  }
+
+  .dark .wellness-modal-backdrop {
+    backdrop-filter: blur(9px) saturate(110%);
+    -webkit-backdrop-filter: blur(9px) saturate(110%);
+  }
+}
+
+@keyframes visual-orb-mobile-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(45px, -35px, 0) scale(1.08); }
+  66% { transform: translate3d(-20px, 25px, 0) scale(.96); }
+}
+
+@keyframes visual-orb-mobile-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(-35px, 25px, 0) scale(.94); }
+  66% { transform: translate3d(20px, -30px, 0) scale(1.07); }
+}
+
+@keyframes visual-orb-mobile-c {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: .45; }
+  33% { transform: translate3d(0, 28px, 0); opacity: .65; }
+  66% { transform: translate3d(0, -18px, 0); opacity: .40; }
+}
+
+@media (max-width: 767px) and (pointer: coarse) {
+  .floating-orb-mobile {
+    will-change: auto;
+    transform: translateZ(0);
+  }
+  .floating-orb-mobile-a { animation: floating-orb-mobile-a 18s ease-in-out infinite; }
+  .floating-orb-mobile-b { animation: floating-orb-mobile-b 22s ease-in-out 2s infinite; }
+  .floating-orb-mobile-c { animation: floating-orb-mobile-c 25s ease-in-out 4s infinite; }
+}
+@keyframes floating-orb-mobile-a {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(80px,-60px,0) scale(1.1); }
+}
+@keyframes floating-orb-mobile-b {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(-60px,80px,0) scale(1.2); }
+}
+@keyframes floating-orb-mobile-c {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(50px,-40px,0) scale(1.15); }
+}
