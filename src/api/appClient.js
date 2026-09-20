@@ -291,6 +291,18 @@ const invoke = async (name, payload = {}) => {
     return { data };
   }
 
+  if (name === "createCommunityAnnouncement") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+
+    const { data, error } = await supabase.rpc("create_community_announcement", {
+      p_content: payload.content,
+    });
+
+    if (error) throw error;
+    return { data };
+  }
+
   if (name === "analyzeCommunityPost") {
     const authUser = await currentAuthUser();
     if (!authUser) return { data: { error: "auth_required" } };
