@@ -1,6 +1,6 @@
 # SafeSpace Deployment
 
-Last reviewed: 2026-09-19
+Last reviewed: 2026-09-20
 
 ## Frontend deployment
 
@@ -77,3 +77,8 @@ Database changes should be delivered through versioned migrations. Because the l
 ## One important limitation
 
 A successful frontend build does not prove that the live Supabase schema/functions are synchronized with Git. Check both deployment surfaces.
+
+
+## Current backend note
+
+The current repository tracks the September 2026 rate-limit and Community posting hardening migrations. AI function source is also tracked for the current assessment, community-post, and PHQ-9 endpoints. Supabase remains a separately deployed backend, so a green frontend build does not by itself prove that the live database or Edge Functions are synchronized.
