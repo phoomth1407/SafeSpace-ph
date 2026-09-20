@@ -19,6 +19,15 @@ async function main(req: Request) {
   const { data: userData, error: userError } = await client.auth.getUser();
   if (userError || !userData.user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
 
+  const { data: allowed, error: rateError } = await client.rpc("consume_rate_limit", {
+    p_endpoint: "analyze-community-post",
+    p_window_seconds: 60,
+    p_max_requests: 5,
+  });
+  if (rateError || allowed !== true) {
+    return new Response(JSON.stringify({ error: "rate limit exceeded" }), { status: 429, headers: corsHeaders });
+  }
+
   const content = String(body.content || "").trim();
   if (content.length < 10) return new Response(JSON.stringify({ error: "Content must be at least 10 characters." }), { status: 400, headers: corsHeaders });
   if (content.length > 10000) return new Response(JSON.stringify({ error: "Content is too long." }), { status: 400, headers: corsHeaders });
