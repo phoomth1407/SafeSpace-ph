@@ -1,10 +1,10 @@
 # SafeSpace
 
-SafeSpace is a Vite + React web application for youth wellbeing screening, supportive self-care tools, community support, and trusted resources.
+SafeSpace is a Vite + React project focused on youth wellbeing. I built it around screening, simple self-care tools, community support, and a collection of trusted resources.
 
 > **Important:** SafeSpace is a school-project screening/support tool. Its results are not medical diagnoses.
 
-## Current stack
+## What SafeSpace uses
 
 - React 18 + Vite
 - Supabase Auth
@@ -20,7 +20,7 @@ SafeSpace is a Vite + React web application for youth wellbeing screening, suppo
 - https://phoomth1407.github.io/SafeSpace-ph
 - https://phoomth1407.github.io/SafeSpace-ph/about.html
 
-## Main features
+## What the project includes
 
 - Wellbeing assessment with age and nationality context
 - Guest assessment flow with browser-only result state
@@ -35,7 +35,7 @@ SafeSpace is a Vite + React web application for youth wellbeing screening, suppo
 - Email/password, Google OAuth, and Google One Tap authentication
 - Admin moderation/resource management
 
-## Assessment data flow
+## How the assessment works behind the scenes
 
 ```text
 Assessment.jsx
@@ -49,7 +49,7 @@ Assessment.jsx
 
 Guest assessment results are kept in browser navigation state and are not saved to the user's account. The assessment UI requires acknowledgement of its privacy notice before starting.
 
-## Current production AI functions
+## AI functions currently used in production
 
 - `analyze-assessment` — active version 13
 - `analyze-community-post` — active version 5
@@ -59,7 +59,7 @@ All three are JWT-protected. Community AI and PHQ-9 also enforce request-size li
 
 See [Edge Functions](docs/EDGE_FUNCTIONS.md).
 
-## Supabase
+## Backend
 
 Supabase provides authentication, user profiles, assessments, community posts/comments, emergency resources, reports, contact requests, Realtime updates, and Edge Functions.
 
@@ -77,11 +77,11 @@ See [LICENSE](LICENSE) for the complete terms.
 
 ## Security
 
-Current controls include RLS, owner/admin authorization, JWT-protected AI functions, request validation, request-size limits, per-user rate limiting, assessment database constraints, client-side signup password screening, and a browser Content Security Policy.
+The project uses RLS, owner/admin authorization, JWT-protected AI functions, request validation, request-size limits, per-user rate limiting, assessment database constraints, client-side signup password screening, and a browser Content Security Policy. These controls are meant to reduce common mistakes and abuse; they are not a promise that the site is impossible to attack.
 
 See [SECURITY.md](SECURITY.md) and [RLS audit](docs/RLS_AUDIT.md).
 
-## Local development
+## Running the project locally
 
 Recommended Node.js version: 22.
 
@@ -103,7 +103,7 @@ Copy `.env.example` to `.env.local` and provide the frontend-safe Supabase value
 
 See [Environment](docs/ENVIRONMENT.md) and [Deployment](docs/DEPLOYMENT.md).
 
-## Repository structure
+## Project structure
 
 ```text
 src/
@@ -119,13 +119,13 @@ docs/           Architecture, deployment, environment, Edge Functions, RLS
 legacy/         Archived Base44-era files; not the active backend
 ```
 
-## CI/CD
+## Testing and deployment
 
 GitHub Actions installs with `npm ci`, runs tests, accessibility linting, the production build, and the Playwright smoke test. Successful pushes to `main` deploy the tested build to GitHub Pages.
 
 Supabase Edge Functions and database migrations are deployed separately.
 
-## Production/source-control note
+## Production and source-control note
 
 The live Supabase project currently has these recent migrations applied:
 
