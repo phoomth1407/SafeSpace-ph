@@ -1,6 +1,6 @@
 # SafeSpace Architecture
 
-Last reviewed: 2026-09-19
+Last reviewed: 2026-09-20
 
 ## How the project is put together
 
@@ -101,3 +101,8 @@ The live backend currently contains some migrations/functions that are not mirro
 - Preserve Thai/English and Light/Dark behavior.
 - Treat assessment answers and generated results as sensitive.
 - Present AI output as screening/supportive guidance, not diagnosis.
+
+
+## Current user flows
+
+The app supports both guest and signed-in assessment flows. Signed-in users can keep assessment history and delete saved assessment records from the History page. Guest results stay in browser navigation state rather than being attached to an account. Authentication includes email/password plus Google OAuth and Google One Tap. The main UI is bilingual (Thai/English) and supports light/dark themes.
