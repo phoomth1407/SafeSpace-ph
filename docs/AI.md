@@ -78,7 +78,7 @@ The local fallback is simpler than a full AI response. It exists to keep the app
 
 `analyze-community-post` requires a JWT, limits the request body to 64 KB, validates the JSON and content, requires at least 10 characters, applies the 5-per-60-second user limit, performs a lightweight safety check, can use OpenAI, and writes the post to `community_posts`.
 
-Community posting also has a database-side `create_community_post` path and rolling limit. This matters because a React-side limit can be bypassed by calling the backend directly.
+Community posting also has a database-side `create_community_post` path and rolling limit. This matters because a React-side limit can be bypassed by calling the backend directly. The database path also applies a lightweight risk-flag floor for obvious high-risk phrases, so a direct RPC caller cannot simply mark that content as safe.
 
 The old `analyzeCommunityPost` endpoint is kept while the old path is being retired.
 
