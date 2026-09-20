@@ -1095,3 +1095,37 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
   opacity:.48;
   filter:blur(12px) saturate(.72);
 }
+
+ 
+/* Make Community + Resources backgrounds much lighter/whiter. */
+.ss-page-social .ss-backdrop,
+.ss-page-resources .ss-backdrop{
+  filter:none;
+  background:
+    radial-gradient(circle at 12% 22%,rgb(45 212 191/.055),transparent 30%),
+    radial-gradient(circle at 88% 18%,rgb(139 92 246/.055),transparent 32%),
+    linear-gradient(150deg,#f8fafc 0%,#f9fbff 52%,#f7fafc 100%);
+}
+.ss-page-social .ss-backdrop::before,
+.ss-page-resources .ss-backdrop::before{
+  opacity:.22;
+  mix-blend-mode:normal;
+}
+.ss-page-social .ss-backdrop::after,
+.ss-page-resources .ss-backdrop::after{
+  opacity:.10;
+}
+.community-page::before,
+.resources-page::before{
+  opacity:.24;
+  filter:blur(16px) saturate(.65);
+}
+.dark .ss-page-social .ss-backdrop,
+.dark .ss-page-resources .ss-backdrop,
+[data-theme='dark'] .ss-page-social .ss-backdrop,
+[data-theme='dark'] .ss-page-resources .ss-backdrop{
+  background:
+    radial-gradient(circle at 12% 22%,rgb(45 212 191/.07),transparent 30%),
+    radial-gradient(circle at 88% 18%,rgb(139 92 246/.07),transparent 32%),
+    linear-gradient(150deg,#172033 0%,#1b2336 52%,#17212f 100%);
+}
