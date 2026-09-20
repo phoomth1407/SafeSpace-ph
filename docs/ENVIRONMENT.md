@@ -1,6 +1,6 @@
 # SafeSpace Environment Configuration
 
-Last reviewed: 2026-09-19
+Last reviewed: 2026-09-20
 
 ## Frontend variables
 
@@ -44,3 +44,8 @@ The repository `.gitignore` excludes `.env` and `.env.*` while allowing `.env.ex
 The Supabase publishable key is intentionally browser-visible and is not an admin/service-role credential. Database authorization therefore depends on Supabase Auth and RLS.
 
 The signup password checker uses browser Web Crypto and the Have I Been Pwned range API. It does not send the plaintext password or full password hash to that API.
+
+
+## Public/static files
+
+`public/about.html` is a standalone project introduction page and is deployed with the GitHub Pages frontend. It does not contain provider secrets or server credentials.
