@@ -6,34 +6,41 @@ Last reviewed: 2026-09-20
 
 The frontend is deployed to GitHub Pages from `main` through `.github/workflows/test.yml`.
 
-The workflow runs:
+The workflow currently runs the quality checks before deployment:
 
 1. `npm ci`
 2. `npm test`
 3. `npm run lint:a11y`
 4. `npm run build`
-5. Playwright Chromium installation
+5. Install Playwright Chromium
 6. `npm run test:e2e`
-7. Pages artifact upload
-8. GitHub Pages deployment after the quality job succeeds
+7. Upload the Pages artifact
+8. Deploy to GitHub Pages only after the quality job succeeds
+
+The standalone `public/about.html` page is deployed with the same Pages build.
 
 ## Supabase deployment
 
-Supabase is managed separately from GitHub Pages.
+Supabase is a separate backend from the GitHub Pages frontend. The repository tracks the current Edge Function source and database migrations, but changes made directly in the Supabase dashboard can still create drift.
 
-Current production AI functions:
+### Current Edge Functions
 
-- `analyze-assessment` — version 13, JWT required
-- `analyze-community-post` — version 5, JWT required
-- `analyze-phq9` — version 5, JWT required
+- `analyze-assessment` — v14, JWT required
+- `analyze-community-post` — v7, JWT required
+- `analyze-phq9` — v5, JWT required
+- `communityInteract` — v3, compatibility function still used by the Community UI
+- `analyzeCommunityPost` — v3, legacy endpoint being retired
 
-Recent production migrations:
+### Current migrations tracked in Git
 
-- `security_hardening_20260919`
-- `add_edge_rate_limit_20260919`
-- `fix_edge_rate_limit_security_20260919`
+- `20260919000000_security_hardening.sql`
+- `20260919000003_lock_rate_limit_rpc_grants.sql`
+- `20260919000004_community_post_rolling_limit.sql`
+- `20260919000005_community_post_limit_index.sql`
+- `20260920000000_enforce_community_post_limit_rpc.sql`
+- `20260920000001_harden_security_definer_search_paths.sql`
 
-The repository currently contains the first migration but not the two rate-limit migration files. This is a source-control drift item and should be resolved before treating Git as a complete infrastructure backup.
+The recent migrations cover the security hardening, AI rate-limit RPC grants, rolling Community post limits, controlled Community creation, and SECURITY DEFINER/search-path hardening.
 
 ## Before deploying
 
@@ -48,8 +55,9 @@ The repository currently contains the first migration but not the two rate-limit
 - [ ] Check Light/Dark
 - [ ] Check email/password and Google authentication
 - [ ] Check guest and authenticated assessment flows
-- [ ] Check Community realtime updates
-- [ ] Check Resources and History
+- [ ] Check assessment history deletion
+- [ ] Check Community realtime updates, posting, comments, and reports
+- [ ] Check Resources and admin flows
 
 ### Supabase
 
@@ -57,28 +65,24 @@ The repository currently contains the first migration but not the two rate-limit
 - [ ] Confirm ownership/admin policies
 - [ ] Confirm AI functions still require JWT
 - [ ] Confirm request-size and rate-limit controls
+- [ ] Confirm Community creation still goes through the controlled database path
 - [ ] Confirm provider secrets exist only in Supabase
 - [ ] Run Supabase security advisors after schema changes
 
-## If a deployment needs to be rolled back
+## Rollback
 
 ### Frontend
 
 Redeploy a previous known-good `main` commit through GitHub Pages.
 
-### Edge Functions
+### Supabase
 
-Deploy the previously known-good function source/version. Do not disable JWT verification merely to recover a frontend issue.
+Roll back the affected Edge Function or database migration using the Supabase deployment process. Do not assume a frontend rollback also rolls back database state.
 
-### Database
+## One important distinction
 
-Database changes should be delivered through versioned migrations. Because the live project currently has two rate-limit migrations not mirrored in `main`, take extra care before rebuilding/resetting a database from repository migrations.
+A successful Vite build only proves that the frontend can be built. It does not prove that the live Supabase schema, RLS policies, Edge Functions, secrets, or Realtime configuration are correct. Those parts need their own verification.
 
-## One important limitation
+## Notes
 
-A successful frontend build does not prove that the live Supabase schema/functions are synchronized with Git. Check both deployment surfaces.
-
-
-## Current backend note
-
-The current repository tracks the September 2026 rate-limit and Community posting hardening migrations. AI function source is also tracked for the current assessment, community-post, and PHQ-9 endpoints. Supabase remains a separately deployed backend, so a green frontend build does not by itself prove that the live database or Edge Functions are synchronized.
+The deployment setup follows the normal Supabase model where authenticated client calls send a user JWT to protected Edge Functions; Supabase documents `verify_jwt` as the platform-level check for functions that require authenticated callers. citeturn1search1turn1search3
