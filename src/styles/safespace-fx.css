@@ -884,16 +884,35 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 .theme-light-policy .assessment-policy-shell .text-slate-600{color:#64748b!important;}
 
 
-/* Phone-only compositing pass: keep the same ambient effects with cheaper blur/compositing. */
+/* Phone-only compositing pass: preserve the visual identity without continuously animating
+   huge blurred layers. Mobile GPUs pay for every large filtered pixel, especially when the
+   backdrop is moving underneath glass surfaces. */
 @media(max-width:767px) and (pointer:coarse){
-  .ss-orb{will-change:auto;}
-  .ss-backdrop::before{animation-duration:32s;}
-  .ss-surface{-webkit-backdrop-filter:blur(12px) saturate(130%);backdrop-filter:blur(12px) saturate(130%);}
-  .community-tools,.community-page .community-tools{-webkit-backdrop-filter:blur(11px);backdrop-filter:blur(11px);}
-  .community-page .community-post-card{-webkit-backdrop-filter:blur(11px);backdrop-filter:blur(11px);}
-  .resources-emergency,.resources-tools{-webkit-backdrop-filter:blur(11px);backdrop-filter:blur(11px);}
-  .resources-library>div:last-child>a,.resources-hotlines .resource-card{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
-  .assessment-gate-card,.assessment-intro-card,.assessment-chapter-card,.assessment-question-card,.result-hero,.result-surface,.result-note,.result-emergency,.result-guest,.admin-hero,.admin-tabs,.admin-segments,.admin-page .bg-slate-900\/60{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+  .ss-backdrop{background-color:rgb(var(--ss-bg));}
+
+  /* Keep only the ambient shape; make it static so scrolling is not coupled to animation. */
+  .ss-orb{will-change:auto;animation:none!important;}
+  .ss-orb--a{width:62vmax;height:62vmax;opacity:.62;}
+  .ss-orb--b{width:52vmax;height:52vmax;opacity:.52;}
+  .ss-orb--c{width:44vmax;height:44vmax;opacity:.42;}
+
+  /* SVG turbulence is decorative only and surprisingly expensive on weaker phones. */
+  .ss-grain{display:none;}
+
+  /* Static atmosphere: no continuously moving full-screen pseudo-layer. */
+  .ss-backdrop::before{animation:none!important;opacity:.30;inset:0;}
+  .ss-backdrop::after{animation:none!important;filter:none!important;opacity:.18;inset:0;}
+
+  /* Retain glass, but reduce the amount of background that must be sampled. */
+  .ss-surface{-webkit-backdrop-filter:blur(8px) saturate(120%);backdrop-filter:blur(8px) saturate(120%);}
+  .community-tools,.community-page .community-tools{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+  .community-page .community-post-card{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+  .resources-emergency,.resources-tools{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+  .resources-library>div:last-child>a,.resources-hotlines .resource-card{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+  .assessment-gate-card,.assessment-intro-card,.assessment-chapter-card,.assessment-question-card,.result-hero,.result-surface,.result-note,.result-emergency,.result-guest,.admin-hero,.admin-tabs,.admin-segments,.admin-page .bg-slate-900\\/60{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+
+  /* The scenic hero already has a large image; avoid a second full-size blur pass. */
+  .home-scenic{transform:scale(1.12);filter:saturate(1.02);opacity:.80;will-change:auto;}
 }
 
 
