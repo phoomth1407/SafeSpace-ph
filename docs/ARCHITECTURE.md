@@ -90,7 +90,7 @@ RLS is the database authorization boundary.
 
 The frontend is deployed to GitHub Pages from `main`. Supabase database changes and Edge Functions are deployed separately to the connected project.
 
-The live backend currently contains some migrations/functions that are not mirrored in `main`. See `docs/RLS_AUDIT.md` and `docs/EDGE_FUNCTIONS.md` before rebuilding the backend from source.
+The live Supabase project can still drift if a change is made directly in the dashboard. The current security migrations and main AI function sources are tracked in the repository, but production state should still be checked before rebuilding the backend from source. See `docs/RLS_AUDIT.md` and `docs/EDGE_FUNCTIONS.md`.
 
 ## Things I try to keep consistent
 
