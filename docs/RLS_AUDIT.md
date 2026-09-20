@@ -26,7 +26,7 @@ RLS is enabled on the current public application tables, including the rate-limi
 - Admin policies use `private.is_admin()`.
 - Anonymous access is revoked from private tables.
 - `edge_rate_limits` allows authenticated users to insert/update only rows belonging to their own `auth.uid()`.
-- The rate-limit function is SECURITY INVOKER and public execute access is revoked; authenticated clients invoke it through the authenticated Supabase session.
+- The rate-limit function is SECURITY DEFINER with an empty pinned search path, and public/anonymous execute access is revoked; authenticated clients invoke it through the authenticated Supabase session.
 
 ## How the sensitive tables are handled
 
