@@ -48,11 +48,16 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
       if (created?.error) {
         setError(created.error === "banned" ? t("community.banned") : created.error);
       } else {
-        setComments([...comments, created]);
+        setComments((current) => [...current, created]);
         setContent("");
       }
     } catch (err) {
-      setError(t("community.commentError"));
+      const message = err?.message || err?.details || err?.hint || "";
+      if (/auth|jwt|session|permission|row-level security|rls/i.test(message)) {
+        setError(/auth|jwt|session/i.test(message) ? t("community.loginPrompt") : message);
+      } else {
+        setError(message || t("community.commentError"));
+      }
     } finally {
       setSubmitting(false);
     }
