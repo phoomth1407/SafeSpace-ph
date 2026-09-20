@@ -62,7 +62,6 @@ set search_path = ''
 as $function$
 declare
   v_user uuid := auth.uid();
-  v_email text;
   v_recent_count integer := 0;
   v_oldest timestamptz;
   v_post public.community_posts%rowtype;
@@ -94,11 +93,6 @@ begin
   if p_ai_risk_flag is null or p_ai_risk_flag not in ('safe', 'moderate', 'high') then
     raise exception using errcode = '22023', message = 'Invalid AI risk flag.';
   end if;
-
-  select lower(email)
-    into v_email
-  from auth.users
-  where id = v_user;
 
   perform pg_advisory_xact_lock(hashtextextended(v_user::text, 0));
 
