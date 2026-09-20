@@ -33,13 +33,13 @@ npm ci
 npm run dev
 ```
 
-## Never commit
+## Things that should never be committed
 
 Do not commit `.env.local`, API keys, service-role keys, OAuth client secrets, database passwords, or private tokens.
 
 The repository `.gitignore` excludes `.env` and `.env.*` while allowing `.env.example`.
 
-## Security notes
+## A couple of security notes
 
 The Supabase publishable key is intentionally browser-visible and is not an admin/service-role credential. Database authorization therefore depends on Supabase Auth and RLS.
 
