@@ -1,7 +1,7 @@
 # SafeSpace Assessment Policy
 
 **Version:** 1.0  
-**Last updated:** 19 September 2026
+**Last updated:** 20 September 2026
 
 Welcome to SafeSpace. Before starting the assessment, please read this policy carefully.
 
