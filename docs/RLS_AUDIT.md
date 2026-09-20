@@ -2,7 +2,7 @@
 
 Audit date: 2026-09-19
 
-## Result
+## What I checked
 
 RLS is enabled on the current public application tables, including the rate-limit table used by the AI Edge Functions.
 
@@ -28,7 +28,7 @@ RLS is enabled on the current public application tables, including the rate-limi
 - `edge_rate_limits` allows authenticated users to insert/update only rows belonging to their own `auth.uid()`.
 - The rate-limit function is SECURITY INVOKER and public execute access is revoked; authenticated clients invoke it through the authenticated Supabase session.
 
-## Sensitive table behavior
+## How the sensitive tables are handled
 
 ### assessments
 Authenticated users can create/read/update/delete their own rows. Admins can manage all rows.
@@ -55,7 +55,7 @@ Public read access is intentional. Admin-only write access is enforced by RLS.
 
 The frontend should never solve a database authorization problem by exposing more rows to the client. RLS remains the final authorization boundary.
 
-## Production/source-control note
+## Production and source-control note
 
 The live Supabase project has these recent migrations applied:
 
@@ -65,7 +65,7 @@ The live Supabase project has these recent migrations applied:
 
 The first is currently tracked under `supabase/migrations/` in `main`. The two rate-limit migration files are applied in production but are not yet mirrored in the repository. This should be synchronized before using the repository as the sole source for rebuilding the database.
 
-## Follow-up
+## After adding a new table or function
 
 Whenever a new table or function is added:
 
