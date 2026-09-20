@@ -24,7 +24,6 @@ export default function Community() {
   const [category, setCategory] = useState("other");
   const [authorName, setAuthorName] = useState("");
   const [anon, setAnon] = useState(true);
-  const [aiEnabled, setAiEnabled] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
@@ -104,27 +103,19 @@ export default function Community() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await appClient.functions.invoke("analyzeCommunityPost", {
+      await appClient.entities.CommunityPost.create({
         content: content.trim(),
         category,
         author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
-        ai_enabled: aiEnabled,
-        language: lang,
+        ai_enabled: false,
+        ai_response: "",
+        ai_risk_flag: "safe",
+        is_announcement: false,
       });
-      if (res.data?.error) {
-        if (res.data.error === "auth_required" || /unauthorized|authentication required/i.test(res.data.error)) {
-          setError(t("community.loginPrompt"));
-        } else if (/rate limit exceeded/i.test(res.data.error)) {
-          setError(lang === "en" ? "You have posted several times recently. Please wait a minute and try again." : "คุณโพสต์หลายครั้งในช่วงที่ผ่านมา กรุณารอสักครู่แล้วลองใหม่");
-        } else {
-          setError(res.data.error === "banned" ? t("community.banned") : res.data.error);
-        }
-      } else {
-        setContent("");
-        setCategory("other");
-        setShowForm(false);
-        await loadPosts();
-      }
+      setContent("");
+      setCategory("other");
+      setShowForm(false);
+      await loadPosts();
     } catch (err) {
       setError(t("community.error"));
     } finally {
@@ -206,13 +197,6 @@ export default function Community() {
               {t("community.anonToggle")}
             </label>
           </div>
-          <label className="flex items-center gap-2 text-xs cursor-pointer select-none bg-slate-800/40 rounded-xl p-2.5 border border-slate-700">
-            <input type="checkbox" checked={aiEnabled} onChange={(e) => setAiEnabled(e.target.checked)} className="accent-sky-500" />
-            <div className="flex flex-col">
-              <span className="text-slate-200">{t("community.aiToggle")}</span>
-              <span className="text-[10px] text-slate-400">{t("community.aiToggleDesc")}</span>
-            </div>
-          </label>
         </>
       )}
 
@@ -232,7 +216,7 @@ export default function Community() {
           className="flex items-center gap-1.5 bg-slate-100 text-slate-900 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : isAnnounce ? <Megaphone className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
-          {submitting ? t("community.analyzing") : isAnnounce ? t("community.postAnnouncement") : t("community.post")}
+          {submitting ? t("community.posting") : isAnnounce ? t("community.postAnnouncement") : t("community.post")}
         </button>
       </div>
     </div>
