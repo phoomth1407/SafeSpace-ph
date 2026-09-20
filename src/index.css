@@ -545,13 +545,13 @@ body {
 }
 
 @media (max-width: 767px) and (pointer: coarse) {
+  /* Mobile keeps the ambient shapes, but they stay static to avoid continuous
+     background compositing while the page scrolls. */
   .floating-orb-mobile {
     will-change: auto;
     transform: translateZ(0);
+    animation: none !important;
   }
-  .floating-orb-mobile-a { animation: floating-orb-mobile-a 18s ease-in-out infinite; }
-  .floating-orb-mobile-b { animation: floating-orb-mobile-b 22s ease-in-out 2s infinite; }
-  .floating-orb-mobile-c { animation: floating-orb-mobile-c 25s ease-in-out 4s infinite; }
 }
 @keyframes floating-orb-mobile-a {
   0%, 100% { transform: translate3d(0,0,0) scale(1); }
