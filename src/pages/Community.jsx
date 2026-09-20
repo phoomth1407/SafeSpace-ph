@@ -103,12 +103,12 @@ export default function Community() {
     setSubmitting(true);
     setError(null);
     try {
-      const { data: result } = await appClient.functions.invoke("createCommunityPost", {
+      const { data: result } = await appClient.functions.invoke("analyzeCommunityPost", {
         content: content.trim(),
         category,
         author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
-        ai_response: "",
-        ai_risk_flag: "safe",
+        language: lang,
+        ai_enabled: true,
       });
 
       if (result?.allowed === false) {
