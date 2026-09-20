@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SafeSpace — Project Introduction</title>
-<meta name="description" content="How SafeSpace works: a bilingual (Thai/English) mental-health screening, self-care, and community app — with the breathing exercise, worry release, and ambient sound mixer rebuilt as live, interactive demos.">
+<meta name="description" content="How SafeSpace works: a bilingual Thai/English wellbeing screening and support web app with authenticated assessment history, AI-assisted analysis with local fallback, community moderation, resources, self-care tools, and a Supabase backend.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='8' y='8' width='84' height='84' rx='24' fill='%236FE7DD'/%3E%3Cpath d='M27 39c10-13 36-13 46 0v22c-10 13-36 13-46 0z' fill='%230B171C'/%3E%3Ccircle cx='39' cy='51' r='5' fill='%236FE7DD'/%3E%3Ccircle cx='61' cy='51' r='5' fill='%236FE7DD'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -774,7 +774,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     <div>
       <span class="eyebrow"><span class="dot"></span>A school capstone project, in production</span>
       <h1>Take a breath.<br>Then meet SafeSpace.</h1>
-      <p class="hero-sub">A bilingual (Thai / English) web app for teens and young adults: wellbeing screening, self-care tools, a community space, resources, and AI-assisted guidance — built as a school project with React, Vite, and Supabase.</p>
+      <p class="hero-sub">A bilingual (Thai / English) web app for teens and young adults: wellbeing screening, self-care tools, an anonymous community, resources, authentication, assessment history, and AI-assisted guidance — built as a school project with React, Vite, and Supabase.</p>
       <div class="hero-badges">
         <span class="pill"><span class="icon-slot" data-icon="atom" aria-hidden="true"></span><b>React + Vite</b></span>
         <span class="pill"><span class="icon-slot" data-icon="database" aria-hidden="true"></span><b>Supabase</b></span>
@@ -1188,14 +1188,14 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <article class="status-card">
         <div class="status-icon"><span class="icon-slot" data-icon="database" aria-hidden="true"></span></div>
         <h3>Backend security controls</h3>
-        <p>Private assessment data is protected with authenticated access controls and Supabase Row-Level Security. The project also uses server-side validation, request limits, and protected AI Edge Functions rather than trusting the browser alone.</p>
+        <p>Private assessment data is protected with authenticated access controls and Supabase Row-Level Security. The project also uses server-side validation, request-size limits, per-user rate limiting, database constraints, and protected AI Edge Functions rather than trusting the browser alone.</p>
         <a class="status-link" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/RLS_AUDIT.md" target="_blank" rel="noopener">See the RLS audit ↗</a>
       </article>
 
       <article class="status-card">
         <div class="status-icon"><span class="icon-slot" data-icon="bot" aria-hidden="true"></span></div>
         <h3>AI-assisted, with fallbacks</h3>
-        <p>Assessment, community, and PHQ-9-related AI processing is handled through authenticated Supabase Edge Functions with input-size validation and per-user rate limiting. AI output is presented as screening/support information, not a diagnosis.</p>
+        <p>Assessment, community-post safety analysis, and PHQ-9-related AI processing are handled through authenticated Supabase Edge Functions. The main assessment path can fall back from OpenAI to Gemini and then to the local/offline model. AI output is presented as screening/support information, not a diagnosis.</p>
         <a class="status-link" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/EDGE_FUNCTIONS.md" target="_blank" rel="noopener">Read the Edge Functions notes ↗</a>
       </article>
     </div>
@@ -1207,6 +1207,19 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <span class="pill"><b>Guest + signed-in</b> assessment flows</span>
     </div>
   </div>
+
+<div class="status-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:24px;">
+  <div class="card">
+    <div class="eyebrow"><span class="dot"></span>Data boundaries</div>
+    <h3 style="font-size:1.15rem;margin-bottom:10px;">What is saved, and where</h3>
+    <p style="color:var(--muted);">Signed-in assessment history is stored in Supabase and protected by RLS. Guest assessment results stay in browser navigation state. Community content is public-facing, while reports, contact requests, profiles, and moderation data use protected access rules.</p>
+  </div>
+  <div class="card">
+    <div class="eyebrow"><span class="dot"></span>Honest limitation</div>
+    <h3 style="font-size:1.15rem;margin-bottom:10px;">This is still a school project</h3>
+    <p style="color:var(--muted);">SafeSpace is a screening and support tool, not a clinical service. AI output can be wrong, community content can be imperfect, and the project should not be treated as a substitute for professional or emergency help.</p>
+  </div>
+</div>
 </section>
 
 <!-- ============================================================ DEV SECTION ============================================================ -->
