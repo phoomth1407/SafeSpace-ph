@@ -311,7 +311,7 @@ const policySections = [["1. What happens when you take the assessment?","The as
                     </section>
                   ))}
                   <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4 text-xs text-slate-400 leading-6">
-                    {lang === "en" ? "Policy version: 1.0 • Last updated: 19 September 2026" : "เวอร์ชันนโยบาย: 1.0 • ปรับปรุงล่าสุด: 19 กันยายน 2569"}
+                    {lang === "en" ? "Policy version: 1.0 • Last updated: 20 September 2026" : "เวอร์ชันนโยบาย: 1.0 • ปรับปรุงล่าสุด: 20 กันยายน 2569"}
                   </div>
                 </div>
 
