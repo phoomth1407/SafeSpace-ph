@@ -142,13 +142,8 @@ export default function Community() {
     setSubmitting(true);
     setError(null);
     try {
-      await appClient.entities.CommunityPost.create({
+      await appClient.functions.invoke("createCommunityAnnouncement", {
         content: content.trim(),
-        category: "other",
-        is_announcement: true,
-        author_name: "Admin",
-        ai_risk_flag: "safe",
-        ai_response: "",
       });
       setContent("");
       setShowAnnounce(false);
