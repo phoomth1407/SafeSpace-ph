@@ -2,9 +2,9 @@
 
 Last reviewed: 2026-09-19
 
-## Overview
+## How the project is put together
 
-SafeSpace is a React/Vite frontend with Supabase providing authentication, Postgres storage, Realtime events, and server-side Edge Functions.
+The frontend is built with React/Vite. Supabase handles authentication, database storage, Realtime events, and server-side Edge Functions.
 
 ```text
 Browser
@@ -31,11 +31,11 @@ Browser
 
 `src/pages/` contains route-level pages such as `Home.jsx`, `Assessment.jsx`, `AssessmentResult.jsx`, `Community.jsx`, `Resources.jsx`, `History.jsx`, `Admin.jsx`, and authentication pages.
 
-`src/api/appClient.js` is the current Supabase-backed compatibility/data adapter. It preserves the older entity/function interface used by some pages while the implementation uses Supabase. It also contains signup password validation and local assessment fallback/repair logic.
+`src/api/appClient.js` is the main Supabase-backed data adapter. Some pages still use the older entity/function interface, so this file keeps that interface working while the actual backend is Supabase. It also contains signup password checks and local assessment fallback/repair logic.
 
 `src/lib/` contains shared infrastructure such as the Supabase client, auth context, i18n, scoring, and auth return-to handling.
 
-## Assessment
+## Assessment flow
 
 ### Guest flow
 
@@ -67,7 +67,7 @@ Comments use `community_comments` with RLS ownership/admin controls.
 
 `analyze-phq9` is a separate authenticated Edge Function. It requires exactly nine answers, normalizes answers to 0–3, calculates a 0–27 screening score and band, optionally asks OpenAI for supportive text, and saves the result to `assessments`.
 
-## Data boundaries
+## What is public and what is private
 
 Public by design:
 
@@ -86,13 +86,13 @@ Private/authenticated:
 
 RLS is the database authorization boundary.
 
-## Deployment boundary
+## Deployment
 
 The frontend is deployed to GitHub Pages from `main`. Supabase database changes and Edge Functions are deployed separately to the connected project.
 
 The live backend currently contains some migrations/functions that are not mirrored in `main`. See `docs/RLS_AUDIT.md` and `docs/EDGE_FUNCTIONS.md` before rebuilding the backend from source.
 
-## Design principles
+## Things I try to keep consistent
 
 - Keep provider secrets server-side.
 - Keep AI functions JWT-protected.
