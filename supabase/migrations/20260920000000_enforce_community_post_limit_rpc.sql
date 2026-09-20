@@ -67,4 +67,4 @@ revoke all on function public.create_community_announcement(text) from public;
 revoke all on function public.create_community_announcement(text) from anon;
 grant execute on function public.create_community_announcement(text) to authenticated;
 
-revoke insert on table public.community_posts from authenticated;
+revoke insert on table public.community_posts from anon, authenticated;
