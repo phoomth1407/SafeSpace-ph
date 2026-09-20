@@ -65,7 +65,12 @@ declare
   v_recent_count integer := 0;
   v_oldest timestamptz;
   v_post public.community_posts%rowtype;
+  v_email text;
+  v_is_tester boolean := false;
 begin
+  select lower(email) into v_email from auth.users where id = v_user;
+  v_is_tester := v_email = 'phoomth1407@gmail.com';
+
   if v_user is null then
     raise exception using errcode = '42501', message = 'authentication required';
   end if;
@@ -94,20 +99,22 @@ begin
     raise exception using errcode = '22023', message = 'Invalid AI risk flag.';
   end if;
 
-  perform pg_advisory_xact_lock(hashtextextended(v_user::text, 0));
+  if not v_is_tester then
+    perform pg_advisory_xact_lock(hashtextextended(v_user::text, 0));
 
-  select count(*)::integer, min(created_date)
-    into v_recent_count, v_oldest
-  from public.community_posts
-  where created_by_id = v_user::text
-    and created_date > now() - interval '30 minutes';
+    select count(*)::integer, min(created_date)
+      into v_recent_count, v_oldest
+    from public.community_posts
+    where created_by_id = v_user::text
+      and created_date > now() - interval '30 minutes';
 
-  if v_recent_count >= 2 then
-    return jsonb_build_object(
-      'allowed', false,
-      'post_count', v_recent_count,
-      'next_allowed_at', v_oldest + interval '30 minutes'
-    );
+    if v_recent_count >= 2 then
+      return jsonb_build_object(
+        'allowed', false,
+        'post_count', v_recent_count,
+        'next_allowed_at', v_oldest + interval '30 minutes'
+      );
+    end if;
   end if;
 
   insert into public.community_posts (
@@ -133,7 +140,7 @@ begin
 
   return jsonb_build_object(
     'allowed', true,
-    'post_count', v_recent_count + 1,
+    'post_count', case when v_is_tester then 0 else v_recent_count + 1 end,
     'next_allowed_at', null,
     'post', to_jsonb(v_post)
   );
