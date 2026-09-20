@@ -216,7 +216,7 @@ export default function Community() {
           className="flex items-center gap-1.5 bg-slate-100 text-slate-900 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : isAnnounce ? <Megaphone className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
-          {submitting ? t("community.posting") : isAnnounce ? t("community.postAnnouncement") : t("community.post")}
+          {submitting ? t("community.post") : isAnnounce ? t("community.postAnnouncement") : t("community.post")}
         </button>
       </div>
     </div>
