@@ -1,13 +1,13 @@
 # SafeSpace Edge Functions
 
-Last reviewed: 2026-09-19
+Last reviewed: 2026-09-20
 
 ## Current production inventory
 
 | Function | Status | Version | JWT |
 | --- | --- | ---: | --- |
-| `analyze-assessment` | ACTIVE | 13 | Required |
-| `analyze-community-post` | ACTIVE | 5 | Required |
+| `analyze-assessment` | ACTIVE | 14 | Required |
+| `analyze-community-post` | ACTIVE | 7 | Required |
 | `analyze-phq9` | ACTIVE | 5 | Required |
 | `analyzeCommunityPost` | ACTIVE | 3 | Required |
 | `communityInteract` | ACTIVE | 3 | Required |
@@ -73,13 +73,13 @@ The PHQ-9 result is a screening indicator, not a diagnosis.
 
 The current AI endpoints call `consume_rate_limit` with a 60-second window and maximum of 5 requests per user/endpoint window.
 
-The rate-limit state is stored in `public.edge_rate_limits` and protected by RLS. The database function is SECURITY INVOKER and public execute access is revoked.
+The rate-limit state is stored in `public.edge_rate_limits` and protected by RLS. The database function is intentionally SECURITY DEFINER because it writes the protected counter table on behalf of an authenticated caller; its `search_path` is pinned to an empty path and EXECUTE is restricted to `authenticated`.
 
 ## Source-control status
 
-As of 2026-09-19, the three current AI function source files are deployed in Supabase but are not yet present under `supabase/functions/` on `main`.
+As of 2026-09-20, the three current AI function source files under `supabase/functions/` match the deployed Supabase `index.ts` byte-for-byte for the active functions `analyze-assessment` (v14), `analyze-community-post` (v7), and `analyze-phq9` (v5).
 
-The live Supabase project is therefore the source of truth for their deployed code. Before future refactors or disaster recovery, mirror the deployed source into Git and deploy from the repository.
+`analyzeCommunityPost` remains deployed as a legacy compatibility function (v3) but is no longer used by the current application flow. `communityInteract` remains deployed and is still used by the Community UI. The current connector can inspect and deploy Edge Functions but does not expose a delete operation, so the legacy `analyzeCommunityPost` endpoint is documented for later retirement rather than removed blindly.
 
 ## Operational guidance
 
