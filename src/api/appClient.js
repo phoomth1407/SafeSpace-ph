@@ -274,6 +274,23 @@ const invoke = async (name, payload = {}) => {
     }
   }
 
+  if (name === "createCommunityPost") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+
+    const { data, error } = await supabase.rpc("create_community_post", {
+      p_author_name: payload.author_name ?? "anonymous",
+      p_content: payload.content,
+      p_category: payload.category ?? "other",
+      p_ai_response: payload.ai_response ?? "",
+      p_ai_risk_flag: payload.ai_risk_flag ?? "safe",
+      p_ai_enabled: false,
+    });
+
+    if (error) throw error;
+    return { data };
+  }
+
   if (name === "analyzeCommunityPost") {
     const authUser = await currentAuthUser();
     if (!authUser) return { data: { error: "auth_required" } };
