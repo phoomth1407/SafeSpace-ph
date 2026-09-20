@@ -75,3 +75,8 @@ Whenever a new table or function is added:
 4. Re-check function SECURITY DEFINER / SECURITY INVOKER behavior and search paths.
 5. Add the migration to source control.
 6. Re-run the Supabase security advisor.
+
+
+## Community posting hardening
+
+The current database path does not rely on a frontend-only posting limit. `create_community_post` is used for controlled creation, direct client INSERT access is restricted, and the rolling post limit is backed by the database. The September 2026 security-definer hardening migration also pins trusted search paths and limits execution privileges.
