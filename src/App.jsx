@@ -138,7 +138,10 @@ const RouteLoading = () => (
 const AppGate = () => {
   const { hasLang } = useTranslation();
   useEffect(() => {
-    if (!hasLang) window.dispatchEvent(new Event("safespace:app-ready"));
+    if (!hasLang) {
+      window.__safespaceAppReady = true;
+      window.dispatchEvent(new Event("safespace:app-ready"));
+    }
   }, [hasLang]);
   return hasLang ? <AuthenticatedApp /> : <LanguageSelect />;
 };
@@ -146,7 +149,10 @@ const AppGate = () => {
 const AuthenticatedApp = () => {
   const { isLoadingAuth } = useAuth();
   useEffect(() => {
-    if (!isLoadingAuth) window.dispatchEvent(new Event("safespace:app-ready"));
+    if (!isLoadingAuth) {
+      window.__safespaceAppReady = true;
+      window.dispatchEvent(new Event("safespace:app-ready"));
+    }
   }, [isLoadingAuth]);
   if (isLoadingAuth) return <RouteLoading />;
 
