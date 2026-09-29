@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientInstance } from '@/lib/query-client';
@@ -9,7 +9,8 @@ import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider, useTranslation } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
 import { RefreshCw } from "lucide-react";
-import AppTransition from "./components/AppTransition";
+import Preloader from "./components/Preloader/Preloader";
+import RouteTransition from "./components/RouteTransition/RouteTransition";
 
 const Layout = lazy(() => import("@/components/Layout"));
 const Home = lazy(() => import("@/pages/Home"));
@@ -169,23 +170,42 @@ const AuthenticatedApp = () => {
 };
 
 export default function App() {
+  const [booted, setBooted] = useState(() => {
+    try {
+      return sessionStorage.getItem("safespace:booted") === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  const handleBootComplete = useCallback(() => {
+    try {
+      sessionStorage.setItem("safespace_boot_seen", "1");
+    } catch {
+      // Continue normally if session storage is unavailable.
+    }
+    setBooted(true);
+  }, []);
+
   return (
-    <LanguageProvider>
+    <>
+      {!booted && <Preloader onComplete={handleBootComplete} />}
+      <LanguageProvider>
       <ThemeProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClientInstance}>
             <Router>
               <ScrollToTop />
               <VersionGate>
-                <AppTransition>
-                  <AppGate />
-                </AppTransition>
+                <RouteTransition />
+                <AppGate />
               </VersionGate>
             </Router>
             <Toaster />
           </QueryClientProvider>
         </AuthProvider>
       </ThemeProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </>
   );
 }
