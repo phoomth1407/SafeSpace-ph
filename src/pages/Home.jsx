@@ -191,7 +191,7 @@ export default function Home() {
 
             <Link
               to="/history"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-200 hover:text-white px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/15 transition-all"
+              className="hero-history-button inline-flex items-center gap-1.5 text-xs px-3.5 py-2.5 rounded-xl backdrop-blur-md border transition-all"
             >
               <HistoryIcon className="w-3.5 h-3.5 text-white/90" />
               <span className="text-white font-semibold">{t("nav.history")}</span>
