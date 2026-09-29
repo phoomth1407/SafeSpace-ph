@@ -44,9 +44,14 @@ export const AuthProvider = ({ children }) => {
       if (!session?.user) {
         setUser(null);
         setIsAuthenticated(false);
+        setIsLoadingAuth(false);
         return;
       }
 
+      // Keep the authenticated routes behind the loading gate until the
+      // application profile has been hydrated. This prevents a route render
+      // with a valid Supabase session but a still-null SafeSpace user.
+      setIsLoadingAuth(true);
       void checkUserAuth();
 
       if (event === "SIGNED_IN") {
