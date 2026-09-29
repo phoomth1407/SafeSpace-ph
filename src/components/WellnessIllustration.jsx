@@ -101,39 +101,101 @@ function Worry() {
 
 function Mood({ mood }) {
   const map = {
-    great:["#D1FAE5","#10B981","#FDE68A"], good:["#DBEAFE","#3B82F6","#BAE6FD"],
-    okay:["#E2E8F0","#64748B","#CBD5E1"], worried:["#FEF3C7","#F59E0B","#FED7AA"],
-    sad:["#DBEAFE","#60A5FA","#C4B5FD"], stressed:["#FFEDD5","#F97316","#FDBA74"],
-    heavy:["#FFE4E6","#FB7185","#FDA4AF"]
+    great: ["#D1FAE5", "#10B981", "#FDE68A"],
+    good: ["#DBEAFE", "#3B82F6", "#BAE6FD"],
+    okay: ["#E2E8F0", "#64748B", "#CBD5E1"],
+    worried: ["#FEF3C7", "#F59E0B", "#FED7AA"],
+    sad: ["#DBEAFE", "#60A5FA", "#C4B5FD"],
+    stressed: ["#FFEDD5", "#F97316", "#FDBA74"],
+    heavy: ["#FFE4E6", "#FB7185", "#FDA4AF"],
   };
-  const [a,b,c] = map[mood] || map.okay;
-  const mouth = {
-    great:"M87 84Q100 96 113 84", good:"M90 85Q100 92 110 85", okay:"M90 89H110",
-    worried:"M90 92Q100 84 110 92", sad:"M90 92Q100 84 110 92",
-    stressed:"M90 92Q100 86 110 92", heavy:"M89 93Q100 82 111 93"
-  }[mood] || "M90 89H110";
+  const [a, b, c] = map[mood] || map.okay;
+  const title = mood || "okay";
+
   return (
     <svg {...shell} aria-hidden="true">
       <defs>
-        <linearGradient id="mood-bg" x1="20" y1="10" x2="180" y2="150"><stop stopColor={a}/><stop offset="1" stopColor={c}/></linearGradient>
-        <filter id="mood-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="9" stdDeviation="8" floodColor="#172554" floodOpacity=".16"/></filter>
+        <linearGradient id={"mood-bg-" + title} x1="20" y1="10" x2="180" y2="150">
+          <stop stopColor={a} />
+          <stop offset="1" stopColor={c} />
+        </linearGradient>
+        <radialGradient id={"mood-glow-" + title} cx="0" cy="0" r="1" gradientTransform="translate(58 42) rotate(48) scale(115 96)">
+          <stop stopColor="#FFFFFF" stopOpacity=".70" />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        </radialGradient>
+        <filter id={"mood-shadow-" + title} x="-30%" y="-30%" width="160%" height="180%">
+          <feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#172554" floodOpacity=".13" />
+        </filter>
       </defs>
-      <rect x="7" y="7" width="186" height="146" rx="36" fill="url(#mood-bg)" />
-      <circle cx="52" cy="36" r="42" fill="#FFFFFF" opacity=".28" />
-      <ellipse cx="100" cy="130" rx="52" ry="10" fill="#0F172A" opacity=".09" />
-      <g filter="url(#mood-shadow)">
-        <circle cx="100" cy="65" r="31" fill="#F3C5B4" />
-        <path d="M69 65C70 42 83 31 101 31C121 31 133 46 130 68C121 54 113 50 99 51C87 51 78 56 69 65Z" fill={b}/>
-        <circle cx="90" cy="70" r="2.6" fill="#334155"/><circle cx="110" cy="70" r="2.6" fill="#334155"/>
-        <path d={mouth} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-        <path d="M70 101C79 91 90 88 100 88C111 88 121 92 130 101L137 131H63L70 101Z" fill="#FFFFFF" fillOpacity=".88"/>
-        <path d="M68 107C56 112 49 119 44 130M132 107C144 112 151 119 156 130" stroke={b} strokeWidth="9" strokeLinecap="round"/>
+
+      <rect x="7" y="7" width="186" height="146" rx="36" fill={"url(#mood-bg-" + title + ")"} />
+      <circle cx="56" cy="38" r="48" fill={"url(#mood-glow-" + title + ")"} />
+      <ellipse cx="100" cy="129" rx="50" ry="10" fill="#0F172A" opacity=".07" />
+
+      <g filter={"url(#mood-shadow-" + title + ")"}>
+        <circle cx="100" cy="80" r="43" fill="#FFFFFF" fillOpacity=".48" stroke="#FFFFFF" strokeOpacity=".62" strokeWidth="1.5" />
+        <circle cx="100" cy="80" r="34" fill="#FFFFFF" fillOpacity=".20" />
+
+        {mood === "great" && (
+          <>
+            <circle cx="100" cy="80" r="17" fill={b} fillOpacity=".12" />
+            <circle cx="100" cy="80" r="8" fill={b} fillOpacity=".92" />
+            <path d="M100 47V56M100 104V113M67 80H76M124 80H133M77 57L83 63M117 97L123 103M123 57L117 63M83 97L77 103" stroke={b} strokeWidth="3" strokeLinecap="round" />
+          </>
+        )}
+
+        {mood === "good" && (
+          <>
+            <path d="M68 91C79 67 91 59 105 64C118 68 126 80 134 58" stroke={b} strokeWidth="7" strokeLinecap="round" />
+            <path d="M126 59L134 58L132 66" stroke={b} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="74" cy="107" r="4" fill={b} fillOpacity=".55" />
+            <circle cx="126" cy="106" r="3" fill={b} fillOpacity=".38" />
+          </>
+        )}
+
+        {mood === "okay" && (
+          <>
+            <path d="M70 80H130" stroke={b} strokeWidth="7" strokeLinecap="round" />
+            <circle cx="75" cy="103" r="4" fill={b} fillOpacity=".45" />
+            <circle cx="125" cy="103" r="4" fill={b} fillOpacity=".45" />
+          </>
+        )}
+
+        {mood === "worried" && (
+          <>
+            <path d="M70 84C78 72 87 70 97 77C106 83 116 82 130 69" stroke={b} strokeWidth="6" strokeLinecap="round" />
+            <path d="M79 101C88 95 96 95 104 101C111 106 119 105 125 101" stroke={b} strokeOpacity=".45" strokeWidth="3" strokeLinecap="round" />
+            <circle cx="132" cy="55" r="5" fill={b} fillOpacity=".55" />
+          </>
+        )}
+
+        {mood === "sad" && (
+          <>
+            <path d="M100 54C100 54 77 80 77 96C77 109 87 118 100 118C113 118 123 109 123 96C123 80 100 54 100 54Z" fill={b} fillOpacity=".82" />
+            <path d="M100 70V100" stroke="#FFFFFF" strokeOpacity=".68" strokeWidth="3" strokeLinecap="round" />
+          </>
+        )}
+
+        {mood === "stressed" && (
+          <>
+            <path d="M68 91L81 72L93 88L107 64L119 82L132 66" stroke={b} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M78 106C90 99 110 99 122 106" stroke={b} strokeOpacity=".38" strokeWidth="3" strokeLinecap="round" />
+          </>
+        )}
+
+        {mood === "heavy" && (
+          <>
+            <path d="M100 111C94 105 72 91 72 75C72 64 80 57 90 57C96 57 100 61 100 65C100 61 104 57 110 57C120 57 128 64 128 75C128 91 106 105 100 111Z" fill={b} fillOpacity=".84" />
+            <path d="M84 76C90 71 96 72 100 77C104 72 110 71 116 76" stroke="#FFFFFF" strokeOpacity=".62" strokeWidth="3" strokeLinecap="round" />
+          </>
+        )}
       </g>
-      <circle cx="42" cy="69" r="5" fill="#FFFFFF" opacity=".52"/><circle cx="159" cy="56" r="4" fill="#FFFFFF" opacity=".42"/>
+
+      <circle cx="42" cy="69" r="5" fill="#FFFFFF" opacity=".48" />
+      <circle cx="159" cy="56" r="4" fill="#FFFFFF" opacity=".38" />
     </svg>
   );
 }
-
 function WorryMode({ mode }) {
   const bg = mode === "lantern" ? ["#FEF3C7","#FDBA74"] : mode === "leaves" ? ["#DCFCE7","#86EFAC"] : ["#EDE9FE","#C4B5FD"];
   return (
