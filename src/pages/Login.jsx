@@ -66,6 +66,7 @@ export default function Login() {
       subtitle={t("auth.loginSubtitle")}
       policyOpen={policyOpen}
       onPolicyAccept={continueAfterPolicy}
+      persistPolicyAcknowledgement
       onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); setPolicyAcceptedThisVisit(false); }}
       footer={
         <>
