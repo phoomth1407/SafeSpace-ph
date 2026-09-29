@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { appClient } from "@/api/appClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +28,11 @@ export default function Login() {
     setLoading(true);
     try {
       await appClient.auth.loginViaEmailPassword(email, password);
-      window.location.hash = returnTo || "/";
+      if (returnTo.startsWith("http://") || returnTo.startsWith("https://")) {
+        window.location.href = returnTo;
+      } else {
+        navigate(returnTo);
+      }
     } catch (err) {
       setError(err.message || t("auth.invalidCredentials"));
     } finally {
