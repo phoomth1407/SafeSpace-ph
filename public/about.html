@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SafeSpace — Project Introduction</title>
-<meta name="description" content="How SafeSpace works: a bilingual Thai/English wellbeing screening and support web app with authenticated assessment history, AI-assisted analysis with local fallback, community moderation, resources, self-care tools, and a Supabase backend.">
+<meta name="description" content="How SafeSpace works: a bilingual Thai/English youth wellbeing web app with assessment and screening tools, self-care features, Community support, resources, authenticated history, AI-assisted analysis with local fallback, and a Supabase backend.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='8' y='8' width='84' height='84' rx='24' fill='%236FE7DD'/%3E%3Cpath d='M27 39c10-13 36-13 46 0v22c-10 13-36 13-46 0z' fill='%230B171C'/%3E%3Ccircle cx='39' cy='51' r='5' fill='%236FE7DD'/%3E%3Ccircle cx='61' cy='51' r='5' fill='%236FE7DD'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1232,7 +1232,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
       <article class="status-card">
         <div class="status-icon"><span class="icon-slot" data-icon="lock" aria-hidden="true"></span></div>
         <h3>Privacy-first assessment flow</h3>
-        <p>The assessment now opens with the SafeSpace Assessment Policy. Users must review the policy and reach the end before they can accept and continue. The current policy is version 1.0, dated 20 September 2026.</p>
+        <p>The assessment opens with the SafeSpace Assessment Policy. Users must review the policy and reach the end before they can accept and continue. The current product policy is version 1.1, last updated 29 September 2026.</p>
         <a class="status-link" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/ASSESSMENT_POLICY.md" target="_blank" rel="noopener">Read the full policy ↗</a>
       </article>
 
@@ -1525,6 +1525,90 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
   </div>
 </section>
 
+<!-- ============================================================ CURRENT IMPLEMENTATION ============================================================ -->
+<section class="section" id="current">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>Current implementation</span>
+      <h2>What SafeSpace actually runs today</h2>
+      <p class="kicker">This section keeps the introduction aligned with the repository instead of describing an older snapshot of the project.</p>
+    </div>
+
+    <div class="mission">
+      <div>
+        <p>SafeSpace currently uses a React/Vite frontend with Supabase Auth, Postgres, Row Level Security, Realtime, and Edge Functions. The frontend is deployed through GitHub Pages, while backend functions and database migrations are managed separately.</p>
+        <p>The assessment can use OpenAI, Gemini as a configured fallback, or local fallback logic. Signed-in users can keep assessment history, while the current guest flow keeps its result in browser navigation state rather than attaching it to an account.</p>
+      </div>
+      <div class="card">
+        <div class="eyebrow"><span class="dot"></span>Application experience</div>
+        <h3 style="font-size:1.15rem;margin-bottom:10px;">Two different loading systems</h3>
+        <p style="color:var(--muted);">The first-open cinematic preloader runs once per browser session and uses the real SafeSpace application icon. In-app navigation uses a separate short route transition with the destination name, progress ring, SafeSpace mark, and top progress bar. The mobile path avoids unnecessary heavy canvas/particle work, and reduced-motion preferences are respected.</p>
+      </div>
+    </div>
+
+    <div class="stage" style="margin-top:70px;">
+      <div>
+        <span class="stage-tag">01 · Assessment</span>
+        <h3>Screening and reflection, not diagnosis</h3>
+        <p class="stage-copy">The assessment collects the context required by the current flow, presents a dedicated policy before starting, and can provide AI-assisted feedback. The result is intended as a screening/support aid and should not be treated as a medical diagnosis.</p>
+        <ul class="feature-list">
+          <li>Signed-in history with deletion of saved records</li>
+          <li>Guest result path without attaching the result to account history</li>
+          <li>PHQ-9-style screening flow</li>
+        </ul>
+      </div>
+      <div class="stage-demo">
+        <div class="demo-label"><span class="live-dot"></span>Current AI path</div>
+        <div class="ai-chain">
+          <div class="ai-node active"><span class="t">OpenAI</span><span class="s">primary when configured</span></div>
+          <div class="ai-arrow">→</div>
+          <div class="ai-node"><span class="t">Gemini</span><span class="s">configured fallback</span></div>
+          <div class="ai-arrow">→</div>
+          <div class="ai-node"><span class="t">Local</span><span class="s">offline fallback</span></div>
+        </div>
+        <div class="ai-result ready">Authenticated + validated + rate-limited before the expensive AI request.</div>
+      </div>
+    </div>
+
+    <div class="stage reverse">
+      <div>
+        <span class="stage-tag">02 · Community</span>
+        <h3>A moderated space for peer discussion</h3>
+        <p class="stage-copy">Community supports public reading and authenticated participation, with policy acknowledgement, reporting, moderation, comments, reactions, and realtime updates. Database-side protections are part of the security model rather than relying only on frontend buttons or timers.</p>
+      </div>
+      <div class="stage-demo">
+        <div class="demo-label"><span class="live-dot"></span>Current boundaries</div>
+        <div class="factstrip" style="border-top:0;border-bottom:0;padding:12px 0;">
+          <div class="fact"><b>1323</b><span>mental-health support</span></div>
+          <div class="fact"><b>RLS</b><span>database authorization</span></div>
+          <div class="fact"><b>Realtime</b><span>live Community updates</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div>
+        <span class="stage-tag">03 · Documentation</span>
+        <h3>The repository is part of the project</h3>
+        <p class="stage-copy">The repository now documents the current features, architecture, AI behavior, data model, Edge Functions, deployment, security model, policies, and loading transitions. The standalone introduction is kept here as a readable project overview, while the Markdown documentation is intended for contributors and technical review.</p>
+        <div class="hero-cta">
+          <a class="btn" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/FEATURES.md" target="_blank" rel="noopener">Read feature docs ↗</a>
+          <a class="btn btn-ghost" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/TRANSITIONS.md" target="_blank" rel="noopener">Read transition docs ↗</a>
+        </div>
+      </div>
+      <div class="stage-demo">
+        <div class="demo-label"><span class="live-dot"></span>Current policy set</div>
+        <div class="ai-tabs">
+          <a class="ai-tab active" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/ASSESSMENT_POLICY.md" target="_blank" rel="noopener">Assessment Policy</a>
+          <a class="ai-tab" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/COMMUNITY_POLICY.md" target="_blank" rel="noopener">Community Policy</a>
+          <a class="ai-tab" href="https://github.com/phoomth1407/SafeSpace-ph/blob/main/docs/SAFESPACE_POLICY.md" target="_blank" rel="noopener">SafeSpace Policy</a>
+        </div>
+        <div class="ai-result">Policy versioning is documented so the product and repository can be updated together.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -1532,7 +1616,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     <div class="footer-top">
       <div>
         <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span>SafeSpace</a>
-        <p style="margin-top:10px; color:var(--muted); font-size:0.9rem; max-width:360px;">A youth mental-health companion built as a school project — screening, self-care tools, community, and real resources, in Thai and English.</p>
+        <p style="margin-top:10px; color:var(--muted); font-size:0.9rem; max-width:360px;">A youth wellbeing companion built as an independently owned project that began as a school assignment — screening, self-care tools, Community, resources, and bilingual support.</p>
       </div>
       <div class="footer-links">
         <a href="https://phoomth1407.github.io/SafeSpace-ph" target="_blank" rel="noopener">Live app ↗</a>

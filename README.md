@@ -35,6 +35,8 @@ SafeSpace is a Vite + React project focused on youth wellbeing. I built it aroun
 - Thai/English UI and Light/Dark themes
 - Email/password, Google OAuth, and Google One Tap authentication
 - Admin moderation/resource management, reports, and contact requests
+- Cinematic first-open preloader and short in-app route transitions
+- SafeSpace application icon, default-on preloader sound cues, reduced-motion support, and lighter mobile transition effects
 
 ## How the assessment works behind the scenes
 
@@ -164,4 +166,8 @@ The complete SafeSpace Assessment Policy is published in [docs/ASSESSMENT_POLICY
 - [AI](docs/AI.md)
 - [Data model](docs/DATA_MODEL.md)
 - [Contributing](CONTRIBUTING.md)
+- [Features](docs/FEATURES.md)
+- [SafeSpace Policy](docs/SAFESPACE_POLICY.md)
+- [Community Policy](docs/COMMUNITY_POLICY.md)
+- [Transitions](docs/TRANSITIONS.md)
 - [Changelog](CHANGELOG.md)
