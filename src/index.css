@@ -565,34 +565,3 @@ body {
   0%, 100% { transform: translate3d(0,0,0) scale(1); }
   50% { transform: translate3d(50px,-40px,0) scale(1.15); }
 }
-
-
-/* ===== Homepage readability + artwork polish ===== */
-.hero-history-button {
-  color: #ffffff !important;
-  background: rgba(15, 23, 42, .52) !important;
-  border-color: rgba(255,255,255,.22) !important;
-  box-shadow: 0 8px 24px rgba(2,6,23,.16), inset 0 1px 0 rgba(255,255,255,.08);
-}
-.hero-history-button:hover {
-  color: #ffffff !important;
-  background: rgba(15,23,42,.68) !important;
-  border-color: rgba(255,255,255,.34) !important;
-}
-.mood-save-button {
-  background: #0f172a !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(15,23,42,.12);
-}
-.mood-save-button:hover { background: #1e293b !important; color: #ffffff !important; }
-.mood-save-button:disabled {
-  background: #e2e8f0 !important;
-  color: #64748b !important;
-  border-color: #cbd5e1 !important;
-}
-.theme-light .mood-save-button {
-  background: #0f172a !important;
-  color: #ffffff !important;
-}
-.theme-light .mood-save-button:hover { background: #1e293b !important; color: #ffffff !important; }
-.theme-light .mood-save-button:disabled { background: #e2e8f0 !important; color: #64748b !important; }
