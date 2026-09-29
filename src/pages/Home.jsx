@@ -35,6 +35,19 @@ import MagneticButton from "@/components/MagneticButton";
 import ScenicBackdrop from "@/components/ScenicBackdrop";
 import { useTranslation } from "@/lib/i18n";
 
+
+function SoftWellnessIcon({ variant, className = "h-6 w-6" }) {
+  const common = { className, viewBox: "0 0 48 48", fill: "none", xmlns: "http://www.w3.org/2000/svg", "aria-hidden": "true" };
+  const stroke = { stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" };
+  if (variant === "wind") return <svg {...common}><path d="M7 18h20c5.8 0 8-7.5 2.8-9.6-2.9-1.2-5.8.3-6.7 2.8" {...stroke}/><path d="M7 25h29c4.8 0 6.4 6.3 2.2 8.3-2.5 1.2-5.1-.1-5.8-2.2" {...stroke}/><path d="M7 32h15" {...stroke}/><circle cx="37" cy="13" r="1.8" fill="currentColor" opacity=".55"/></svg>;
+  if (variant === "leaf") return <svg {...common}><path d="M24 39V19" {...stroke}/><path d="M24 25c-7-1-11-5.5-11-12 7.1.2 12 3.7 12 10" {...stroke}/><path d="M25 30c1-7 5.7-10.8 12.5-10.5-.8 7-5.1 10.8-12.5 12" {...stroke}/><path d="M17 39h14" {...stroke}/><circle cx="14" cy="11" r="2" fill="currentColor" opacity=".22"/></svg>;
+  if (variant === "sparkle") return <svg {...common}><path d="M24 7l3.1 10.9L38 21l-10.9 3.1L24 35l-3.1-10.9L10 21l10.9-3.1L24 7Z" {...stroke}/><path d="M39 30l1.2 4.2L44 35.4l-3.8 1.2L39 40.5l-1.2-3.9L34 35.4l3.8-1.2L39 30Z" {...stroke}/><circle cx="10" cy="10" r="2" fill="currentColor" opacity=".35"/></svg>;
+  if (variant === "sound") return <svg {...common}><path d="M9 27h6l7 6V15l-7 6H9v6Z" {...stroke}/><path d="M29 20c3.8 2.7 3.8 5.3 0 8" {...stroke}/><path d="M34 16c7 5 7 11 0 16" {...stroke}/><circle cx="40" cy="35" r="2" fill="currentColor" opacity=".4"/></svg>;
+  if (variant === "people") return <svg {...common}><circle cx="18" cy="17" r="5" {...stroke}/><circle cx="32" cy="18" r="4" {...stroke}/><path d="M9 37c.8-7 4.4-11 9-11s8.2 4 9 11" {...stroke}/><path d="M28 28c2.2-.8 4.3-.2 6 1.5 1.6 1.6 2.7 4.1 3 7.5" {...stroke}/><path d="M12 34c4-2.4 8.8-2.4 13 0" stroke="currentColor" strokeWidth="2" opacity=".25" strokeLinecap="round"/></svg>;
+  if (variant === "shield") return <svg {...common}><path d="M24 7l14 5v9.5c0 9-5.8 15-14 19-8.2-4-14-10-14-19V12l14-5Z" {...stroke}/><path d="m17 24 4.5 4.5L31.5 19" {...stroke}/><path d="M18 13c4 1.4 8 1.4 12 0" stroke="currentColor" strokeWidth="1.7" opacity=".25" strokeLinecap="round"/></svg>;
+  return <svg {...common}><circle cx="24" cy="24" r="12" {...stroke}/></svg>;
+}
+
 function getGreeting(lang) {
   const hour = new Date().getHours();
   if (lang === "en") {
@@ -185,8 +198,8 @@ export default function Home() {
               to="/history"
               className="inline-flex items-center gap-1.5 text-xs text-slate-200 hover:text-white px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/15 transition-all"
             >
-              <HistoryIcon className="w-3.5 h-3.5" />
-              {t("nav.history")}
+              <HistoryIcon className="w-3.5 h-3.5 text-white/90" />
+              <span className="text-white font-semibold">{t("nav.history")}</span>
             </Link>
           </div>
         </div>
@@ -216,7 +229,7 @@ export default function Home() {
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-sky-100 dark:bg-sky-500/10 text-sky-600 dark:text-sky-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
-                  <Wind className="w-5 h-5" />
+                  <SoftWellnessIcon variant="wind" className="w-6 h-6" />
                 </div>
                 <span className="text-[10px] font-semibold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
                   {lang === "en" ? "2 min" : "2 นาที"}
@@ -242,7 +255,7 @@ export default function Home() {
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
-                  <Sprout className="w-5 h-5" />
+                  <SoftWellnessIcon variant="leaf" className="w-6 h-6" />
                 </div>
                 <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                   5-4-3-2-1
@@ -268,7 +281,7 @@ export default function Home() {
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-violet-100 dark:bg-violet-500/10 text-violet-600 dark:text-violet-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-5 h-5" />
+                  <SoftWellnessIcon variant="sparkle" className="w-6 h-6" />
                 </div>
                 <span className="text-[10px] font-semibold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 px-2 py-0.5 rounded-full border border-violet-500/20">
                   {lang === "en" ? "Let Go" : "ปลดปล่อย"}
@@ -294,7 +307,7 @@ export default function Home() {
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
-                  <Headphones className="w-5 h-5" />
+                  <SoftWellnessIcon variant="sound" className="w-6 h-6" />
                 </div>
                 <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
                   Audio
@@ -322,7 +335,7 @@ export default function Home() {
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-500/10 text-sky-600 dark:text-sky-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <Users className="w-6 h-6" />
+              <SoftWellnessIcon variant="people" className="w-7 h-7" />
             </div>
             <div>
               <div className="text-xs font-semibold text-sky-600 dark:text-sky-400">
@@ -346,7 +359,7 @@ export default function Home() {
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-6 h-6" />
+              <SoftWellnessIcon variant="shield" className="w-7 h-7" />
             </div>
             <div>
               <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
