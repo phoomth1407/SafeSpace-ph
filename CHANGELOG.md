@@ -1,5 +1,14 @@
 # SafeSpace — Changelog
 
+## 2026-09-30 — Documentation and application-experience refresh
+
+- Added current feature documentation covering assessment, Community, Resources, authentication, administration, and the application transition system.
+- Added repository guides for the SafeSpace Policy and Community Policy.
+- Documented the two distinct loading systems: the session-based cinematic preloader and the in-app route transition.
+- Documented the current SafeSpace application icon, default-on preloader sound behavior, mobile-light transition path, and reduced-motion support.
+- Updated the README documentation index and feature list.
+- Refreshed the standalone SafeSpace introduction page to reflect the current frontend, backend, policy, AI, Community, Resources, and transition behavior.
+
 ## 2026-09-20 — Current backend and project cleanup
 
 - Added the SafeSpace Non-Commercial Attribution License and documented the reuse/attribution rules.
