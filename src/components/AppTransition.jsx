@@ -29,6 +29,7 @@ const isSameRoute = (a, b) => a.pathname === b.pathname;
 export default function AppTransition({ children }) {
   const location = useLocation();
   const { lang } = useTranslation();
+  const [appReady, setAppReady] = useState(false);
   const [bootOpen, setBootOpen] = useState(() => {
     try {
       return sessionStorage.getItem("safespace_boot_seen") !== "1";
@@ -49,9 +50,10 @@ export default function AppTransition({ children }) {
     let cancelled = false;
     const started = performance.now();
     const minimum = 1050;
+    let pageLoaded = document.readyState === "complete";
 
-    const finish = () => {
-      if (cancelled) return;
+    const maybeFinish = () => {
+      if (cancelled || !appReady || !pageLoaded) return;
       const remaining = Math.max(0, minimum - (performance.now() - started));
       window.setTimeout(() => {
         if (cancelled) return;
@@ -64,16 +66,29 @@ export default function AppTransition({ children }) {
       }, remaining);
     };
 
-    if (document.readyState === "complete") finish();
-    else window.addEventListener("load", finish, { once: true });
+    const onReady = () => {
+      pageLoaded = true;
+      maybeFinish();
+    };
+    window.addEventListener("safespace:app-ready", () => {
+      setAppReady(true);
+    });
+    if (!pageLoaded) window.addEventListener("load", onReady, { once: true });
+    else maybeFinish();
 
-    const fallback = window.setTimeout(finish, 2200);
+    const fallback = window.setTimeout(() => {
+      if (!cancelled) {
+        setBootOpen(false);
+        try { sessionStorage.setItem("safespace_boot_seen", "1"); } catch {}
+      }
+    }, 5000);
+
     return () => {
       cancelled = true;
-      window.removeEventListener("load", finish);
+      window.removeEventListener("load", onReady);
       window.clearTimeout(fallback);
     };
-  }, [bootOpen]);
+  }, [bootOpen, appReady]);
 
   useEffect(() => {
     if (bootOpen) return;
