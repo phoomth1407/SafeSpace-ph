@@ -344,17 +344,18 @@ export default function Preloader({ onComplete }) {
 
       window.setTimeout(() => {
         pre.classList.add("collapsing");
+        document.body.classList.remove("safespace-preloading");
         onComplete?.();
       }, 620);
 
       window.setTimeout(() => {
         pre.classList.add("gone");
-        document.body.classList.remove("locked");
+        document.body.classList.remove("locked", "safespace-preloading");
         setGone(true);
       }, 2200);
     }
 
-    document.body.classList.add("locked");
+    document.body.classList.add("locked", "safespace-preloading");
 
     if (reduced) {
       fill.style.transform = "scaleX(1)";
@@ -381,7 +382,7 @@ export default function Preloader({ onComplete }) {
         window.removeEventListener("mousemove", onMove);
         pre.removeEventListener("click", onClick);
         window.removeEventListener("load", start);
-        document.body.classList.remove("locked");
+        document.body.classList.remove("locked", "safespace-preloading");
       };
     }
 
