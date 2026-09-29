@@ -170,6 +170,9 @@ export default function Register() {
       icon={UserPlus}
       title={t("auth.createYourAccount")}
       subtitle={t("auth.registerSubtitle")}
+      policyOpen={policyOpen}
+      onPolicyAccept={continueAfterPolicy}
+      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); }}
       footer={
         <>
           {t("auth.haveAccount")}{" "}
