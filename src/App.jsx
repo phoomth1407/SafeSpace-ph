@@ -9,7 +9,8 @@ import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider, useTranslation } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
 import { RefreshCw } from "lucide-react";
-import AppTransition from "./components/AppTransition";
+import Preloader from "./components/Preloader/Preloader";
+import RouteTransition from "./components/RouteTransition/RouteTransition";
 
 const Layout = lazy(() => import("@/components/Layout"));
 const Home = lazy(() => import("@/pages/Home"));
@@ -136,7 +137,7 @@ const RouteLoading = () => (
 );
 
 const AppGate = () => {
-  const { hasLang } = useTranslation();
+  const { hasLang, lang } = useTranslation();
   return hasLang ? <AuthenticatedApp /> : <LanguageSelect />;
 };
 
@@ -177,9 +178,8 @@ export default function App() {
             <Router>
               <ScrollToTop />
               <VersionGate>
-                <AppTransition>
-                  <AppGate />
-                </AppTransition>
+                <AppGate />
+                <RouteTransition lang={lang} />
               </VersionGate>
             </Router>
             <Toaster />
