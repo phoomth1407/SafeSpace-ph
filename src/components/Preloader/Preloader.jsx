@@ -58,7 +58,7 @@ export default function Preloader({ onComplete }) {
         particles.push({
           x: Math.random() * W, y: Math.random() * H,
           vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
-          r: baseR, baseR, alpha: .25 + Math.random() * .55,
+          r: baseR, alpha: .25 + Math.random() * .55,
           color, phase: Math.random() * Math.PI * 2,
         });
       }
