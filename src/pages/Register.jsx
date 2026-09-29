@@ -26,6 +26,7 @@ export default function Register() {
   const [otpCode, setOtpCode] = useState("");
   const [policyOpen, setPolicyOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+  const [policyAcceptedThisVisit, setPolicyAcceptedThisVisit] = useState(false);
   const { t } = useTranslation();
 
   const requirePolicy = (action) => {
@@ -35,6 +36,7 @@ export default function Register() {
 
   const continueAfterPolicy = () => {
     setPolicyOpen(false);
+    setPolicyAcceptedThisVisit(true);
     const action = pendingAction;
     setPendingAction(null);
     action?.();
@@ -171,7 +173,7 @@ export default function Register() {
       subtitle={t("auth.registerSubtitle")}
       policyOpen={policyOpen}
       onPolicyAccept={continueAfterPolicy}
-      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); }}
+      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); setPolicyAcceptedThisVisit(false); }}
       footer={
         <>
           {t("auth.haveAccount")}{" "}
@@ -193,7 +195,7 @@ export default function Register() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={safeReturnTo()} enabled={false} />
+      <GoogleOneTap returnTo={safeReturnTo()} enabled={policyAcceptedThisVisit} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
