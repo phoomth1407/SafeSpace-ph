@@ -30,7 +30,7 @@ function ToolTile({ icon: Icon, illustration, title, subtitle, badge, onClick, t
     >
       <div className="flex items-start justify-between gap-3">
         <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-50 dark:bg-slate-950/50 p-1">
-          <WellnessIllustration type={illustration} />
+          {illustration ? <WellnessIllustration type={illustration} /> : <Icon className="w-5 h-5 text-amber-500 m-auto mt-2.5" />}
         </div>
         <span className="text-[10px] px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
           {badge}
