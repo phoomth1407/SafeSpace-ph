@@ -70,9 +70,8 @@ export default function AppTransition({ children }) {
       pageLoaded = true;
       maybeFinish();
     };
-    window.addEventListener("safespace:app-ready", () => {
-      setAppReady(true);
-    });
+    const onAppReady = () => setAppReady(true);
+    window.addEventListener("safespace:app-ready", onAppReady);
     if (!pageLoaded) window.addEventListener("load", onReady, { once: true });
     else maybeFinish();
 
@@ -85,6 +84,7 @@ export default function AppTransition({ children }) {
 
     return () => {
       cancelled = true;
+      window.removeEventListener("safespace:app-ready", onAppReady);
       window.removeEventListener("load", onReady);
       window.clearTimeout(fallback);
     };
