@@ -40,11 +40,12 @@ async function createNonce() {
   return { raw, hashed };
 }
 
-export default function GoogleOneTap({ returnTo = "/" }) {
+export default function GoogleOneTap({ returnTo = "/", enabled = true }) {
   const { lang } = useTranslation();
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    if (!enabled) return undefined;
     let cancelled = false;
 
     const start = async () => {
@@ -87,7 +88,7 @@ export default function GoogleOneTap({ returnTo = "/" }) {
         window.google?.accounts?.id?.cancel();
       } catch {}
     };
-  }, [returnTo, lang]);
+  }, [returnTo, lang, enabled]);
 
   if (!message) return null;
 

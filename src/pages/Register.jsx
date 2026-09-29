@@ -13,6 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
+import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -23,7 +24,22 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
+  const [policyOpen, setPolicyOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
   const { t } = useTranslation();
+
+  const requirePolicy = (action) => {
+    if (hasAcceptedSafeSpacePolicy()) { action(); return; }
+    setPendingAction(() => action);
+    setPolicyOpen(true);
+  };
+
+  const continueAfterPolicy = () => {
+    setPolicyOpen(false);
+    const action = pendingAction;
+    setPendingAction(null);
+    action?.();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,14 +102,14 @@ export default function Register() {
     }
   };
 
-  const handleGoogle = async () => {
+  const handleGoogle = () => requirePolicy(async () => {
     setError("");
     try {
       await appClient.auth.loginWithProvider("google", safeReturnTo());
     } catch (err) {
       setError(err.message || "Google sign-in failed");
     }
-  };
+  });
 
   if (showOtp) {
     return (
@@ -154,6 +170,9 @@ export default function Register() {
       icon={UserPlus}
       title={t("auth.createYourAccount")}
       subtitle={t("auth.registerSubtitle")}
+      policyOpen={policyOpen}
+      onPolicyAccept={continueAfterPolicy}
+      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); }}
       footer={
         <>
           {t("auth.haveAccount")}{" "}
@@ -175,7 +194,7 @@ export default function Register() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={safeReturnTo()} />
+      <GoogleOneTap returnTo={safeReturnTo()} enabled={hasAcceptedSafeSpacePolicy()} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
@@ -192,7 +211,7 @@ export default function Register() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(() => handleSubmit(e)); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
