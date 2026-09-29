@@ -1,6 +1,6 @@
 # SafeSpace Security Notes
 
-Last reviewed: 2026-09-20
+Last reviewed: 2026-09-30
 
 SafeSpace handles sensitive wellbeing/mental-health screening information. This document describes the current security model for the school-project deployment.
 
