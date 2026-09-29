@@ -183,7 +183,7 @@ export default function Community() {
           </span>
           <div>
             <span>{isAnnounce ? t("community.postAnnouncement") : t("community.writeTitle")}</span>
-            <small>{isAnnounce ? "Share an important SafeSpace announcement." : "A safe place to put something into words."}</small>
+            
           </div>
         </div>
         <button
@@ -299,25 +299,25 @@ export default function Community() {
         <section className="community-tools-card">
           <div className="community-section-heading">
             <div>
-              <span className="community-kicker">Take a small pause</span>
+              
               <h2>{t("community.quickTitle")}</h2>
             </div>
-            <span className="community-section-count">3 tools</span>
+            
           </div>
           <div className="community-tools-grid">
             <button onClick={() => setBreathingOpen(true)} className="community-tool-card tool-breath">
               <span className="community-tool-icon"><WellnessIcon type="breath" /></span>
-              <span><strong>{t("community.quickBreath")}</strong><small>Slow down and breathe.</small></span>
+              <span><strong>{t("community.quickBreath")}</strong></span>
               <ArrowLeft className="community-tool-arrow" />
             </button>
             <button onClick={() => setGroundingOpen(true)} className="community-tool-card tool-ground">
               <span className="community-tool-icon"><WellnessIcon type="ground" /></span>
-              <span><strong>{t("community.quickGround")}</strong><small>Come back to the present.</small></span>
+              <span><strong>{t("community.quickGround")}</strong></span>
               <ArrowLeft className="community-tool-arrow" />
             </button>
             <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="community-tool-card tool-sound">
               <span className="community-tool-icon"><WellnessIcon type="sound" /></span>
-              <span><strong>{t("community.quickSound")}</strong><small>Listen to something calm.</small></span>
+              <span><strong>{t("community.quickSound")}</strong></span>
               <ArrowLeft className="community-tool-arrow" />
             </button>
           </div>
@@ -327,7 +327,7 @@ export default function Community() {
       {!isAuthenticated ? (
         <section className="community-login-card">
           <div className="community-login-icon"><LogIn className="w-5 h-5" /></div>
-          <div><h2>{t("community.loginPrompt")}</h2><p>Sign in to share your own experience with the community.</p></div>
+          <div><h2>{t("community.loginPrompt")}</h2></div>
           <div className="community-login-actions">
             <button onClick={() => navigate("/login")} className="community-primary-button">{t("community.login")}</button>
             <button onClick={() => navigate("/register")} className="community-secondary-button">{t("community.register")}</button>
@@ -357,7 +357,7 @@ export default function Community() {
         <section className="community-feed-section">
           <div className="community-feed-header">
             <div>
-              <span className="community-kicker">Community feed</span>
+              
               <h2>{t("community.title")}</h2>
             </div>
             <div className="community-filter-wrap">
@@ -393,7 +393,7 @@ export default function Community() {
 
       <div className="community-posts-list">
         {loading ? (
-          <div className="community-loading"><Loader2 className="w-7 h-7 animate-spin" /><span>Loading community…</span></div>
+          <div className="community-loading"><Loader2 className="w-7 h-7 animate-spin" /></div>
         ) : focusedPostId ? (
           (() => {
             const p = posts.find((x) => x.id === focusedPostId);
@@ -403,7 +403,7 @@ export default function Community() {
           <div className="community-empty">
             <div className="community-empty-icon"><Heart className="w-6 h-6" /></div>
             <h3>{t("community.empty")}</h3>
-            <p>Be the first person to share something here.</p>
+            
             {isAuthenticated && !isBanned && <button onClick={() => setShowForm(true)} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
           </div>
         ) : (
