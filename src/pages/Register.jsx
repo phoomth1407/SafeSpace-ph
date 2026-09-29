@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { appClient } from "@/api/appClient";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
 
 export default function Register() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,7 +36,12 @@ export default function Register() {
     try {
       const result = await appClient.auth.register({ email, password });
       if (result?.session) {
-        window.location.hash = safeReturnTo() || "/";
+        const dest = safeReturnTo();
+        if (dest.startsWith("http://") || dest.startsWith("https://")) {
+          window.location.href = dest;
+        } else {
+          navigate(dest);
+        }
         return;
       }
       setShowOtp(true);
@@ -54,7 +60,12 @@ export default function Register() {
       // Supabase persists the verified session automatically.
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
-      window.location.hash = safeReturnTo() || "/";
+      const dest = safeReturnTo();
+      if (dest.startsWith("http://") || dest.startsWith("https://")) {
+        window.location.href = dest;
+      } else {
+        navigate(dest);
+      }
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
