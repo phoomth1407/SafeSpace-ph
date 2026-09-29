@@ -38,8 +38,7 @@ export default function Login() {
     action?.();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError("");
     setLoading(true);
     try {
@@ -104,7 +103,7 @@ export default function Login() {
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(() => handleSubmit(e)); }} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(handleSubmit); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
