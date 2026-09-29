@@ -69,7 +69,12 @@ export default function Resources() {
     load();
     const retry = () => load();
     window.addEventListener("safespace:resources-retry", retry);
-    return (
+    return () => window.removeEventListener("safespace:resources-retry", retry);
+  }, [lang]);
+
+  const links = selfCareLinks[lang] || selfCareLinks.th;
+
+  return (
     <div className="resources-page space-y-6 max-w-5xl mx-auto">
       {loadError && !loading && (
         <div className="rounded-2xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 p-4 flex items-center justify-between gap-3" role="alert">
