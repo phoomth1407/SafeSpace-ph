@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { Smile, Meh, Frown, HeartCrack, CloudRain, SunMedium, Flame, Check, Sparkles } from "lucide-react";
 import { MoodIllustration } from "@/components/WellnessIllustration";
 import { useTranslation } from "@/lib/i18n";
