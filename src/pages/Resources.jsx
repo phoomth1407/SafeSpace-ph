@@ -5,7 +5,7 @@ import ResourceCard from "@/components/ResourceCard";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
 import { useTranslation } from "@/lib/i18n";
-import SafeSpacePolicyModal, { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
+import SafeSpacePolicyModal from "@/components/SafeSpacePolicyModal";
 import { ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
 
 const defaultHotlines = {
