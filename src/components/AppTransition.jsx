@@ -24,12 +24,10 @@ const getLabel = (pathname, lang) => {
   return lang === "en" ? "SafeSpace" : "SafeSpace";
 };
 
-const isSameRoute = (a, b) => a.pathname === b.pathname;
-
 export default function AppTransition({ children }) {
   const location = useLocation();
   const { lang } = useTranslation();
-  const [appReady, setAppReady] = useState(false);
+  const [appReady, setAppReady] = useState(() => typeof window !== "undefined" && window.__safespaceAppReady === true);
   const [bootOpen, setBootOpen] = useState(() => {
     try {
       return sessionStorage.getItem("safespace_boot_seen") !== "1";
