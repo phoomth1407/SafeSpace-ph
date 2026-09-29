@@ -4,7 +4,7 @@ import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 import CommentItem from "@/components/CommentItem";
 
-export default function CommentSection({ post, user, isAdmin, expanded, onToggle }) {
+export default function CommentSection({ post, user, isAdmin, expanded, onToggle, onCommentIntent }) {
   const { t, lang } = useTranslation();
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
   return (
     <div className="space-y-2">
       <button
-        onClick={onToggle}
+        onClick={() => { if (!expanded && onCommentIntent) { onCommentIntent(post.id); } else { onToggle(); } }}
         className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
       >
         <MessageCircle className="w-3.5 h-3.5" />
