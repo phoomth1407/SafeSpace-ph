@@ -42,7 +42,7 @@ export default function ScenicBackdrop({ className = "" }) {
       <ellipse cx="1080" cy="120" rx="300" ry="230" fill="url(#safeGlow)" filter="url(#safeBlur)" />
       <circle cx="1080" cy="126" r="58" fill="#FFF7ED" opacity=".16" filter="url(#safeSoftBlur)" />
 
-      <g fill="none" stroke="url(#safeRibbon)" stroke-linecap="round">
+      <g fill="none" stroke="url(#safeRibbon)" strokeLinecap="round">
         <path d="M-80 420C190 270 390 300 610 420S1050 560 1530 330" strokeWidth="78" opacity=".32" />
         <path d="M-120 505C180 360 430 360 670 485S1110 610 1540 430" strokeWidth="42" opacity=".30" />
         <path d="M-80 550C250 430 440 455 720 540S1160 620 1510 500" strokeWidth="18" opacity=".30" />
