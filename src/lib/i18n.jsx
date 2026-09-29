@@ -292,7 +292,7 @@ const translations = {
     "risk.severe.short": "รุนแรง",
 
     "community.title": "ชุมชนนิรนาม",
-    "community.subtitle": "พื้นที่ปลอดภัยสำหรับแบ่งปันประสบการณ์ — แบ่งปัน ให้กำลังใจ และรับคำแนะนำจาก AI",
+    "community.subtitle": "พื้นที่ปลอดภัยสำหรับแบ่งปันประสบการณ์ — แบ่งปัน ให้กำลังใจ และรับฟังประสบการณ์จากคนอื่น",
     "community.loginPrompt": "เข้าสู่ระบบเพื่อแบ่งปันและคอมเมนต์",
     "community.login": "เข้าสู่ระบบ",
     "community.register": "สมัครสมาชิก",
@@ -793,7 +793,7 @@ const translations = {
     "risk.severe.short": "Severe",
 
     "community.title": "Anonymous Community",
-    "community.subtitle": "A safe space to share — share, encourage, and get guidance from AI",
+    "community.subtitle": "A safe space to share — share, encourage, and learn from other people’s experiences",
     "community.loginPrompt": "Log in to share and comment with the community",
     "community.login": "Log in",
     "community.register": "Sign up",
