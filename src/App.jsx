@@ -9,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider, useTranslation } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
 import { RefreshCw } from "lucide-react";
+import AppTransition from "./components/AppTransition";
 
 const Layout = lazy(() => import("@/components/Layout"));
 const Home = lazy(() => import("@/pages/Home"));
@@ -176,7 +177,9 @@ export default function App() {
             <Router>
               <ScrollToTop />
               <VersionGate>
-                <AppGate />
+                <AppTransition>
+                  <AppGate />
+                </AppTransition>
               </VersionGate>
             </Router>
             <Toaster />
