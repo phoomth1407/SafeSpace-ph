@@ -1,6 +1,6 @@
 # SafeSpace Edge Functions
 
-Last reviewed: 2026-09-20
+Last reviewed: 2026-09-30
 
 ## What is currently deployed
 
