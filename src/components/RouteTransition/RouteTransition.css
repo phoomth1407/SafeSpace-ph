@@ -1,3 +1,14 @@
+:root{
+  --ink:#0b0b0f;
+  --ink-soft:#5b5b66;
+  --ink-mute:#a8a8b3;
+  --line:#e7e7ec;
+  --bg:#fcfcfd;
+  --blue:#4b7bff;
+  --violet:#8b5cf6;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ease-out:cubic-bezier(.22,.61,.36,1);
+}
 /* ============================================================
    VEIL — same cream as the page, so it feels like a soft blink
    ============================================================ */
@@ -52,7 +63,7 @@
   stroke-width: 1.2;
 }
 .ring__fg{
-  stroke: url(#ringGrad);
+  stroke: url(#safespace-route-ring-gradient);
   stroke-width: 1.5;
   /* circumference = 2 * π * 28 ≈ 176 */
   stroke-dasharray: 176;
