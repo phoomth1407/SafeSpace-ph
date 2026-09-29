@@ -10,7 +10,7 @@ import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
-import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ export default function Login() {
   const returnTo = safeReturnTo();
 
   const requirePolicy = (action) => {
-    if (hasAcceptedSafeSpacePolicy()) { action(); return; }
     setPendingAction(() => action);
     setPolicyOpen(true);
   };
@@ -87,7 +86,7 @@ export default function Login() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={returnTo} enabled={hasAcceptedSafeSpacePolicy()} />
+      <GoogleOneTap returnTo={returnTo} enabled={false} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
