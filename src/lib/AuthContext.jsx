@@ -44,9 +44,13 @@ export const AuthProvider = ({ children }) => {
       if (!session?.user) {
         setUser(null);
         setIsAuthenticated(false);
+        setIsLoadingAuth(false);
         return;
       }
 
+      // Keep protected routes behind the auth-loading gate until the
+      // SafeSpace user profile has finished hydrating after sign-in.
+      setIsLoadingAuth(true);
       void checkUserAuth();
 
       if (event === "SIGNED_IN") {
