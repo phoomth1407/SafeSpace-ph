@@ -11,17 +11,8 @@ import {
 import { useTranslation } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
-const incidenceData = [
-  { year: "2565", rate: 189.25 },
-  { year: "2566", rate: 183.21 },
-  { year: "2567", rate: 174.69 },
-];
-
-const prevalenceData = [
-  { year: "2565", rate: 2.39 },
-  { year: "2566", rate: 2.41 },
-  { year: "2567", rate: 2.54 },
-];
+const incidenceRates = [189.25, 183.21, 174.69];
+const prevalenceRates = [2.39, 2.41, 2.54];
 
 function TrendBadge({ value, positive, label }) {
   return (
@@ -138,6 +129,7 @@ function StatsCard({
   trend,
   latest,
   unit,
+  latestLabel,
   change,
   changeLabel,
   positive,
@@ -154,7 +146,7 @@ function StatsCard({
           <h3>{title}</h3>
         </div>
         <div className="stats-card-latest">
-          <span className="stats-card-latest-label">ล่าสุด</span>
+          <span className="stats-card-latest-label">{latestLabel}</span>
           <strong>{latest}<small>{unit}</small></strong>
         </div>
       </div>
@@ -172,9 +164,12 @@ function StatsCard({
 }
 
 export default function StatsDashboard() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { theme } = useTheme();
   const isLight = theme === "light";
+  const yearLabels = lang === "en" ? ["2022", "2023", "2024"] : ["2565", "2566", "2567"];
+  const incidenceData = yearLabels.map((year, index) => ({ year, rate: incidenceRates[index] }));
+  const prevalenceData = yearLabels.map((year, index) => ({ year, rate: prevalenceRates[index] }));
 
   return (
     <div className="stats-dashboard">
@@ -184,8 +179,9 @@ export default function StatsDashboard() {
         trend={t("stats.incidenceTrend")}
         latest="174.69"
         unit=""
+        latestLabel={t("stats.latest")}
         change="-7.69%"
-        changeLabel="จากปี 2565"
+        changeLabel={t("stats.changeFrom2022")}
         positive={true}
         accentClass="stats-card-incidence"
       >
@@ -207,8 +203,9 @@ export default function StatsDashboard() {
         trend={t("stats.prevalenceTrend")}
         latest="2.54"
         unit="%"
+        latestLabel={t("stats.latest")}
         change="+0.15 pp"
-        changeLabel="จากปี 2565"
+        changeLabel={t("stats.changeFrom2022")}
         positive={false}
         accentClass="stats-card-prevalence"
       >

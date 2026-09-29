@@ -27,7 +27,7 @@ export default function Login() {
     setLoading(true);
     try {
       await appClient.auth.loginViaEmailPassword(email, password);
-      window.location.href = returnTo;
+      window.location.hash = returnTo || "/";
     } catch (err) {
       setError(err.message || t("auth.invalidCredentials"));
     } finally {

@@ -89,7 +89,7 @@ export default function Admin() {
         setUsers(users.map((x) => (x.id === u.id ? { ...x, banned: true, banned_until: bannedUntil } : x)));
       }
     } catch (err) {
-      alert(t("admin.deleteFail"));
+      alert(t("admin.banFail"));
     } finally {
       setBanning(null);
       setBanTarget(null);

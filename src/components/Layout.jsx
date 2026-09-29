@@ -100,7 +100,18 @@ export default function Layout() {
       </main>
 
       <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-2">
-        <div className="border-t border-white/10 pt-5 text-center" />
+        <div className="border-t border-white/10 pt-5 text-center space-y-1.5">
+          <p className="text-xs font-semibold text-slate-300">SafeSpace<span className="text-rose-500">.</span></p>
+          <p className="text-[11px] leading-relaxed text-slate-500">{t("footer.disclaimer")}</p>
+          <p className="text-[11px] leading-relaxed text-slate-500">
+            {t("footer.crisis")}{" "}
+            <a href="tel:1323" className="text-rose-300 hover:text-rose-200 underline underline-offset-2">1323</a>
+            {" · "}
+            <a href="tel:1669" className="text-slate-300 hover:text-white underline underline-offset-2">1669</a>
+            {" · 191"}
+          </p>
+          <p className="text-[10px] text-slate-600">{t("footer.copyright")}</p>
+        </div>
       </footer>
 
       <nav className="mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-40">

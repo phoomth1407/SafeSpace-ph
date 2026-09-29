@@ -35,7 +35,7 @@ export default function Register() {
     try {
       const result = await appClient.auth.register({ email, password });
       if (result?.session) {
-        window.location.href = safeReturnTo();
+        window.location.hash = safeReturnTo() || "/";
         return;
       }
       setShowOtp(true);
@@ -54,7 +54,7 @@ export default function Register() {
       // Supabase persists the verified session automatically.
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
-      window.location.href = safeReturnTo();
+      window.location.hash = safeReturnTo() || "/";
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {

@@ -366,6 +366,10 @@ const translations = {
     "rescat.general": "ทั่วไป",
     "rescat.emergency": "ฉุกเฉิน",
 
+    "footer.disclaimer": "พื้นที่สนับสนุนและแบบคัดกรองเบื้องต้นเพื่อการเรียนรู้ — ไม่ใช่การวินิจฉัยทางการแพทย์",
+    "footer.crisis": "หากต้องการความช่วยเหลือเร่งด่วน ติดต่อ",
+    "footer.copyright": "โครงการ SafeSpace สำหรับงานโรงเรียน",
+
     "theme.dark": "โหมดมืด",
     "theme.light": "โหมดสว่าง",
     "theme.toggle": "สลับธีม",
@@ -419,6 +423,8 @@ const translations = {
     "stats.prevalence": "ร้อยละความชุกของโรคซึมเศร้า",
     "stats.prevalenceTrend": "แนวโน้มเพิ่มขึ้น (น่ากังวล)",
     "stats.source": "ที่มา: กรมสุขภาพจิต (HDC) พ.ศ. 2565-2567",
+    "stats.latest": "ล่าสุด",
+    "stats.changeFrom2022": "จากปี 2565",
 
     "report.button": "รายงาน",
     "report.title": "เหตุผลในการรายงาน",
@@ -731,7 +737,7 @@ const translations = {
     "result.depressionChance": "Emotional wellbeing risk indicator",
     "result.emergency.title": "You are not alone — reach out for help",
     "result.emergency.desc": "Your screening result shows signs of higher risk. Consider reaching out to a trusted support service or mental-health professional for further support.",
-    "result.emergency.call1": "Call 1327 (Mental Health)",
+    "result.emergency.call1": "Call 1323 (Mental Health)",
     "result.emergency.call2": "Call 1667 (Children & Youth)",
     "result.guest.prompt": "This result is saved anonymously. Log in to save and view your history.",
     "result.guest.register": "Sign up",
@@ -840,12 +846,17 @@ const translations = {
     "admin.guestSub": "Assessments saved anonymously, separate from logged-in users",
     "admin.deleteConfirm": "Delete this post?",
     "admin.deleteFail": "Could not delete",
+    "admin.banFail": "Could not update the user ban status",
     "admin.loading": "Loading data...",
 
     "rescat.mental": "Mental Health",
     "rescat.child": "Children & Youth",
     "rescat.general": "General",
     "rescat.emergency": "Emergency",
+
+    "footer.disclaimer": "A supportive space and preliminary screening tool for learning — not a medical diagnosis.",
+    "footer.crisis": "For urgent help, contact",
+    "footer.copyright": "SafeSpace school project",
 
     "theme.dark": "Dark",
     "theme.light": "Light",
@@ -900,6 +911,8 @@ const translations = {
     "stats.prevalence": "Depression prevalence (%)",
     "stats.prevalenceTrend": "Rising trend (concerning)",
     "stats.source": "Source: Dept. of Mental Health (HDC), 2022-2024",
+    "stats.latest": "Latest",
+    "stats.changeFrom2022": "from 2022",
 
     "report.button": "Report",
     "report.title": "Reason for reporting",
