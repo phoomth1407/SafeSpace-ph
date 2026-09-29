@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, BarChart3, Brain, ClipboardList,
+  ArrowRight, BarChart3, ClipboardList,
   Heart, ShieldCheck, Sparkles, Users, Wind, Leaf, MessageCircle,
   Waves, Compass, Clock3
 } from "lucide-react";
@@ -22,7 +22,7 @@ const sectionMotion = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
 };
 
-function ToolTile({ icon: Icon, illustration, title, subtitle, badge, onClick, accent }) {
+function ToolTile({ illustration, title, subtitle, badge, onClick, accent }) {
   return (
     <motion.button
       variants={sectionMotion}
