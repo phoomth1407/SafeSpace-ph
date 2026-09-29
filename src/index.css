@@ -1064,3 +1064,31 @@ body {
 .dark .community-icon-button { color:#94a3b8; background:#1e293b; }
 .dark .community-icon-button:hover { color:#f8fafc; background:#334155; }
 .dark .community-notice-danger { color:#fda4af; background:rgba(244,63,94,.08); border-color:rgba(244,63,94,.20); }
+
+/* Version update dialog: isolated from the global light-theme slate overrides. */
+.safespace-update-button {
+  color: #ffffff !important;
+  background: #0f172a !important;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+.safespace-update-button:hover {
+  color: #ffffff !important;
+  background: #1e293b !important;
+}
+.theme-light .safespace-update-button {
+  color: #ffffff !important;
+  background: #0f172a !important;
+}
+.theme-light .safespace-update-button:hover {
+  color: #ffffff !important;
+  background: #1e293b !important;
+}
+.dark .safespace-update-button {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border-color: rgba(255,255,255,.12);
+}
+.dark .safespace-update-button:hover {
+  color: #0f172a !important;
+  background: #f1f5f9 !important;
+}

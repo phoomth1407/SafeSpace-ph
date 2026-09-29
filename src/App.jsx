@@ -112,7 +112,7 @@ const VersionGate = ({ children }) => {
             <button
               type="button"
               onClick={handleUpdate}
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl active:translate-y-0 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              className="safespace-update-button mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-bold shadow-lg shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
             >
               <RefreshCw className="h-4 w-4" />
               {isEnglish ? "Update SafeSpace" : "อัปเดต SafeSpace"}
