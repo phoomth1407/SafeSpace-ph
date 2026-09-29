@@ -1286,3 +1286,26 @@ body {
   .community-modal-card { padding:1.25rem; border-radius:1.25rem; }
   .community-policy-scroll { max-height: 17rem; }
 }
+
+/* Community policy markdown */
+.community-policy-scroll .community-policy-md-title {
+  margin: 1.05rem 0 .35rem;
+  color: #0f172a;
+  font-size: .82rem;
+  line-height: 1.45;
+  font-weight: 850;
+}
+.community-policy-scroll > div > p { margin: .45rem 0; color:#64748b; font-size:.7rem; line-height:1.7; }
+.community-policy-scroll > div > ul,
+.community-policy-scroll > div > ol { margin:.45rem 0 .7rem 1.1rem; padding:0; color:#64748b; font-size:.7rem; line-height:1.7; }
+.community-policy-scroll > div > ul { list-style:disc; }
+.community-policy-scroll > div > ol { list-style:decimal; }
+.community-policy-scroll > div li { padding-left:.15rem; }
+.community-policy-scroll > div blockquote { margin:.65rem 0; padding:.65rem .8rem; border-left:3px solid #7dd3fc; background:#f0f9ff; border-radius:.6rem; color:#334155; font-size:.7rem; }
+.community-policy-scroll > div strong { color:#334155; font-weight:800; }
+.dark .community-policy-scroll .community-policy-md-title { color:#f8fafc; }
+.dark .community-policy-scroll > div > p,
+.dark .community-policy-scroll > div > ul,
+.dark .community-policy-scroll > div > ol { color:#94a3b8; }
+.dark .community-policy-scroll > div blockquote { background:#0f2538; color:#cbd5e1; border-color:#38bdf8; }
+.dark .community-policy-scroll > div strong { color:#e2e8f0; }

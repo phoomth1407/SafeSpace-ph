@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail } from "lucide-react";
 import { appClient } from "@/api/appClient";
@@ -9,6 +10,7 @@ import GroundingModal from "@/components/GroundingModal";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
 import { supabase } from "@/lib/supabaseClient";
+import { COMMUNITY_POLICY } from "@/lib/communityPolicy";
 
 export default function Community() {
   const navigate = useNavigate();
@@ -35,12 +37,28 @@ export default function Community() {
   const [guestInfo, setGuestInfo] = useState(null);
   const [policyOpen, setPolicyOpen] = useState(false);
   const [policyScrolled, setPolicyScrolled] = useState(false);
-  const [policyAccepted, setPolicyAccepted] = useState(() => {
-    try { return sessionStorage.getItem("safespace_community_policy_accepted") === "1"; } catch { return false; }
-  });
+  const [policyAccepted, setPolicyAccepted] = useState(false);
   const [pendingCommunityAction, setPendingCommunityAction] = useState(null);
 
+  useEffect(() => {
+    if (!isAuthenticated || !user?.id) {
+      setPolicyAccepted(false);
+      return;
+    }
+    try {
+      setPolicyAccepted(localStorage.getItem(`safespace_community_policy_accepted:${user.id}`) === "1");
+    } catch {
+      setPolicyAccepted(false);
+    }
+  }, [isAuthenticated, user?.id]);
+
   const finishIntro = () => {
+    if (!policyAccepted) {
+      setPendingCommunityAction({ type: "enter" });
+      setPolicyScrolled(false);
+      setPolicyOpen(true);
+      return;
+    }
     setIntroComplete(true);
   };
 
@@ -89,11 +107,17 @@ export default function Community() {
 
   const acceptCommunityPolicy = () => {
     if (!policyScrolled || !pendingCommunityAction) return;
-    try { sessionStorage.setItem("safespace_community_policy_accepted", "1"); } catch {}
-    setPolicyAccepted(true);
     const action = pendingCommunityAction;
+    if (isAuthenticated && user?.id) {
+      try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, "1"); } catch {}
+      setPolicyAccepted(true);
+    }
     setPendingCommunityAction(null);
     setPolicyOpen(false);
+    if (action.type === "enter") {
+      setIntroComplete(true);
+      return;
+    }
     if (action.type === "post") setShowForm(true);
     if (action.type === "comment") setFocusedPostId(action.postId);
   };
@@ -519,11 +543,21 @@ export default function Community() {
             <h2 id="community-policy-title">{t("community.policyTitle")}</h2>
             <p className="community-policy-lead">{t("community.policyLead")}</p>
             <div className="community-policy-scroll" onScroll={handlePolicyScroll}>
-              <section><h3>{t("community.policyTitle")}</h3><p>{t("community.policyPlaceholder1")}</p></section>
-              <section><h3>Posting & commenting</h3><p>{t("community.policyPlaceholder2")}</p></section>
-              <section><h3>Privacy</h3><p>{t("community.policyPlaceholder3")}</p></section>
-              <section><h3>Moderation</h3><p>{t("community.policyPlaceholder4")}</p></section>
-              <section><h3>Policy placeholder</h3><p>{t("community.policyPlaceholder5")}</p></section>
+<ReactMarkdown
+                components={{
+                  h1: ({children}) => <h3 className="community-policy-md-title">{children}</h3>,
+                  h2: ({children}) => <h3 className="community-policy-md-title">{children}</h3>,
+                  h3: ({children}) => <h3 className="community-policy-md-title">{children}</h3>,
+                  p: ({children}) => <p>{children}</p>,
+                  ul: ({children}) => <ul>{children}</ul>,
+                  ol: ({children}) => <ol>{children}</ol>,
+                  li: ({children}) => <li>{children}</li>,
+                  blockquote: ({children}) => <blockquote>{children}</blockquote>,
+                  strong: ({children}) => <strong>{children}</strong>,
+                }}
+              >
+                {COMMUNITY_POLICY}
+              </ReactMarkdown>
             </div>
             <button onClick={acceptCommunityPolicy} disabled={!policyScrolled} className="community-primary-button w-full disabled:opacity-40 disabled:cursor-not-allowed">
               {policyScrolled ? t("community.policyAccept") : t("community.policyScroll")}
