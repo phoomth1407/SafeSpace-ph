@@ -172,7 +172,7 @@ const AuthenticatedApp = () => {
 export default function App() {
   const [booted, setBooted] = useState(() => {
     try {
-      return sessionStorage.getItem("safespace_boot_seen") === "1";
+      return sessionStorage.getItem("safespace:booted") === "1";
     } catch {
       return false;
     }
@@ -205,6 +205,7 @@ export default function App() {
           </QueryClientProvider>
         </AuthProvider>
       </ThemeProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </>
   );
 }
