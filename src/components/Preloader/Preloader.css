@@ -198,3 +198,22 @@
   #preloader #canvas,#preloader .cursor,#preloader .cursor-ring { display:none; }
   #preloader { cursor:default; }
 }
+
+
+/* Let the real application emerge underneath the preloader, like the reference demo. */
+body.safespace-preloading > #root {
+  opacity: 0;
+  transform: scale(1.035);
+  filter: blur(14px);
+  transition: opacity 1.4s ease .45s, transform 1.8s var(--ss-pre-ease-out) .45s, filter 1.4s ease .45s;
+  transform-origin: center center;
+}
+body:not(.safespace-preloading) > #root {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+  transition: opacity 1.4s ease, transform 1.8s var(--ss-pre-ease-out), filter 1.4s ease;
+}
+@media (max-width:767px) {
+  body.safespace-preloading > #root { transform: scale(1.015); filter: blur(7px); }
+}
