@@ -30,6 +30,81 @@ export default function Community() {
   const [focusedPostId, setFocusedPostId] = useState(null);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
+  const [introComplete, setIntroComplete] = useState(() => {
+    try { return sessionStorage.getItem("safespace_community_intro_seen") === "1"; } catch { return false; }
+  });
+  const [accessModal, setAccessModal] = useState(null);
+  const [guestInfo, setGuestInfo] = useState(null);
+  const [policyOpen, setPolicyOpen] = useState(false);
+  const [policyScrolled, setPolicyScrolled] = useState(false);
+  const [policyAccepted, setPolicyAccepted] = useState(() => {
+    try { return sessionStorage.getItem("safespace_community_policy_accepted") === "1"; } catch { return false; }
+  });
+  const [pendingCommunityAction, setPendingCommunityAction] = useState(null);
+
+  const finishIntro = () => {
+    try { sessionStorage.setItem("safespace_community_intro_seen", "1"); } catch {}
+    setIntroComplete(true);
+  };
+
+  const openPolicyFor = (action) => {
+    if (policyAccepted) {
+      if (action.type === "post") setShowForm(true);
+      if (action.type === "comment") setFocusedPostId(action.postId);
+      return;
+    }
+    setPendingCommunityAction(action);
+    setPolicyScrolled(false);
+    setPolicyOpen(true);
+  };
+
+  const requestPost = () => {
+    if (!isAuthenticated) {
+      setAccessModal({ type: "post" });
+      return;
+    }
+    if (isBanned) return;
+    openPolicyFor({ type: "post" });
+  };
+
+  const requestComment = (postId) => {
+    if (!isAuthenticated) {
+      setAccessModal({ type: "comment", postId });
+      return;
+    }
+    if (isBanned) return;
+    openPolicyFor({ type: "comment", postId });
+  };
+
+  const continueAsGuest = () => {
+    const intent = accessModal;
+    setAccessModal(null);
+    setGuestInfo(intent);
+  };
+
+  const acknowledgeGuestInfo = () => {
+    const intent = guestInfo;
+    setGuestInfo(null);
+    if (intent?.type === "comment" && intent.postId) {
+      setFocusedPostId(intent.postId);
+    }
+  };
+
+  const acceptCommunityPolicy = () => {
+    if (!policyScrolled || !pendingCommunityAction) return;
+    try { sessionStorage.setItem("safespace_community_policy_accepted", "1"); } catch {}
+    setPolicyAccepted(true);
+    const action = pendingCommunityAction;
+    setPendingCommunityAction(null);
+    setPolicyOpen(false);
+    if (action.type === "post") setShowForm(true);
+    if (action.type === "comment") setFocusedPostId(action.postId);
+  };
+
+  const handlePolicyScroll = (event) => {
+    const el = event.currentTarget;
+    setPolicyScrolled(el.scrollTop + el.clientHeight >= el.scrollHeight - 12);
+  };
 
   const loadPosts = async () => {
     setLoading(true);
@@ -247,8 +322,8 @@ export default function Community() {
   );
 
   return (
-    <div className="community-page max-w-5xl mx-auto">
-      <section className="community-hero-card">
+    <div className={`community-page ${introComplete ? "is-feed-mode" : "is-intro-mode"}`}>
+      {!introComplete && <section className="community-hero-card">
         <div className="community-hero-glow community-hero-glow-a" />
         <div className="community-hero-glow community-hero-glow-b" />
         <div className="community-hero-copy">
@@ -259,17 +334,16 @@ export default function Community() {
           <h1>{t("community.title")}</h1>
           <p>{t("community.subtitle")}</p>
           <div className="community-hero-actions">
-            {isAuthenticated && !isBanned ? (
-              <button onClick={() => setShowForm(true)} className="community-primary-button">
-                <PenLine className="h-4 w-4" />
-                {t("community.writePlaceholder")}
-              </button>
-            ) : !isAuthenticated ? (
+            {!isAuthenticated && (
               <button onClick={() => navigate("/login")} className="community-primary-button">
                 <LogIn className="h-4 w-4" />
                 {t("community.login")}
               </button>
-            ) : null}
+            )}
+            <button onClick={finishIntro} className="community-primary-button">
+              {t("community.next")}
+              <ArrowLeft className="h-4 w-4 rotate-180" />
+            </button>
             <button onClick={() => navigate("/contact-admin")} className="community-secondary-button">
               <Mail className="h-4 w-4" />
               {t("contact.tab")}
@@ -286,8 +360,10 @@ export default function Community() {
             <span className="community-art-heart"><Heart className="h-5 w-5" /></span>
           </div>
         </div>
-      </section>
+      </section>}
 
+      {introComplete && (
+        <div className="community-feed-mode-content">
       {isAuthenticated && isBanned && (
         <div className="community-notice community-notice-danger">
           <Ban className="w-4 h-4" />
@@ -324,25 +400,16 @@ export default function Community() {
         </section>
       )}
 
-      {!isAuthenticated ? (
-        <section className="community-login-card">
-          <div className="community-login-icon"><LogIn className="w-5 h-5" /></div>
-          <div><h2>{t("community.loginPrompt")}</h2></div>
-          <div className="community-login-actions">
-            <button onClick={() => navigate("/login")} className="community-primary-button">{t("community.login")}</button>
-            <button onClick={() => navigate("/register")} className="community-secondary-button">{t("community.register")}</button>
-          </div>
-        </section>
-      ) : isBanned ? null : showAnnounce ? (
+      {isBanned ? null : showAnnounce ? (
         renderForm(true)
       ) : showForm ? (
         renderForm(false)
       ) : (
         <section className="community-share-card">
           <div className="community-share-avatar"><PenLine className="w-5 h-5" /></div>
-          <button onClick={() => setShowForm(true)} className="community-share-trigger">
+          <button onClick={requestPost} className="community-share-trigger">
             <span>{t("community.writePlaceholder")}</span>
-            <small>{anon ? t("community.anonToggle") : authorName || t("community.anon")}</small>
+            <small>{isAuthenticated ? (anon ? t("community.anonToggle") : authorName || t("community.anon")) : t("community.loginPrompt")}</small>
           </button>
           {isAdmin && (
             <button onClick={() => setShowAnnounce(true)} className="community-announce-button">
@@ -397,21 +464,75 @@ export default function Community() {
         ) : focusedPostId ? (
           (() => {
             const p = posts.find((x) => x.id === focusedPostId);
-            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} focused onFocus={() => setFocusedPostId(null)} /> : null;
+            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} focused onFocus={() => setFocusedPostId(null)} onCommentIntent={requestComment} /> : null;
           })()
         ) : sortedPosts.length === 0 ? (
           <div className="community-empty">
             <div className="community-empty-icon"><Heart className="w-6 h-6" /></div>
             <h3>{t("community.empty")}</h3>
             
-            {isAuthenticated && !isBanned && <button onClick={() => setShowForm(true)} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
+            {isAuthenticated && !isBanned && <button onClick={requestPost} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
           </div>
         ) : (
           sortedPosts.map((post) => (
-            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onFocus={() => setFocusedPostId(post.id)} />
+            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onFocus={() => setFocusedPostId(post.id)} onCommentIntent={requestComment} />
           ))
         )}
       </div>
+
+        </div>
+      )}
+
+      {accessModal && (
+        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-access-title">
+          <div className="community-modal-backdrop" />
+          <div className="community-modal-card community-access-modal">
+            <div className="community-modal-icon"><LogIn className="h-5 w-5" /></div>
+            <span className="community-modal-kicker">SafeSpace Community</span>
+            <h2 id="community-access-title">{accessModal.type === "post" ? t("community.accessPostTitle") : t("community.accessCommentTitle")}</h2>
+            <p>{t("community.accessDesc")}</p>
+            <div className="community-modal-actions">
+              <button onClick={() => navigate("/login")} className="community-primary-button"><LogIn className="h-4 w-4" />{t("community.login")}</button>
+              <button onClick={continueAsGuest} className="community-secondary-button">{t("community.guestContinue")}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {guestInfo && (
+        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-guest-title">
+          <div className="community-modal-backdrop" />
+          <div className="community-modal-card">
+            <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
+            <span className="community-modal-kicker">SafeSpace Community</span>
+            <h2 id="community-guest-title">{t("community.guestTitle")}</h2>
+            <p>{t("community.guestDesc")}</p>
+            <button onClick={acknowledgeGuestInfo} className="community-primary-button w-full">{t("community.ok")}</button>
+          </div>
+        </div>
+      )}
+
+      {policyOpen && (
+        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-policy-title">
+          <div className="community-modal-backdrop" />
+          <div className="community-modal-card community-policy-modal">
+            <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
+            <span className="community-modal-kicker">SafeSpace Community</span>
+            <h2 id="community-policy-title">{t("community.policyTitle")}</h2>
+            <p className="community-policy-lead">{t("community.policyLead")}</p>
+            <div className="community-policy-scroll" onScroll={handlePolicyScroll}>
+              <section><h3>{t("community.policyTitle")}</h3><p>{t("community.policyPlaceholder1")}</p></section>
+              <section><h3>Posting & commenting</h3><p>{t("community.policyPlaceholder2")}</p></section>
+              <section><h3>Privacy</h3><p>{t("community.policyPlaceholder3")}</p></section>
+              <section><h3>Moderation</h3><p>{t("community.policyPlaceholder4")}</p></section>
+              <section><h3>Policy placeholder</h3><p>{t("community.policyPlaceholder5")}</p></section>
+            </div>
+            <button onClick={acceptCommunityPolicy} disabled={!policyScrolled} className="community-primary-button w-full disabled:opacity-40 disabled:cursor-not-allowed">
+              {policyScrolled ? t("community.policyAccept") : t("community.policyScroll")}
+            </button>
+          </div>
+        </div>
+      )}
 
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
