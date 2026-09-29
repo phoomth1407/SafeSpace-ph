@@ -490,11 +490,11 @@ export default function Community() {
           <div className="community-modal-card community-access-modal">
             <div className="community-modal-icon"><LogIn className="h-5 w-5" /></div>
             <span className="community-modal-kicker">SafeSpace Community</span>
-            <h2 id="community-access-title">{accessModal.type === "post" ? "อยากแบ่งปันกับชุมชนใช่ไหม?" : "อยากแสดงความคิดเห็นใช่ไหม?"}</h2>
-            <p>เข้าสู่ระบบเพื่อโพสต์หรือแสดงความคิดเห็น หรือเลือกดำเนินการต่อในฐานะแขกเพื่ออ่านเนื้อหาในชุมชน</p>
+            <h2 id="community-access-title">{accessModal.type === "post" ? t("community.accessPostTitle") : t("community.accessCommentTitle")}</h2>
+            <p>{t("community.accessDesc")}</p>
             <div className="community-modal-actions">
               <button onClick={() => navigate("/login")} className="community-primary-button"><LogIn className="h-4 w-4" />{t("community.login")}</button>
-              <button onClick={continueAsGuest} className="community-secondary-button">ดำเนินการต่อในฐานะแขก</button>
+              <button onClick={continueAsGuest} className="community-secondary-button">{t("community.guestContinue")}</button>
             </div>
           </div>
         </div>
@@ -506,9 +506,9 @@ export default function Community() {
           <div className="community-modal-card">
             <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
             <span className="community-modal-kicker">SafeSpace Community</span>
-            <h2 id="community-guest-title">การใช้งานแบบ Guest</h2>
-            <p>ในโหมด Guest คุณสามารถอ่านโพสต์และดูเนื้อหาในชุมชนได้ แต่ต้องเข้าสู่ระบบก่อนจึงจะโพสต์หรือแสดงความคิดเห็นได้</p>
-            <button onClick={acknowledgeGuestInfo} className="community-primary-button w-full">ตกลง</button>
+            <h2 id="community-guest-title">{t("community.guestTitle")}</h2>
+            <p>{t("community.guestDesc")}</p>
+            <button onClick={acknowledgeGuestInfo} className="community-primary-button w-full">{t("community.ok")}</button>
           </div>
         </div>
       )}
@@ -519,17 +519,17 @@ export default function Community() {
           <div className="community-modal-card community-policy-modal">
             <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
             <span className="community-modal-kicker">SafeSpace Community</span>
-            <h2 id="community-policy-title">Community Policy</h2>
-            <p className="community-policy-lead">ก่อนโพสต์หรือแสดงความคิดเห็น กรุณาอ่านนโยบายชุมชนให้จบก่อน</p>
+            <h2 id="community-policy-title">{t("community.policyTitle")}</h2>
+            <p className="community-policy-lead">{t("community.policyLead")}</p>
             <div className="community-policy-scroll" onScroll={handlePolicyScroll}>
-              <section><h3>นโยบายชุมชน</h3><p>เนื้อหานโยบายฉบับเต็มจะถูกเพิ่มในส่วนนี้ภายหลัง ก่อนเปิดใช้งานชุมชนอย่างเป็นทางการ</p></section>
-              <section><h3>การใช้งาน</h3><p>ส่วนนี้เป็นพื้นที่สำหรับเตรียมแสดงข้อกำหนดเกี่ยวกับการโพสต์ การแสดงความคิดเห็น และการดูแลพื้นที่ชุมชน</p></section>
-              <section><h3>ความเป็นส่วนตัว</h3><p>ส่วนนี้จะอธิบายรายละเอียดเกี่ยวกับข้อมูล ชื่อที่แสดง และสิ่งที่ผู้ใช้งานควรระวังเมื่อแบ่งปันเนื้อหา</p></section>
-              <section><h3>การดูแลชุมชน</h3><p>ส่วนนี้จะอธิบายแนวทางการรายงาน การกลั่นกรอง และการจัดการเนื้อหาที่ไม่เป็นไปตามนโยบาย</p></section>
-              <section><h3>กำลังเตรียมนโยบายฉบับสมบูรณ์</h3><p>โปรดเลื่อนลงจนสุดเพื่อยืนยันว่าคุณได้อ่านส่วนนี้แล้ว เมื่อเพิ่มนโยบายจริงในภายหลัง กล่องนี้จะถูกแทนที่ด้วยเนื้อหาฉบับเต็ม</p></section>
+              <section><h3>{t("community.policyTitle")}</h3><p>{t("community.policyPlaceholder1")}</p></section>
+              <section><h3>Posting & commenting</h3><p>{t("community.policyPlaceholder2")}</p></section>
+              <section><h3>Privacy</h3><p>{t("community.policyPlaceholder3")}</p></section>
+              <section><h3>Moderation</h3><p>{t("community.policyPlaceholder4")}</p></section>
+              <section><h3>Policy placeholder</h3><p>{t("community.policyPlaceholder5")}</p></section>
             </div>
             <button onClick={acceptCommunityPolicy} disabled={!policyScrolled} className="community-primary-button w-full disabled:opacity-40 disabled:cursor-not-allowed">
-              {policyScrolled ? "ตกลงและดำเนินการต่อ" : "เลื่อนอ่านให้สุดก่อน"}
+              {policyScrolled ? t("community.policyAccept") : t("community.policyScroll")}
             </button>
           </div>
         </div>
