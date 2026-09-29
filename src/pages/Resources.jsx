@@ -224,3 +224,4 @@ export default function Resources() {
       />
     </div>
   );
+}
