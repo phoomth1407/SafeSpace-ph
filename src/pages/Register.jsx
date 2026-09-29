@@ -173,6 +173,7 @@ export default function Register() {
       subtitle={t("auth.registerSubtitle")}
       policyOpen={policyOpen}
       onPolicyAccept={continueAfterPolicy}
+      persistPolicyAcknowledgement
       onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); setPolicyAcceptedThisVisit(false); }}
       footer={
         <>
