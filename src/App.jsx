@@ -9,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider, useTranslation } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
 import { RefreshCw } from "lucide-react";
+import AppTransition from "@/components/AppTransition";
 
 const Layout = lazy(() => import("@/components/Layout"));
 const Home = lazy(() => import("@/pages/Home"));
@@ -175,9 +176,11 @@ export default function App() {
           <QueryClientProvider client={queryClientInstance}>
             <Router>
               <ScrollToTop />
-              <VersionGate>
-                <AppGate />
-              </VersionGate>
+              <AppTransition>
+                <VersionGate>
+                  <AppGate />
+                </VersionGate>
+              </AppTransition>
             </Router>
             <Toaster />
           </QueryClientProvider>
