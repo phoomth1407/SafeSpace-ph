@@ -41,8 +41,7 @@ export default function Register() {
     action?.();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError("");
     if (password !== confirmPassword) {
       setError(t("auth.passwordMismatch"));
@@ -211,7 +210,7 @@ export default function Register() {
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(() => handleSubmit(e)); }} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(handleSubmit); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
