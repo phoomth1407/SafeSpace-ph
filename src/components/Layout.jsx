@@ -99,18 +99,45 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-2">
-        <div className="border-t border-white/10 pt-5 text-center space-y-1.5">
-          <p className="text-xs font-semibold text-slate-300">SafeSpace<span className="text-rose-500">.</span></p>
-          <p className="text-[11px] leading-relaxed text-slate-500">{t("footer.disclaimer")}</p>
-          <p className="text-[11px] leading-relaxed text-slate-500">
-            {t("footer.crisis")}{" "}
-            <a href="tel:1323" className="text-rose-300 hover:text-rose-200 underline underline-offset-2">1323</a>
-            {" · "}
-            <a href="tel:1669" className="text-slate-300 hover:text-white underline underline-offset-2">1669</a>
-            {" · 191"}
-          </p>
-          <p className="text-[10px] text-slate-600">{t("footer.copyright")}</p>
+      <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-6">
+        <div className="border-t border-slate-200/80 dark:border-white/10 pt-8 pb-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div className="space-y-2 max-w-md">
+              <div className="flex items-center justify-center md:justify-start gap-2">
+                <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">SafeSpace<span className="text-rose-500">.</span></span>
+                <span className="text-xs text-slate-400">·</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{lang === "en" ? "Youth Wellbeing Companion" : "พื้นที่เพื่อสุขภาวะเยาวชน"}</span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                {lang === "en"
+                  ? "SafeSpace is an exploratory wellbeing tool. Results are not medical diagnoses. If you are in immediate distress, please call Hotline 1323 (Free 24/7)."
+                  : "SafeSpace เป็นพื้นที่สำรวจสุขภาวะเบื้องต้น ผลลัพธ์มิใช่การวินิจฉัยทางการแพทย์ หากต้องการความช่วยเหลือฉุกเฉิน กรุณาติดต่อสายด่วนสุขภาพจิต 1323 (ฟรี 24 ชม.)"}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-slate-600 dark:text-slate-400">
+              <Link to="/resources" className="hover:text-rose-500 transition-colors">
+                {t("nav.resources")} (1323)
+              </Link>
+              <span>·</span>
+              <Link to="/community" className="hover:text-rose-500 transition-colors">
+                {t("nav.community")}
+              </Link>
+              <span>·</span>
+              <a href={`${import.meta.env.BASE_URL}about.html`} className="hover:text-rose-500 transition-colors">
+                {lang === "en" ? "About Project" : "เกี่ยวกับโครงการ"}
+              </a>
+              <span>·</span>
+              <Link to="/contact-admin" className="hover:text-rose-500 transition-colors">
+                {lang === "en" ? "Contact Admin" : "ติดต่อผู้ดูแล"}
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-8 pt-4 border-t border-slate-100 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
+            <span>© {new Date().getFullYear()} SafeSpace by phoomth1407. Non-commercial Attribution License.</span>
+            <span>{lang === "en" ? "Take care of your heart every day ❤️" : "ดูแลใจตัวเองในทุกๆ วันนะ ❤️"}</span>
+          </div>
         </div>
       </footer>
 
