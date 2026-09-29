@@ -237,11 +237,23 @@ export default function Preloader({ onComplete }) {
     }
 
     let audioCtx = null;
+    let masterGain = null;
+    let compressor = null;
 
     function getAudioContext() {
       if (!audioCtx) {
         try {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          masterGain = audioCtx.createGain();
+          masterGain.gain.value = 2.4;
+          compressor = audioCtx.createDynamicsCompressor();
+          compressor.threshold.value = -18;
+          compressor.knee.value = 12;
+          compressor.ratio.value = 4;
+          compressor.attack.value = 0.003;
+          compressor.release.value = 0.18;
+          masterGain.connect(compressor);
+          compressor.connect(audioCtx.destination);
         } catch {
           return null;
         }
@@ -250,10 +262,16 @@ export default function Preloader({ onComplete }) {
       return audioCtx;
     }
 
-    function playTone(freq, dur, type = "sine", vol = .06, delay = 0) {
+    function outputNode() {
+      const ctx = getAudioContext();
+      return ctx && masterGain ? masterGain : null;
+    }
+
+    function playTone(freq, dur, type = "sine", vol = .085, delay = 0) {
       if (!soundOnRef.current) return;
       const ctx = getAudioContext();
-      if (!ctx) return;
+      const out = outputNode();
+      if (!ctx || !out) return;
       const now = ctx.currentTime + delay;
       const o = ctx.createOscillator();
       const g = ctx.createGain();
@@ -262,7 +280,7 @@ export default function Preloader({ onComplete }) {
       g.gain.setValueAtTime(.0001, now);
       g.gain.exponentialRampToValueAtTime(vol, now + .015);
       g.gain.exponentialRampToValueAtTime(.0001, now + dur);
-      o.connect(g).connect(ctx.destination);
+      o.connect(g).connect(out);
       o.start(now);
       o.stop(now + dur);
     }
@@ -270,17 +288,18 @@ export default function Preloader({ onComplete }) {
     function playWhoosh() {
       if (!soundOnRef.current) return;
       const ctx = getAudioContext();
-      if (!ctx) return;
+      const out = outputNode();
+      if (!ctx || !out) return;
       const now = ctx.currentTime;
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.type = "sine";
       o.frequency.setValueAtTime(180, now);
-      o.frequency.exponentialRampToValueAtTime(720, now + .48);
+      o.frequency.exponentialRampToValueAtTime(820, now + .48);
       g.gain.setValueAtTime(.0001, now);
-      g.gain.exponentialRampToValueAtTime(.075, now + .08);
+      g.gain.exponentialRampToValueAtTime(.11, now + .08);
       g.gain.exponentialRampToValueAtTime(.0001, now + .5);
-      o.connect(g).connect(ctx.destination);
+      o.connect(g).connect(out);
       o.start(now);
       o.stop(now + .52);
     }
@@ -290,8 +309,8 @@ export default function Preloader({ onComplete }) {
       setSoundOn(true);
       const ctx = getAudioContext();
       if (!ctx) return;
-      playTone(440, .12, "sine", .05);
-      playTone(660, .16, "sine", .045, .08);
+      playTone(440, .12, "sine", .075);
+      playTone(660, .16, "sine", .065, .08);
     }
 
     function exit() {
@@ -366,8 +385,8 @@ export default function Preloader({ onComplete }) {
 
         if (progress >= 100) {
           pre.classList.add("preloader-ready");
-          playTone(660, .22, "sine", .055);
-          playTone(880, .34, "sine", .05, .14);
+          playTone(660, .22, "sine", .08);
+          playTone(880, .34, "sine", .075, .14);
           window.setTimeout(exit, 600);
           return;
         }
