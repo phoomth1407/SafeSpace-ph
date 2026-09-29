@@ -1,12 +1,14 @@
 # SafeSpace AI
 
-Last reviewed: 2026-09-20
+Last reviewed: 2026-09-30
 
 AI is used in a few parts of SafeSpace, but it is not the whole application. Some UI and assessment logic work without a remote AI provider.
 
 The main idea is to use AI for supportive analysis and text generation while keeping authentication, validation, rate limiting, and database permissions outside the model.
 
 ## Current AI functions
+
+The frontend also contains a non-remote local fallback path for the main assessment, so AI availability is not the only condition for displaying an assessment result.
 
 | Function | Version | What it does |
 | --- | ---: | --- |
