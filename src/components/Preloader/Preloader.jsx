@@ -19,10 +19,10 @@ export default function Preloader({ onComplete }) {
   const shieldRef = useRef(null);
   const cursorRef = useRef(null);
   const ringRef = useRef(null);
-  const soundOnRef = useRef(false);
+  const soundOnRef = useRef(true);
   const startedRef = useRef(false);
   const [gone, setGone] = useState(false);
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
 
   useEffect(() => {
     soundOnRef.current = soundOn;
@@ -237,23 +237,65 @@ export default function Preloader({ onComplete }) {
     }
 
     let audioCtx = null;
-    function playTone(freq, dur, type = "sine", vol = .05) {
-      if (!soundOnRef.current) return;
+
+    function getAudioContext() {
       if (!audioCtx) {
-        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        catch { return; }
+        try {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch {
+          return null;
+        }
       }
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = type; o.frequency.value = freq;
-      g.gain.setValueAtTime(.0001, audioCtx.currentTime);
-      g.gain.exponentialRampToValueAtTime(vol, audioCtx.currentTime + .01);
-      g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + dur);
-      o.connect(g).connect(audioCtx.destination);
-      o.start(); o.stop(audioCtx.currentTime + dur);
+      if (audioCtx.state === "suspended") void audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playTone(freq, dur, type = "sine", vol = .035, delay = 0) {
+      if (!soundOnRef.current) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime + delay;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, now);
+      g.gain.setValueAtTime(.0001, now);
+      g.gain.exponentialRampToValueAtTime(vol, now + .015);
+      g.gain.exponentialRampToValueAtTime(.0001, now + dur);
+      o.connect(g).connect(ctx.destination);
+      o.start(now);
+      o.stop(now + dur);
+    }
+
+    function playWhoosh() {
+      if (!soundOnRef.current) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(180, now);
+      o.frequency.exponentialRampToValueAtTime(720, now + .48);
+      g.gain.setValueAtTime(.0001, now);
+      g.gain.exponentialRampToValueAtTime(.03, now + .08);
+      g.gain.exponentialRampToValueAtTime(.0001, now + .5);
+      o.connect(g).connect(ctx.destination);
+      o.start(now);
+      o.stop(now + .52);
+    }
+
+    function enableSound() {
+      soundOnRef.current = true;
+      setSoundOn(true);
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      playTone(440, .12, "sine", .025);
+      playTone(660, .16, "sine", .02, .08);
     }
 
     function exit() {
+      playWhoosh();
       pre.classList.add("exiting");
       if (!isTouch && !reduced) {
         for (const p of particles) {
@@ -324,8 +366,8 @@ export default function Preloader({ onComplete }) {
 
         if (progress >= 100) {
           pre.classList.add("preloader-ready");
-          playTone(880, .4, "sine", .06);
-          window.setTimeout(() => playTone(1320, .5, "sine", .05), 120);
+          playTone(660, .22, "sine", .028);
+          playTone(880, .34, "sine", .024, .14);
           window.setTimeout(exit, 600);
           return;
         }
@@ -396,7 +438,14 @@ export default function Preloader({ onComplete }) {
 
       <button
         className={`sound-toggle${soundOn ? "" : " off"}`}
-        onClick={(e) => { e.stopPropagation(); setSoundOn((s) => !s); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!soundOnRef.current) enableSound();
+          else {
+            soundOnRef.current = false;
+            setSoundOn(false);
+          }
+        }}
         aria-label="Toggle sound"
         type="button"
       >
@@ -427,18 +476,11 @@ export default function Preloader({ onComplete }) {
         <div className="pre-center">
           <div className="shield-wrap" ref={shieldRef}>
             <div className="shield-glow" />
-            <svg className="shield" viewBox="0 0 24 24">
-              <defs>
-                <linearGradient id="safespace-preloader-gradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#4b7bff" />
-                  <stop offset="45%" stopColor="#8b5cf6" />
-                  <stop offset="75%" stopColor="#ff6b9d" />
-                  <stop offset="100%" stopColor="#34d3b5" />
-                </linearGradient>
-              </defs>
-              <path className="outline" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72 1.17 0 14.51 3.81 17 5a1 1 0 0 1 1 1z" />
-              <path className="check" d="m9 12 2 2 4-4" />
-            </svg>
+            <img
+              className="safespace-app-icon"
+              src={`${import.meta.env.BASE_URL}icons/safespace-icon.svg`}
+              alt="SafeSpace application icon"
+            />
           </div>
 
           <h1 className="pre-title">
