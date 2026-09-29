@@ -1,6 +1,6 @@
 # SafeSpace Architecture
 
-Last reviewed: 2026-09-20
+Last reviewed: 2026-09-30
 
 ## How the project is put together
 
@@ -85,6 +85,12 @@ Private/authenticated:
 - rate-limit state
 
 RLS is the database authorization boundary.
+
+## Application startup and navigation transitions
+
+The frontend now has two distinct transition layers. The first-open cinematic preloader is rendered from App.jsx before the HashRouter and records safespace:booted in sessionStorage when it completes. The separate RouteTransition component is rendered inside the router and watches pathname changes. This keeps cold-start presentation separate from in-app navigation.
+
+The preloader uses the repository SafeSpace icon, default-on sound state with browser autoplay limitations, desktop ambient/canvas effects, a lighter mobile path, and reduced-motion handling. Route transitions show the destination name, progress ring, SafeSpace mark, and top progress bar. See [docs/TRANSITIONS.md](TRANSITIONS.md).
 
 ## Deployment
 
