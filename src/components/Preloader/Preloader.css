@@ -2,7 +2,11 @@
 /* ============================================================
    PRELOADER
    ============================================================ */
-#preloader{ font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+#preloader{
+  --ink:#0b0b0f; --ink-soft:#5b5b66; --ink-mute:#a8a8b3; --line:#e7e7ec; --bg:#fcfcfd;
+  --blue:#4b7bff; --violet:#8b5cf6; --mint:#34d3b5; --rose:#ff6b9d;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-in-out:cubic-bezier(.76,0,.24,1); --ease-soft:cubic-bezier(.4,0,.2,1); --ease-back:cubic-bezier(.34,1.56,.64,1);
+  font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 
   position: fixed;
   inset: 0;
