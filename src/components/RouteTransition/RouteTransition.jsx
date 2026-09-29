@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "@/lib/i18n";
 import "./RouteTransition.css";
 
 const LABELS = {
@@ -26,8 +27,9 @@ const getRouteName = (pathname, lang) => {
 
 const RING_LEN = 176;
 
-export default function RouteTransition({ lang = "en" }) {
+export default function RouteTransition() {
   const { pathname } = useLocation();
+  const { lang } = useTranslation();
   const veilRef = useRef(null);
   const nameRef = useRef(null);
   const ringRef = useRef(null);
