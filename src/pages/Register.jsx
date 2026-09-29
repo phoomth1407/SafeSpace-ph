@@ -13,6 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
+import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 
 
 export default function Register() {
@@ -26,7 +27,7 @@ export default function Register() {
   const [otpCode, setOtpCode] = useState("");
   const [policyOpen, setPolicyOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
-  const [policyAcceptedThisVisit, setPolicyAcceptedThisVisit] = useState(false);
+  const [policyAcceptedThisVisit, setPolicyAcceptedThisVisit] = useState(() => hasAcceptedSafeSpacePolicy());
   const { t } = useTranslation();
 
   const requirePolicy = (action) => {
@@ -42,8 +43,7 @@ export default function Register() {
     action?.();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError("");
     if (password !== confirmPassword) {
       setError(t("auth.passwordMismatch"));
@@ -173,6 +173,7 @@ export default function Register() {
       subtitle={t("auth.registerSubtitle")}
       policyOpen={policyOpen}
       onPolicyAccept={continueAfterPolicy}
+      persistPolicyAcknowledgement
       onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); setPolicyAcceptedThisVisit(false); }}
       footer={
         <>
@@ -212,7 +213,7 @@ export default function Register() {
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(() => handleSubmit(e)); }} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); if (policyAcceptedThisVisit) handleSubmit(); else requirePolicy(handleSubmit); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">

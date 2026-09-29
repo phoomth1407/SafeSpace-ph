@@ -9,7 +9,25 @@ import {
   SAFESPACE_POLICY_LAST_UPDATED_TH,
 } from "@/lib/safespacePolicy";
 
-export default function SafeSpacePolicyModal({ open, onAccept, onClose }) {
+export const SAFESPACE_POLICY_STORAGE_KEY = "safespace_policy_acknowledged_version";
+
+export function hasAcceptedSafeSpacePolicy() {
+  try {
+    return window.localStorage.getItem(SAFESPACE_POLICY_STORAGE_KEY) === SAFESPACE_POLICY_VERSION;
+  } catch {
+    return false;
+  }
+}
+
+export function acknowledgeSafeSpacePolicy() {
+  try {
+    window.localStorage.setItem(SAFESPACE_POLICY_STORAGE_KEY, SAFESPACE_POLICY_VERSION);
+  } catch {
+    // Continue for this visit if browser storage is unavailable.
+  }
+}
+
+export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistAcknowledgement = false }) {
   const { lang } = useTranslation();
   const [atEnd, setAtEnd] = useState(false);
   const sections = lang === "en" ? SAFESPACE_POLICY_EN : SAFESPACE_POLICY_TH;
@@ -26,6 +44,7 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose }) {
 
   const handleAccept = () => {
     if (!atEnd) return;
+    if (persistAcknowledgement) acknowledgeSafeSpacePolicy();
     onAccept?.();
   };
 
