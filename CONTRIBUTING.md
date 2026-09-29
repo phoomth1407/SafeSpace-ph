@@ -35,6 +35,10 @@ The frontend only needs `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
 
 `legacy/` contains old Base44-era code. It is not the active backend.
 
+## Documentation and public introduction
+
+The repository includes technical Markdown documentation and a standalone project introduction at public/about.html. If a user-facing feature, policy, AI behavior, authentication flow, or security control changes, update the relevant documentation and the introduction page when its description becomes outdated.
+
 ## Making a change
 
 I try to keep changes small enough that it is easy to understand what broke if a test fails.
