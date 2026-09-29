@@ -9,25 +9,6 @@ import {
   SAFESPACE_POLICY_LAST_UPDATED_TH,
 } from "@/lib/safespacePolicy";
 
-export const SAFESPACE_POLICY_STORAGE_KEY = "safespace_policy_acknowledged_version";
-
-export function hasAcceptedSafeSpacePolicy() {
-  try {
-    return window.localStorage.getItem(SAFESPACE_POLICY_STORAGE_KEY) === SAFESPACE_POLICY_VERSION;
-  } catch {
-    return false;
-  }
-}
-
-export function acknowledgeSafeSpacePolicy() {
-  try {
-    window.localStorage.setItem(SAFESPACE_POLICY_STORAGE_KEY, SAFESPACE_POLICY_VERSION);
-  } catch {
-    // If storage is unavailable, the current auth action is still allowed after
-    // the user explicitly reaches the end and accepts this version.
-  }
-}
-
 export default function SafeSpacePolicyModal({ open, onAccept, onClose }) {
   const { lang } = useTranslation();
   const [atEnd, setAtEnd] = useState(false);
@@ -45,7 +26,6 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose }) {
 
   const handleAccept = () => {
     if (!atEnd) return;
-    acknowledgeSafeSpacePolicy();
     onAccept?.();
   };
 
