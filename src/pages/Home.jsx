@@ -17,9 +17,7 @@ import {
   ChevronDown,
   ChevronUp,
   Clock,
-  Shield,
   History as HistoryIcon,
-  Flame,
   Info,
 } from "lucide-react";
 import StatsDashboard from "@/components/StatsDashboard";
@@ -30,7 +28,6 @@ import WorryReleaseModal from "@/components/WorryReleaseModal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
 import MagneticButton from "@/components/MagneticButton";
-import WellnessIllustration from "@/components/WellnessIllustration";
 import ScenicBackdrop from "@/components/ScenicBackdrop";
 import { useTranslation } from "@/lib/i18n";
 
