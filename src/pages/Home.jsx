@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, BarChart3, Brain, ClipboardList, Headphones,
-  Heart, ShieldCheck, Sparkles, Users, Wind, Leaf, MessageCircle
+  Heart, ShieldCheck, Sparkles, Users, Wind, Leaf, MessageCircle,
+  Waves, Compass, Clock3
 } from "lucide-react";
 import StatsDashboard from "@/components/StatsDashboard";
 import MoodCheckInCard from "@/components/MoodCheckInCard";
@@ -11,39 +12,75 @@ import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
 import WorryReleaseModal from "@/components/WorryReleaseModal";
 import MagneticButton from "@/components/MagneticButton";
-import WellnessIllustration from "@/components/WellnessIllustration";
+import WellnessIllustration, { SoundIllustrationIcon } from "@/components/WellnessIllustration";
 import { useTranslation } from "@/lib/i18n";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
+const ease = [0.22, 1, 0.36, 1];
+
+const sectionMotion = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
 };
 
-function ToolTile({ icon: Icon, illustration, title, subtitle, badge, onClick, tone }) {
+function ToolTile({ icon: Icon, illustration, title, subtitle, badge, onClick, accent }) {
   return (
     <motion.button
-      variants={fadeUp}
+      variants={sectionMotion}
       onClick={onClick}
-      whileHover={{ y: -3 }}
+      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.985 }}
-      className={`group min-h-[132px] rounded-2xl border p-4 text-left transition-all bg-white dark:bg-slate-900/70 border-slate-200 dark:border-slate-800 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 ${tone}`}
+      className="home-tool group relative min-h-[148px] overflow-hidden rounded-[1.35rem] border p-4 text-left transition-all"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-slate-50 dark:bg-slate-950/50 p-1">
-          {illustration ? <WellnessIllustration type={illustration} /> : <Icon className="w-5 h-5 text-amber-500 m-auto mt-2.5" />}
+      <div className={`home-tool-glow ${accent}`} />
+      <div className="relative flex items-start justify-between gap-3">
+        <div className="home-tool-art h-12 w-12 overflow-hidden rounded-2xl border border-white/50 bg-white/70 p-0.5 shadow-sm dark:border-white/10 dark:bg-slate-950/50">
+          {illustration === "sound"
+            ? <SoundIllustrationIcon type="rain" className="h-full w-full" />
+            : <WellnessIllustration type={illustration} className="h-full w-full" />}
         </div>
-        <span className="text-[10px] px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+        <span className="rounded-full border border-slate-200/70 bg-white/75 px-2.5 py-1 text-[10px] font-semibold text-slate-500 shadow-sm dark:border-slate-700/70 dark:bg-slate-950/50 dark:text-slate-400">
           {badge}
         </span>
       </div>
-      <div className="mt-3 flex items-end justify-between gap-2">
+      <div className="relative mt-5 flex items-end justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">{title}</h3>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">{subtitle}</p>
+          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">{title}</h3>
+          <p className="mt-1 text-[11px] leading-4 text-slate-500 dark:text-slate-400">{subtitle}</p>
         </div>
-        <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 group-hover:translate-x-1 transition-transform" />
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/80 text-slate-400 shadow-sm transition-transform group-hover:translate-x-1 dark:bg-slate-950/70">
+          <ArrowRight className="h-4 w-4" />
+        </span>
       </div>
     </motion.button>
+  );
+}
+
+function SidePanel({ side, icon: Icon, title, body, illustration, children }) {
+  return (
+    <motion.aside
+      initial={{ opacity: 0, x: side === "left" ? -12 : 12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6, delay: 0.08, ease }}
+      className="home-side-panel hidden xl:flex"
+    >
+      <div className="home-side-card">
+        <div className="home-side-orbit" />
+        <div className="relative">
+          <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-violet-600 dark:text-violet-300">
+            <span className="grid h-7 w-7 place-items-center rounded-xl bg-violet-500/10">
+              <Icon className="h-3.5 w-3.5" />
+            </span>
+            SafeSpace
+          </div>
+          <div className="home-side-art">
+            <WellnessIllustration type={illustration} />
+          </div>
+          <h2 className="mt-5 text-base font-bold text-slate-900 dark:text-white">{title}</h2>
+          <p className="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400">{body}</p>
+          {children}
+        </div>
+      </div>
+    </motion.aside>
   );
 }
 
@@ -68,140 +105,243 @@ export default function Home() {
 
   const tools = [
     {
-      icon: Wind, illustration: "breath", title: t("breath.title"), subtitle: t("breath.subtitle"),
-      badge: t("home.tool.badge2"), onClick: () => setBreathingOpen(true), tone: "hover:border-sky-300/60 dark:hover:border-sky-500/30"
+      illustration: "breath", title: t("breath.title"), subtitle: t("breath.subtitle"),
+      badge: t("home.tool.badge2"), onClick: () => setBreathingOpen(true), accent: "home-tool-glow-sky"
     },
     {
-      icon: Leaf, illustration: "ground", title: t("ground.title"), subtitle: t("ground.subtitle"),
-      badge: t("home.tool.badge3"), onClick: () => setGroundingOpen(true), tone: "hover:border-emerald-300/60 dark:hover:border-emerald-500/30"
+      illustration: "ground", title: t("ground.title"), subtitle: t("ground.subtitle"),
+      badge: t("home.tool.badge3"), onClick: () => setGroundingOpen(true), accent: "home-tool-glow-emerald"
     },
     {
-      icon: MessageCircle, illustration: "worry", title: t("worry.title"), subtitle: t("worry.subtitle"),
-      badge: t("home.tool.interactive"), onClick: () => setWorryOpen(true), tone: "hover:border-violet-300/60 dark:hover:border-violet-500/30"
+      illustration: "worry", title: t("worry.title"), subtitle: t("worry.subtitle"),
+      badge: t("home.tool.interactive"), onClick: () => setWorryOpen(true), accent: "home-tool-glow-violet"
     },
   ];
 
   return (
-    <div className="home-page pb-8">
-      <section className="relative overflow-hidden rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/70 shadow-xl shadow-slate-200/30 dark:shadow-black/20">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-sky-50 dark:from-rose-950/20 dark:via-slate-950 dark:to-sky-950/20" />
-        <div className="relative p-5 md:p-7">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-            <div>
-              <div className="inline-flex items-center gap-2 text-[11px] font-medium text-rose-600 dark:text-rose-300">
-                <Heart className="w-3.5 h-3.5" fill="currentColor" />
-                {t("home.badge")}
+    <div className="home-page pb-10">
+      <div className="home-ambient" aria-hidden="true">
+        <div className="home-ambient-blob home-ambient-blob-a" />
+        <div className="home-ambient-blob home-ambient-blob-b" />
+        <div className="home-ambient-grid" />
+      </div>
+
+      <div className="home-layout">
+        <SidePanel
+          side="left"
+          icon={Wind}
+          illustration="breath"
+          title={lang === "en" ? "A slower moment" : "ช่วงเวลาที่ช้าลง"}
+          body={lang === "en"
+            ? "You do not need to solve everything at once. Start with one small step."
+            : "ไม่จำเป็นต้องแก้ทุกอย่างในครั้งเดียว เริ่มจากเรื่องเล็ก ๆ ก่อนก็ได้"}
+        >
+          <div className="mt-5 flex items-center gap-2 rounded-2xl border border-sky-100 bg-sky-50/70 px-3 py-2.5 text-[10px] font-medium text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-300">
+            <Waves className="h-3.5 w-3.5" />
+            {lang === "en" ? "Breathe at your own pace" : "หายใจในจังหวะของตัวเอง"}
+          </div>
+        </SidePanel>
+
+        <main className="home-main">
+          <motion.section
+            initial="hidden"
+            animate="show"
+            variants={sectionMotion}
+            className="home-hero"
+          >
+            <div className="home-hero-sheen" />
+            <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+              <div className="max-w-2xl">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-white/65 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-violet-700 shadow-sm dark:border-violet-500/20 dark:bg-slate-950/40 dark:text-violet-300">
+                  <Heart className="h-3.5 w-3.5" />
+                  {t("home.badge")}
+                </div>
+                <h1 className="text-[2rem] font-black leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.55rem] dark:text-white">
+                  {greeting}
+                </h1>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  {t("home.subtitle")}
+                </p>
               </div>
-              <h1 className="mt-2 text-2xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                {greeting}
-              </h1>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 max-w-xl">
-                {t("home.subtitle")}
-              </p>
+
+              <a
+                href="tel:1323"
+                className="home-help-pill shrink-0"
+                aria-label={t("home.hotline")}
+              >
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-300">
+                  <ShieldCheck className="h-4 w-4" />
+                </span>
+                <span>
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                    {lang === "en" ? "Need urgent support?" : "ต้องการความช่วยเหลือด่วน?"}
+                  </span>
+                  <span className="mt-0.5 block text-xs font-bold text-slate-800 dark:text-slate-100">{t("home.hotline")}</span>
+                </span>
+              </a>
             </div>
-            <a
-              href="tel:1323"
-              className="shrink-0 inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/15 transition-colors"
+
+            <div className="relative mt-6 grid gap-3 sm:grid-cols-[1fr_auto]">
+              <MoodCheckInCard compact />
+              <div className="hidden min-w-[155px] rounded-2xl border border-white/70 bg-white/55 p-4 shadow-sm sm:block dark:border-slate-700/60 dark:bg-slate-950/30">
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-300">
+                  <Compass className="h-4 w-4" />
+                </div>
+                <p className="mt-3 text-xs font-bold text-slate-800 dark:text-slate-100">
+                  {lang === "en" ? "One step is enough" : "ทีละก้าวก็เพียงพอ"}
+                </p>
+                <p className="mt-1 text-[10px] leading-4 text-slate-500 dark:text-slate-400">
+                  {lang === "en" ? "Check in whenever it feels useful." : "กลับมาเช็กอินเมื่อรู้สึกว่าอยากทำ"}
+                </p>
+              </div>
+            </div>
+          </motion.section>
+
+          <div className="mt-5 grid gap-5 lg:grid-cols-[1.12fr_.88fr]">
+            <motion.section
+              initial="hidden"
+              animate="show"
+              variants={sectionMotion}
+              className="home-assessment"
             >
-              <ShieldCheck className="w-4 h-4" />
-              {t("home.hotline")}
-            </a>
-          </div>
-        </div>
-      </section>
+              <div className="home-assessment-art">
+                <WellnessIllustration type="worry" />
+              </div>
+              <div className="relative z-10 max-w-[68%] sm:max-w-[62%]">
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-600 dark:text-rose-300">
+                  {t("home.mainCheckin.eyebrow")}
+                </span>
+                <h2 className="mt-2 text-xl font-black tracking-tight text-slate-950 sm:text-2xl dark:text-white">
+                  {t("home.mainCheckin.title")}
+                </h2>
+                <p className="mt-2 text-xs leading-5 text-slate-600 sm:text-sm dark:text-slate-400">
+                  {t("home.mainCheckin.desc")}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                  <span className="rounded-full border border-white/70 bg-white/65 px-3 py-1.5 dark:border-slate-700/60 dark:bg-slate-950/40">{t("home.mainCheckin.time")}</span>
+                  <span className="rounded-full border border-white/70 bg-white/65 px-3 py-1.5 dark:border-slate-700/60 dark:bg-slate-950/40">{t("home.mainCheckin.private")}</span>
+                </div>
+                <MagneticButton>
+                  <Link
+                    to="/assessment"
+                    className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
+                  >
+                    <ClipboardList className="h-4 w-4" />
+                    {t("home.cta.assessment")}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </MagneticButton>
+              </div>
+            </motion.section>
 
-      <div className="mt-5">
-        <MoodCheckInCard compact />
-      </div>
+            <motion.section
+              initial="hidden"
+              animate="show"
+              variants={sectionMotion}
+              className="home-tools-panel"
+            >
+              <div className="relative flex items-end justify-between gap-3">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-600 dark:text-sky-300">{t("home.tools.eyebrow")}</span>
+                  <h2 className="mt-1 text-lg font-black tracking-tight text-slate-950 dark:text-white">{t("home.tools.title")}</h2>
+                </div>
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-300">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+              </div>
+              <motion.div
+                initial="hidden"
+                animate="show"
+                variants={{ show: { transition: { staggerChildren: 0.055 } } }}
+                className="relative mt-4 grid grid-cols-2 gap-2.5"
+              >
+                {tools.map((tool) => <ToolTile key={tool.title} {...tool} />)}
+                <ToolTile
+                  illustration="sound"
+                  title={t("sound.title")}
+                  subtitle={t("sound.subtitle")}
+                  badge={t("home.tool.live")}
+                  onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))}
+                  accent="home-tool-glow-amber"
+                />
+              </motion.div>
+            </motion.section>
+          </div>
 
-      <div className="mt-5 grid lg:grid-cols-[1.05fr_.95fr] gap-5">
-        <motion.section
-          initial="hidden" animate="show" variants={fadeUp}
-          className="rounded-3xl border border-rose-200/70 dark:border-rose-500/15 bg-gradient-to-br from-rose-50 to-white dark:from-rose-950/20 dark:to-slate-950 p-5 md:p-6"
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <span className="text-[10px] uppercase tracking-[0.16em] font-semibold text-rose-500">{t("home.mainCheckin.eyebrow")}</span>
-              <h2 className="mt-2 text-xl font-bold text-slate-900 dark:text-white">{t("home.mainCheckin.title")}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{t("home.mainCheckin.desc")}</p>
-            </div>
-            <div className="hidden sm:flex w-11 h-11 rounded-2xl bg-white dark:bg-slate-900 items-center justify-center shadow-sm">
-              <Brain className="w-5 h-5 text-rose-500" />
-            </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-            <span className="rounded-full bg-white/80 dark:bg-slate-900/70 px-3 py-1.5">{t("home.mainCheckin.time")}</span>
-            <span className="rounded-full bg-white/80 dark:bg-slate-900/70 px-3 py-1.5">{t("home.mainCheckin.private")}</span>
-          </div>
-          <MagneticButton>
-            <Link to="/assessment" className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 transition-colors">
-              <ClipboardList className="w-4 h-4" />
-              {t("home.cta.assessment")}
-              <ArrowRight className="w-4 h-4" />
+          <section className="mt-5 grid gap-4 md:grid-cols-[1fr_1fr]">
+            <Link to="/community" className="home-secondary-card group">
+              <div className="flex items-start justify-between gap-4">
+                <span className="home-secondary-icon bg-sky-500/10 text-sky-600 dark:text-sky-300">
+                  <Users className="h-5 w-5" />
+                </span>
+                <ArrowRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-1" />
+              </div>
+              <h2 className="mt-4 text-base font-black text-slate-950 dark:text-white">{t("home.community.title")}</h2>
+              <p className="mt-1 max-w-md text-xs leading-5 text-slate-500 dark:text-slate-400">{t("home.community.desc")}</p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-sky-600 dark:text-sky-300">
+                <MessageCircle className="h-3.5 w-3.5" />
+                {lang === "en" ? "Open community" : "เข้าสู่ชุมชน"}
+              </span>
             </Link>
-          </MagneticButton>
-        </motion.section>
 
-        <motion.section
-          initial="hidden" animate="show" variants={fadeUp}
-          className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-5 md:p-6"
-        >
-          <div className="flex items-center justify-between mb-4">
+            <button onClick={() => setInsightsOpen((v) => !v)} className="home-secondary-card text-left">
+              <div className="flex items-start justify-between gap-4">
+                <span className="home-secondary-icon bg-violet-500/10 text-violet-600 dark:text-violet-300">
+                  <BarChart3 className="h-5 w-5" />
+                </span>
+                <ArrowRight className={`h-4 w-4 text-slate-400 transition-transform ${insightsOpen ? "rotate-90" : ""}`} />
+              </div>
+              <h2 className="mt-4 text-base font-black text-slate-950 dark:text-white">{t("home.insights.title")}</h2>
+              <p className="mt-1 max-w-md text-xs leading-5 text-slate-500 dark:text-slate-400">{t("home.insights.desc")}</p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-violet-600 dark:text-violet-300">
+                <Clock3 className="h-3.5 w-3.5" />
+                {insightsOpen
+                  ? (lang === "en" ? "Hide insights" : "ซ่อนข้อมูล")
+                  : (lang === "en" ? "View insights" : "ดูข้อมูล")}
+              </span>
+              <AnimatePresence initial={false}>
+                {insightsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3, ease }}
+                    className="mt-4 overflow-hidden border-t border-slate-200/70 pt-4 dark:border-slate-800"
+                  >
+                    <StatsDashboard />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+          </section>
+
+          <section className="mt-5 flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white/60 px-5 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/40 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="text-[10px] uppercase tracking-[0.16em] font-semibold text-sky-500">{t("home.tools.eyebrow")}</span>
-              <h2 className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{t("home.tools.title")}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t("home.about.hint")}</p>
+              <a href={`${import.meta.env.BASE_URL}about.html`} className="text-sm font-bold text-slate-800 hover:underline dark:text-slate-200">
+                {t("home.about.button")}
+              </a>
             </div>
-            <Sparkles className="w-5 h-5 text-sky-400" />
+            <span className="text-[10px] font-medium text-slate-400">
+              {lang === "en" ? "SafeSpace school project" : "โครงการ SafeSpace สำหรับงานโรงเรียน"}
+            </span>
+          </section>
+        </main>
+
+        <SidePanel
+          side="right"
+          icon={Leaf}
+          illustration="ground"
+          title={lang === "en" ? "Small things count" : "เรื่องเล็ก ๆ ก็สำคัญ"}
+          body={lang === "en"
+            ? "Ground yourself, notice what is around you, and give yourself a little space."
+            : "ลองกลับมาอยู่กับสิ่งรอบตัว สังเกตสิ่งที่เกิดขึ้น และให้พื้นที่กับตัวเองสักนิด"}
+        >
+          <div className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50/70 px-3 py-2.5 text-[10px] font-medium leading-4 text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-300">
+            {lang === "en" ? "There is no perfect way to feel." : "ไม่มีวิธีที่ถูกต้องเพียงวิธีเดียวในการรู้สึก"}
           </div>
-          <motion.div variants={{ show: { transition: { staggerChildren: 0.06 } } }} initial="hidden" animate="show" className="grid grid-cols-2 gap-2.5">
-            {tools.map((tool) => <ToolTile key={tool.title} {...tool} />)}
-            <ToolTile
-              icon={Headphones}
-              illustration="sound"
-              title={t("sound.title")}
-              subtitle={t("sound.subtitle")}
-              badge={t("home.tool.live")}
-              onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))}
-              tone="hover:border-amber-300/60 dark:hover:border-amber-500/30"
-            />
-          </motion.div>
-        </motion.section>
+        </SidePanel>
       </div>
-
-      <section className="mt-5 grid md:grid-cols-2 gap-4">
-        <Link to="/community" className="group rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-5 hover:-translate-y-0.5 transition-transform">
-          <div className="flex items-start justify-between gap-4">
-            <div className="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center">
-              <Users className="w-5 h-5 text-sky-500" />
-            </div>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-          </div>
-          <h2 className="mt-4 text-base font-semibold text-slate-900 dark:text-white">{t("home.community.title")}</h2>
-          <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{t("home.community.desc")}</p>
-        </Link>
-
-        <button onClick={() => setInsightsOpen((v) => !v)} className="text-left rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
-          <div className="flex items-start justify-between gap-4">
-            <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-violet-500" />
-            </div>
-            <ArrowRight className={`w-4 h-4 text-slate-400 transition-transform ${insightsOpen ? "rotate-90" : ""}`} />
-          </div>
-          <h2 className="mt-4 text-base font-semibold text-slate-900 dark:text-white">{t("home.insights.title")}</h2>
-          <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{t("home.insights.desc")}</p>
-          {insightsOpen && <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800"><StatsDashboard /></div>}
-        </button>
-      </section>
-
-      <section className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 px-5 py-4">
-        <div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">{t("home.about.hint")}</p>
-          <a href={`${import.meta.env.BASE_URL}about.html`} className="text-sm font-semibold text-slate-800 dark:text-slate-200 hover:underline">
-            {t("home.about.button")}
-          </a>
-        </div>
-        <span className="text-[10px] text-slate-400">{lang === "en" ? "SafeSpace school project" : "โครงการ SafeSpace สำหรับงานโรงเรียน"}</span>
-      </section>
 
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
