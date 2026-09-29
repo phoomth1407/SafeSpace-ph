@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientInstance } from '@/lib/query-client';
@@ -178,14 +178,14 @@ export default function App() {
     }
   });
 
-  const handleBootComplete = () => {
+  const handleBootComplete = useCallback(() => {
     try {
       sessionStorage.setItem("safespace_boot_seen", "1");
     } catch {
       // Continue normally if session storage is unavailable.
     }
     setBooted(true);
-  };
+  }, []);
 
   return (
     <>
