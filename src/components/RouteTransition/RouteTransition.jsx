@@ -27,6 +27,9 @@ export default function RouteTransition({ lang = "en" }) {
   const barRef = useRef(null);
   const fillRef = useRef(null);
   const first = useRef(true);
+  const langRef = useRef(lang);
+
+  useEffect(() => { langRef.current = lang; }, [lang]);
 
   useEffect(() => {
     if (first.current) { first.current = false; return undefined; }
@@ -38,7 +41,7 @@ export default function RouteTransition({ lang = "en" }) {
     if (!veil || !ring || !fill || !bar) return undefined;
 
     const label = getLabel(pathname);
-    nameRef.current.textContent = lang === "th" ? label.th : label.en;
+    nameRef.current.textContent = langRef.current === "th" ? label.th : label.en;
 
     ring.style.transition = "none";
     ring.style.strokeDashoffset = "176";
@@ -71,7 +74,7 @@ export default function RouteTransition({ lang = "en" }) {
     }, 1220);
 
     return () => [t1, t2, t3, t4].forEach(window.clearTimeout);
-  }, [pathname, lang]);
+  }, [pathname]);
 
   return (
     <>
