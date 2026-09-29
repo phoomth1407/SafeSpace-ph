@@ -19,6 +19,10 @@ import {
   Clock,
   History as HistoryIcon,
   Info,
+  Sunrise,
+  Sun,
+  Sunset,
+  Moon,
 } from "lucide-react";
 import StatsDashboard from "@/components/StatsDashboard";
 import MoodCheckInCard from "@/components/MoodCheckInCard";
@@ -35,20 +39,20 @@ function getGreeting(lang) {
   const hour = new Date().getHours();
   if (lang === "en") {
     if (hour >= 5 && hour < 12)
-      return { title: "Good morning", icon: "🌅", message: "Start your day with a calm mind and gentle breath." };
+      return { title: "Good morning", icon: Sunrise, message: "Start your day with a calm mind and gentle breath." };
     if (hour >= 12 && hour < 17)
-      return { title: "Good afternoon", icon: "☀️", message: "Take a pause in your day to check in with yourself." };
+      return { title: "Good afternoon", icon: Sun, message: "Take a pause in your day to check in with yourself." };
     if (hour >= 17 && hour < 21)
-      return { title: "Good evening", icon: "🌇", message: "How was your day? Let your body and mind unwind." };
-    return { title: "Good night", icon: "🌙", message: "Set down the worries of the day and rest gently." };
+      return { title: "Good evening", icon: Sunset, message: "How was your day? Let your body and mind unwind." };
+    return { title: "Good night", icon: Moon, message: "Set down the worries of the day and rest gently." };
   } else {
     if (hour >= 5 && hour < 12)
-      return { title: "อรุณสวัสดิ์", icon: "🌅", message: "เริ่มต้นวันใหม่อย่างอ่อนโยนและใจดีกับตัวเองนะ" };
+      return { title: "อรุณสวัสดิ์", icon: Sunrise, message: "เริ่มต้นวันใหม่อย่างอ่อนโยนและใจดีกับตัวเองนะ" };
     if (hour >= 12 && hour < 17)
-      return { title: "สวัสดีตอนบ่าย", icon: "☀️", message: "พักสักนิดระหว่างวัน เพื่อดูแลใจและเติมพลัง" };
+      return { title: "สวัสดีตอนบ่าย", icon: Sun, message: "พักสักนิดระหว่างวัน เพื่อดูแลใจและเติมพลัง" };
     if (hour >= 17 && hour < 21)
-      return { title: "สวัสดีตอนเย็น", icon: "🌇", message: "วันนี้เป็นอย่างไรบ้าง? มาผ่อนคลายความเหนื่อยล้ากันนะ" };
-    return { title: "ราตรีสวัสดิ์", icon: "🌙", message: "คืนนี้วางเรื่องหนักใจลง แล้วพักผ่อนให้สบายใจนะ" };
+      return { title: "สวัสดีตอนเย็น", icon: Sunset, message: "วันนี้เป็นอย่างไรบ้าง? มาผ่อนคลายความเหนื่อยล้ากันนะ" };
+    return { title: "ราตรีสวัสดิ์", icon: Moon, message: "คืนนี้วางเรื่องหนักใจลง แล้วพักผ่อนให้สบายใจนะ" };
   }
 }
 
@@ -69,6 +73,7 @@ export default function Home() {
 
   const greeting = useMemo(() => getGreeting(lang), [lang]);
   const formattedDate = useMemo(() => getFormattedDate(lang), [lang]);
+  const GreetingIcon = greeting.icon;
 
   const handleOpenSounds = () => {
     window.dispatchEvent(new Event("safespace:open-sounds"));
@@ -88,7 +93,7 @@ export default function Home() {
           </div>
           <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-0.5 flex items-center gap-2">
             <span>{greeting.title}</span>
-            <span className="text-2xl">{greeting.icon}</span>
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-white/70 text-sky-500 shadow-sm ring-1 ring-slate-200/70 dark:bg-slate-900/70 dark:text-sky-300 dark:ring-slate-800/70" aria-hidden="true"><GreetingIcon className="h-5 w-5" strokeWidth={1.8} /></span>
           </h1>
           <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
             {greeting.message}
