@@ -166,16 +166,30 @@ export default function Community() {
   const filteredPosts = filter === "all" ? userPosts : userPosts.filter((p) => p.category === filter);
   const sortedPosts = [...filteredPosts].sort((a, b) => (b.bumps || 0) - (a.bumps || 0));
 
+  const WellnessIcon = ({ type, className = "h-5 w-5" }) => {
+    const common = { className, viewBox: "0 0 48 48", fill: "none", xmlns: "http://www.w3.org/2000/svg", "aria-hidden": "true" };
+    const stroke = { stroke: "currentColor", strokeWidth: 2.4, strokeLinecap: "round", strokeLinejoin: "round" };
+    if (type === "breath") return <svg {...common}><path d="M7 18h20c5 0 7-2.4 7-5.5 0-3-2.4-5.5-5.5-5.5-2.7 0-4.7 1.5-5.5 3.7" {...stroke}/><path d="M7 26h28c4.5 0 7 2.1 7 5.2 0 3-2.3 5.3-5.4 5.3-2.5 0-4.5-1.4-5.3-3.5" {...stroke}/><path d="M7 34h14" {...stroke}/><circle cx="38" cy="11" r="2" fill="currentColor" opacity=".2"/></svg>;
+    if (type === "ground") return <svg {...common}><path d="M24 39V18" {...stroke}/><path d="M24 25c-7-1-11-5.3-11-12 7.3.2 11.5 4 11.5 10.5" fill="currentColor" opacity=".12"/><path d="M24 25c-7-1-11-5.3-11-12 7.3.2 11.5 4 11.5 10.5" {...stroke}/><path d="M24 31c1.5-7 6-10.8 13-10.5-.7 7.2-5 11-13 12" fill="currentColor" opacity=".12"/><path d="M24 31c1.5-7 6-10.8 13-10.5-.7 7.2-5 11-13 12" {...stroke}/><path d="M15 39h18" {...stroke} opacity=".45"/></svg>;
+    return <svg {...common}><path d="M8 25h6l7 6V17l-7 6H8v2Z" fill="currentColor" opacity=".12"/><path d="M8 25h6l7 6V17l-7 6H8v2Z" {...stroke}/><path d="M28 20c4 2.5 4 5.5 0 8" {...stroke}/><path d="M34 16c7 5 7 11 0 16" {...stroke}/><path d="M39 12c10 7.5 10 16.5 0 24" {...stroke} opacity=".35"/></svg>;
+  };
+
   const renderForm = (isAnnounce) => (
-    <div className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800 space-y-3">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-slate-200 flex items-center gap-1.5">
-          {isAnnounce ? <Megaphone className="w-4 h-4 text-amber-300" /> : <PenLine className="w-4 h-4" />}
-          {isAnnounce ? t("community.postAnnouncement") : t("community.writeTitle")}
-        </span>
+    <div className="community-composer">
+      <div className="community-composer-head">
+        <div className="community-composer-title">
+          <span className="community-composer-icon">
+            {isAnnounce ? <Megaphone className="h-4 w-4" /> : <PenLine className="h-4 w-4" />}
+          </span>
+          <div>
+            <span>{isAnnounce ? t("community.postAnnouncement") : t("community.writeTitle")}</span>
+            <small>{isAnnounce ? "Share an important SafeSpace announcement." : "A safe place to put something into words."}</small>
+          </div>
+        </div>
         <button
           onClick={() => { setShowForm(false); setShowAnnounce(false); setContent(""); setError(null); }}
-          className="!text-slate-900 hover:!text-slate-700 dark:!text-slate-300 dark:hover:!text-white"
+          className="community-icon-button"
+          aria-label="Close"
         >
           <X className="w-4 h-4" />
         </button>
@@ -183,30 +197,28 @@ export default function Community() {
 
       {!isAnnounce && (
         <>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="community-category-picker">
             {Object.entries(categoryLabels).map(([key, labelObj]) => (
               <button
                 key={key}
                 onClick={() => setCategory(key)}
-                className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                  category === key ? "bg-slate-100 text-slate-900" : "bg-slate-800 text-slate-200 hover:text-white"
-                }`}
+                className={`community-category-chip ${category === key ? "is-active" : ""}`}
               >
                 {labelObj[lang] || labelObj.th}
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="community-composer-row">
             <input
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder={t("community.authorPlaceholder")}
               disabled={anon}
-              className="flex-1 text-sm text-slate-200 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:!text-slate-500 disabled:opacity-40"
+              className="community-field"
             />
-            <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none">
-              <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
-              {t("community.anonToggle")}
+            <label className="community-anon-toggle">
+              <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} />
+              <span>{t("community.anonToggle")}</span>
             </label>
           </div>
         </>
@@ -217,17 +229,17 @@ export default function Community() {
         onChange={(e) => setContent(e.target.value)}
         placeholder={t("community.contentPlaceholder")}
         rows={5}
-        className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 resize-none focus:outline-none focus:border-slate-600 placeholder:!text-slate-500"
+        className="community-field community-textarea"
       />
-      {error && <div className="text-xs text-red-400">{error}</div>}
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-slate-400">{content.length} {t("community.chars")}</span>
+      {error && <div className="community-form-error">{error}</div>}
+      <div className="community-composer-foot">
+        <span>{content.length} {t("community.chars")}</span>
         <button
           onClick={isAnnounce ? handleAnnounce : handleSubmit}
           disabled={submitting || content.trim().length < (isAnnounce ? 5 : 10)}
-          className="flex items-center gap-1.5 bg-slate-100 text-slate-900 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="community-submit-button"
         >
-          {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : isAnnounce ? <Megaphone className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+          {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : isAnnounce ? <Megaphone className="w-4 h-4" /> : <Send className="w-4 h-4" />}
           {submitting ? t("community.post") : isAnnounce ? t("community.postAnnouncement") : t("community.post")}
         </button>
       </div>
@@ -235,181 +247,172 @@ export default function Community() {
   );
 
   return (
-    <div className="community-page space-y-6 max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="community-hero text-center pt-2">
-        <h1 className="text-2xl font-bold text-slate-100">{t("community.title")}</h1>
-        <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">{t("community.subtitle")}</p>
-        <button
-          onClick={() => navigate("/contact-admin")}
-          className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 bg-slate-900/60 border border-slate-800 rounded-full px-3 py-1.5 hover:border-slate-700 transition-colors"
-        >
-          <Mail className="w-3.5 h-3.5" />
-          {t("contact.tab")}
-        </button>
-      </div>
-
-      {/* Quick wellbeing tools */}
-      {!focusedPostId && (
-        <div className="community-tools bg-white dark:bg-slate-900/60 rounded-2xl p-4 border border-slate-200 dark:border-slate-800">
-          <h2 className="text-sm font-semibold text-slate-100 mb-3">{t("community.quickTitle")}</h2>
-          <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => setBreathingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-sky-300 dark:hover:border-sky-500/30">
-              🫧 {t("community.quickBreath")}
-            </button>
-            <button onClick={() => setGroundingOpen(true)} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-emerald-300 dark:hover:border-emerald-500/30">
-              🌿 {t("community.quickGround")}
-            </button>
-            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-3 text-xs text-slate-700 dark:text-slate-200 hover:border-violet-300 dark:hover:border-violet-500/30">
-              🎧 {t("community.quickSound")}
+    <div className="community-page max-w-5xl mx-auto">
+      <section className="community-hero-card">
+        <div className="community-hero-glow community-hero-glow-a" />
+        <div className="community-hero-glow community-hero-glow-b" />
+        <div className="community-hero-copy">
+          <div className="community-eyebrow">
+            <span className="community-live-dot" />
+            SafeSpace Community
+          </div>
+          <h1>{t("community.title")}</h1>
+          <p>{t("community.subtitle")}</p>
+          <div className="community-hero-actions">
+            {isAuthenticated && !isBanned ? (
+              <button onClick={() => setShowForm(true)} className="community-primary-button">
+                <PenLine className="h-4 w-4" />
+                {t("community.writePlaceholder")}
+              </button>
+            ) : !isAuthenticated ? (
+              <button onClick={() => navigate("/login")} className="community-primary-button">
+                <LogIn className="h-4 w-4" />
+                {t("community.login")}
+              </button>
+            ) : null}
+            <button onClick={() => navigate("/contact-admin")} className="community-secondary-button">
+              <Mail className="h-4 w-4" />
+              {t("contact.tab")}
             </button>
           </div>
         </div>
-      )}
+        <div className="community-hero-art" aria-hidden="true">
+          <div className="community-art-orbit orbit-one" />
+          <div className="community-art-orbit orbit-two" />
+          <div className="community-art-core">
+            <div className="community-art-person person-one" />
+            <div className="community-art-person person-two" />
+            <div className="community-art-person person-three" />
+            <span className="community-art-heart"><Heart className="h-5 w-5" /></span>
+          </div>
+        </div>
+      </section>
 
-      {/* Banned notice */}
       {isAuthenticated && isBanned && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-center flex items-center justify-center gap-2">
-          <Ban className="w-4 h-4 text-red-400" />
-          <p className="text-sm text-red-300">{t("community.banned")}</p>
+        <div className="community-notice community-notice-danger">
+          <Ban className="w-4 h-4" />
+          <p>{t("community.banned")}</p>
         </div>
       )}
 
-      {/* Write button / form */}
-      {!isAuthenticated ? (
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-center">
-          <p className="text-sm text-amber-300 mb-3">
-            <LogIn className="w-4 h-4 inline mr-1" />
-            {t("community.loginPrompt")}
-          </p>
-          <div className="flex gap-2 justify-center">
-            <button onClick={() => navigate("/login")} className="bg-slate-100 text-slate-900 text-sm font-semibold px-4 py-2 rounded-full hover:bg-white transition-colors">
-              {t("community.login")}
+      {!focusedPostId && (
+        <section className="community-tools-card">
+          <div className="community-section-heading">
+            <div>
+              <span className="community-kicker">Take a small pause</span>
+              <h2>{t("community.quickTitle")}</h2>
+            </div>
+            <span className="community-section-count">3 tools</span>
+          </div>
+          <div className="community-tools-grid">
+            <button onClick={() => setBreathingOpen(true)} className="community-tool-card tool-breath">
+              <span className="community-tool-icon"><WellnessIcon type="breath" /></span>
+              <span><strong>{t("community.quickBreath")}</strong><small>Slow down and breathe.</small></span>
+              <ArrowLeft className="community-tool-arrow" />
             </button>
-            <button onClick={() => navigate("/register")} className="bg-slate-900 text-slate-200 text-sm font-semibold px-4 py-2 rounded-full border border-slate-700 hover:bg-slate-800 transition-colors">
-              {t("community.register")}
+            <button onClick={() => setGroundingOpen(true)} className="community-tool-card tool-ground">
+              <span className="community-tool-icon"><WellnessIcon type="ground" /></span>
+              <span><strong>{t("community.quickGround")}</strong><small>Come back to the present.</small></span>
+              <ArrowLeft className="community-tool-arrow" />
+            </button>
+            <button onClick={() => window.dispatchEvent(new Event("safespace:open-sounds"))} className="community-tool-card tool-sound">
+              <span className="community-tool-icon"><WellnessIcon type="sound" /></span>
+              <span><strong>{t("community.quickSound")}</strong><small>Listen to something calm.</small></span>
+              <ArrowLeft className="community-tool-arrow" />
             </button>
           </div>
-        </div>
-      ) : isBanned ? null : !showForm && !showAnnounce ? (
-        <div className="space-y-2">
-          <button
-            onClick={() => setShowForm(true)}
-            className="w-full bg-slate-900/60 rounded-2xl p-4 border border-dashed border-slate-700 text-slate-300 text-sm hover:border-slate-600 hover:text-white transition-colors flex items-center justify-center gap-2"
-          >
-            <PenLine className="w-4 h-4" />
-            {t("community.writePlaceholder")}
+        </section>
+      )}
+
+      {!isAuthenticated ? (
+        <section className="community-login-card">
+          <div className="community-login-icon"><LogIn className="w-5 h-5" /></div>
+          <div><h2>{t("community.loginPrompt")}</h2><p>Sign in to share your own experience with the community.</p></div>
+          <div className="community-login-actions">
+            <button onClick={() => navigate("/login")} className="community-primary-button">{t("community.login")}</button>
+            <button onClick={() => navigate("/register")} className="community-secondary-button">{t("community.register")}</button>
+          </div>
+        </section>
+      ) : isBanned ? null : showAnnounce ? (
+        renderForm(true)
+      ) : showForm ? (
+        renderForm(false)
+      ) : (
+        <section className="community-share-card">
+          <div className="community-share-avatar"><PenLine className="w-5 h-5" /></div>
+          <button onClick={() => setShowForm(true)} className="community-share-trigger">
+            <span>{t("community.writePlaceholder")}</span>
+            <small>{anon ? t("community.anonToggle") : authorName || t("community.anon")}</small>
           </button>
           {isAdmin && (
-            <button
-              onClick={() => setShowAnnounce(true)}
-              className="w-full bg-amber-500/10 rounded-2xl p-3 border border-amber-500/20 text-amber-300 text-sm hover:bg-amber-500/20 transition-colors flex items-center justify-center gap-2"
-            >
+            <button onClick={() => setShowAnnounce(true)} className="community-announce-button">
               <Megaphone className="w-4 h-4" />
               {t("community.postAnnouncement")}
             </button>
           )}
-        </div>
-      ) : showAnnounce ? (
-        renderForm(true)
-      ) : (
-        renderForm(false)
+        </section>
       )}
 
-      {/* Filter bar */}
       {!focusedPostId && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="flex items-center gap-1 text-xs text-slate-400">
-            <Filter className="w-3.5 h-3.5" />
-          </span>
-          <button
-            onClick={() => setFilter("all")}
-            className={`text-xs px-3 py-1 rounded-full transition-colors ${filter === "all" ? "bg-slate-100 text-slate-900" : "bg-slate-800 text-slate-200 hover:text-white"}`}
-          >
-            {t("community.filter.all")}
-          </button>
-          {Object.entries(categoryLabels).map(([key, labelObj]) => (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              className={`text-xs px-3 py-1 rounded-full transition-colors ${filter === key ? "bg-slate-100 text-slate-900" : "bg-slate-800 text-slate-200 hover:text-white"}`}
-            >
-              {labelObj[lang] || labelObj.th}
-            </button>
-          ))}
-        </div>
+        <section className="community-feed-section">
+          <div className="community-feed-header">
+            <div>
+              <span className="community-kicker">Community feed</span>
+              <h2>{t("community.title")}</h2>
+            </div>
+            <div className="community-filter-wrap">
+              <Filter className="w-4 h-4" />
+              <div className="community-filter-scroll">
+                <button onClick={() => setFilter("all")} className={`community-filter-chip ${filter === "all" ? "is-active" : ""}`}>{t("community.filter.all")}</button>
+                {Object.entries(categoryLabels).map(([key, labelObj]) => (
+                  <button key={key} onClick={() => setFilter(key)} className={`community-filter-chip ${filter === key ? "is-active" : ""}`}>
+                    {labelObj[lang] || labelObj.th}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       )}
 
-      {/* Focused post (comments open) */}
       {focusedPostId && (
-        <button
-          onClick={() => setFocusedPostId(null)}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
+        <button onClick={() => setFocusedPostId(null)} className="community-back-button">
+          <ArrowLeft className="w-4 h-4" />
           {t("community.back")}
         </button>
       )}
 
-      {/* Announcements (always at top, not filtered/focused) */}
       {!focusedPostId && announcements.length > 0 && (
-        <div className="space-y-3">
+        <div className="community-announcements">
+          <div className="community-feed-label"><Megaphone className="w-4 h-4" /> {t("community.announcement")}</div>
           {announcements.map((post) => (
-            <CommunityPostCard
-              key={post.id}
-              post={post}
-              isAdmin={isAdmin}
-              isOwner={user?.id === post.created_by_id}
-              user={user}
-              onDelete={handleDeletePost}
-              isAnnouncement
-            />
+            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} isAnnouncement />
           ))}
         </div>
       )}
 
-      {/* Posts list */}
-      <div className="space-y-3">
+      <div className="community-posts-list">
         {loading ? (
-          <div className="flex justify-center py-10">
-            <Loader2 className="w-6 h-6 text-slate-400 animate-spin" />
-          </div>
+          <div className="community-loading"><Loader2 className="w-7 h-7 animate-spin" /><span>Loading community…</span></div>
         ) : focusedPostId ? (
           (() => {
             const p = posts.find((x) => x.id === focusedPostId);
-            return p ? (
-              <CommunityPostCard
-                post={p}
-                isAdmin={isAdmin}
-                isOwner={user?.id === p.created_by_id}
-                user={user}
-                onDelete={handleDeletePost}
-                focused
-                onFocus={() => setFocusedPostId(null)}
-              />
-            ) : null;
+            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} focused onFocus={() => setFocusedPostId(null)} /> : null;
           })()
         ) : sortedPosts.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-3">
-              <Heart className="w-6 h-6 text-slate-400" />
-            </div>
-            <p className="text-sm text-slate-400">{t("community.empty")}</p>
+          <div className="community-empty">
+            <div className="community-empty-icon"><Heart className="w-6 h-6" /></div>
+            <h3>{t("community.empty")}</h3>
+            <p>Be the first person to share something here.</p>
+            {isAuthenticated && !isBanned && <button onClick={() => setShowForm(true)} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
           </div>
         ) : (
           sortedPosts.map((post) => (
-            <CommunityPostCard
-              key={post.id}
-              post={post}
-              isAdmin={isAdmin}
-              isOwner={user?.id === post.created_by_id}
-              user={user}
-              onDelete={handleDeletePost}
-              onFocus={() => setFocusedPostId(post.id)}
-            />
+            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onFocus={() => setFocusedPostId(post.id)} />
           ))
         )}
       </div>
+
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
     </div>
