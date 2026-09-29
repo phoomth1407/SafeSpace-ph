@@ -180,7 +180,7 @@ export default function App() {
 
   const handleBootComplete = useCallback(() => {
     try {
-      sessionStorage.setItem("safespace_boot_seen", "1");
+      sessionStorage.setItem("safespace:booted", "1");
     } catch {
       // Continue normally if session storage is unavailable.
     }
