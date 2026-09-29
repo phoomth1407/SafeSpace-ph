@@ -3,17 +3,12 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList,
-  Users,
   ArrowRight,
   Heart,
-  ShieldCheck,
   Sparkles,
   Brain,
   TrendingUp,
   Phone,
-  Wind,
-  Sprout,
-  Headphones,
   ChevronDown,
   ChevronUp,
   Clock,
