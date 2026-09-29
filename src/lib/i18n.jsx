@@ -366,6 +366,10 @@ const translations = {
     "rescat.general": "ทั่วไป",
     "rescat.emergency": "ฉุกเฉิน",
 
+    "footer.disclaimer": "พื้นที่สนับสนุนและแบบคัดกรองเบื้องต้นเพื่อการเรียนรู้ — ไม่ใช่การวินิจฉัยทางการแพทย์",
+    "footer.crisis": "หากต้องการความช่วยเหลือเร่งด่วน ติดต่อ",
+    "footer.copyright": "โครงการ SafeSpace สำหรับงานโรงเรียน",
+
     "theme.dark": "โหมดมืด",
     "theme.light": "โหมดสว่าง",
     "theme.toggle": "สลับธีม",
@@ -419,6 +423,8 @@ const translations = {
     "stats.prevalence": "ร้อยละความชุกของโรคซึมเศร้า",
     "stats.prevalenceTrend": "แนวโน้มเพิ่มขึ้น (น่ากังวล)",
     "stats.source": "ที่มา: กรมสุขภาพจิต (HDC) พ.ศ. 2565-2567",
+    "stats.latest": "ล่าสุด",
+    "stats.changeFrom2022": "จากปี 2565",
 
     "report.button": "รายงาน",
     "report.title": "เหตุผลในการรายงาน",
