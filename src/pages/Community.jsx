@@ -323,7 +323,7 @@ export default function Community() {
 
   return (
     <div className={`community-page ${introComplete ? "is-feed-mode" : "is-intro-mode"}`}>
-      <section className="community-hero-card">
+      {!introComplete && <section className="community-hero-card">
         <div className="community-hero-glow community-hero-glow-a" />
         <div className="community-hero-glow community-hero-glow-b" />
         <div className="community-hero-copy">
@@ -361,21 +361,7 @@ export default function Community() {
             <span className="community-art-heart"><Heart className="h-5 w-5" /></span>
           </div>
         </div>
-      </section>
-
-      {!introComplete ? (
-        <section className="community-intro-next">
-          <div>
-            <span className="community-intro-step">01 / 02</span>
-            <h2>พร้อมเข้าชุมชนเมื่อไหร่ กดถัดไปได้เลย</h2>
-            <p>อ่านโพสต์และประสบการณ์จากคนอื่นได้ก่อน ส่วนการโพสต์และแสดงความคิดเห็นจะมีขั้นตอนยืนยันเพิ่มเติม</p>
-          </div>
-          <button onClick={finishIntro} className="community-next-button">
-            ถัดไป
-            <ArrowLeft className="h-4 w-4 rotate-180" />
-          </button>
-        </section>
-      ) : null}
+      </section>}
 
       {introComplete && (
         <div className="community-feed-mode-content">
@@ -479,14 +465,14 @@ export default function Community() {
         ) : focusedPostId ? (
           (() => {
             const p = posts.find((x) => x.id === focusedPostId);
-            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} focused onFocus={() => setFocusedPostId(null)} /> : null;
+            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} focused onFocus={() => setFocusedPostId(null)} onCommentIntent={requestComment} /> : null;
           })()
         ) : sortedPosts.length === 0 ? (
           <div className="community-empty">
             <div className="community-empty-icon"><Heart className="w-6 h-6" /></div>
             <h3>{t("community.empty")}</h3>
             
-            {isAuthenticated && !isBanned && <button onClick={() => setShowForm(true)} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
+            {isAuthenticated && !isBanned && <button onClick={requestPost} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
           </div>
         ) : (
           sortedPosts.map((post) => (
