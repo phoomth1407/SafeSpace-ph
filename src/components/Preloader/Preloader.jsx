@@ -19,10 +19,10 @@ export default function Preloader({ onComplete }) {
   const shieldRef = useRef(null);
   const cursorRef = useRef(null);
   const ringRef = useRef(null);
-  const soundOnRef = useRef(false);
+  const soundOnRef = useRef(true);
   const startedRef = useRef(false);
   const [gone, setGone] = useState(false);
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
 
   useEffect(() => {
     soundOnRef.current = soundOn;
@@ -476,18 +476,11 @@ export default function Preloader({ onComplete }) {
         <div className="pre-center">
           <div className="shield-wrap" ref={shieldRef}>
             <div className="shield-glow" />
-            <svg className="shield" viewBox="0 0 24 24">
-              <defs>
-                <linearGradient id="safespace-preloader-gradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#4b7bff" />
-                  <stop offset="45%" stopColor="#8b5cf6" />
-                  <stop offset="75%" stopColor="#ff6b9d" />
-                  <stop offset="100%" stopColor="#34d3b5" />
-                </linearGradient>
-              </defs>
-              <path className="outline" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-              <path className="check" d="m9 12 2 2 4-4" />
-            </svg>
+            <img
+              className="safespace-app-icon"
+              src={`${import.meta.env.BASE_URL}icons/safespace-icon.svg`}
+              alt="SafeSpace application icon"
+            />
           </div>
 
           <h1 className="pre-title">
