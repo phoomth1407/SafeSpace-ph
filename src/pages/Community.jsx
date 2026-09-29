@@ -30,6 +30,81 @@ export default function Community() {
   const [focusedPostId, setFocusedPostId] = useState(null);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
+  const [introComplete, setIntroComplete] = useState(() => {
+    try { return sessionStorage.getItem("safespace_community_intro_seen") === "1"; } catch { return false; }
+  });
+  const [accessModal, setAccessModal] = useState(null);
+  const [guestInfo, setGuestInfo] = useState(null);
+  const [policyOpen, setPolicyOpen] = useState(false);
+  const [policyScrolled, setPolicyScrolled] = useState(false);
+  const [policyAccepted, setPolicyAccepted] = useState(() => {
+    try { return sessionStorage.getItem("safespace_community_policy_accepted") === "1"; } catch { return false; }
+  });
+  const [pendingCommunityAction, setPendingCommunityAction] = useState(null);
+
+  const finishIntro = () => {
+    try { sessionStorage.setItem("safespace_community_intro_seen", "1"); } catch {}
+    setIntroComplete(true);
+  };
+
+  const openPolicyFor = (action) => {
+    if (policyAccepted) {
+      if (action.type === "post") setShowForm(true);
+      if (action.type === "comment") setFocusedPostId(action.postId);
+      return;
+    }
+    setPendingCommunityAction(action);
+    setPolicyScrolled(false);
+    setPolicyOpen(true);
+  };
+
+  const requestPost = () => {
+    if (!isAuthenticated) {
+      setAccessModal({ type: "post" });
+      return;
+    }
+    if (isBanned) return;
+    openPolicyFor({ type: "post" });
+  };
+
+  const requestComment = (postId) => {
+    if (!isAuthenticated) {
+      setAccessModal({ type: "comment", postId });
+      return;
+    }
+    if (isBanned) return;
+    openPolicyFor({ type: "comment", postId });
+  };
+
+  const continueAsGuest = () => {
+    const intent = accessModal;
+    setAccessModal(null);
+    setGuestInfo(intent);
+  };
+
+  const acknowledgeGuestInfo = () => {
+    const intent = guestInfo;
+    setGuestInfo(null);
+    if (intent?.type === "comment" && intent.postId) {
+      setFocusedPostId(intent.postId);
+    }
+  };
+
+  const acceptCommunityPolicy = () => {
+    if (!policyScrolled || !pendingCommunityAction) return;
+    try { sessionStorage.setItem("safespace_community_policy_accepted", "1"); } catch {}
+    setPolicyAccepted(true);
+    const action = pendingCommunityAction;
+    setPendingCommunityAction(null);
+    setPolicyOpen(false);
+    if (action.type === "post") setShowForm(true);
+    if (action.type === "comment") setFocusedPostId(action.postId);
+  };
+
+  const handlePolicyScroll = (event) => {
+    const el = event.currentTarget;
+    setPolicyScrolled(el.scrollTop + el.clientHeight >= el.scrollHeight - 12);
+  };
 
   const loadPosts = async () => {
     setLoading(true);
@@ -247,7 +322,7 @@ export default function Community() {
   );
 
   return (
-    <div className="community-page max-w-5xl mx-auto">
+    <div className={`community-page ${introComplete ? "is-feed-mode" : "is-intro-mode"}`}>
       <section className="community-hero-card">
         <div className="community-hero-glow community-hero-glow-a" />
         <div className="community-hero-glow community-hero-glow-b" />
@@ -260,7 +335,7 @@ export default function Community() {
           <p>{t("community.subtitle")}</p>
           <div className="community-hero-actions">
             {isAuthenticated && !isBanned ? (
-              <button onClick={() => setShowForm(true)} className="community-primary-button">
+              <button onClick={requestPost} className="community-primary-button">
                 <PenLine className="h-4 w-4" />
                 {t("community.writePlaceholder")}
               </button>
@@ -288,6 +363,22 @@ export default function Community() {
         </div>
       </section>
 
+      {!introComplete ? (
+        <section className="community-intro-next">
+          <div>
+            <span className="community-intro-step">01 / 02</span>
+            <h2>พร้อมเข้าชุมชนเมื่อไหร่ กดถัดไปได้เลย</h2>
+            <p>อ่านโพสต์และประสบการณ์จากคนอื่นได้ก่อน ส่วนการโพสต์และแสดงความคิดเห็นจะมีขั้นตอนยืนยันเพิ่มเติม</p>
+          </div>
+          <button onClick={finishIntro} className="community-next-button">
+            ถัดไป
+            <ArrowLeft className="h-4 w-4 rotate-180" />
+          </button>
+        </section>
+      ) : null}
+
+      {introComplete && (
+        <div className="community-feed-mode-content">
       {isAuthenticated && isBanned && (
         <div className="community-notice community-notice-danger">
           <Ban className="w-4 h-4" />
@@ -324,25 +415,16 @@ export default function Community() {
         </section>
       )}
 
-      {!isAuthenticated ? (
-        <section className="community-login-card">
-          <div className="community-login-icon"><LogIn className="w-5 h-5" /></div>
-          <div><h2>{t("community.loginPrompt")}</h2></div>
-          <div className="community-login-actions">
-            <button onClick={() => navigate("/login")} className="community-primary-button">{t("community.login")}</button>
-            <button onClick={() => navigate("/register")} className="community-secondary-button">{t("community.register")}</button>
-          </div>
-        </section>
-      ) : isBanned ? null : showAnnounce ? (
+      {isBanned ? null : showAnnounce ? (
         renderForm(true)
       ) : showForm ? (
         renderForm(false)
       ) : (
         <section className="community-share-card">
           <div className="community-share-avatar"><PenLine className="w-5 h-5" /></div>
-          <button onClick={() => setShowForm(true)} className="community-share-trigger">
+          <button onClick={requestPost} className="community-share-trigger">
             <span>{t("community.writePlaceholder")}</span>
-            <small>{anon ? t("community.anonToggle") : authorName || t("community.anon")}</small>
+            <small>{isAuthenticated ? (anon ? t("community.anonToggle") : authorName || t("community.anon")) : t("community.loginPrompt")}</small>
           </button>
           {isAdmin && (
             <button onClick={() => setShowAnnounce(true)} className="community-announce-button">
@@ -408,10 +490,64 @@ export default function Community() {
           </div>
         ) : (
           sortedPosts.map((post) => (
-            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onFocus={() => setFocusedPostId(post.id)} />
+            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onFocus={() => setFocusedPostId(post.id)} onCommentIntent={requestComment} />
           ))
         )}
       </div>
+
+        </div>
+      )}
+
+      {accessModal && (
+        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-access-title">
+          <div className="community-modal-backdrop" />
+          <div className="community-modal-card community-access-modal">
+            <div className="community-modal-icon"><LogIn className="h-5 w-5" /></div>
+            <span className="community-modal-kicker">SafeSpace Community</span>
+            <h2 id="community-access-title">{accessModal.type === "post" ? "อยากแบ่งปันกับชุมชนใช่ไหม?" : "อยากแสดงความคิดเห็นใช่ไหม?"}</h2>
+            <p>เข้าสู่ระบบเพื่อโพสต์หรือแสดงความคิดเห็น หรือเลือกดำเนินการต่อในฐานะแขกเพื่ออ่านเนื้อหาในชุมชน</p>
+            <div className="community-modal-actions">
+              <button onClick={() => navigate("/login")} className="community-primary-button"><LogIn className="h-4 w-4" />{t("community.login")}</button>
+              <button onClick={continueAsGuest} className="community-secondary-button">ดำเนินการต่อในฐานะแขก</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {guestInfo && (
+        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-guest-title">
+          <div className="community-modal-backdrop" />
+          <div className="community-modal-card">
+            <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
+            <span className="community-modal-kicker">SafeSpace Community</span>
+            <h2 id="community-guest-title">การใช้งานแบบ Guest</h2>
+            <p>ในโหมด Guest คุณสามารถอ่านโพสต์และดูเนื้อหาในชุมชนได้ แต่ต้องเข้าสู่ระบบก่อนจึงจะโพสต์หรือแสดงความคิดเห็นได้</p>
+            <button onClick={acknowledgeGuestInfo} className="community-primary-button w-full">ตกลง</button>
+          </div>
+        </div>
+      )}
+
+      {policyOpen && (
+        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-policy-title">
+          <div className="community-modal-backdrop" />
+          <div className="community-modal-card community-policy-modal">
+            <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
+            <span className="community-modal-kicker">SafeSpace Community</span>
+            <h2 id="community-policy-title">Community Policy</h2>
+            <p className="community-policy-lead">ก่อนโพสต์หรือแสดงความคิดเห็น กรุณาอ่านนโยบายชุมชนให้จบก่อน</p>
+            <div className="community-policy-scroll" onScroll={handlePolicyScroll}>
+              <section><h3>นโยบายชุมชน</h3><p>เนื้อหานโยบายฉบับเต็มจะถูกเพิ่มในส่วนนี้ภายหลัง ก่อนเปิดใช้งานชุมชนอย่างเป็นทางการ</p></section>
+              <section><h3>การใช้งาน</h3><p>ส่วนนี้เป็นพื้นที่สำหรับเตรียมแสดงข้อกำหนดเกี่ยวกับการโพสต์ การแสดงความคิดเห็น และการดูแลพื้นที่ชุมชน</p></section>
+              <section><h3>ความเป็นส่วนตัว</h3><p>ส่วนนี้จะอธิบายรายละเอียดเกี่ยวกับข้อมูล ชื่อที่แสดง และสิ่งที่ผู้ใช้งานควรระวังเมื่อแบ่งปันเนื้อหา</p></section>
+              <section><h3>การดูแลชุมชน</h3><p>ส่วนนี้จะอธิบายแนวทางการรายงาน การกลั่นกรอง และการจัดการเนื้อหาที่ไม่เป็นไปตามนโยบาย</p></section>
+              <section><h3>กำลังเตรียมนโยบายฉบับสมบูรณ์</h3><p>โปรดเลื่อนลงจนสุดเพื่อยืนยันว่าคุณได้อ่านส่วนนี้แล้ว เมื่อเพิ่มนโยบายจริงในภายหลัง กล่องนี้จะถูกแทนที่ด้วยเนื้อหาฉบับเต็ม</p></section>
+            </div>
+            <button onClick={acceptCommunityPolicy} disabled={!policyScrolled} className="community-primary-button w-full disabled:opacity-40 disabled:cursor-not-allowed">
+              {policyScrolled ? "ตกลงและดำเนินการต่อ" : "เลื่อนอ่านให้สุดก่อน"}
+            </button>
+          </div>
+        </div>
+      )}
 
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
