@@ -237,7 +237,7 @@ export default function Preloader({ onComplete }) {
     }
 
     let audioCtx = null;
-    function playTone(freq, dur, type = "sine", vol = .05) {
+    function getAudioContext() {\n      if (!audioCtx) {\n        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }\n        catch { return null; }\n      }\n      if (audioCtx.state === "suspended") void audioCtx.resume();\n      return audioCtx;\n    }\n\n    function playTone(freq, dur, type = "sine", vol = .04, delay = 0) {
       if (!soundOnRef.current) return;
       if (!audioCtx) {
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -396,7 +396,7 @@ export default function Preloader({ onComplete }) {
 
       <button
         className={`sound-toggle${soundOn ? "" : " off"}`}
-        onClick={(e) => { e.stopPropagation(); setSoundOn((s) => !s); }}
+        onClick={(e) => { e.stopPropagation(); if (!soundOnRef.current) enableSound(); else { soundOnRef.current = false; setSoundOn(false); } }}
         aria-label="Toggle sound"
         type="button"
       >
