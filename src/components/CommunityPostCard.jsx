@@ -20,7 +20,7 @@ function useIsPhone() {
   return isPhone;
 }
 
-function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncement, focused, onFocus }) {
+function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncement, focused, onFocus, onCommentIntent }) {
   const { t, lang } = useTranslation();
   const isPhone = useIsPhone();
   const Card = isPhone ? "div" : motion.div;
@@ -199,6 +199,7 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
         isAdmin={isAdmin}
         expanded={!!focused}
         onToggle={() => onFocus && onFocus(focused ? null : post.id)}
+        onCommentIntent={onCommentIntent}
       />
 
       <BanModal userId={banUserId} onClose={() => setBanUserId(null)} />
@@ -212,5 +213,6 @@ export default React.memo(CommunityPostCard, (prev, next) => (
   prev.isOwner === next.isOwner &&
   prev.user?.id === next.user?.id &&
   prev.isAnnouncement === next.isAnnouncement &&
-  prev.focused === next.focused
+  prev.focused === next.focused &&
+  prev.onCommentIntent === next.onCommentIntent
 ));
