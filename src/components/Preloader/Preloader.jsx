@@ -237,12 +237,13 @@ export default function Preloader({ onComplete }) {
     }
 
     let audioCtx = null;
-    function playTone(freq, dur, type = "sine", vol = .05) {
+    function playTone(freq, dur, type = "sine", vol = .035, delay = 0) {
       if (!soundOnRef.current) return;
       if (!audioCtx) {
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         catch { return; }
       }
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
       const o = audioCtx.createOscillator();
       const g = audioCtx.createGain();
       o.type = type; o.frequency.value = freq;
@@ -250,11 +251,43 @@ export default function Preloader({ onComplete }) {
       g.gain.exponentialRampToValueAtTime(vol, audioCtx.currentTime + .01);
       g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + dur);
       o.connect(g).connect(audioCtx.destination);
-      o.start(); o.stop(audioCtx.currentTime + dur);
+      o.start(audioCtx.currentTime + delay); o.stop(audioCtx.currentTime + delay + dur);
+    }
+
+    function playWhoosh(duration = .55) {
+      if (!soundOnRef.current) return;
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch { return; }
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(180, now);
+      o.frequency.exponentialRampToValueAtTime(720, now + duration);
+      g.gain.setValueAtTime(.0001, now);
+      g.gain.exponentialRampToValueAtTime(.028, now + .08);
+      g.gain.exponentialRampToValueAtTime(.0001, now + duration);
+      o.connect(g).connect(audioCtx.destination);
+      o.start(now);
+      o.stop(now + duration);
+    }
+
+    function enableSound() {
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch { return; }
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
+      playTone(392, .16, "sine", .025);
+      window.setTimeout(() => playTone(523.25, .22, "sine", .022), 100);
     }
 
     function exit() {
       pre.classList.add("exiting");
+      playWhoosh(.7);
       if (!isTouch && !reduced) {
         for (const p of particles) {
           const dx = p.x - W / 2, dy = p.y - H / 2;
@@ -282,6 +315,10 @@ export default function Preloader({ onComplete }) {
       if (started || startedRef.current) return;
       started = true;
       startedRef.current = true;
+      playWhoosh(.45);
+      window.setTimeout(() => playTone(523.25, .18, "sine", .022), 550);
+      window.setTimeout(() => playTone(659.25, .2, "sine", .024), 1100);
+      window.setTimeout(() => playTone(783.99, .24, "sine", .025), 1650);
       resize();
       spawnParticles(70);
       const t0 = performance.now();
@@ -324,7 +361,7 @@ export default function Preloader({ onComplete }) {
 
         if (progress >= 100) {
           pre.classList.add("preloader-ready");
-          playTone(880, .4, "sine", .06);
+          playTone(880, .32, "sine", .032);
           window.setTimeout(() => playTone(1320, .5, "sine", .05), 120);
           window.setTimeout(exit, 600);
           return;
@@ -396,7 +433,7 @@ export default function Preloader({ onComplete }) {
 
       <button
         className={`sound-toggle${soundOn ? "" : " off"}`}
-        onClick={(e) => { e.stopPropagation(); setSoundOn((s) => !s); }}
+        onClick={(e) => { e.stopPropagation(); setSoundOn((current) => { const next = !current; if (next) enableSound(); return next; }); }}
         aria-label="Toggle sound"
         type="button"
       >
@@ -436,7 +473,7 @@ export default function Preloader({ onComplete }) {
                   <stop offset="100%" stopColor="#34d3b5" />
                 </linearGradient>
               </defs>
-              <path className="outline" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72 1.17 0 14.51 3.81 17 5a1 1 0 0 1 1 1z" />
+              <path className="outline" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
               <path className="check" d="m9 12 2 2 4-4" />
             </svg>
           </div>
