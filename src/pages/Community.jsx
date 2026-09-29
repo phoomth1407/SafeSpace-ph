@@ -334,17 +334,16 @@ export default function Community() {
           <h1>{t("community.title")}</h1>
           <p>{t("community.subtitle")}</p>
           <div className="community-hero-actions">
-            {isAuthenticated && !isBanned ? (
-              <button onClick={requestPost} className="community-primary-button">
-                <PenLine className="h-4 w-4" />
-                {t("community.writePlaceholder")}
-              </button>
-            ) : !isAuthenticated ? (
+            {!isAuthenticated && (
               <button onClick={() => navigate("/login")} className="community-primary-button">
                 <LogIn className="h-4 w-4" />
                 {t("community.login")}
               </button>
-            ) : null}
+            )}
+            <button onClick={finishIntro} className="community-primary-button">
+              {t("community.next")}
+              <ArrowLeft className="h-4 w-4 rotate-180" />
+            </button>
             <button onClick={() => navigate("/contact-admin")} className="community-secondary-button">
               <Mail className="h-4 w-4" />
               {t("contact.tab")}
