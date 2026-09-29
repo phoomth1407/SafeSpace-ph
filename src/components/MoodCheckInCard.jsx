@@ -207,7 +207,7 @@ export default function MoodCheckInCard() {
               {t("mood.factorTitle")}
             </label>
             {selected && (
-              <span className="text-xs text-slate-700 dark:text-slate-300 italic font-medium">
+              <span className="text-xs text-slate-500 dark:text-slate-400 italic">
                 "{t(`mood.insight.${mood}`)}"
               </span>
             )}
@@ -238,7 +238,7 @@ export default function MoodCheckInCard() {
                 type="button"
                 onClick={save}
                 disabled={saved && !isEditing}
-                className={`mood-save-button px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs ${
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs ${
                   saved && !isEditing
                     ? "bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-default"
                     : "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 hover:opacity-90 active:scale-95"
