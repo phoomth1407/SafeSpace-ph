@@ -170,12 +170,22 @@ const AuthenticatedApp = () => {
 };
 
 export default function App() {
+  const [booted, setBooted] = useState(() => {
+    try { return sessionStorage.getItem("safespace:booted") === "1"; } catch { return false; }
+  });
+
+  const handlePreloaderDone = () => {
+    try { sessionStorage.setItem("safespace:booted", "1"); } catch { /* continue */ }
+    setBooted(true);
+  };
+
   return (
     <LanguageProvider>
       <ThemeProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClientInstance}>
             <Router>
+              {!booted && <Preloader onComplete={handlePreloaderDone} />}
               <ScrollToTop />
               <VersionGate>
                 <AppGate />
