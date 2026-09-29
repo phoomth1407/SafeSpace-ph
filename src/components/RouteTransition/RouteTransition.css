@@ -1,0 +1,157 @@
+/* ============================================================
+   VEIL — same cream as the page, so it feels like a soft blink
+   ============================================================ */
+.veil{
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  opacity: 0;
+  transition: opacity .32s var(--ease);
+}
+.veil.on{ opacity: 1; }
+
+/* inner content wrapper */
+.veil__inner{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .3s var(--ease-out), transform .45s var(--ease-out);
+}
+.veil.on .veil__inner{
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- progress ring with shield inside ---------- */
+.ring{
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.ring__svg{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ring__svg circle{
+  fill: none;
+  stroke-linecap: round;
+}
+.ring__bg{
+  stroke: var(--line);
+  stroke-width: 1.2;
+}
+.ring__fg{
+  stroke: url(#ringGrad);
+  stroke-width: 1.5;
+  /* circumference = 2 * π * 28 ≈ 176 */
+  stroke-dasharray: 176;
+  stroke-dashoffset: 176;
+  transition: stroke-dashoffset .6s var(--ease-out);
+}
+
+/* shield mark centered inside the ring */
+.ring__mark{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+.ring__mark svg{
+  width: 22px;
+  height: 22px;
+  opacity: 0;
+  transform: scale(.85);
+  animation: markIn .55s var(--ease-out) .08s forwards;
+}
+@keyframes markIn{
+  to{ opacity: 1; transform: none; }
+}
+
+/* ---------- destination name ---------- */
+.veil__label{
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  opacity: 0;
+  animation: labelIn .55s var(--ease-out) .16s forwards;
+}
+@keyframes labelIn{
+  to{ opacity: 1; }
+}
+
+.veil__name{
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin-top: -6px;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: nameIn .6s var(--ease-out) .22s forwards;
+}
+@keyframes nameIn{
+  to{ opacity: 1; transform: none; }
+}
+
+/* leaving state — everything softens out together */
+.veil.leaving .veil__inner{
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .22s ease, transform .3s ease;
+}
+
+/* ============================================================
+   TOP BAR — thin, calm sweep
+   ============================================================ */
+.bar{
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 100%;
+  z-index: 9001;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.bar.on{ opacity: 1; }
+.bar__fill{
+  height: 100%;
+  width: 0;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, var(--blue), var(--violet));
+  transition: width .55s var(--ease-out);
+  will-change: width;
+}
+.bar__fill.done{
+  transition: width .3s var(--ease-out), opacity .35s ease .1s;
+  opacity: 0;
+}
+
+
+@media (max-width: 767px){
+  .veil__inner{gap:16px}
+  .ring{width:64px;height:64px}
+  .veil__name{font-size:24px}
+}
+@media (prefers-reduced-motion: reduce){
+  .veil,.veil__inner,.bar,.bar__fill,.ring__fg,.ring__mark svg,.veil__label,.veil__name{transition-duration:.01ms!important;animation-duration:.01ms!important}
+  .veil__inner{opacity:1;transform:none}
+  .ring__mark svg,.veil__label,.veil__name{opacity:1;transform:none;animation:none}
+}
