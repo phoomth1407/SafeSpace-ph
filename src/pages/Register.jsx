@@ -35,7 +35,7 @@ export default function Register() {
     try {
       const result = await appClient.auth.register({ email, password });
       if (result?.session) {
-        window.location.href = safeReturnTo();
+        window.location.hash = safeReturnTo() || "/";
         return;
       }
       setShowOtp(true);
