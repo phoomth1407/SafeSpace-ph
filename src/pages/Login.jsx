@@ -56,15 +56,16 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = () => {
-    appClient.auth.loginWithProvider("google", returnTo);
-  };
+  const handleGoogle = () => requirePolicy(() => appClient.auth.loginWithProvider("google", returnTo));
 
   return (
     <AuthLayout
       icon={LogIn}
       title={t("auth.welcome")}
       subtitle={t("auth.loginSubtitle")}
+      policyOpen={policyOpen}
+      onPolicyAccept={continueAfterPolicy}
+      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); }}
       footer={
         <>
           {t("auth.noAccount")}{" "}
