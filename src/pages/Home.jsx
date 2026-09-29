@@ -5,6 +5,7 @@ import {
   ClipboardList,
   ArrowRight,
   Heart,
+  ShieldCheck,
   Sparkles,
   Brain,
   TrendingUp,
