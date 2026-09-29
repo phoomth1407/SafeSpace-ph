@@ -250,7 +250,7 @@ export default function Preloader({ onComplete }) {
       return audioCtx;
     }
 
-    function playTone(freq, dur, type = "sine", vol = .035, delay = 0) {
+    function playTone(freq, dur, type = "sine", vol = .06, delay = 0) {
       if (!soundOnRef.current) return;
       const ctx = getAudioContext();
       if (!ctx) return;
@@ -278,7 +278,7 @@ export default function Preloader({ onComplete }) {
       o.frequency.setValueAtTime(180, now);
       o.frequency.exponentialRampToValueAtTime(720, now + .48);
       g.gain.setValueAtTime(.0001, now);
-      g.gain.exponentialRampToValueAtTime(.03, now + .08);
+      g.gain.exponentialRampToValueAtTime(.075, now + .08);
       g.gain.exponentialRampToValueAtTime(.0001, now + .5);
       o.connect(g).connect(ctx.destination);
       o.start(now);
@@ -290,8 +290,8 @@ export default function Preloader({ onComplete }) {
       setSoundOn(true);
       const ctx = getAudioContext();
       if (!ctx) return;
-      playTone(440, .12, "sine", .025);
-      playTone(660, .16, "sine", .02, .08);
+      playTone(440, .12, "sine", .05);
+      playTone(660, .16, "sine", .045, .08);
     }
 
     function exit() {
@@ -366,8 +366,8 @@ export default function Preloader({ onComplete }) {
 
         if (progress >= 100) {
           pre.classList.add("preloader-ready");
-          playTone(660, .22, "sine", .028);
-          playTone(880, .34, "sine", .024, .14);
+          playTone(660, .22, "sine", .055);
+          playTone(880, .34, "sine", .05, .14);
           window.setTimeout(exit, 600);
           return;
         }
