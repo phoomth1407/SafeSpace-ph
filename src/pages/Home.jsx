@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, BarChart3, Brain, ClipboardList, Headphones,
+  ArrowRight, BarChart3, Brain, ClipboardList,
   Heart, ShieldCheck, Sparkles, Users, Wind, Leaf, MessageCircle,
   Waves, Compass, Clock3
 } from "lucide-react";
