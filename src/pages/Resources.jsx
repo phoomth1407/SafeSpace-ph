@@ -183,7 +183,7 @@ export default function Resources() {
             </div>
             <div className="resources-hero-image-wrap">
               <img
-                src="/SafeSpace-ph/assets/resources-reading-hero.webp"
+                src="./assets/resources-reading-hero.webp"
                 alt={lang === "en" ? "Calm illustration of a person reading a book" : "ภาพประกอบบรรยากาศสงบของการอ่านหนังสือ"}
                 className="resources-hero-image"
               />
