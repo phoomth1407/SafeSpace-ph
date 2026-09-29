@@ -181,12 +181,12 @@ export default function Resources() {
                   : "หน้านี้เน้นการอ่านโดยเฉพาะ คุณสามารถค่อย ๆ อ่านข้อมูล แนวทางรับมือ และเนื้อหาเกี่ยวกับการดูแลตัวเองได้ตามจังหวะของคุณ"}
               </p>
             </div>
-            <div className="community-hero-art" aria-hidden="true">
-              <div className="community-art-orbit orbit-one" />
-              <div className="community-art-orbit orbit-two" />
-              <div className="community-art-core">
-                <span className="community-art-heart"><BookOpen className="h-5 w-5" /></span>
-              </div>
+            <div className="resources-hero-image-wrap">
+              <img
+                src="/SafeSpace-ph/assets/resources-reading-hero.webp"
+                alt={lang === "en" ? "Calm illustration of a person reading a book" : "ภาพประกอบบรรยากาศสงบของการอ่านหนังสือ"}
+                className="resources-hero-image"
+              />
             </div>
           </section>
 
