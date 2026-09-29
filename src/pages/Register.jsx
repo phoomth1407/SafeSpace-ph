@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
-import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
+
 
 export default function Register() {
   const navigate = useNavigate();
@@ -29,7 +29,6 @@ export default function Register() {
   const { t } = useTranslation();
 
   const requirePolicy = (action) => {
-    if (hasAcceptedSafeSpacePolicy()) { action(); return; }
     setPendingAction(() => action);
     setPolicyOpen(true);
   };
@@ -194,7 +193,7 @@ export default function Register() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={safeReturnTo()} enabled={hasAcceptedSafeSpacePolicy()} />
+      <GoogleOneTap returnTo={safeReturnTo()} enabled={false} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
