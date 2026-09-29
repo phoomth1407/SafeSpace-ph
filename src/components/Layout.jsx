@@ -7,6 +7,7 @@ import { useTranslation } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import AmbientSoundPlayer from "@/components/AmbientSoundPlayer";
 import { BreathingBackdrop } from "@/components/fx";
+import SafeSpacePolicyModal from "@/components/SafeSpacePolicyModal";
 
 export default function Layout() {
   const location = useLocation();
@@ -17,6 +18,7 @@ export default function Layout() {
   const isAdmin = user?.role === "admin";
   const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : location.pathname === "/assessment" ? "ss-page-assessment" : location.pathname.startsWith("/result") ? "ss-page-result" : location.pathname === "/admin" ? "ss-page-admin" : "ss-page-default";
   const [langOpen, setLangOpen] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(false);
 
   const navItems = [
     { to: "/", label: t("nav.home"), icon: Home },
@@ -128,6 +130,10 @@ export default function Layout() {
                 {lang === "en" ? "About Project" : "เกี่ยวกับโครงการ"}
               </a>
               <span>·</span>
+              <button type="button" onClick={() => setPolicyOpen(true)} className="hover:text-rose-500 transition-colors">
+                {lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace"}
+              </button>
+              <span>·</span>
               <Link to="/contact-admin" className="hover:text-rose-500 transition-colors">
                 {lang === "en" ? "Contact Admin" : "ติดต่อผู้ดูแล"}
               </Link>
@@ -140,6 +146,13 @@ export default function Layout() {
           </div>
         </div>
       </footer>
+
+      <SafeSpacePolicyModal
+        open={policyOpen}
+        persistAcknowledgement={false}
+        onAccept={() => setPolicyOpen(false)}
+        onClose={() => setPolicyOpen(false)}
+      />
 
       <nav className="mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-40">
         <div className="flex items-center justify-around h-16">
