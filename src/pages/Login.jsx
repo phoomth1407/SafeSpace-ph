@@ -10,6 +10,7 @@ import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
 import GoogleOneTap from "@/components/GoogleOneTap";
+import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,10 +18,25 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
   const { t } = useTranslation();
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
   const returnTo = safeReturnTo();
+
+  const requirePolicy = (action) => {
+    if (hasAcceptedSafeSpacePolicy()) { action(); return; }
+    setPendingAction(() => action);
+    setPolicyOpen(true);
+  };
+
+  const continueAfterPolicy = () => {
+    setPolicyOpen(false);
+    const action = pendingAction;
+    setPendingAction(null);
+    action?.();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +86,7 @@ export default function Login() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={returnTo} />
+      <GoogleOneTap returnTo={returnTo} enabled={hasAcceptedSafeSpacePolicy()} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
@@ -87,7 +103,7 @@ export default function Login() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(() => handleSubmit(e)); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
