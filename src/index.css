@@ -1309,3 +1309,33 @@ body {
 .dark .community-policy-scroll > div > ol { color:#94a3b8; }
 .dark .community-policy-scroll > div blockquote { background:#0f2538; color:#cbd5e1; border-color:#38bdf8; }
 .dark .community-policy-scroll > div strong { color:#e2e8f0; }
+
+
+/* Resources reading hero artwork */
+.resources-hero-image-wrap {
+  width: min(100%, 24rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.resources-hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 23rem;
+  object-fit: contain;
+  border-radius: 1.5rem;
+  filter: drop-shadow(0 20px 34px rgba(15, 23, 42, .10));
+  animation: resources-hero-float 6s ease-in-out infinite;
+}
+@keyframes resources-hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@media (max-width: 767px) {
+  .resources-hero-image-wrap { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .resources-hero-image { animation: none; }
+}
