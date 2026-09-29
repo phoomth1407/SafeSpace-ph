@@ -30,9 +30,7 @@ export default function Community() {
   const [focusedPostId, setFocusedPostId] = useState(null);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
-  const [introComplete, setIntroComplete] = useState(() => {
-    try { return sessionStorage.getItem("safespace_community_intro_seen") === "1"; } catch { return false; }
-  });
+  const [introComplete, setIntroComplete] = useState(false);
   const [accessModal, setAccessModal] = useState(null);
   const [guestInfo, setGuestInfo] = useState(null);
   const [policyOpen, setPolicyOpen] = useState(false);
@@ -43,7 +41,6 @@ export default function Community() {
   const [pendingCommunityAction, setPendingCommunityAction] = useState(null);
 
   const finishIntro = () => {
-    try { sessionStorage.setItem("safespace_community_intro_seen", "1"); } catch {}
     setIntroComplete(true);
   };
 
@@ -362,16 +359,8 @@ export default function Community() {
         </div>
       </section>}
 
-      {introComplete && (
-        <div className="community-feed-mode-content">
-      {isAuthenticated && isBanned && (
-        <div className="community-notice community-notice-danger">
-          <Ban className="w-4 h-4" />
-          <p>{t("community.banned")}</p>
-        </div>
-      )}
-
-      {!focusedPostId && (
+      {!introComplete && (
+        
         <section className="community-tools-card">
           <div className="community-section-heading">
             <div>
@@ -398,6 +387,15 @@ export default function Community() {
             </button>
           </div>
         </section>
+      )}
+
+      {introComplete && (
+        <div className="community-feed-mode-content">
+      {isAuthenticated && isBanned && (
+        <div className="community-notice community-notice-danger">
+          <Ban className="w-4 h-4" />
+          <p>{t("community.banned")}</p>
+        </div>
       )}
 
       {isBanned ? null : showAnnounce ? (
