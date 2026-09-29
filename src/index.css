@@ -1003,3 +1003,64 @@ body {
   .community-secondary-button,
   .community-tool-card { transition:none; }
 }
+
+.dark .community-hero-card {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(56,189,248,.10), transparent 30%),
+    radial-gradient(circle at 80% 100%, rgba(167,139,250,.10), transparent 34%),
+    rgba(15,23,42,.72);
+  border-color:rgba(148,163,184,.16);
+  box-shadow:0 24px 70px rgba(2,6,23,.28), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.dark .community-hero-card h1,
+.dark .community-section-heading h2,
+.dark .community-feed-header h2 { color:#f8fafc; }
+.dark .community-hero-card p,
+.dark .community-login-card p,
+.dark .community-tool-card small { color:#94a3b8; }
+.dark .community-secondary-button {
+  color:#cbd5e1;
+  border-color:#334155;
+  background:rgba(30,41,59,.72);
+}
+.dark .community-secondary-button:hover { background:#1e293b; border-color:#475569; }
+.dark .community-tools-card,
+.dark .community-login-card,
+.dark .community-share-card,
+.dark .community-composer {
+  border-color:#1e293b;
+  background:rgba(15,23,42,.72);
+  box-shadow:0 18px 50px rgba(2,6,23,.22), inset 0 1px 0 rgba(255,255,255,.03);
+}
+.dark .community-tool-card {
+  border-color:#1e293b;
+  background:rgba(15,23,42,.62);
+}
+.dark .community-tool-card strong,
+.dark .community-composer-title span { color:#e2e8f0; }
+.dark .community-share-trigger,
+.dark .community-field {
+  color:#e2e8f0 !important;
+  background:rgba(2,6,23,.38) !important;
+  border-color:#334155 !important;
+}
+.dark .community-share-trigger span { color:#94a3b8; }
+.dark .community-anon-toggle { color:#94a3b8; }
+.dark .community-category-chip,
+.dark .community-filter-chip {
+  color:#94a3b8;
+  background:rgba(30,41,59,.55);
+  border-color:#334155;
+}
+.dark .community-category-chip:hover,
+.dark .community-filter-chip:hover { color:#e2e8f0; border-color:#475569; }
+.dark .community-category-chip.is-active,
+.dark .community-filter-chip.is-active { color:#0f172a; background:#f8fafc; border-color:#f8fafc; }
+.dark .community-empty {
+  border-color:#334155;
+  background:rgba(15,23,42,.42);
+}
+.dark .community-empty h3 { color:#cbd5e1; }
+.dark .community-icon-button { color:#94a3b8; background:#1e293b; }
+.dark .community-icon-button:hover { color:#f8fafc; background:#334155; }
+.dark .community-notice-danger { color:#fda4af; background:rgba(244,63,94,.08); border-color:rgba(244,63,94,.20); }
