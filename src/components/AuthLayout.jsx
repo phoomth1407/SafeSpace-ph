@@ -1,6 +1,7 @@
 import React from "react";
+import SafeSpacePolicyModal from "@/components/SafeSpacePolicyModal";
 
-export default function AuthLayout({ icon: Icon, title, subtitle, footer, children }) {
+export default function AuthLayout({ icon: Icon, title, subtitle, footer, children, policyOpen, onPolicyAccept, onPolicyClose }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
@@ -18,6 +19,7 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
           <p className="text-center text-sm text-muted-foreground mt-6">{footer}</p>
         )}
       </div>
+      <SafeSpacePolicyModal open={policyOpen} onAccept={onPolicyAccept} onClose={onPolicyClose} />
     </div>
   );
 }
