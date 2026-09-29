@@ -58,7 +58,11 @@ export default function RouteTransition() {
     timers.current.forEach(window.clearTimeout);
     timers.current = [];
 
-    if (reduced) return undefined;
+    if (reduced) {
+      veil.classList.remove("on", "leaving");
+      bar.classList.remove("on");
+      return undefined;
+    }
 
     ring.style.transition = "none";
     ring.style.strokeDashoffset = String(RING_LEN);
