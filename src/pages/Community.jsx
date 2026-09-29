@@ -10,7 +10,7 @@ import GroundingModal from "@/components/GroundingModal";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
 import { supabase } from "@/lib/supabaseClient";
-import { COMMUNITY_POLICY } from "@/lib/communityPolicy";
+import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH } from "@/lib/communityPolicy";
 
 export default function Community() {
   const navigate = useNavigate();
@@ -556,7 +556,7 @@ export default function Community() {
                   strong: ({children}) => <strong>{children}</strong>,
                 }}
               >
-                {COMMUNITY_POLICY}
+                {lang === "th" ? COMMUNITY_POLICY_TH : COMMUNITY_POLICY_EN}
               </ReactMarkdown>
             </div>
             <button onClick={acceptCommunityPolicy} disabled={!policyScrolled} className="community-primary-button w-full disabled:opacity-40 disabled:cursor-not-allowed">
