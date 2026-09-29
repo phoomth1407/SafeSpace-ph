@@ -20,6 +20,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+  const [policyAcceptedThisVisit, setPolicyAcceptedThisVisit] = useState(false);
   const { t } = useTranslation();
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
@@ -32,6 +33,7 @@ export default function Login() {
 
   const continueAfterPolicy = () => {
     setPolicyOpen(false);
+    setPolicyAcceptedThisVisit(true);
     const action = pendingAction;
     setPendingAction(null);
     action?.();
@@ -64,7 +66,7 @@ export default function Login() {
       subtitle={t("auth.loginSubtitle")}
       policyOpen={policyOpen}
       onPolicyAccept={continueAfterPolicy}
-      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); }}
+      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); setPolicyAcceptedThisVisit(false); }}
       footer={
         <>
           {t("auth.noAccount")}{" "}
@@ -86,7 +88,7 @@ export default function Login() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={returnTo} enabled={false} />
+      <GoogleOneTap returnTo={returnTo} enabled={policyAcceptedThisVisit} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
