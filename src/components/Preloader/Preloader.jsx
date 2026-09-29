@@ -12,6 +12,7 @@ const TITLE = [
 
 export default function Preloader({ onComplete }) {
   const rootRef = useRef(null);
+  const onCompleteRef = useRef(onComplete);
   const canvasRef = useRef(null);
   const fillRef = useRef(null);
   const statusRef = useRef(null);
@@ -26,6 +27,10 @@ export default function Preloader({ onComplete }) {
   useEffect(() => {
     soundOnRef.current = soundOn;
   }, [soundOn]);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, []);
 
   useEffect(() => {
     const pre = rootRef.current;
@@ -269,7 +274,7 @@ export default function Preloader({ onComplete }) {
         pre.classList.add("gone");
         document.body.classList.remove("locked");
         setGone(true);
-        onComplete?.();
+        onCompleteRef.current?.();
       }, 2020);
     }
 
