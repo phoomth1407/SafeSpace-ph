@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export default function PolicyConsentModal({
   open,
@@ -21,12 +22,12 @@ export default function PolicyConsentModal({
     }
   }, [open]);
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
   const allRequired = requiredConsents.every((item) => checks[item.id] === true);
 
-  return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 bg-slate-950/65 backdrop-blur-[24px]" role="dialog" aria-modal="true">
+  return createPortal(
+    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 bg-slate-950/45 backdrop-blur-xl" role="dialog" aria-modal="true">
       <div className="w-full max-w-2xl max-h-[88vh] overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-950 shadow-2xl flex flex-col">
         {!fullOpen ? (
           <>
@@ -81,6 +82,7 @@ export default function PolicyConsentModal({
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
