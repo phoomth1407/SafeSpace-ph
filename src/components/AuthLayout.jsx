@@ -19,7 +19,13 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
           <p className="text-center text-sm text-muted-foreground mt-6">{footer}</p>
         )}
       </div>
-      <SafeSpacePolicyModal open={policyOpen} onAccept={onPolicyAccept} onClose={onPolicyClose} persistAcknowledgement={persistPolicyAcknowledgement} />
+      <SafeSpacePolicyModal
+        open={policyOpen}
+        onAccept={onPolicyAccept}
+        onClose={onPolicyClose}
+        persistAcknowledgement={persistPolicyAcknowledgement}
+        requiresAcceptance={true}
+      />
     </div>
   );
 }
