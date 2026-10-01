@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2, Check, Heart, LogIn, UserPlus, Sparkles, Shield, User as UserIcon, ShieldAlert, Home as HomeIcon, GraduationCap, Users as UsersIcon, Apple } from "lucide-react";
 import { assessmentCategories } from "@/lib/assessmentQuestions";
-import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH } from "@/lib/assessmentPolicy";
+import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH, ASSESSMENT_POLICY_VERSION } from "@/lib/assessmentPolicy";
 import { useAuth } from "@/lib/AuthContext";
 import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
@@ -77,7 +77,7 @@ export default function Assessment() {
     if (!assessmentPolicyKey) { setPrivacyAcknowledged(false); return; }
     try {
       const saved = JSON.parse(window.localStorage.getItem(assessmentPolicyKey) || "null");
-      setPrivacyAcknowledged(saved?.accepted === true && saved?.version === "1.0");
+      setPrivacyAcknowledged(saved?.accepted === true && saved?.version === ASSESSMENT_POLICY_VERSION);
     } catch { setPrivacyAcknowledged(false); }
   }, [assessmentPolicyKey]);
 
@@ -320,7 +320,7 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
           ]}
           onAccept={() => {
             if (isAuthenticated && assessmentPolicyKey) {
-              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, version: "1.0", acceptedAt: new Date().toISOString() })); } catch {}
+              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, version: ASSESSMENT_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
             }
             setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null);
           }}
