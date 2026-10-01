@@ -57,7 +57,12 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    requirePolicy(() => appClient.auth.loginWithProvider("google", returnTo));
+    // Route Google sign-in through the same policy, age, and sharing flow
+    // used by Google signup. The registration flow handles existing accounts
+    // through Supabase OAuth after the required details are collected.
+    const query = new URLSearchParams({ method: "google" });
+    if (returnTo !== "/") query.set("returnTo", returnTo);
+    navigate(`/register?${query.toString()}`);
   };
 
   return (
