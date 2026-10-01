@@ -1,324 +1,88 @@
-# SafeSpace Assessment Policy
+# Assessment Policy
 
-**Version:** 1.0  
-**Last updated:** 20 September 2026
-
-Welcome to SafeSpace. Before starting the assessment, please read this policy carefully.
-
-SafeSpace Assessment is a wellbeing tool designed to help you reflect on your current feelings, experiences, and general wellbeing. The assessment uses your answers to produce an AI-assisted result that may help you understand your current situation and identify areas that you may want to pay attention to.
-
-SafeSpace is not a medical service, psychological diagnosis, emergency service, or replacement for a qualified professional. Your result should be treated as information and guidance, not as a definitive statement about your mental health.
-
-## 1. What happens when you take the assessment?
-
-The assessment asks you a series of questions about areas that may affect your wellbeing.
-
-Depending on the assessment, questions may relate to things such as:
-
-- Your feelings and emotions
-- Experiences at school or home
-- Relationships with other people
-- Stress and everyday difficulties
-- Your general wellbeing
-- Other experiences relevant to the assessment
-
-You choose the answers yourself.
-
-You should not provide information that is unnecessary for the assessment, such as your password, home address, phone number, school address, or other information that could directly identify you.
-
-You may stop using the assessment if you no longer want to continue.
-
-## 2. Why do we ask for your age?
-
-Your age is requested because wellbeing experiences can differ between different age groups.
-
-Age may be used to:
-
-- Provide context for your assessment
-- Help interpret your answers appropriately
-- Help the system understand which age group the assessment relates to
-- Support safer and more appropriate presentation of information
-
-Your age is not intended to be used to judge you as a person.
-
-## 3. Why do we ask for nationality?
-
-Nationality may provide additional context when interpreting an assessment.
-
-It may help SafeSpace understand the background in which the assessment is being completed.
-
-You should provide only the information requested by the assessment.
-
-SafeSpace does not need your exact home location for this assessment.
-
-## 4. How are my answers processed?
-
-After you submit the assessment, your answers may be processed by the SafeSpace application and its AI analysis system.
-
-The system can use your answers to generate things such as:
-
-- An overall assessment result
-- Explanations of patterns in your answers
-- Areas that may deserve attention
-- General suggestions that may be useful
-
-AI systems can make mistakes.
-
-Therefore, an AI-generated result should never be treated as a diagnosis or as absolute truth about you.
-
-If the result seems incorrect, confusing, or does not match how you actually feel, you should not assume that the system is necessarily correct.
-
-## 5. Does SafeSpace make decisions about me?
-
-The assessment is intended to provide information to you.
-
-It should not be treated as a system that determines your value, character, future, or medical condition.
-
-An assessment result does not define who you are.
-
-Where AI is used, its output is generated from the information provided to the system and may contain errors or limitations. AI-related processing should be explained clearly, particularly for younger users.
-
-## 6. What information does SafeSpace receive?
-
-Depending on how you use the application, information may include:
-
-### Information you enter
-
-- Age
-- Nationality
-- Assessment answers
-- Information you voluntarily provide in relevant features
-
-### Account information
-
-If you create an account, information associated with that account may also be processed.
-
-### Technical information
-
-The service may also receive technical information necessary for the website or application to function, such as authentication/session information and requests sent to the service.
-
-SafeSpace does not need you to provide unnecessary identifying information inside assessment answers.
-
-## 7. What should I NOT put in my answers?
-
-Please avoid entering information that is not necessary for the assessment.
-
-For example, do not intentionally include:
-
-- Passwords
-- Bank or payment information
-- Exact home addresses
-- Personal identification numbers
-- Private account credentials
-- Someone else's private information
-
-If a question asks about an experience, you can describe the experience without including identifying information about yourself or another person.
-
-## 8. What happens if I am signed in?
-
-When you are signed in, assessment information may be associated with your account so that the application can provide account-related features such as accessing relevant assessment information.
-
-This means your assessment should be treated as private account information, not as a public post.
-
-Other users should not automatically be able to view your private assessment answers simply because they use SafeSpace.
-
-## 9. What happens if I use SafeSpace as a guest?
-
-Guest assessment results are handled differently from signed-in account data.
-
-The application can provide a result without requiring you to create an account.
-
-Guest results are intended to remain within the guest/session experience rather than becoming a permanent account record.
-
-However, browser storage and technical systems can behave differently depending on the device, browser, network, and application configuration. Therefore, do not treat guest mode as a guarantee of complete anonymity.
-
-## 10. Is my assessment public?
-
-**No.**
-
-Your assessment information is separate from SafeSpace's community features.
-
-An assessment answer should not automatically become a community post, comment, or public profile.
-
-Community content is a separate feature with its own rules and processing.
-
-If you voluntarily post something publicly, that information should be treated differently from your private assessment.
-
-## 11. What about the SafeSpace community?
-
-The community area allows users to interact with other users.
-
-This is different from the private assessment.
-
-Do not post private assessment information publicly unless you genuinely understand that other people may be able to see it.
-
-Do not publish:
-
-- Your home address
-- Passwords
-- Private contact information
-- Another person's private information
-- Information that could put you or another person at risk
-
-SafeSpace may use AI-assisted processing for certain community features, but community processing and assessment processing are separate parts of the application.
-
-## 12. Who can see my information?
-
-SafeSpace is designed so that private assessment information is not intentionally made public to other users.
-
-Some information must be processed by technical services that allow the application to operate.
-
-For example, the application may use:
-
-- Authentication services
-- Database/storage services
-- AI processing services
-- Hosting or infrastructure services
-
-These services exist to provide specific technical functions.
-
-SafeSpace should not represent third-party processing as completely risk-free. Third-party services can have their own infrastructure, security practices, and terms.
-
-Where third parties process personal information, users should be informed about that processing rather than being left to guess what happens to their data.
-
-## 13. How does SafeSpace protect information?
-
-SafeSpace uses technical protections intended to reduce unauthorized access and misuse.
-
-Depending on the feature, these can include:
-
-- Authentication
-- Database access controls
-- Row-level security
-- Restricted access to private data
-- Server-side validation
-- Request/rate limiting
-- Input validation
-- Protection against oversized or malformed requests
-- Security controls around AI processing
-
-These measures reduce risk, but no website or online service can honestly promise that security risk is zero.
-
-You should therefore avoid submitting information that does not need to be submitted.
-
-## 14. Does SafeSpace sell my assessment information?
-
-Assessment information should not be treated as advertising material or as something that should simply be sold to other users.
-
-The assessment exists to provide the SafeSpace service.
-
-SafeSpace should only use information for purposes that are explained to users and supported by the project's actual implementation.
-
-## 15. Is my information used to advertise to me?
-
-The assessment is not designed around using your private wellbeing answers to target advertising.
-
-If the service introduces a new type of data use in the future, the relevant privacy information should be updated before users are expected to rely on the new behavior.
-
-## 16. Can SafeSpace identify me from my answers?
-
-You should assume that information you provide can potentially become associated with your account when you are signed in.
-
-For that reason, do not assume that writing something inside an assessment makes it anonymous.
-
-Even when an application does not directly ask for your name, combinations of information can sometimes make a person identifiable.
-
-This is why SafeSpace asks users not to include unnecessary identifying information.
-
-## 17. What happens to my information after the assessment?
-
-The exact handling depends on how you use SafeSpace.
-
-For signed-in users, assessment records may remain associated with the account until they are deleted through available account functionality or an applicable administrative process.
-
-For guest users, results are intended to be handled within the guest/session experience rather than being stored as an account record.
-
-SafeSpace should not claim that information is immediately and permanently erased from every technical system unless the application actually guarantees that.
-
-## 18. Can I stop or leave the assessment?
-
-**Yes.**
-
-Participation is voluntary.
-
-You can leave the assessment before submitting it.
-
-You do not have to answer a question simply because it appears on the screen.
-
-If a question makes you uncomfortable, you should consider whether continuing is appropriate for you.
-
-## 19. What if I am under 18?
-
-SafeSpace may be used by teenagers and other younger users.
-
-Because younger users can require stronger privacy protections, SafeSpace aims to use high-privacy defaults and clear explanations rather than encouraging users to disclose unnecessary personal information.
-
-If you are unsure about what information you should provide, consider talking with a parent, guardian, teacher, counselor, or another trusted adult before continuing.
-
-## 20. Is this a diagnosis?
-
-**No.**
-
-A SafeSpace result does not diagnose depression, anxiety, or another medical or psychological condition.
-
-It is an AI-assisted interpretation of the answers you provided.
-
-Only an appropriately qualified professional can provide a professional assessment or diagnosis.
-
-## 21. What if my result is wrong?
-
-AI-generated results can be incomplete or incorrect.
-
-Your own experience matters.
-
-If your result does not seem to describe you accurately, do not force yourself to accept it simply because the system produced it.
-
-You can discuss your concerns with someone you trust or with an appropriate qualified professional.
-
-## 22. What if I need urgent help?
-
-SafeSpace is not an emergency service.
-
-If you believe you or another person is in immediate danger, do not wait for an AI assessment result or rely on SafeSpace to handle the situation.
-
-Contact a trusted adult or an appropriate local emergency or professional support service.
-
-In Thailand, the Department of Mental Health hotline is **1323**.
-
-## 23. Changes to SafeSpace
-
-SafeSpace is an evolving project.
-
-The application, assessment questions, AI systems, security measures, and other features may change over time.
-
-If a change materially affects how personal information is handled, the relevant policy information should be updated accordingly.
-
-The policy should always show its current version and update date so users can understand which version they are accepting.
-
-## 24. Your acceptance
-
-Before beginning the assessment, you are given an opportunity to read this policy.
-
-By selecting **Agree & Accept**, you confirm that:
-
-- You have read the policy.
-- You understand what the assessment does.
-- You understand that AI may process your answers.
-- You understand that the assessment is not a medical diagnosis.
-- You understand how your answers may be handled.
-- You understand that participation is voluntary.
-- You understand that you should not submit unnecessary sensitive information.
-- You want to continue to the assessment.
-
-If you do not agree, you can leave the assessment without continuing.
-
----
-
-**SafeSpace Assessment Policy**  
 **Version 1.0**  
-**Last updated: 19 September 2026**
+**Last updated: September 2026**
 
+## English
 
-### Saved assessment deletion
+## 1. What the Assessment Is and Is Not
 
-Signed-in users can delete saved assessment history from the History page. Guest assessment results are not written to the signed-in assessment history.
+The SafeSpace Assessment is a wellbeing screening and reflection tool. It asks structured questions about mood, stress, daily wellbeing, relationships, school or home experiences, and other current wellbeing topics. It is not a medical diagnosis, treatment plan, professional evaluation, or test of your worth, personality, intelligence, character, or future.
+
+## 2. Who It Is For, Voluntary Use, and Young Users
+
+SafeSpace is designed with young people and general wellbeing in mind. Participation is voluntary. You may leave before submitting, pause, or stop if a question makes you uncomfortable. Younger users should take particular care with personal information and may involve a parent, guardian, teacher, school counselor, healthcare professional, or trusted adult when needed.
+
+## 3. What the Assessment Asks
+
+Questions may cover feelings and thoughts, stress, sleep or daily functioning, relationships, school or home experiences, and other wellbeing-related topics. The exact questions can change. Age may be requested to provide context. A broad nationality category may also be requested for analysis and presentation; it is not a request for an address, precise location, immigration documents, or identification number.
+
+## 4. What You Should and Should Not Submit
+
+Answer according to your experience, but provide only information necessary for the assessment. Do not submit passwords, account credentials, one-time codes, payment or banking details, government identification numbers, exact home addresses, private phone numbers, private social-media credentials, or another person's confidential information. If a question can be answered without identifying a person, prefer the non-identifying answer.
+
+## 5. How Answers Are Processed — AI Analysis
+
+After submission, SafeSpace sends assessment information to its analysis function. The documented flow may use OpenAI, Google Gemini as a configured fallback, and local fallback logic when remote AI is unavailable. AI may generate risk-related values, summaries, trends, factors, explanations, or general recommendations. AI can misunderstand language, context, sarcasm, cultural meaning, incomplete answers, or circumstances that were not provided. The output can be inaccurate, incomplete, generic, inconsistent, or unsuitable.
+
+## 6. Sensitive Information, Consent, and Cross-Border Processing
+
+Assessment answers can contain wellbeing-related personal information. Where required under PDPA, SafeSpace processes this sensitive data only after explicit consent through a separate, clear, unticked control. OpenAI and Google Gemini may process assessment information outside Thailand. SafeSpace relies on the providers' standard contractual safeguards.
+
+## 7. Signed-In and Guest Assessment
+
+When signed in, assessment records may be associated with the account and supported history features may show saved records. The application provides deletion of saved assessment records, but deletion through the interface should not be described as instantaneous removal from every backup, cache, log, or technical system unless verified. Guest assessment is also available. The current documented frontend guest flow keeps the result in browser navigation state, while the backend contains an administrator-controlled guest-assessment data model. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
+
+## 8. Security, Data Minimisation, and Limits of Anonymity
+
+Assessment requests can involve authentication, database access controls, Row Level Security, server-side validation, input validation, request limits, restricted private-record access, and controls around analysis requests. These measures reduce risk but cannot guarantee that errors, vulnerabilities, outages, or unauthorised access never occur. An online service cannot honestly promise complete anonymity merely because it does not ask for a name; account, session, technical, network, browser, and device information can sometimes make activity linkable.
+
+## 9. Retention, Responsibilities, Contact, and Changes
+
+Retention placeholders requiring developer confirmation: signed-in assessment records [until user deletes or account is deleted]; guest assessment information [TO CONFIRM based on actual deployed storage]; related technical/security logs [90 days]. Do not promise immediate deletion from every backup, cache, log, or technical system unless verified. You are responsible for reviewing what you submit and for not submitting another person's information unless permitted. Privacy contact: [privacy contact email — to be filled in by the developer]. Version 1.0 — September 2026.
+
+## 10. Emergency Support and Final Reminder
+
+SafeSpace is not an emergency response service and cannot monitor your safety in real time. Thailand: 1669 — medical emergency; 1323 — Department of Mental Health hotline; 1300 — MSDHS social assistance line, especially for children and young people. Do not wait for an assessment, AI response, Community response, or administrator response when immediate real-world help is needed. You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at pdpc.or.th if you believe your personal data has been mishandled. The assessment is one source of information for reflection, not a final judgment about you.
+
+## ไทย
+
+## 1. แบบประเมินคืออะไรและไม่ใช่อะไร
+
+แบบประเมิน SafeSpace เป็นเครื่องมือคัดกรองและสะท้อนสุขภาวะ ถามเกี่ยวกับอารมณ์ ความเครียด สุขภาวะประจำวัน ความสัมพันธ์ โรงเรียน บ้าน และหัวข้อสุขภาวะอื่น ๆ แบบประเมินไม่ใช่การวินิจฉัย การรักษา การประเมินโดยผู้เชี่ยวชาญ หรือการทดสอบคุณค่า บุคลิกภาพ ความฉลาด นิสัย หรืออนาคตของคุณ
+
+## 2. เหมาะกับใคร การใช้งานโดยสมัครใจ และผู้ใช้อายุน้อย
+
+SafeSpace ออกแบบโดยคำนึงถึงเยาวชนและสุขภาวะทั่วไป การเข้าร่วมเป็นไปโดยสมัครใจ คุณสามารถออกก่อนส่ง พัก หรือหยุดได้หากคำถามทำให้ไม่สบายใจ ผู้ใช้อายุน้อยควรระมัดระวังข้อมูลส่วนตัวและอาจปรึกษาผู้ปกครอง ครู ที่ปรึกษา บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่ไว้ใจได้เมื่อจำเป็น
+
+## 3. แบบประเมินถามอะไร
+
+คำถามอาจเกี่ยวกับความรู้สึกและความคิด ความเครียด การนอนหรือการใช้ชีวิต ความสัมพันธ์ โรงเรียนหรือบ้าน และหัวข้อสุขภาวะอื่น ๆ ชุดคำถามอาจเปลี่ยนแปลงได้ อาจถามอายุเพื่อใช้เป็นบริบท และกลุ่มสัญชาติแบบกว้าง ๆ เพื่อการวิเคราะห์และการนำเสนอ ไม่ใช่การขอที่อยู่ ตำแหน่งละเอียด เอกสารตรวจคนเข้าเมือง หรือเลขประจำตัว
+
+## 4. สิ่งที่ควรและไม่ควรส่ง
+
+ตอบตามประสบการณ์ของคุณแต่ให้ข้อมูลเท่าที่จำเป็น ห้ามส่งรหัสผ่าน ข้อมูลบัญชี รหัสครั้งเดียว ข้อมูลการเงิน เลขประจำตัวรัฐ ที่อยู่ละเอียด เบอร์ส่วนตัว ข้อมูลรับรองโซเชียลส่วนตัว หรือข้อมูลลับของผู้อื่น หากตอบได้โดยไม่ระบุตัวบุคคล ให้เลือกคำตอบที่ไม่ระบุตัวตน
+
+## 5. การประมวลผลคำตอบด้วย AI
+
+หลังส่งคำตอบ SafeSpace ส่งข้อมูลไปยังฟังก์ชันวิเคราะห์ flow ที่บันทึกไว้สามารถใช้ OpenAI, Google Gemini เป็นตัวสำรอง และ logic สำรองภายในเมื่อ AI ภายนอกใช้ไม่ได้ AI อาจสร้างค่าความเสี่ยง สรุป แนวโน้ม ปัจจัย คำอธิบาย หรือคำแนะนำทั่วไป และอาจเข้าใจภาษา บริบท การประชด ความหมายทางวัฒนธรรม คำตอบไม่ครบ หรือสถานการณ์ที่ไม่ได้ให้ข้อมูลผิดพลาดได้ ผลลัพธ์จึงอาจไม่ถูกต้อง ไม่ครบ กว้างเกินไป ไม่สม่ำเสมอ หรือไม่เหมาะกับบุคคล
+
+## 6. ข้อมูลละเอียดอ่อน ความยินยอม และการประมวลผลข้ามประเทศ
+
+คำตอบแบบประเมินอาจมีข้อมูลสุขภาวะส่วนบุคคลที่ละเอียดอ่อน เมื่อกฎหมาย PDPA กำหนด SafeSpace ต้องประมวลผลข้อมูลดังกล่าวหลังได้รับความยินยอมโดยชัดแจ้งผ่านช่องยินยอมแยกที่ชัดเจนและไม่เลือกไว้ล่วงหน้า OpenAI และ Google Gemini อาจประมวลผลข้อมูลนอกประเทศไทย โดย SafeSpace อาศัยมาตรการคุ้มครองตามสัญญามาตรฐานของผู้ให้บริการ
+
+## 7. แบบประเมินสำหรับผู้เข้าสู่ระบบและ Guest
+
+เมื่อเข้าสู่ระบบ ข้อมูลแบบประเมินอาจเชื่อมกับบัญชีและประวัติที่รองรับอาจแสดงผลที่บันทึกไว้ แอปมีการลบประวัติแบบประเมินที่บันทึก แต่ไม่ควรกล่าวว่าลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันทีหากยังไม่ตรวจสอบ Guest assessment ก็มีได้ โดย frontend ที่บันทึกไว้เก็บผลใน browser navigation state และ backend มีโมเดลข้อมูล guest assessment ที่ผู้ดูแลควบคุม Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ ข้อมูลแบบประเมินไม่ตั้งใจให้กลายเป็นโพสต์ชุมชนสาธารณะ
+
+## 8. ความปลอดภัย การลดข้อมูล และข้อจำกัดของการไม่เปิดเผยตัวตน
+
+คำขอแบบประเมินอาจเกี่ยวข้องกับการยืนยันตัวตน สิทธิฐานข้อมูล RLS การตรวจสอบฝั่งเซิร์ฟเวอร์และอินพุต การจำกัดคำขอ การจำกัดการเข้าถึงข้อมูลส่วนตัว และการควบคุมการวิเคราะห์ มาตรการเหล่านี้ลดความเสี่ยงแต่ไม่รับประกันว่าจะไม่มีข้อผิดพลาด ช่องโหว่ ระบบล่ม หรือการเข้าถึงโดยไม่ได้รับอนุญาต บริการออนไลน์ไม่ควรรับประกันว่าไม่เปิดเผยตัวตนอย่างสมบูรณ์เพียงเพราะไม่ถามชื่อ เพราะข้อมูลบัญชี เซสชัน เทคนิค เครือข่าย เบราว์เซอร์ และอุปกรณ์อาจเชื่อมโยงกิจกรรมกลับมาหาบุคคลได้
+
+## 9. การเก็บรักษา ความรับผิดชอบ การติดต่อ และการเปลี่ยนแปลง
+
+ระยะเวลาที่ต้องยืนยัน: ประวัติแบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ข้อมูล guest [TO CONFIRM ตาม storage ที่ใช้งานจริง]; log ทางเทคนิค/ความปลอดภัย [90 วัน] ไม่ควรรับประกันการลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันที คุณมีหน้าที่ตรวจสอบสิ่งที่ส่งและไม่ส่งข้อมูลของผู้อื่นหากไม่มีสิทธิ ติดต่อความเป็นส่วนตัว: [privacy contact email — to be filled in by the developer] Version 1.0 — กันยายน 2569
+
+## 10. ความช่วยเหลือฉุกเฉินและข้อเตือนสุดท้าย
+
+SafeSpace ไม่ใช่บริการตอบสนองเหตุฉุกเฉินและไม่สามารถติดตามความปลอดภัยแบบเรียลไทม์ ประเทศไทย: 1669 — เหตุฉุกเฉินทางการแพทย์; 1323 — สายด่วนสุขภาพจิต กรมสุขภาพจิต; 1300 — สายด่วนช่วยเหลือสังคม พม. โดยเฉพาะเด็กและเยาวชน อย่ารอผลแบบประเมิน AI การตอบจากชุมชน หรือผู้ดูแลเมื่อจำเป็นต้องได้รับความช่วยเหลือทันที คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ pdpc.or.th หากเชื่อว่าข้อมูลส่วนบุคคลถูกจัดการอย่างไม่เหมาะสม แบบประเมินเป็นข้อมูลหนึ่งเพื่อการสะท้อน ไม่ใช่คำตัดสินสุดท้ายเกี่ยวกับคุณ
