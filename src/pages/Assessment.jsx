@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 import Mascot from "@/components/Mascot";
+import PolicyConsentModal from "@/components/PolicyConsentModal";
 
 const MASCOT_TH = [
   "ขอบคุณที่ตอบนะ อย่ายอมแพ้ละ ❤️",
@@ -288,45 +289,30 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
           </motion.button>
         </motion.div>
 
-        {typeof document !== "undefined" && createPortal(
-          <AnimatePresence>
-            {policyOpen && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={"assessment-policy-overlay fixed inset-0 z-[100] w-screen h-screen min-h-dvh flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-[24px] " + (document.documentElement.classList.contains("dark") ? "" : "theme-light-policy")} role="dialog" aria-modal="true" aria-labelledby="assessment-policy-title">
-              <motion.div initial={{ opacity: 0, scale: 0.97, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.98, y: 8 }} transition={{ duration: 0.2 }} className="assessment-policy-shell w-full max-w-3xl max-h-[86vh] overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-950 shadow-2xl shadow-black/50 flex flex-col">
-                <div className="px-6 py-5 border-b border-slate-800 flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-xs uppercase tracking-[0.18em] text-sky-300 mb-1">SafeSpace</div>
-                    <h2 id="assessment-policy-title" className="text-lg sm:text-xl font-bold text-slate-100">{policyTitle}</h2>
-                    <p className="text-xs text-slate-500 mt-1">{lang === "en" ? "Please review the full policy before continuing." : "กรุณาอ่านนโยบายทั้งหมดก่อนดำเนินการต่อ"}</p>
-                  </div>
-                  <span className="shrink-0 text-xs text-sky-300 rounded-full border border-sky-500/20 bg-sky-500/5 px-3 py-1.5">{lang === "en" ? "Required before assessment" : "ต้องอ่านและยอมรับก่อนทำแบบประเมิน"}</span>
-                </div>
-
-                <div onScroll={(e) => { const el = e.currentTarget; setPolicyScrolledToEnd(el.scrollTop + el.clientHeight >= el.scrollHeight - 16); }} className="overflow-y-auto px-6 py-5 space-y-5 text-sm leading-7 text-slate-300 overscroll-contain">
-                  {activePolicySections.map(([heading, body]) => (
-                    <section key={heading}>
-                      <h3 className="font-semibold text-slate-100 mb-1">{heading}</h3>
-                      <p>{body}</p>
-                    </section>
-                  ))}
-                  <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4 text-xs text-slate-400 leading-6">
-                    {lang === "en" ? `Policy version: ${ASSESSMENT_POLICY_VERSION} • Last updated: ${ASSESSMENT_POLICY_LAST_UPDATED_EN}` : `เวอร์ชันนโยบาย: ${ASSESSMENT_POLICY_VERSION} • ปรับปรุงล่าสุด: ${ASSESSMENT_POLICY_LAST_UPDATED_TH}`}
-                  </div>
-                </div>
-
-                <div className="px-6 py-4 border-t border-slate-800 bg-slate-950/95">
-                  <div className="flex items-center justify-between gap-4 mb-3 text-xs">
-                    <span className={policyScrolledToEnd ? "text-emerald-300" : "text-slate-500"}>{policyScrolledToEnd ? (lang === "en" ? "✓ You reached the end of the policy" : "✓ คุณอ่านถึงท้ายเอกสารแล้ว") : (lang === "en" ? "Scroll to the bottom to continue" : "เลื่อนอ่านให้ถึงด้านล่างเพื่อดำเนินการต่อ")}</span>
-                    <span className="text-slate-600">{lang === "en" ? "Required before assessment" : "ต้องยอมรับก่อนทำแบบประเมิน"}</span>
-                  </div>
-                  <motion.button disabled={!policyScrolledToEnd} onClick={() => { setPrivacyAcknowledged(true); setPolicyOpen(false); setPolicyScrolledToEnd(false); setError(null); }} className="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-900 text-sm font-semibold py-3 rounded-2xl hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                    <Check className="w-4 h-4" />
-                    {lang === "en" ? "Agree & Accept" : "ยอมรับและดำเนินการต่อ"}
-                  </motion.button>
-                </div>
-              </motion.div>
-            </motion.div>
-            )}
+        <PolicyConsentModal
+          open={policyOpen}
+          title={lang === "en" ? "Before you start" : "ก่อนเริ่มแบบประเมิน"}
+          lang={lang}
+          popupContent={
+            <div className="space-y-4">
+              <p>{lang === "en"
+                ? <>The SafeSpace Assessment is a <strong>wellbeing screening and reflection tool</strong>, not a medical diagnosis, treatment service, or professional evaluation. A score, risk level, label, or AI explanation does not prove that you do or do not have a medical condition.</>
+                : <>แบบประเมิน SafeSpace เป็น <strong>เครื่องมือคัดกรองและสะท้อนสุขภาวะ</strong> ไม่ใช่การวินิจฉัยโรค การรักษา หรือการประเมินโดยผู้เชี่ยวชาญ คะแนน ระดับความเสี่ยง ป้ายกำกับ หรือคำอธิบายจาก AI ไม่ได้พิสูจน์ว่าคุณมีหรือไม่มีภาวะทางการแพทย์</>}</p>
+              <p>{lang === "en" ? "The assessment may ask about feelings, thoughts, stress, sleep or daily functioning, relationships, school or home experiences, and other wellbeing topics. It may request your age and broad nationality category for context." : "แบบประเมินอาจถามเรื่องความรู้สึก ความคิด ความเครียด การนอนหรือการใช้ชีวิต ความสัมพันธ์ ประสบการณ์ที่โรงเรียนหรือที่บ้าน และหัวข้อด้านสุขภาวะอื่น ๆ และอาจถามอายุและกลุ่มสัญชาติแบบกว้าง ๆ เพื่อใช้เป็นบริบท"}</p>
+              <p>{lang === "en" ? "Answers can be processed by SafeSpace's analysis function. Depending on configuration, this can use OpenAI or Google Gemini, with local fallback logic when remote AI is unavailable. OpenAI and Google may process information outside Thailand; SafeSpace relies on their standard contractual safeguards." : "คำตอบอาจถูกประมวลผลโดยระบบวิเคราะห์ของ SafeSpace ซึ่งขึ้นอยู่กับการตั้งค่า อาจใช้ OpenAI หรือ Google Gemini และมี logic สำรองภายในเมื่อ AI ภายนอกใช้ไม่ได้ OpenAI และ Google อาจประมวลผลข้อมูลนอกประเทศไทย โดย SafeSpace อาศัยมาตรการคุ้มครองตามสัญญามาตรฐานของผู้ให้บริการ"}</p>
+              <p>{lang === "en" ? <>Do not submit passwords, one-time codes, payment information, ID numbers, exact addresses, private contact details, or another person's private information.</> : <>ห้ามส่งรหัสผ่าน รหัสครั้งเดียว ข้อมูลการเงิน เลขประจำตัว ที่อยู่แบบละเอียด ข้อมูลติดต่อส่วนตัว หรือข้อมูลส่วนตัวของผู้อื่น</>}</p>
+              <p>{lang === "en" ? <>Privacy contact: <strong>[privacy contact email — to be filled in by the developer]</strong>. You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at <strong>pdpc.or.th</strong> if you believe your personal data has been mishandled.</> : <>ติดต่อเรื่องความเป็นส่วนตัว: <strong>[privacy contact email — to be filled in by the developer]</strong> คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ <strong>pdpc.or.th</strong> หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม</>}</p>
+              <p>{lang === "en" ? "Emergency support in Thailand: 1669 medical emergency; 1323 Department of Mental Health hotline; 1300 MSDHS social assistance line, especially for children and young people." : "ช่องทางฉุกเฉินในประเทศไทย: 1669 เหตุฉุกเฉินทางการแพทย์; 1323 สายด่วนสุขภาพจิต กรมสุขภาพจิต; 1300 สายด่วนช่วยเหลือสังคม พม. โดยเฉพาะเด็กและเยาวชน"}</p>
+            </div>
+          }
+          fullPolicy={lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH}
+          requiredConsents={[
+            { id: "policy", label: lang === "en" ? "I have read and agree to the Assessment Policy." : "ฉันได้อ่านและยอมรับ Assessment Policy" },
+            { id: "sensitive", label: lang === "en" ? "I explicitly consent to SafeSpace processing my assessment answers and related wellbeing information for assessment analysis, including configured AI providers that may process information outside Thailand." : "ฉันให้ความยินยอมโดยชัดแจ้งให้ SafeSpace ประมวลผลคำตอบและข้อมูลสุขภาวะที่เกี่ยวข้องเพื่อวิเคราะห์แบบประเมิน รวมถึงผู้ให้บริการ AI ที่ตั้งค่าไว้ซึ่งอาจประมวลผลข้อมูลนอกประเทศไทย" }
+          ]}
+          onAccept={() => { setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null); }}
+          onDecline={() => { setPolicyOpen(false); setPolicyScrolledToEnd(false); }}
+        />}
           </AnimatePresence>,
           document.body
         )}
