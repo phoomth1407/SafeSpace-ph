@@ -55,7 +55,7 @@ SafeSpace may review content that has been reported, appears to violate this pol
 
 ## 13. User-Created Content, Community Limitations, and Getting Help
 
-Posts and comments are created by users. SafeSpace does not automatically endorse opinions, experiences, medical claims, treatment suggestions, practical advice, or other user statements. No online Community can guarantee that every harmful or inappropriate post will be detected immediately. Reporting helps SafeSpace identify concerns. The Community cannot replace professional support. Thailand: 1669 medical emergency; 1323 Department of Mental Health hotline; 1300 MSDHS social assistance line.
+Posts and comments are created by users. SafeSpace does not automatically endorse opinions, experiences, medical claims, treatment suggestions, practical advice, or other user statements. No online Community can guarantee that every harmful or inappropriate post will be detected immediately. Reporting helps SafeSpace identify concerns. The Community cannot replace professional support. Thailand: 1669 medical emergency; 1323 Department of Mental Health hotline; 1300 MSDHS social assistance line. Community content legal basis: consent for content the user chooses to submit; legitimate interest for reports and moderation records, subject to applicable law. Posts remain visible until deleted by the user or removed by moderation. Report-related moderation records may be retained only as necessary for safety and review; no fixed retention period is currently documented.
 
 ## 14. Respecting Differences, Policy Changes, and Acceptance
 
@@ -113,7 +113,7 @@ SafeSpace อาจตรวจสอบเนื้อหาที่ถูก�
 
 ## 13. เนื้อหาที่ผู้ใช้สร้าง ข้อจำกัดของชุมชน และการขอความช่วยเหลือ
 
-โพสต์และความคิดเห็นสร้างโดยผู้ใช้ SafeSpace ไม่รับรองโดยอัตโนมัติซึ่งความคิดเห็น ประสบการณ์ ข้อกล่าวอ้างทางการแพทย์ คำแนะนำการรักษา คำแนะนำการปฏิบัติ หรือข้อความของผู้ใช้ ไม่มีชุมชนออนไลน์ใดรับประกันว่าจะตรวจพบเนื้อหาที่เป็นอันตรายหรือไม่เหมาะสมทุกอย่างทันที การรายงานช่วยให้ตรวจพบปัญหา ชุมชนไม่สามารถทดแทนความช่วยเหลือจากผู้เชี่ยวชาญได้ ประเทศไทย: 1669 เหตุฉุกเฉินทางการแพทย์; 1323 สายด่วนสุขภาพจิต; 1300 สายด่วนช่วยเหลือสังคม พม.
+โพสต์และความคิดเห็นสร้างโดยผู้ใช้ SafeSpace ไม่รับรองโดยอัตโนมัติซึ่งความคิดเห็น ประสบการณ์ ข้อกล่าวอ้างทางการแพทย์ คำแนะนำการรักษา คำแนะนำการปฏิบัติ หรือข้อความของผู้ใช้ ไม่มีชุมชนออนไลน์ใดรับประกันว่าจะตรวจพบเนื้อหาที่เป็นอันตรายหรือไม่เหมาะสมทุกอย่างทันที การรายงานช่วยให้ตรวจพบปัญหา ชุมชนไม่สามารถทดแทนความช่วยเหลือจากผู้เชี่ยวชาญได้ ประเทศไทย: 1669 เหตุฉุกเฉินทางการแพทย์; 1323 สายด่วนสุขภาพจิต; 1300 สายด่วนช่วยเหลือสังคม พม. ฐานทางกฎหมายสำหรับเนื้อหาชุมชนคือความยินยอมสำหรับเนื้อหาที่ผู้ใช้เลือกส่ง และผลประโยชน์โดยชอบด้วยกฎหมายสำหรับรายงานและบันทึกการกลั่นกรอง ภายใต้กฎหมายที่เกี่ยวข้อง โพสต์จะแสดงจนกว่าผู้ใช้จะลบหรือผู้ดูแลนำออก บันทึกการกลั่นกรองที่เกี่ยวข้องกับรายงานอาจเก็บเท่าที่จำเป็นต่อความปลอดภัยและการตรวจสอบ โดยปัจจุบันยังไม่มีระยะเวลาเก็บรักษาที่แน่นอน
 
 ## 14. การเคารพความแตกต่าง การเปลี่ยนแปลงนโยบาย และการยอมรับ
 
