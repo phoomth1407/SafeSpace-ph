@@ -206,6 +206,10 @@ async function localScreeningAssessment(payload, { isGuest = false } = {}) {
     screening_type: "wellbeing",
     language: payload.language === "en" ? "en" : "th",
     analysis_source: "offline-model",
+    ...(payload.sensitive_data_consent === true ? {
+      consent_version: payload.consent_version,
+      sensitive_data_consent_at: new Date().toISOString(),
+    } : {}),
   };
   const privateResult = {
     ...result,
