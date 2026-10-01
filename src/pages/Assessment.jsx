@@ -55,6 +55,7 @@ export default function Assessment() {
   const [mascotMessage, setMascotMessage] = useState(null);
   const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
   const [sensitiveConsent, setSensitiveConsent] = useState(false);
+  const [shareRiskScore, setShareRiskScore] = useState(false);
   const assessmentPolicyKey = user?.id ? `safespace_assessment_policy_accepted:${user.id}` : null;
   const [policyOpen, setPolicyOpen] = useState(true);
   const [policyScrolledToEnd, setPolicyScrolledToEnd] = useState(false);
@@ -179,6 +180,17 @@ export default function Assessment() {
       }
 
       if (result.is_guest) {
+        if (shareRiskScore) {
+          const bytes = crypto.getRandomValues(new Uint8Array(32));
+          const claimToken = btoa(String.fromCharCode(...bytes)).replace(/\\+/g, "-").replace(/\\//g, "_").replace(/=+$/g, "");
+          try {
+            const shared = await appClient.functions.invoke("saveGuestScore", { risk_score: result.risk_score, risk_level: result.risk_level, language: lang, claim_token: claimToken });
+            if (shared.data?.error || shared.data?.saved !== true) throw new Error("score_save_failed");
+            result.shared_for_history = true;
+          } catch {
+            result.share_save_failed = true;
+          }
+        }
         navigate("/result", { state: { result, isGuest: true } });
       } else {
         navigate(`/result/${result.id}`);
@@ -300,7 +312,16 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
             </div>
           )}
 
-          {error && <div className="bg-red-500/10 text-red-400 text-sm p-3 rounded-xl text-center border border-red-500/20">{error}</div>}
+          {guestMode && !isAuthenticated && (
+            <label className="flex items-start gap-3 rounded-xl border border-slate-700 bg-slate-800/40 p-3 text-sm text-slate-200 cursor-pointer">
+              <input type="checkbox" checked={shareRiskScore} onChange={(e) => setShareRiskScore(e.target.checked)} className="mt-1 accent-rose-400" />
+              <span>
+                <strong>{lang === "en" ? "Optionally share my risk score with SafeSpace" : "อนุญาตให้ SafeSpace เก็บคะแนนความเสี่ยง (ไม่บังคับ)"}</strong>
+                <span className="block mt-1 text-xs leading-relaxed text-slate-400">{lang === "en" ? "If selected, only your risk score, risk level, language and date are saved. Your answers, name and contact details are not included. You will not see guest history while logged out; if you later sign in on this browser, the score can be added to your account history. SafeSpace administrators can view shared scores." : "หากเลือก ระบบจะบันทึกเฉพาะคะแนน ระดับความเสี่ยง ภาษา และวันที่ โดยไม่บันทึกคำตอบ ชื่อ หรือข้อมูลติดต่อ คุณจะไม่เห็นประวัติขณะเป็นผู้เยี่ยมชม แต่หากเข้าสู่ระบบภายหลังจากเบราว์เซอร์นี้ คะแนนอาจถูกเพิ่มในประวัติบัญชี และผู้ดูแล SafeSpace สามารถดูคะแนนที่แบ่งปันได้"}</span>
+              </span>
+            </label>
+          )}
+                    {error && <div className="bg-red-500/10 text-red-400 text-sm p-3 rounded-xl text-center border border-red-500/20">{error}</div>}
 
           <motion.button
             whileHover={{ scale: 1.02 }}
