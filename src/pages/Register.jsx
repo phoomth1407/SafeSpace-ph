@@ -19,6 +19,7 @@ import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 export default function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -45,13 +46,34 @@ export default function Register() {
 
   const handleSubmit = async () => {
     setError("");
+    const birthMatch = /^(\\d{2})\\/(\\d{2})\\/(\\d{4})$/.exec(birthDate.trim());
+    if (!birthMatch) {
+      setError("Enter your birthdate as DD/MM/YYYY.");
+      return;
+    }
+    const [, dayText, monthText, yearText] = birthMatch;
+    const day = Number(dayText);
+    const month = Number(monthText);
+    const year = Number(yearText);
+    const birth = new Date(year, month - 1, day);
+    const today = new Date();
+    if (birth.getFullYear() !== year || birth.getMonth() !== month - 1 || birth.getDate() !== day || birth > today) {
+      setError("Enter a valid birthdate.");
+      return;
+    }
+    let age = today.getFullYear() - year;
+    if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age -= 1;
+    if (age < 13) {
+      setError("You must be at least 13 years old to create a SafeSpace account.");
+      return;
+    }
     if (password !== confirmPassword) {
       setError(t("auth.passwordMismatch"));
       return;
     }
     setLoading(true);
     try {
-      const result = await appClient.auth.register({ email, password });
+      const result = await appClient.auth.register({ email, password, age });
       if (result?.session) {
         const dest = safeReturnTo();
         if (dest.startsWith("http://") || dest.startsWith("https://")) {
@@ -214,6 +236,21 @@ export default function Register() {
       )}
 
       <form onSubmit={(e) => { e.preventDefault(); if (policyAcceptedThisVisit) handleSubmit(); else requirePolicy(handleSubmit); }} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="birthdate">Birthdate (DD/MM/YYYY, Christian calendar)</Label>
+          <Input
+            id="birthdate"
+            type="text"
+            inputMode="numeric"
+            autoComplete="bday"
+            placeholder="DD/MM/YYYY"
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+            maxLength={10}
+            required
+          />
+          <p className="text-xs text-muted-foreground">SafeSpace uses your age for relevant features and does not submit your full birthdate during registration.</p>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
