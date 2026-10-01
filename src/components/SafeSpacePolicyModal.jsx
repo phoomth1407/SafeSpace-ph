@@ -13,7 +13,11 @@ export const SAFESPACE_POLICY_STORAGE_KEY = "safespace_policy_acknowledged_versi
 
 export function hasAcceptedSafeSpacePolicy() {
   try {
-    return window.localStorage.getItem(SAFESPACE_POLICY_STORAGE_KEY) === SAFESPACE_POLICY_VERSION;
+    const saved = window.localStorage.getItem(SAFESPACE_POLICY_STORAGE_KEY);
+    if (!saved) return false;
+
+    const data = JSON.parse(saved);
+    return data?.accepted === true && data?.version === SAFESPACE_POLICY_VERSION;
   } catch {
     return false;
   }
@@ -21,15 +25,23 @@ export function hasAcceptedSafeSpacePolicy() {
 
 export function acknowledgeSafeSpacePolicy() {
   try {
-    window.localStorage.setItem(SAFESPACE_POLICY_STORAGE_KEY, SAFESPACE_POLICY_VERSION);
+    window.localStorage.setItem(
+      SAFESPACE_POLICY_STORAGE_KEY,
+      JSON.stringify({
+        accepted: true,
+        version: SAFESPACE_POLICY_VERSION,
+        acceptedAt: new Date().toISOString(),
+      })
+    );
   } catch {
     // Continue for this visit if browser storage is unavailable.
   }
 }
 
-export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistAcknowledgement = false }) {
+export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistAcknowledgement = false, requiresAcceptance = false }) {
   const { lang } = useTranslation();
   const [atEnd, setAtEnd] = useState(false);
+  const [policyConsentChecked, setPolicyConsentChecked] = useState(false);
   const sections = lang === "en" ? SAFESPACE_POLICY_EN : SAFESPACE_POLICY_TH;
   const title = lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace";
   const intro = lang === "en"
@@ -37,13 +49,16 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
     : "กรุณาอ่านนโยบายภาพรวมของ SafeSpace ก่อนสร้างบัญชีหรือเข้าสู่ระบบ";
 
   useEffect(() => {
-    if (open) setAtEnd(false);
+    if (open) {
+      setAtEnd(false);
+      setPolicyConsentChecked(false);
+    }
   }, [open]);
 
   if (!open) return null;
 
   const handleAccept = () => {
-    if (!atEnd) return;
+    if (!atEnd || (requiresAcceptance && !policyConsentChecked)) return;
     if (persistAcknowledgement) acknowledgeSafeSpacePolicy();
     onAccept?.();
   };
@@ -94,10 +109,28 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
                 ? (lang === "en" ? "✓ You reached the end of the policy" : "✓ คุณอ่านถึงท้ายเอกสารแล้ว")
                 : (lang === "en" ? "Scroll to the bottom to continue" : "เลื่อนอ่านให้ถึงด้านล่างเพื่อดำเนินการต่อ")}
             </span>
-            <span className="text-slate-600">
-              {lang === "en" ? "Required before authentication" : "ต้องอ่านและยอมรับก่อนยืนยันตัวตน"}
-            </span>
+            {requiresAcceptance && (
+              <span className="text-slate-600">
+                {lang === "en" ? "Required before authentication" : "ต้องอ่านและยอมรับก่อนยืนยันตัวตน"}
+              </span>
+            )}
           </div>
+          {requiresAcceptance && (
+            <label className="flex items-start gap-3 mb-3 rounded-2xl border border-slate-800 bg-slate-900/60 px-4 py-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={policyConsentChecked}
+                onChange={(e) => setPolicyConsentChecked(e.target.checked)}
+                className="mt-1 h-4 w-4 shrink-0 accent-sky-500"
+              />
+              <span className="text-xs leading-5 text-slate-300">
+                {lang === "en"
+                  ? "I have read and agree to the SafeSpace Policy."
+                  : "ฉันได้อ่านและยอมรับนโยบาย SafeSpace"}
+              </span>
+            </label>
+          )}
+
           <div className="flex gap-2">
             {onClose && (
               <button
@@ -110,12 +143,14 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
             )}
             <button
               type="button"
-              disabled={!atEnd}
+              disabled={!atEnd || (requiresAcceptance && !policyConsentChecked)}
               onClick={handleAccept}
               className="flex-1 flex items-center justify-center gap-2 bg-slate-100 text-slate-900 text-sm font-semibold py-3 rounded-2xl hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <Check className="w-4 h-4" />
-              {lang === "en" ? "Agree & Continue" : "ยอมรับและดำเนินการต่อ"}
+              {requiresAcceptance
+                ? (lang === "en" ? "Agree & Continue" : "ยอมรับและดำเนินการต่อ")
+                : (lang === "en" ? "Close" : "ปิด")}
             </button>
           </div>
         </div>
