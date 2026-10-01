@@ -143,6 +143,10 @@ async function main(req: Request) {
   }
   const ageGroup = ageNum === null ? null : (ageNum < 20 ? "under20" : "over20");
   const nat = body.nationality === "foreigner" ? "foreigner" : "thai";
+  const consentVersion = typeof body.consent_version === "string" ? body.consent_version.trim() : "";
+  if (body.sensitive_data_consent !== true || !/^\\d+\\.\\d+$/.test(consentVersion) || consentVersion.length > 32) {
+    return new Response(JSON.stringify({ error: "explicit assessment consent required" }), { status: 400, headers: corsHeaders });
+  }
 
   const authHeader = req.headers.get("Authorization") || "";
   const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
@@ -332,8 +336,10 @@ async function main(req: Request) {
     risk_level: validLevels.includes(result.risk_level) ? result.risk_level : "moderate",
     risk_score: Math.max(0, Math.min(100, Math.round(Number(result.risk_score) || 0))),
     screening_type: "wellbeing",
-    analysis_source: aiSucceeded ? (apiKey ? "ai" : "ai") : "offline-model",
+    analysis_source: aiSucceeded ? "ai" : "offline-model",
     language,
+    consent_version: consentVersion,
+    sensitive_data_consent_at: new Date().toISOString(),
   };
 
   const { data: saved, error: saveError } = await userClient.from("assessments").insert(row).select("id,created_date,risk_level,risk_score,screening_type,analysis_source,language").single();
