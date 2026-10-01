@@ -1,7 +1,7 @@
 # Assessment Policy
 
-**Version 1.0**  
-**Last updated: September 2026**
+**Version 1.1**  
+**Last updated: October 2026**
 
 ## English
 
@@ -31,7 +31,7 @@ Assessment answers can contain wellbeing-related personal information. Where req
 
 ## 7. Signed-In and Guest Assessment
 
-When signed in, assessment records may be associated with the account and supported history features may show saved records. Users can request deletion of saved assessment records through the available account feature. Removal from backups, caches, logs, or other technical systems may take longer and is not guaranteed to be immediate. Guest assessment is also available. The frontend offers a guest option, but the current analyze-assessment Edge Function requires authentication and only saves signed-in assessments. Guest submission is therefore not confirmed to work or to be stored server-side in the current implementation. SafeSpace's stated intention is to retain guest answers for service improvement, but this collection is not implemented or verified. Do not submit a guest assessment until the guest flow, purpose, legal basis, access controls, and retention period are implemented and disclosed. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
+When signed in, the assessment answers are sent to the authenticated analysis function for processing, which may use configured external AI providers. The database stores score/category and operational metadata only for new submissions; it does not store new answers or generated narrative results in the assessment row. The full result may be kept in browser localStorage (up to 20 entries) to display the result on that device. Anyone with access to an unlocked/shared browser profile may be able to view locally cached information. Clearing browser data or using another device may make full details unavailable; signed-in History can still show saved score metadata. Users can delete saved assessment records through the available feature. Guest assessment is calculated locally and shown through browser navigation state; persistent guest history is not implemented, and guest results are not written to the guest_assessments table by the current frontend flow. The guest-assessments table may contain legacy/admin-managed records; authenticated Data API reads are limited to score metadata and row access is admin-controlled. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
 
 ## 8. Security, Data Minimisation, and Limits of Anonymity
 
@@ -73,7 +73,7 @@ SafeSpace ออกแบบโดยคำนึงถึงเยาวชน�
 
 ## 7. แบบประเมินสำหรับผู้เข้าสู่ระบบและ Guest
 
-เมื่อเข้าสู่ระบบ ข้อมูลแบบประเมินอาจเชื่อมกับบัญชีและประวัติที่รองรับอาจแสดงผลที่บันทึกไว้ ผู้ใช้สามารถขอลบประวัติแบบประเมินที่บันทึกผ่านฟีเจอร์บัญชีที่มีอยู่ การนำออกจาก backup, cache, log หรือระบบเทคนิคอื่นอาจใช้เวลานานกว่าและไม่รับประกันว่าจะเกิดขึ้นทันที Guest assessment ก็มีได้ หน้าเว็บมีตัวเลือก Guest แต่ Edge Function analyze-assessment ปัจจุบันกำหนดให้ต้องเข้าสู่ระบบและบันทึกเฉพาะแบบประเมินของผู้ที่เข้าสู่ระบบ จึงยังยืนยันไม่ได้ว่าการส่งแบบประเมิน Guest ทำงานหรือถูกเก็บบนเซิร์ฟเวอร์ แม้มีความตั้งใจจะเก็บคำตอบ Guest เพื่อพัฒนาบริการ แต่ยังไม่พบการทำงานดังกล่าวในโค้ดที่ตรวจสอบ อย่าส่งแบบประเมิน Guest จนกว่าจะพัฒนาและตรวจสอบ flow วัตถุประสงค์ ฐานทางกฎหมาย การควบคุมการเข้าถึง และระยะเวลาเก็บรักษา พร้อมแจ้งผู้ใช้อย่างชัดเจน Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ ข้อมูลแบบประเมินไม่ตั้งใจให้กลายเป็นโพสต์ชุมชนสาธารณะ
+เมื่อเข้าสู่ระบบ คำตอบแบบประเมินจะถูกส่งไปยังฟังก์ชันวิเคราะห์ที่ต้องยืนยันตัวตน ซึ่งอาจใช้ผู้ให้บริการ AI ภายนอกตามการตั้งค่า สำหรับการส่งแบบประเมินใหม่ ฐานข้อมูลจะเก็บเฉพาะคะแนน/ระดับผลและข้อมูลทางเทคนิคที่จำเป็น โดยไม่บันทึกคำตอบหรือคำอธิบายผลที่สร้างขึ้นลงในแถว assessments รายละเอียดผลฉบับเต็มอาจถูกเก็บใน localStorage ของเบราว์เซอร์ (สูงสุด 20 รายการ) เพื่อแสดงผลบนอุปกรณ์นั้น ผู้ที่เข้าถึงโปรไฟล์เบราว์เซอร์ที่เปิดค้างหรือใช้ร่วมกันอาจเห็นข้อมูลที่เก็บไว้ได้ การล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนอุปกรณ์อาจทำให้ไม่สามารถดูรายละเอียดฉบับเต็มได้ แต่หน้า History ยังแสดงข้อมูลคะแนนที่บันทึกไว้ ผู้ใช้สามารถลบรายการที่บันทึกผ่านฟีเจอร์ที่มี แบบประเมิน Guest คำนวณภายในเครื่องและแสดงผลผ่านสถานะการนำทางของเบราว์เซอร์ ยังไม่มีประวัติ Guest แบบถาวร และ flow ปัจจุบันไม่ได้เขียนผล Guest ลงในตาราง guest_assessments ตารางดังกล่าวอาจมีข้อมูลเดิมหรือข้อมูลที่ผู้ดูแลจัดการ โดยการอ่านผ่าน Data API จำกัดไว้เฉพาะข้อมูลคะแนนและยังอยู่ภายใต้ RLS สำหรับผู้ดูแล Guest ไม่ได้รับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ และคำตอบแบบประเมินไม่ได้มีจุดประสงค์ให้กลายเป็นโพสต์สาธารณะในชุมชน
 
 ## 8. ความปลอดภัย การลดข้อมูล และข้อจำกัดของการไม่เปิดเผยตัวตน
 
