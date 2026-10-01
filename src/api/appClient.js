@@ -515,9 +515,11 @@ const auth = {
   async loginWithProvider(provider = "google", returnTo = "/", age, shareRiskScore) {
     try {
       if (!Number.isInteger(age) || age < 13 || age > 120) throw new Error("A valid age of 13 or older is required.");
-      if (typeof shareRiskScore !== "boolean") throw new Error("Choose whether to share assessment risk scores.");
+      if (shareRiskScore !== undefined && typeof shareRiskScore !== "boolean") throw new Error("Choose whether to share assessment risk scores.");
       sessionStorage.setItem("safespace_pending_oauth_age", String(age));
-      sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
+      if (typeof shareRiskScore === "boolean") {
+        sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
+      }
       sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
       const redirectTo = `${window.location.origin}${window.location.pathname}`;
       const { error } = await supabase.auth.signInWithOAuth({
