@@ -198,7 +198,7 @@ export default function History() {
                     <Surface className="history-assessment-card p-0 overflow-hidden" interactive>
                       <div className={"history-card-accent history-card-accent--" + risk.accent} />
                       <div className="flex items-center gap-4 p-4 sm:p-5">
-                        <Link to={"/result/" + a.id} className="min-w-0 flex-1 flex items-center gap-3.5">
+                        <Link to={a.is_shared_guest_score ? "/history" : "/result/" + a.id} className="min-w-0 flex-1 flex items-center gap-3.5">
                           <div className={"history-list-icon " + risk.color}><ClipboardList className="w-5 h-5" /></div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
@@ -211,9 +211,9 @@ export default function History() {
                           </div>
                           <ChevronRight className="w-5 h-5 text-slate-500 flex-shrink-0" />
                         </Link>
-                        <button type="button" aria-label={t("history.delete")} title={t("history.delete")} onClick={() => handleDelete(a)} disabled={deletingId === a.id} className="history-delete-btn">
+                        {!a.is_shared_guest_score && <button type="button" aria-label={t("history.delete")} title={t("history.delete")} onClick={() => handleDelete(a)} disabled={deletingId === a.id} className="history-delete-btn">
                           {deletingId === a.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                        </button>
+                        </button>}
                       </div>
                     </Surface>
                   </StaggerItem>
