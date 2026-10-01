@@ -126,7 +126,7 @@ export default function Register() {
   };
 
   const getDeclaredAge = () => {
-    const match = /^([0-9]{2})\\/([0-9]{2})\\/([0-9]{4})$/.exec(birthDate.trim());
+    const match = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/.exec(birthDate.trim());
     if (!match) return null;
     const [, d, m, y] = match;
     const day = Number(d), month = Number(m), year = Number(y);
