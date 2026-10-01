@@ -471,18 +471,26 @@ const auth = {
     if (error) throw error;
     return currentAppUser();
   },
-  async register({ email, password, age }) {
+  async register({ email, password, age, shareRiskScore }) {
     await validatePasswordBeforeSignup(password);
     if (!Number.isInteger(age) || age < 13 || age > 120) {
       throw new Error("A valid age of 13 or older is required.");
     }
-    // Store only the calculated age in Auth user metadata; never send the birthdate.
+    if (typeof shareRiskScore !== "boolean") {
+      throw new Error("Choose whether to share assessment risk scores.");
+    }
+    // Keep this explicit choice in session storage until an authenticated session exists.
+    // The full birthdate is never sent to Supabase.
+    sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { age } },
     });
-    if (error) throw error;
+    if (error) {
+      sessionStorage.removeItem("safespace_pending_share_risk_score");
+      throw error;
+    }
     return data.user ? currentAppUser() : data;
   },
   async verifyOtp({ email, otpCode }) {
@@ -504,10 +512,12 @@ const auth = {
   redirectToLogin(returnTo = "/") {
     window.location.hash = `/login?returnTo=${encodeURIComponent(returnTo)}`;
   },
-  async loginWithProvider(provider = "google", returnTo = "/", age) {
+  async loginWithProvider(provider = "google", returnTo = "/", age, shareRiskScore) {
     try {
       if (!Number.isInteger(age) || age < 13 || age > 120) throw new Error("A valid age of 13 or older is required.");
+      if (typeof shareRiskScore !== "boolean") throw new Error("Choose whether to share assessment risk scores.");
       sessionStorage.setItem("safespace_pending_oauth_age", String(age));
+      sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
       sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
       const redirectTo = `${window.location.origin}${window.location.pathname}`;
       const { error } = await supabase.auth.signInWithOAuth({
@@ -518,6 +528,7 @@ const auth = {
     } catch (error) {
       sessionStorage.removeItem("safespace_auth_return_to");
       sessionStorage.removeItem("safespace_pending_oauth_age");
+      sessionStorage.removeItem("safespace_pending_share_risk_score");
       const message = error?.message || "Google sign-in failed";
       if (/provider.*not enabled|unsupported provider/i.test(message)) {
         throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet.");
