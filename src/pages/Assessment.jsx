@@ -312,7 +312,7 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
           ]}
           onAccept={() => { setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null); }}
           onDecline={() => { setPolicyOpen(false); setPolicyScrolledToEnd(false); }}
-        />}
+        />
           </AnimatePresence>,
           document.body
         )}
