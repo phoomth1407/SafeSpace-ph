@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Smile, Meh, Frown, HeartCrack, CloudRain, SunMedium, Flame, Check, Sparkles } from "lucide-react";
 import { MoodIllustration } from "@/components/WellnessIllustration";
 import { useTranslation } from "@/lib/i18n";
@@ -44,6 +46,8 @@ function getWeekDays() {
 
 export default function MoodCheckInCard() {
   const { t, lang } = useTranslation();
+  const { user, isAuthenticated } = useAuth();
+  const [saving, setSaving] = useState(false);
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   const [history, setHistory] = useState(() => {
@@ -59,6 +63,33 @@ export default function MoodCheckInCard() {
     } catch {}
     return {};
   });
+
+  useEffect(() => {
+    let active = true;
+    async function loadAccountHistory() {
+      if (!isAuthenticated || !user?.id) return;
+      const { data, error } = await supabase.from("mood_checkins")
+        .select("checkin_date,mood,factor,created_at")
+        .eq("user_id", user.id)
+        .order("checkin_date", { ascending: false })
+        .limit(365);
+      if (!active) return;
+      if (!error) {
+        const accountHistory = Object.fromEntries((data || []).map((item) => [
+          item.checkin_date,
+          { mood: item.mood, factor: item.factor || "", timestamp: item.created_at ? new Date(item.created_at).getTime() : Date.now() },
+        ]));
+        setHistory(accountHistory);
+        const today = accountHistory[todayStr];
+        setMood(today?.mood || "");
+        setFactor(today?.factor || "");
+        setSaved(Boolean(today?.mood));
+        setIsEditing(!today?.mood);
+      }
+    }
+    loadAccountHistory();
+    return () => { active = false; };
+  }, [isAuthenticated, user?.id, todayStr]);
 
   const todayEntry = history[todayStr];
   const [mood, setMood] = useState(() => todayEntry?.mood || localStorage.getItem("safespace_mood") || "");
@@ -89,21 +120,34 @@ export default function MoodCheckInCard() {
     return count;
   }, [history]);
 
-  const save = () => {
-    if (!mood) return;
-    const updated = {
-      ...history,
-      [todayStr]: { mood, factor, timestamp: Date.now() },
-    };
-    setHistory(updated);
+  const save = async () => {
+    if (!mood || saving) return;
+    setSaving(true);
+    const updated = { ...history, [todayStr]: { mood, factor, timestamp: Date.now() } };
     try {
-      localStorage.setItem("safespace_mood_history", JSON.stringify(updated));
-      localStorage.setItem("safespace_mood", mood);
-      if (factor) localStorage.setItem("safespace_mood_factor", factor);
-      else localStorage.removeItem("safespace_mood_factor");
-    } catch {}
-    setSaved(true);
-    setIsEditing(false);
+      if (isAuthenticated && user?.id) {
+        const { error } = await supabase.from("mood_checkins").upsert({
+          user_id: user.id,
+          checkin_date: todayStr,
+          mood,
+          factor: factor || null,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "user_id,checkin_date" });
+        if (error) throw error;
+      } else {
+        localStorage.setItem("safespace_mood_history", JSON.stringify(updated));
+        localStorage.setItem("safespace_mood", mood);
+        if (factor) localStorage.setItem("safespace_mood_factor", factor);
+        else localStorage.removeItem("safespace_mood_factor");
+      }
+      setHistory(updated);
+      setSaved(true);
+      setIsEditing(false);
+    } catch {
+      setSaved(false);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const dayNames = DAY_LABELS[lang] || DAY_LABELS.th;
@@ -237,14 +281,14 @@ export default function MoodCheckInCard() {
               <button
                 type="button"
                 onClick={save}
-                disabled={saved && !isEditing}
+                disabled={saving || (saved && !isEditing)}
                 className={`mood-save-button px-4 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs ${
                   saved && !isEditing
                     ? "bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-default"
                     : "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 hover:opacity-90 active:scale-95"
                 }`}
               >
-                {saved && !isEditing ? (
+                {saving ? (<>Saving…</>) : saved && !isEditing ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-500" />
                     {t("mood.saved")}
