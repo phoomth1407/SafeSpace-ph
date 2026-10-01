@@ -122,6 +122,7 @@ export default function Register() {
       await appClient.auth.me();
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
+      await appClient.auth.me();
       const dest = safeReturnTo();
       if (dest.startsWith("http://") || dest.startsWith("https://")) window.location.href = dest;
       else navigate(dest);
