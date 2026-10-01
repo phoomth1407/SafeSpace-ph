@@ -1,5 +1,15 @@
 # SafeSpace — Changelog
 
+## 2026-10-01 — Assessment consent metadata and access controls
+
+- Require the assessment UI's explicit sensitive-data consent before submission and include the policy version in the authenticated analysis request.
+- Validate the consent flag and policy-version format in `analyze-assessment`; record the consent version and server receipt timestamp as separate metadata on new signed-in assessment rows.
+- Keep assessment answers and generated narrative results out of the database row; the consent fields contain no answer text.
+- Add narrowly scoped authenticated insert grants for the consent metadata and apply the migration to the configured Supabase project.
+- Deploy `analyze-assessment` with JWT verification enabled (active function version 16).
+- Align the assessment policy's English/Thai version markers and remove duplicated young-user policy text.
+
+
 ## 2026-09-30 — Documentation and application-experience refresh
 
 - Added current feature documentation covering assessment, Community, Resources, authentication, administration, and the application transition system.
