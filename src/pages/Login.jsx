@@ -9,7 +9,6 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
-import GoogleOneTap from "@/components/GoogleOneTap";
 import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 
 
