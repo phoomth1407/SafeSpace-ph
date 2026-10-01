@@ -16,6 +16,27 @@ const tableFor = (name) => ({
 
 const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+const PRIVATE_ASSESSMENT_CACHE = "safespace_private_assessment_results_v1";
+function cachePrivateAssessment(result) {
+  if (!result?.id || typeof window === "undefined") return;
+  try {
+    const existing = JSON.parse(window.localStorage.getItem(PRIVATE_ASSESSMENT_CACHE) || "{}");
+    const cache = existing && typeof existing === "object" && !Array.isArray(existing) ? existing : {};
+    cache[result.id] = result;
+    const entries = Object.entries(cache).slice(-20);
+    window.localStorage.setItem(PRIVATE_ASSESSMENT_CACHE, JSON.stringify(Object.fromEntries(entries)));
+  } catch {
+    // The assessment remains available for this page view if local storage is unavailable.
+  }
+}
+function getCachedPrivateAssessment(id) {
+  if (!id || typeof window === "undefined") return null;
+  try {
+    const cache = JSON.parse(window.localStorage.getItem(PRIVATE_ASSESSMENT_CACHE) || "{}");
+    return cache && typeof cache === "object" ? cache[id] || null : null;
+  } catch { return null; }
+}
+
 async function validatePasswordBeforeSignup(password) {
   if (typeof password !== "string" || password.length < 12) {
     throw new Error("Password must be at least 12 characters long.");
@@ -84,7 +105,10 @@ const entity = (name) => {
   return {
     async list(order = "-created_date", limit = 50) {
       const field = order.replace(/^-/, "");
-      let query = supabase.from(table).select("*");
+      const columns = table === "assessments"
+        ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
+        : "*";
+      let query = supabase.from(table).select(columns);
       query = query.order(field, { ascending: !order.startsWith("-") });
       const { data, error } = await query.limit(limit);
       if (error) throw error;
@@ -103,6 +127,8 @@ const entity = (name) => {
       const { data, error } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
       if (error) throw error;
       if (!data) return null;
+      const privateResult = table === "assessments" ? getCachedPrivateAssessment(id) : null;
+      if (privateResult) return { ...data, ...privateResult, id: data.id, created_date: data.created_date };
 
       // Repair legacy assessment rows created by the old "fallback" implementation.
       // This also makes previously-created result links show the new offline model
@@ -183,21 +209,34 @@ const entities = new Proxy({}, { get: (_, name) => entity(name) });
 
 async function localScreeningAssessment(payload, { isGuest = false } = {}) {
   const result = computeAssessmentResult(payload.answers || [], payload.language || "th");
+  const authUser = isGuest ? null : await currentAuthUser();
   const row = {
-    ...result,
     id: makeId(),
-    created_by_id: isGuest ? null : (await currentAuthUser())?.id || null,
-    created_by: isGuest ? null : (await currentAuthUser())?.email || null,
-    age: Number.isFinite(Number(payload.age)) ? Number(payload.age) : null,
-    nationality: payload.nationality || "thai",
+    created_by_id: authUser?.id || null,
+    risk_level: result.risk_level,
+    risk_score: result.risk_score,
     screening_type: "wellbeing",
     language: payload.language === "en" ? "en" : "th",
-    answers: payload.answers || [],
+    analysis_source: "offline-model",
   };
-  if (isGuest) return { ...row, is_guest: true };
-  const { data, error } = await supabase.from("assessments").insert(row).select("*").single();
+  const privateResult = {
+    ...result,
+    ...row,
+    created_by: null,
+    age: Number.isFinite(Number(payload.age)) ? Number(payload.age) : null,
+    nationality: payload.nationality || "thai",
+    answers: payload.answers || [],
+    is_guest: isGuest,
+  };
+  if (isGuest) return privateResult;
+  const { data, error } = await supabase.from("assessments")
+    .insert(row)
+    .select("id,created_date,risk_level,risk_score,screening_type,analysis_source,language")
+    .single();
   if (error) throw error;
-  return { ...data, is_guest: false, analysis_source: "offline-model" };
+  const fullResult = { ...privateResult, ...data, is_guest: false };
+  cachePrivateAssessment(fullResult);
+  return fullResult;
 }
 
 const invoke = async (name, payload = {}) => {
@@ -215,6 +254,8 @@ const invoke = async (name, payload = {}) => {
       // The current Supabase function may have its own legacy local fallback.
       // Replace that result with the newer offline model and update the same
       // database row so the user does not get a duplicate history entry.
+      if (data.id) cachePrivateAssessment({ ...data, ...computeAssessmentResult(payload.answers || [], payload.language || "th"), answers: payload.answers || [], age: payload.age, nationality: payload.nationality, is_guest: false });
+
       if (data.analysis_source === "fallback") {
         const offline = computeAssessmentResult(payload.answers || [], payload.language || "th");
         const patch = {
