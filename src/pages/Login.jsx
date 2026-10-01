@@ -18,7 +18,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const getDeclaredAge = () => {
-    const match = /^([0-9]{2})\\/([0-9]{2})\\/([0-9]{4})$/.exec(birthDate.trim());
+    const match = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/.exec(birthDate.trim());
     if (!match) return null;
     const [, d, m, y] = match;
     const day = Number(d), month = Number(m), year = Number(y);
@@ -128,7 +128,7 @@ export default function Login() {
       <form onSubmit={(e) => { e.preventDefault(); if (policyAcceptedThisVisit) handleSubmit(); else requirePolicy(handleSubmit); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="birthdate">Birthdate (DD/MM/YYYY, Christian calendar)</Label>
-          <Input id="birthdate" type="text" inputMode="numeric" autoComplete="bday" placeholder="DD/MM/YYYY" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} maxLength={10} required />
+          <Input id="birthdate" type="text" inputMode="numeric" autoComplete="bday" placeholder="DD/MM/YYYY" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} maxLength={10} />
           <p className="text-xs text-muted-foreground">Used as a self-declared age check for Google sign-in.</p>
         </div>
         <div className="space-y-2">
