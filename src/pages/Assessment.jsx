@@ -46,6 +46,11 @@ export default function Assessment() {
   const [error, setError] = useState(null);
   const [step, setStep] = useState("intro");
   const [ageInput, setAgeInput] = useState("");
+  useEffect(() => {
+    if (isAuthenticated && Number.isInteger(Number(user?.age)) && Number(user.age) >= 13) {
+      setAgeInput(String(user.age));
+    }
+  }, [isAuthenticated, user?.age]);
   const [nationality, setNationality] = useState(lang === "en" ? "" : "thai");
   const [mascotMessage, setMascotMessage] = useState(null);
   const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
@@ -151,7 +156,7 @@ export default function Assessment() {
       const res = await appClient.functions.invoke("analyzeAssessment", {
         answers: answersArray,
         language: lang,
-        age: Number(ageInput),
+        age: isAuthenticated && Number.isInteger(Number(user?.age)) ? Number(user.age) : Number(ageInput),
         nationality: nationality,
       });
       const result = res.data;
@@ -250,7 +255,8 @@ export default function Assessment() {
 
   // Intro step — collect minimal details, then require policy acceptance before the assessment begins
   if (step === "intro") {
-    const canOpenPolicy = ageInput && Number(ageInput) >= 1 && Number(ageInput) <= 120 && (lang !== "en" || nationality);
+    const effectiveAge = isAuthenticated && Number.isInteger(Number(user?.age)) ? Number(user.age) : Number(ageInput);
+    const canOpenPolicy = effectiveAge >= 13 && effectiveAge <= 120 && (lang !== "en" || nationality);
 const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH;
     const policyTitle = lang === "en" ? "SafeSpace Assessment Policy" : "นโยบายการประเมินของ SafeSpace";
 
@@ -262,10 +268,15 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
             <p className="text-sm text-slate-400 leading-relaxed">{t("assess.intro.subtitle")}</p>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-200">{t("assess.intro.ageLabel")}</label>
-            <input type="number" min="1" max="120" value={ageInput} onChange={(e) => setAgeInput(e.target.value)} placeholder={t("assess.intro.agePlaceholder")} className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:text-slate-500" />
-          </div>
+          {(!isAuthenticated || !Number.isInteger(Number(user?.age))) && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-200">{t("assess.intro.ageLabel")}</label>
+              <input type="number" min="13" max="120" value={ageInput} onChange={(e) => setAgeInput(e.target.value)} placeholder={t("assess.intro.agePlaceholder")} className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:text-slate-500" />
+            </div>
+          )}
+          {isAuthenticated && Number.isInteger(Number(user?.age)) && (
+            <p className="text-xs text-slate-400">{lang === "en" ? "Age on your account: " + user.age : "อายุในบัญชีของคุณ: " + user.age + " ปี"}</p>
+          )}
 
           {lang === "en" && (
             <div className="space-y-2">
@@ -283,7 +294,8 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              if (!ageInput || Number(ageInput) < 1 || Number(ageInput) > 120) { setError(t("assess.intro.ageRequired")); return; }
+              const effectiveAge = isAuthenticated && Number.isInteger(Number(user?.age)) ? Number(user.age) : Number(ageInput);
+              if (!Number.isInteger(effectiveAge) || effectiveAge < 13 || effectiveAge > 120) { setError(t("assess.intro.ageRequired")); return; }
               if (lang === "en" && !nationality) { setError(t("assess.intro.ageRequired")); return; }
               setError(null);
               if (!privacyAcknowledged) { setPolicyScrolledToEnd(false); setPolicyOpen(true); return; }
