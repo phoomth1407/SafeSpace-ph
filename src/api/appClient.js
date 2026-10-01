@@ -270,6 +270,13 @@ async function claimPendingGuestScores() {
 }
 
 const invoke = async (name, payload = {}) => {
+  if (name === "adminSharedAssessments") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { data, error } = await supabase.rpc("admin_list_shared_assessments");
+    if (error) throw error;
+    return { data: data || [] };
+  }
   if (name === "adminGuestScoreShares") {
     const authUser = await currentAuthUser();
     if (!authUser) return { data: { error: "auth_required" } };
