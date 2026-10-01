@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2, Check, Heart, LogIn, UserPlus, Sparkles, Shield, User as UserIcon, ShieldAlert, Home as HomeIcon, GraduationCap, Users as UsersIcon, Apple } from "lucide-react";
 import { assessmentCategories } from "@/lib/assessmentQuestions";
-import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH, ASSESSMENT_POLICY_VERSION, ASSESSMENT_POLICY_LAST_UPDATED_EN, ASSESSMENT_POLICY_LAST_UPDATED_TH } from "@/lib/assessmentPolicy";
+import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH } from "@/lib/assessmentPolicy";
 import { useAuth } from "@/lib/AuthContext";
 import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
