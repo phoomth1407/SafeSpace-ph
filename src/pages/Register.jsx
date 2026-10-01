@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { appClient } from "@/api/appClient";
 import { supabase } from "@/lib/supabaseClient";
@@ -26,8 +26,9 @@ export default function Register() {
   const navigate = useNavigate();
   const { t, lang } = useTranslation();
   const en = lang === "en";
-  const today = new Date();
+  const [today, setToday] = useState(() => new Date());
   const todayYear = today.getFullYear();
+  useEffect(() => { const refresh = () => setToday(new Date()); const timer = window.setInterval(refresh, 60_000); return () => window.clearInterval(timer); }, []);
   const [step, setStep] = useState("method");
   const [method, setMethod] = useState(null);
   const [day, setDay] = useState(String(today.getDate()));
@@ -44,13 +45,14 @@ export default function Register() {
   const [policyOpen, setPolicyOpen] = useState(false);
   const [policyAccepted, setPolicyAccepted] = useState(false);
 
-  const maxDay = useMemo(() => new Date(Number(year), Number(month), 0).getDate(), [year, month]);
+  const calendarDays = useMemo(() => new Date(Number(year), Number(month), 0).getDate(), [year, month]);
+  const maxDay = Number(year) === todayYear && Number(month) === today.getMonth() + 1 ? Math.min(calendarDays, today.getDate()) : calendarDays;
   const selectedDay = Math.min(Number(day), maxDay);
   const age = getAge(Number(year), Number(month), selectedDay, today);
   const validAge = Number.isInteger(age) && age >= 13 && age <= 120;
   const days = Array.from({ length: maxDay }, (_, i) => i + 1);
   const years = Array.from({ length: 121 }, (_, i) => todayYear - i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const months = Array.from({ length: Number(year) === todayYear ? today.getMonth() + 1 : 12 }, (_, i) => i + 1);
   const birthDateValid = age !== null && age >= 0 && age <= 120;
 
   const begin = (selectedMethod) => {
@@ -133,7 +135,7 @@ export default function Register() {
   const SelectField = ({ label, value, onChange, children, ariaLabel }) => (
     <div className="min-w-0 flex-1 space-y-2">
       <Label>{label}</Label>
-      <select aria-label={ariaLabel} value={value} onChange={(e) => onChange(e.target.value)} className="h-12 w-full rounded-xl border border-input bg-background px-3 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring">
+      <select size={5} aria-label={ariaLabel} value={value} onChange={(e) => onChange(e.target.value)} className="h-12 w-full rounded-xl border border-input bg-background px-3 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring">
         {children}
       </select>
     </div>
@@ -172,8 +174,8 @@ export default function Register() {
           <Label>{en ? "Date of birth" : "วันเดือนปีเกิด"}</Label>
           <div className="flex gap-2">
             <SelectField label={en ? "Day" : "วัน"} ariaLabel="Day" value={day} onChange={setDay}>{days.map((d) => <option key={d} value={d}>{String(d).padStart(2,"0")}</option>)}</SelectField>
-            <SelectField label={en ? "Month" : "เดือน"} ariaLabel="Month" value={month} onChange={setMonth}>{months.map((m) => <option key={m} value={m}>{en ? new Date(2000,m-1,1).toLocaleString("en",{month:"short"}) : new Date(2000,m-1,1).toLocaleString("th",{month:"short"})}</option>)}</SelectField>
-            <SelectField label={en ? "Year" : "ปี"} ariaLabel="Year" value={year} onChange={setYear}>{years.map((y) => <option key={y} value={y}>{y}</option>)}</SelectField>
+            <SelectField label={en ? "Month" : "เดือน"} ariaLabel="Month" value={month} onChange={(next) => { setMonth(next); setDay("1"); }}>{months.map((m) => <option key={m} value={m}>{en ? new Date(2000,m-1,1).toLocaleString("en",{month:"short"}) : new Date(2000,m-1,1).toLocaleString("th",{month:"short"})}</option>)}</SelectField>
+            <SelectField label={en ? "Year" : "ปี"} ariaLabel="Year" value={year} onChange={(next) => { setYear(next); setMonth(next === String(todayYear) ? String(today.getMonth() + 1) : "1"); setDay("1"); }}>{years.map((y) => <option key={y} value={y}>{y}</option>)}</SelectField>
           </div>
           <p className="text-xs text-muted-foreground">{en ? `Latest selectable date: ${today.toLocaleDateString("en-GB")} · Calculated age: ${birthDateValid ? age : "—"}` : `เลือกวันเกิดได้ถึง: ${today.toLocaleDateString("th-TH")} · อายุที่คำนวณได้: ${birthDateValid ? age : "—"}`}</p>
           <p className="text-xs text-muted-foreground">{en ? "Only your calculated age is used for account features; the full date is not stored." : "ระบบใช้เฉพาะอายุที่คำนวณได้สำหรับฟีเจอร์บัญชี โดยไม่จัดเก็บวันเกิดแบบเต็ม"}</p>
