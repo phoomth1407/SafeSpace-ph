@@ -106,7 +106,7 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
               <button type="button" onClick={()=>setFullOpen(true)} className="text-sm text-sky-300 hover:text-sky-200 underline underline-offset-4">{lang === "en" ? "Read the full SafeSpace Policy" : "อ่าน SafeSpace Policy ฉบับเต็ม"}</button>
               <div className="flex gap-2">
                 {onClose && <button type="button" onClick={onClose} className="flex-1 px-5 py-3 rounded-2xl border border-slate-600 text-slate-200 text-sm font-semibold hover:bg-slate-900">{lang === "en" ? "Decline" : "ปฏิเสธ"}</button>}
-                <button type="button" disabled={!ready} onClick={accept} className="flex-1 px-5 py-3 rounded-2xl bg-slate-100 text-slate-900 text-sm font-semibold hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed">{lang === "en" ? "Agree and Continue" : "ยอมรับและดำเนินการต่อ"}</button>
+                <button type="button" disabled={!ready} onClick={accept} className="flex-1 px-5 py-3 rounded-2xl bg-slate-100 text-slate-900 text-sm font-semibold hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed">{requiresAcceptance ? (lang === "en" ? "Agree and Continue" : "ยอมรับและดำเนินการต่อ") : (lang === "en" ? "Close" : "ปิด")}</button>
               </div>
             </div>
           </>
