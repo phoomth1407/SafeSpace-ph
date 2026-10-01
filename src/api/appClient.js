@@ -107,7 +107,9 @@ const entity = (name) => {
       const field = order.replace(/^-/, "");
       const columns = table === "assessments"
         ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
-        : "*";
+        : table === "guest_assessments"
+          ? "id,created_date,updated_date,risk_level,risk_score,language"
+          : "*";
       let query = supabase.from(table).select(columns);
       query = query.order(field, { ascending: !order.startsWith("-") });
       const { data, error } = await query.limit(limit);
@@ -136,42 +138,6 @@ const entity = (name) => {
       const privateResult = table === "assessments" ? getCachedPrivateAssessment(id) : null;
       if (privateResult) return { ...data, ...privateResult, id: data.id, created_date: data.created_date };
 
-      // Repair legacy assessment rows created by the old "fallback" implementation.
-      // This also makes previously-created result links show the new offline model
-      // instead of the old "Unable to complete AI analysis" placeholder.
-      if (
-        table === "assessments" &&
-        Array.isArray(data.answers) &&
-        data.answers.length &&
-        (
-          data.analysis_source === "fallback" ||
-          /Unable to complete AI analysis|ไม่สามารถวิเคราะห์โดย AI ได้ในขณะนี้|ระบบ AI ไม่สามารถวิเคราะห์แบบประเมินได้ครบถ้วน/i.test(
-            `${data.depression_chance || ""} ${data.ai_summary || ""}`
-          )
-        )
-      ) {
-        const offline = computeAssessmentResult(data.answers, data.language || "th");
-        const patch = {
-          risk_level: offline.risk_level,
-          risk_score: offline.risk_score,
-          depression_chance: offline.depression_chance,
-          ai_summary: offline.ai_summary,
-          similar_case: offline.similar_case,
-          recommendations: offline.recommendations,
-          tool_recommendations: offline.tool_recommendations || [],
-          analysis_source: "offline-model",
-          language: data.language === "en" ? "en" : "th",
-        };
-        const { data: repaired, error: repairError } = await supabase
-          .from("assessments")
-          .update(patch)
-          .eq("id", id)
-          .select("id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language")
-          .single();
-
-        if (!repairError && repaired) return repaired;
-        return { ...data, ...patch };
-      }
 
       return data;
     },
