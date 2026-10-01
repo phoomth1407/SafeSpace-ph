@@ -8,6 +8,10 @@ import { useTheme } from "@/lib/theme";
 import AmbientSoundPlayer from "@/components/AmbientSoundPlayer";
 import { BreathingBackdrop } from "@/components/fx";
 import SafeSpacePolicyModal from "@/components/SafeSpacePolicyModal";
+import PolicyReaderModal from "@/components/PolicyReaderModal";
+import { SAFESPACE_POLICY_EN, SAFESPACE_POLICY_TH } from "@/lib/safespacePolicy";
+import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH } from "@/lib/assessmentPolicy";
+import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH } from "@/lib/communityPolicy";
 
 export default function Layout() {
   const location = useLocation();
@@ -19,6 +23,12 @@ export default function Layout() {
   const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : location.pathname === "/assessment" ? "ss-page-assessment" : location.pathname.startsWith("/result") ? "ss-page-result" : location.pathname === "/admin" ? "ss-page-admin" : "ss-page-default";
   const [langOpen, setLangOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
+  const [readerPolicy, setReaderPolicy] = useState(null);
+  const policyDocuments = {
+    safe: { title: lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace", sections: lang === "en" ? SAFESPACE_POLICY_EN : SAFESPACE_POLICY_TH },
+    assessment: { title: lang === "en" ? "Assessment Policy" : "นโยบายการประเมิน", sections: lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH },
+    community: { title: lang === "en" ? "Community Policy" : "นโยบายชุมชน", sections: lang === "en" ? COMMUNITY_POLICY_EN : COMMUNITY_POLICY_TH },
+  };
 
   const navItems = [
     { to: "/", label: t("nav.home"), icon: Home },
@@ -130,9 +140,11 @@ export default function Layout() {
                 {lang === "en" ? "About Project" : "เกี่ยวกับโครงการ"}
               </a>
               <span>·</span>
-              <button type="button" onClick={() => setPolicyOpen(true)} className="hover:text-rose-500 transition-colors">
-                {lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace"}
-              </button>
+              <button type="button" onClick={() => setReaderPolicy("safe")} className="hover:text-rose-500 transition-colors">{lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace"}</button>
+              <span>·</span>
+              <button type="button" onClick={() => setReaderPolicy("assessment")} className="hover:text-rose-500 transition-colors">{lang === "en" ? "Assessment Policy" : "นโยบายการประเมิน"}</button>
+              <span>·</span>
+              <button type="button" onClick={() => setReaderPolicy("community")} className="hover:text-rose-500 transition-colors">{lang === "en" ? "Community Policy" : "นโยบายชุมชน"}</button>
               <span>·</span>
               <Link to="/contact-admin" className="hover:text-rose-500 transition-colors">
                 {lang === "en" ? "Contact Admin" : "ติดต่อผู้ดูแล"}
@@ -146,6 +158,8 @@ export default function Layout() {
           </div>
         </div>
       </footer>
+
+      <PolicyReaderModal open={!!readerPolicy} title={readerPolicy ? policyDocuments[readerPolicy].title : ""} sections={readerPolicy ? policyDocuments[readerPolicy].sections : []} lang={lang} onClose={() => setReaderPolicy(null)} />
 
       <SafeSpacePolicyModal
         open={policyOpen}
