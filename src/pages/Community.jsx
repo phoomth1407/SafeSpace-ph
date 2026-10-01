@@ -556,7 +556,7 @@ export default function Community() {
         onAccept={() => {
           const action = pendingCommunityAction;
           if (isAuthenticated && user?.id) {
-            try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, "1"); } catch {}
+            try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, JSON.stringify({ accepted: true, version: COMMUNITY_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
             setPolicyAccepted(true);
           }
           setPendingCommunityAction(null);
