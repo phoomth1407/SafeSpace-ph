@@ -1,0 +1,1868 @@
+SAFESPACE — ALL USER-FACING POLICIES
+Extracted from the current policy source used by the website.
+Repository: phoomth1407/SafeSpace-ph
+Generated: 1 October 2026
+
+============================================================
+1. SAFESPACE POLICY
+============================================================
+
+--- ENGLISH ---
+1. About SafeSpace
+SafeSpace is a school-project web application focused on youth wellbeing. It combines an optional wellbeing assessment, screening-related information, self-care tools, a community area, support resources, authentication, and administrative moderation. SafeSpace is designed to support reflection and awareness; it is not a hospital, clinic, emergency service, therapist, doctor, or replacement for professional care. This section is also meant to make the project's boundaries clear to a reader who has never used SafeSpace before. SafeSpace is developed as an independent personal project: it originated from a school assignment in which the creator was asked to choose and build one substantial project, but the assignment context does not make the school the owner or operator of the application. If the project continues after the academic work is complete, its future public use will be determined by the creator and by the technical, safety, and legal requirements applicable at that time.
+2. Who this policy applies to
+This policy applies whenever you create an account, sign in, use an authenticated feature, or otherwise use SafeSpace. Some features have additional rules. The Assessment Policy applies specifically to assessments, the Community Policy applies specifically to community participation, and other notices shown by the application may provide feature-specific information. This section is also meant to make the project's boundaries clear to a reader who has never used SafeSpace before. SafeSpace is developed as an independent personal project: it originated from a school assignment in which the creator was asked to choose and build one substantial project, but the assignment context does not make the school the owner or operator of the application. If the project continues after the academic work is complete, its future public use will be determined by the creator and by the technical, safety, and legal requirements applicable at that time.
+3. Read before creating or using an account
+Before creating an account or continuing with sign-in, you should review this policy. It explains what SafeSpace is, what the application can do, what information can be involved, how automated systems are used, what community and account rules apply, and what important limitations you should understand. This section is also meant to make the project's boundaries clear to a reader who has never used SafeSpace before. SafeSpace is developed as an independent personal project: it originated from a school assignment in which the creator was asked to choose and build one substantial project, but the assignment context does not make the school the owner or operator of the application. If the project continues after the academic work is complete, its future public use will be determined by the creator and by the technical, safety, and legal requirements applicable at that time.
+4. School-project status
+SafeSpace is currently a school project. Its code and infrastructure may continue to change, and production configuration can differ from the source repository if a backend change was made directly in the service dashboard. The project is not represented as a clinical, government, hospital, or regulated health-data service. SafeSpace is an independently created and personally owned project. It began because the creator was asked by a teacher to complete one substantial project and chose to build SafeSpace as that project; the school assignment explains the origin of the work, but it does not make the school the owner, operator, publisher, or endorser of SafeSpace. If development and safety work are successful, the creator intends to take SafeSpace beyond the classroom and make it available for public use. Any future public release remains the creator's responsibility and will be subject to the project's actual technical capabilities, applicable requirements, and decisions about how the service should operate.
+5. Voluntary use
+Using SafeSpace is voluntary. You may stop using a feature when you choose, and you should not use the application if you do not agree with the information or rules presented for that feature. This section is also meant to make the project's boundaries clear to a reader who has never used SafeSpace before. SafeSpace is developed as an independent personal project: it originated from a school assignment in which the creator was asked to choose and build one substantial project, but the assignment context does not make the school the owner or operator of the application. If the project continues after the academic work is complete, its future public use will be determined by the creator and by the technical, safety, and legal requirements applicable at that time.
+6. What SafeSpace provides
+Depending on the current version, SafeSpace can provide a wellbeing assessment, assessment results and history for signed-in users, a PHQ-9-style screening flow, mood check-ins, breathing, grounding, worry-release and ambient-sound tools, a community with posts/comments/reactions, mental-health resources and hotlines, account authentication, contact/support requests, and administrative moderation. This section is also meant to make the project's boundaries clear to a reader who has never used SafeSpace before. SafeSpace is developed as an independent personal project: it originated from a school assignment in which the creator was asked to choose and build one substantial project, but the assignment context does not make the school the owner or operator of the application. If the project continues after the academic work is complete, its future public use will be determined by the creator and by the technical, safety, and legal requirements applicable at that time.
+7. What SafeSpace does not provide
+SafeSpace does not provide a medical diagnosis, treatment plan, clinical monitoring, emergency dispatch, guaranteed crisis intervention, or a guarantee that an automated result is correct. The application cannot continuously observe your wellbeing or know everything happening in your life. This section is also meant to make the project's boundaries clear to a reader who has never used SafeSpace before. SafeSpace is developed as an independent personal project: it originated from a school assignment in which the creator was asked to choose and build one substantial project, but the assignment context does not make the school the owner or operator of the application. If the project continues after the academic work is complete, its future public use will be determined by the creator and by the technical, safety, and legal requirements applicable at that time.
+8. Account creation
+An account can be created using the authentication methods currently offered by the application. The current application supports email/password registration and Google-based authentication flows. Account availability and verification behavior can depend on the authentication provider and current configuration. The purpose of this section is to explain what happens in practical terms rather than simply naming a feature. Account features are connected to authentication and backend services, so the visible page is only one part of the system. Users should therefore understand that an action such as signing in, creating an account, or recovering access can involve several technical components working together.
+9. Email and password accounts
+For email/password registration, SafeSpace sends the credentials to the authentication service used by the project. The application applies a client-side password policy and breached-password screening before registration, but this client-side control is not a substitute for server-side authentication protections. Never reuse an important password or disclose it to SafeSpace staff, other users, or anyone else. The purpose of this section is to explain what happens in practical terms rather than simply naming a feature. Account features are connected to authentication and backend services, so the visible page is only one part of the system. Users should therefore understand that an action such as signing in, creating an account, or recovering access can involve several technical components working together.
+10. Google authentication
+Google sign-in can use Google's authentication services and may involve Google account information needed to establish a SafeSpace session. SafeSpace does not receive your Google password through the normal OAuth/ID-token flow. Google's own terms and privacy practices also apply to information processed by Google. The purpose of this section is to explain what happens in practical terms rather than simply naming a feature. Account features are connected to authentication and backend services, so the visible page is only one part of the system. Users should therefore understand that an action such as signing in, creating an account, or recovering access can involve several technical components working together.
+11. Email verification and password reset
+The application may require email verification and provides a password-reset flow. Verification codes, reset links, sessions, and authentication tokens are security-sensitive. Do not share them with another person. If you did not request an authentication email or reset, treat it as a security event and avoid using unexpected links. The purpose of this section is to explain what happens in practical terms rather than simply naming a feature. Account features are connected to authentication and backend services, so the visible page is only one part of the system. Users should therefore understand that an action such as signing in, creating an account, or recovering access can involve several technical components working together.
+12. Account responsibility
+You are responsible for keeping access to your account and authentication methods secure. Do not intentionally share credentials, impersonate another person, or use another person's account. If you believe your account has been accessed without permission, stop using the affected session and use the available account/support process. The purpose of this section is to explain what happens in practical terms rather than simply naming a feature. Account features are connected to authentication and backend services, so the visible page is only one part of the system. Users should therefore understand that an action such as signing in, creating an account, or recovering access can involve several technical components working together.
+13. Information associated with an account
+Depending on the features you use, an account can be associated with authentication information, a user profile, assessment history, community activity, reports, contact requests, and other records required by the application. Not every feature creates every type of record. The purpose of this section is to explain what happens in practical terms rather than simply naming a feature. Account features are connected to authentication and backend services, so the visible page is only one part of the system. Users should therefore understand that an action such as signing in, creating an account, or recovering access can involve several technical components working together.
+14. Assessment information
+Assessment answers, age, nationality, screening results, risk-related values, generated summaries, recommendations, and related history can be sensitive wellbeing information. The Assessment Policy provides the detailed rules and warnings shown before an assessment begins. These features are intended to help a person reflect on their wellbeing and understand information presented by the application. They are not designed to replace a conversation with a qualified professional, and the application cannot understand circumstances that were never provided to it. A result should therefore be treated as one piece of information within a larger real-world situation, rather than as a final judgment about a person.
+15. Guest assessment
+SafeSpace can provide a guest assessment experience. The current frontend guest flow keeps the result in browser navigation state rather than attaching it to the signed-in user's history. The backend also contains an admin-controlled guest-assessment data model. Guest mode must not be interpreted as a promise of complete internet anonymity. These features are intended to help a person reflect on their wellbeing and understand information presented by the application. They are not designed to replace a conversation with a qualified professional, and the application cannot understand circumstances that were never provided to it. A result should therefore be treated as one piece of information within a larger real-world situation, rather than as a final judgment about a person.
+16. Assessment history
+Signed-in users can have assessment records associated with their account and can access supported history features. The application provides deletion of saved assessment records. Deleting a record through the application should not be described as an instantaneous removal from every technical system unless the underlying infrastructure actually provides that guarantee. These features are intended to help a person reflect on their wellbeing and understand information presented by the application. They are not designed to replace a conversation with a qualified professional, and the application cannot understand circumstances that were never provided to it. A result should therefore be treated as one piece of information within a larger real-world situation, rather than as a final judgment about a person.
+17. AI-assisted assessment
+The main assessment can use automated analysis. The current documented flow can try OpenAI, use Gemini as a fallback when configured, and use local fallback logic when remote AI is unavailable. Provider configuration can change. AI output may be inaccurate, incomplete, generic, or unsuitable for a particular situation. Automated processing is used because SafeSpace is intended to provide useful feedback without requiring every response to be manually written by a person. That convenience also creates limitations: automated systems can misunderstand wording, miss context, produce inconsistent answers, or reflect limitations in the underlying model. For that reason, SafeSpace treats AI as an assisting component of the product rather than as an authority over the user.
+18. AI and sensitive information
+Assessment information sent to an AI analysis function can contain wellbeing-related personal information. Provider API keys are kept server-side in the intended Edge Function secret storage; they are not supposed to be placed in the browser. SafeSpace does not claim that third-party AI processing is risk-free or that provider-side retention is fully controlled by the SafeSpace frontend. Automated processing is used because SafeSpace is intended to provide useful feedback without requiring every response to be manually written by a person. That convenience also creates limitations: automated systems can misunderstand wording, miss context, produce inconsistent answers, or reflect limitations in the underlying model. For that reason, SafeSpace treats AI as an assisting component of the product rather than as an authority over the user.
+19. AI is not a decision-maker about your account
+AI does not determine whether you are authenticated, whether you own a database record, whether you are an administrator, whether a request is permitted by database rules, or whether a secret is valid. Those controls are implemented by authentication, server-side functions, database authorization, and related infrastructure. Automated processing is used because SafeSpace is intended to provide useful feedback without requiring every response to be manually written by a person. That convenience also creates limitations: automated systems can misunderstand wording, miss context, produce inconsistent answers, or reflect limitations in the underlying model. For that reason, SafeSpace treats AI as an assisting component of the product rather than as an authority over the user.
+20. AI limitations
+An AI-generated summary, recommendation, category, risk value, or explanation is not a statement of absolute truth. It can misunderstand language, context, cultural meaning, incomplete answers, or circumstances that were not included in the input. You should use the output as information for reflection, not as a diagnosis or permanent label. Automated processing is used because SafeSpace is intended to provide useful feedback without requiring every response to be manually written by a person. That convenience also creates limitations: automated systems can misunderstand wording, miss context, produce inconsistent answers, or reflect limitations in the underlying model. For that reason, SafeSpace treats AI as an assisting component of the product rather than as an authority over the user.
+21. PHQ-9-style screening
+SafeSpace includes a PHQ-9-style screening flow. The application calculates a screening score and band and can generate supportive explanatory text. A screening score is not a diagnosis and should not be treated as proof that a person has or does not have a medical condition. Automated processing is used because SafeSpace is intended to provide useful feedback without requiring every response to be manually written by a person. That convenience also creates limitations: automated systems can misunderstand wording, miss context, produce inconsistent answers, or reflect limitations in the underlying model. For that reason, SafeSpace treats AI as an assisting component of the product rather than as an authority over the user.
+22. Self-care tools
+SafeSpace includes tools such as breathing exercises, grounding, worry release, mood check-ins, and an ambient sound mixer. These are general wellbeing tools. They are optional, are not medical treatment, and may not be appropriate for every person or every situation. Stop a tool if it makes you uncomfortable. These features are intended to help a person reflect on their wellbeing and understand information presented by the application. They are not designed to replace a conversation with a qualified professional, and the application cannot understand circumstances that were never provided to it. A result should therefore be treated as one piece of information within a larger real-world situation, rather than as a final judgment about a person.
+23. Mood check-ins
+A mood check-in is intended as a short reflection feature. It should not be interpreted as a clinical measurement, continuous monitoring system, or prediction of future mental health. The labels shown by the interface are not diagnoses. These features are intended to help a person reflect on their wellbeing and understand information presented by the application. They are not designed to replace a conversation with a qualified professional, and the application cannot understand circumstances that were never provided to it. A result should therefore be treated as one piece of information within a larger real-world situation, rather than as a final judgment about a person.
+24. Community overview
+The Community is a place for users to read and, when authenticated and permitted, share wellbeing-related experiences and discussions. Community content is user-generated and should not be assumed to be accurate, professional, private, or endorsed by SafeSpace. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+25. Community anonymity
+The Community can display users with an anonymous-style name where the user chooses that option. An anonymous display name does not guarantee that the underlying account, technical activity, or information voluntarily disclosed in a post cannot be associated with a person. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+26. Community posting and comments
+Authenticated users can post and comment subject to the current application rules and Community Policy. Guests can read community content but must sign in before posting or commenting. Posting limits and other technical restrictions may apply. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+27. Community posting limits
+The current database-enforced Community limit is up to two successful non-announcement posts in a rolling 30-minute window for ordinary users. The project also has an administrator announcement path. Limits can change as the application develops. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+28. Community moderation
+SafeSpace provides reporting and administrator moderation tools. Administrators can review reports, remove content, and manage accounts according to the application's moderation controls. Automated safety checks may also be used, but automated flags can be wrong and should not be treated as perfect moderation. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+29. Community safety rules
+Users must not use the Community to bully, harass, discriminate against, impersonate, expose private information, spam, deliberately mislead others, or post content prohibited by the Community Policy. The Community Policy is the detailed rule set for participation. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+30. Reporting
+Authenticated users can report Community content through the available reporting feature. Reports should be truthful and made in good faith. Misusing reports to harass another user or deliberately submit false reports can interfere with moderation. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+31. Public Community data
+Community posts and comments are intentionally public-facing within the application. Do not treat a public post as a private diary. Do not include passwords, exact addresses, private contact details, identification numbers, account credentials, or another person's confidential information. The Community is a social feature, which means its quality depends not only on the software but also on how people use it. A technical rule can limit or remove some harmful behavior, but no automated system can understand every conversation perfectly. Users should therefore combine the application's rules with ordinary online-safety judgment and avoid sharing information that could put themselves or another person at risk.
+32. Resources and hotlines
+SafeSpace provides mental-health information, resources, and hotline information. Resource availability, hours, eligibility, and contact methods can change. The application should not be treated as the authoritative emergency-dispatch system. In Thailand, the application currently presents the Department of Mental Health hotline 1323; for immediate danger or urgent medical needs, use the appropriate local emergency service. Privacy in SafeSpace is based on limiting unnecessary disclosure and applying access controls where the application supports them. Privacy is not the same as promising that no technical record can ever exist, especially when external authentication, hosting, databases, or AI services are involved. Users should make decisions about what to enter with that distinction in mind.
+33. Emergency limitations
+SafeSpace cannot monitor you in real time, dispatch emergency responders, guarantee that a message will be seen immediately, or guarantee that an AI system will recognize an urgent situation. Do not wait for an assessment result, AI response, community response, or administrator response when immediate real-world help is needed. Privacy in SafeSpace is based on limiting unnecessary disclosure and applying access controls where the application supports them. Privacy is not the same as promising that no technical record can ever exist, especially when external authentication, hosting, databases, or AI services are involved. Users should make decisions about what to enter with that distinction in mind.
+34. Contacting the administrator
+Authenticated users can use the contact/support feature to send bug reports, feedback, questions, and other requests. Contact messages are treated as non-public application data and are intended for administrative handling. Do not include passwords, authentication codes, payment information, or unnecessary sensitive details in a support request. Privacy in SafeSpace is based on limiting unnecessary disclosure and applying access controls where the application supports them. Privacy is not the same as promising that no technical record can ever exist, especially when external authentication, hosting, databases, or AI services are involved. Users should make decisions about what to enter with that distinction in mind.
+35. Reports and support requests
+Reports and contact requests can contain sensitive information. The database model is designed so ordinary users do not receive general access to other users' private contact requests, while administrators can review the records needed for moderation and support. Privacy in SafeSpace is based on limiting unnecessary disclosure and applying access controls where the application supports them. Privacy is not the same as promising that no technical record can ever exist, especially when external authentication, hosting, databases, or AI services are involved. Users should make decisions about what to enter with that distinction in mind.
+36. Privacy and data minimization
+Only provide information that is reasonably necessary for the feature you are using. Do not enter passwords, one-time codes, banking/payment information, government identification numbers, exact home addresses, private credentials, or another person's confidential information into assessment answers, posts, comments, reports, or support messages. Privacy in SafeSpace is based on limiting unnecessary disclosure and applying access controls where the application supports them. Privacy is not the same as promising that no technical record can ever exist, especially when external authentication, hosting, databases, or AI services are involved. Users should make decisions about what to enter with that distinction in mind.
+37. Technical information
+An online application necessarily processes technical information needed for authentication, sessions, requests, hosting, database access, security controls, and service operation. The visible SafeSpace interface does not expose every technical event or infrastructure record to users. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+38. Supabase and infrastructure
+The current application uses Supabase Auth, Postgres, Row Level Security, Realtime, and Edge Functions. Supabase therefore participates in the technical processing required for the corresponding features. Provider policies and the actual deployed configuration can change independently of the frontend code. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+39. GitHub Pages and frontend hosting
+The current frontend is deployed through GitHub Pages. The frontend is separate from the Supabase backend. Publishing the frontend does not mean the GitHub repository itself is the database or authentication service. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+40. Database access controls
+The project uses Supabase Row Level Security and server-side/database functions to restrict sensitive operations. Owner/admin access, controlled Community creation, and protected AI calls are intended to be enforced beyond frontend buttons. Security controls reduce risk but cannot guarantee perfect security. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+41. AI endpoint protection
+The documented AI functions use authenticated sessions, input validation, request-size limits, and per-user rate limiting. Current documented limits include five requests per 60 seconds per user for the main AI endpoints, with endpoint-specific request-size limits. These are abuse controls, not guarantees against every form of misuse. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+42. Browser security
+The frontend includes a browser Content Security Policy and other application-level security measures. The current security documentation notes that the CSP is implemented as a meta tag rather than an HTTP response header. No browser security control can guarantee that a website is impossible to attack. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+43. Security limitations
+SafeSpace is a school project and not a claim of perfect security, anonymity, availability, or regulatory compliance. Known project limitations include client-side password screening being bypassable by direct callers, broad CORS on some authenticated Edge Functions, and older compatibility functions remaining during migration. These are documented engineering limitations, not promises that the system has no risk. These controls are designed to reduce realistic risks, not to create a claim of perfect security. Security is a continuing engineering responsibility because browsers, dependencies, hosting services, authentication systems, and attacker techniques can change over time. When a limitation is known, it should be understood as a reason for continued improvement rather than as evidence that the entire application is unsafe.
+44. Availability and technical failures
+The website, authentication provider, database, AI providers, email delivery, Google authentication, Realtime updates, and other services can fail, become unavailable, change behavior, or experience delays. SafeSpace does not guarantee uninterrupted availability or that every result will be generated successfully. Because SafeSpace is an online application, some parts of its operation depend on services outside the frontend code. A feature can therefore be affected by an outage, policy change, configuration change, network problem, or provider limitation even when the SafeSpace interface itself has not changed. The project will continue to evolve as those dependencies and its own requirements change.
+45. Third-party services
+SafeSpace depends on third-party services for parts of authentication, hosting, database infrastructure, AI processing, and related functionality. Third-party services have their own policies, security practices, outages, and changes. SafeSpace cannot control every action performed by those external providers. Because SafeSpace is an online application, some parts of its operation depend on services outside the frontend code. A feature can therefore be affected by an outage, policy change, configuration change, network problem, or provider limitation even when the SafeSpace interface itself has not changed. The project will continue to evolve as those dependencies and its own requirements change.
+46. Changes to features
+SafeSpace is actively developed. Questions, scoring methods, AI models, prompts, resources, Community rules, authentication behavior, security controls, database structures, and user-interface features may change. A feature described here may therefore behave differently in a later version. Because SafeSpace is an online application, some parts of its operation depend on services outside the frontend code. A feature can therefore be affected by an outage, policy change, configuration change, network problem, or provider limitation even when the SafeSpace interface itself has not changed. The project will continue to evolve as those dependencies and its own requirements change.
+47. Changes to this policy
+This policy may be updated when SafeSpace adds, removes, or materially changes features, data processing, security behavior, or rules. The version and last-updated date are displayed so users can identify the version presented to them. Because SafeSpace is an online application, some parts of its operation depend on services outside the frontend code. A feature can therefore be affected by an outage, policy change, configuration change, network problem, or provider limitation even when the SafeSpace interface itself has not changed. The project will continue to evolve as those dependencies and its own requirements change.
+48. Specialized policies still apply
+This policy is the product-wide overview. The Assessment Policy remains the detailed policy for assessments, and the Community Policy remains the detailed policy for Community participation. If a feature presents a more specific safety or privacy notice, read that notice before using the feature. Because SafeSpace is an online application, some parts of its operation depend on services outside the frontend code. A feature can therefore be affected by an outage, policy change, configuration change, network problem, or provider limitation even when the SafeSpace interface itself has not changed. The project will continue to evolve as those dependencies and its own requirements change.
+49. Prohibited misuse of SafeSpace
+Do not attempt to bypass authentication, database authorization, rate limits, moderation controls, account restrictions, or security mechanisms. Do not use SafeSpace to attack the service, abuse another person's account, deliberately overload infrastructure, extract private records, or interfere with another user's access. These rules exist to define how SafeSpace is intended to be used and to protect the people who rely on it. They are not intended to prevent ordinary disagreement or honest mistakes; they are intended to establish reasonable boundaries for safety, privacy, security, and respectful participation. Enforcement may involve both technical controls and human review.
+50. Respect for other users
+SafeSpace is intended to be a supportive environment. Users may have different experiences, backgrounds, opinions, and levels of comfort. Disagreement is allowed where the Community rules permit it, but harassment, humiliation, discrimination, threats, and deliberate exposure of private information are not acceptable. These rules exist to define how SafeSpace is intended to be used and to protect the people who rely on it. They are not intended to prevent ordinary disagreement or honest mistakes; they are intended to establish reasonable boundaries for safety, privacy, security, and respectful participation. Enforcement may involve both technical controls and human review.
+51. Content ownership and sharing
+When you submit a post, comment, report, or other content, you should only submit material you have the right to share. Do not upload copyrighted material that you do not have permission to use, private material belonging to another person, or content that violates another person's rights. Anything submitted by a user can affect other people as well as the person who submitted it. Users should consider whether they have the right to share the material and whether the information could expose someone to unnecessary harm or loss of privacy. The safest approach is to share only what is genuinely needed for the purpose of the feature.
+52. Account removal and moderation
+SafeSpace may restrict or remove accounts, posts, comments, or access when required by the application's moderation and security controls, including for violations of the Community Policy, abuse, or security concerns. Technical enforcement and administrator review can both be involved. Anything submitted by a user can affect other people as well as the person who submitted it. Users should consider whether they have the right to share the material and whether the information could expose someone to unnecessary harm or loss of privacy. The safest approach is to share only what is genuinely needed for the purpose of the feature.
+53. No guarantee of anonymity
+The word anonymous in a feature's interface refers to how information is displayed or handled within that feature. It is not a promise that SafeSpace, Supabase, Google, AI providers, hosting infrastructure, networks, browsers, devices, or other technical systems can never associate activity with a person. Anything submitted by a user can affect other people as well as the person who submitted it. Users should consider whether they have the right to share the material and whether the information could expose someone to unnecessary harm or loss of privacy. The safest approach is to share only what is genuinely needed for the purpose of the feature.
+54. No guarantee of correctness
+Information, AI output, resource descriptions, screening interpretations, community content, and technical status can contain errors. Verify important health, safety, emergency, legal, or account-security decisions with an appropriate trusted source or qualified professional. Anything submitted by a user can affect other people as well as the person who submitted it. Users should consider whether they have the right to share the material and whether the information could expose someone to unnecessary harm or loss of privacy. The safest approach is to share only what is genuinely needed for the purpose of the feature.
+55. Young users and trusted adults
+SafeSpace is designed with young people in mind. Young users should avoid unnecessary personal disclosure online and should consider involving a parent, guardian, teacher, school counselor, healthcare professional, or another trusted adult when they need help understanding a result, privacy question, or difficult situation. Because SafeSpace is designed with young people in mind, the project takes a cautious approach to personal information and wellbeing-related features. Young users may have different levels of experience with online privacy and may not always know what information can identify them later. The application therefore encourages minimal disclosure and reaching out to trusted real-world people when a situation goes beyond what software can safely handle.
+56. Acceptance before authentication
+Before continuing with account creation or sign-in, you will be given an opportunity to review this policy. Continuing after the application's acceptance step means you acknowledge that you had an opportunity to read the policy and understand the main nature and limitations of SafeSpace. Authentication is still subject to the requirements of the authentication provider. This policy is written for the current version of SafeSpace and should be read together with the notices shown inside individual features. The project is not frozen: code, infrastructure, providers, limits, and interface behavior can change as development continues. Keeping the policy versioned allows the application to tell users which description they accepted at a particular point in the project's development.
+57. Policy version and records
+SafeSpace displays a policy version and last-updated date. The application may remember that a particular policy version was acknowledged on the current browser so that the same notice does not unnecessarily interrupt every authentication action. A new policy version can require a new acknowledgement. This policy is written for the current version of SafeSpace and should be read together with the notices shown inside individual features. The project is not frozen: code, infrastructure, providers, limits, and interface behavior can change as development continues. Keeping the policy versioned allows the application to tell users which description they accepted at a particular point in the project's development.
+58. Final reminder
+SafeSpace is a wellbeing and awareness school project, not a substitute for people who can directly support you. Use only the information you are comfortable providing, treat automated results as limited screening information, protect your account, follow the Community rules, and seek appropriate real-world support when you need it.
+
+--- THAI ---
+1. เกี่ยวกับ SafeSpace
+SafeSpace เป็นเว็บแอปโครงการโรงเรียนที่มุ่งเน้นเรื่องสุขภาวะของเยาวชน โดยรวมแบบประเมินสุขภาวะที่เลือกใช้ได้ ข้อมูลการคัดกรองเบื้องต้น เครื่องมือดูแลใจ พื้นที่ชุมชน แหล่งช่วยเหลือ ระบบยืนยันตัวตน และการดูแลโดยผู้ดูแลระบบ SafeSpace มีจุดประสงค์เพื่อช่วยให้เกิดการทบทวนและความตระหนัก ไม่ใช่โรงพยาบาล คลินิก บริการฉุกเฉิน นักบำบัด แพทย์ หรือสิ่งทดแทนการดูแลจากผู้เชี่ยวชาญ ส่วนนี้มีไว้เพื่ออธิบายขอบเขตของโครงการให้ชัดเจนสำหรับคนที่เพิ่งรู้จัก SafeSpace ด้วย SafeSpace เป็นโครงการที่ผู้สร้างพัฒนาและเป็นเจ้าของด้วยตนเอง โดยจุดเริ่มต้นมาจากงานโครงการขนาดใหญ่ที่โรงเรียนให้ผู้เรียนเลือกหัวข้อและลงมือสร้าง แต่บริบทของงานในโรงเรียนไม่ได้ทำให้โรงเรียนเป็นเจ้าของ ผู้ดำเนินการ หรือผู้รับผิดชอบระบบ หากโครงการพัฒนาต่อหลังจากสิ้นสุดงานการศึกษา การนำไปใช้จริงหรือเผยแพร่ต่อสาธารณะจะขึ้นอยู่กับผู้สร้างและข้อกำหนดด้านเทคนิค ความปลอดภัย และกฎหมายที่เกี่ยวข้องในเวลานั้น
+2. นโยบายนี้ใช้กับใคร
+นโยบายนี้ใช้เมื่อคุณสร้างบัญชี เข้าสู่ระบบ ใช้ฟีเจอร์ที่ต้องยืนยันตัวตน หรือใช้ SafeSpace ในลักษณะอื่น ฟีเจอร์บางอย่างมีข้อกำหนดเพิ่มเติม โดย Assessment Policy ใช้กับแบบประเมินโดยเฉพาะ Community Policy ใช้กับการใช้งานชุมชนโดยเฉพาะ และประกาศเฉพาะฟีเจอร์ที่แอปแสดงอาจให้ข้อมูลเพิ่มเติม ส่วนนี้มีไว้เพื่ออธิบายขอบเขตของโครงการให้ชัดเจนสำหรับคนที่เพิ่งรู้จัก SafeSpace ด้วย SafeSpace เป็นโครงการที่ผู้สร้างพัฒนาและเป็นเจ้าของด้วยตนเอง โดยจุดเริ่มต้นมาจากงานโครงการขนาดใหญ่ที่โรงเรียนให้ผู้เรียนเลือกหัวข้อและลงมือสร้าง แต่บริบทของงานในโรงเรียนไม่ได้ทำให้โรงเรียนเป็นเจ้าของ ผู้ดำเนินการ หรือผู้รับผิดชอบระบบ หากโครงการพัฒนาต่อหลังจากสิ้นสุดงานการศึกษา การนำไปใช้จริงหรือเผยแพร่ต่อสาธารณะจะขึ้นอยู่กับผู้สร้างและข้อกำหนดด้านเทคนิค ความปลอดภัย และกฎหมายที่เกี่ยวข้องในเวลานั้น
+3. อ่านก่อนสร้างบัญชีหรือใช้งาน
+ก่อนสร้างบัญชีหรือดำเนินการเข้าสู่ระบบ คุณควรอ่านนโยบายนี้เพื่อทำความเข้าใจว่า SafeSpace คืออะไร ทำอะไรได้บ้าง มีข้อมูลประเภทใดที่เกี่ยวข้อง ใช้ระบบอัตโนมัติอย่างไร กฎของชุมชนและบัญชีเป็นอย่างไร รวมถึงข้อจำกัดสำคัญที่ควรทราบ ส่วนนี้มีไว้เพื่ออธิบายขอบเขตของโครงการให้ชัดเจนสำหรับคนที่เพิ่งรู้จัก SafeSpace ด้วย SafeSpace เป็นโครงการที่ผู้สร้างพัฒนาและเป็นเจ้าของด้วยตนเอง โดยจุดเริ่มต้นมาจากงานโครงการขนาดใหญ่ที่โรงเรียนให้ผู้เรียนเลือกหัวข้อและลงมือสร้าง แต่บริบทของงานในโรงเรียนไม่ได้ทำให้โรงเรียนเป็นเจ้าของ ผู้ดำเนินการ หรือผู้รับผิดชอบระบบ หากโครงการพัฒนาต่อหลังจากสิ้นสุดงานการศึกษา การนำไปใช้จริงหรือเผยแพร่ต่อสาธารณะจะขึ้นอยู่กับผู้สร้างและข้อกำหนดด้านเทคนิค ความปลอดภัย และกฎหมายที่เกี่ยวข้องในเวลานั้น
+4. สถานะโครงการโรงเรียน
+ปัจจุบัน SafeSpace เป็นโครงการโรงเรียน โค้ดและโครงสร้างพื้นฐานอาจมีการพัฒนาอย่างต่อเนื่อง และการตั้งค่าของระบบจริงอาจแตกต่างจากซอร์สโค้ดหากมีการแก้ไขระบบหลังบ้านโดยตรง โครงการไม่ได้อ้างว่าเป็นบริการทางการแพทย์ หน่วยงานรัฐ โรงพยาบาล หรือบริการข้อมูลสุขภาพที่อยู่ภายใต้การกำกับดูแลเฉพาะ SafeSpace เป็นโครงการที่ผู้สร้างคิด พัฒนา และเป็นเจ้าของด้วยตนเอง จุดเริ่มต้นของโครงการเกิดจากครูมอบหมายให้นักเรียนเลือกและสร้างโครงการขนาดใหญ่หนึ่งโครงการ และผู้สร้างเลือกทำ SafeSpace เป็นงานนั้น ดังนั้นการที่ SafeSpace เริ่มต้นจากงานโรงเรียนเป็นเพียงบริบทของจุดเริ่มต้น ไม่ได้หมายความว่าโรงเรียนเป็นเจ้าของ ผู้ดำเนินการ ผู้เผยแพร่ หรือผู้รับรอง SafeSpace หากการพัฒนาและการเตรียมความปลอดภัยเป็นไปด้วยดี ผู้สร้างตั้งใจให้โครงการสามารถออกจากบริบทของห้องเรียนและเปิดให้บุคคลทั่วไปใช้งานได้ในอนาคต การเผยแพร่จริงในอนาคตยังคงอยู่ภายใต้ความรับผิดชอบของผู้สร้างและข้อกำหนด ความสามารถทางเทคนิค และการตัดสินใจเกี่ยวกับการให้บริการในเวลานั้น
+5. การใช้งานเป็นไปโดยสมัครใจ
+การใช้ SafeSpace เป็นไปโดยสมัครใจ คุณสามารถหยุดใช้ฟีเจอร์ใดก็ได้ และไม่ควรใช้แอปหากคุณไม่ยอมรับข้อมูลหรือกฎที่แสดงสำหรับฟีเจอร์นั้น ส่วนนี้มีไว้เพื่ออธิบายขอบเขตของโครงการให้ชัดเจนสำหรับคนที่เพิ่งรู้จัก SafeSpace ด้วย SafeSpace เป็นโครงการที่ผู้สร้างพัฒนาและเป็นเจ้าของด้วยตนเอง โดยจุดเริ่มต้นมาจากงานโครงการขนาดใหญ่ที่โรงเรียนให้ผู้เรียนเลือกหัวข้อและลงมือสร้าง แต่บริบทของงานในโรงเรียนไม่ได้ทำให้โรงเรียนเป็นเจ้าของ ผู้ดำเนินการ หรือผู้รับผิดชอบระบบ หากโครงการพัฒนาต่อหลังจากสิ้นสุดงานการศึกษา การนำไปใช้จริงหรือเผยแพร่ต่อสาธารณะจะขึ้นอยู่กับผู้สร้างและข้อกำหนดด้านเทคนิค ความปลอดภัย และกฎหมายที่เกี่ยวข้องในเวลานั้น
+6. SafeSpace มีอะไรบ้าง
+ขึ้นอยู่กับเวอร์ชันปัจจุบัน SafeSpace มีแบบประเมินสุขภาวะ ผลและประวัติการประเมินสำหรับผู้ที่เข้าสู่ระบบ การคัดกรองแบบ PHQ-9-style เช็กอินอารมณ์ ฝึกหายใจ Grounding การวางความกังวล เครื่องมือผสมเสียงบรรยากาศ ชุมชนที่มีโพสต์/ความคิดเห็น/การโต้ตอบ แหล่งข้อมูลและสายด่วน ระบบยืนยันตัวตน การติดต่อผู้ดูแล และการดูแลโดยผู้ดูแลระบบ ส่วนนี้มีไว้เพื่ออธิบายขอบเขตของโครงการให้ชัดเจนสำหรับคนที่เพิ่งรู้จัก SafeSpace ด้วย SafeSpace เป็นโครงการที่ผู้สร้างพัฒนาและเป็นเจ้าของด้วยตนเอง โดยจุดเริ่มต้นมาจากงานโครงการขนาดใหญ่ที่โรงเรียนให้ผู้เรียนเลือกหัวข้อและลงมือสร้าง แต่บริบทของงานในโรงเรียนไม่ได้ทำให้โรงเรียนเป็นเจ้าของ ผู้ดำเนินการ หรือผู้รับผิดชอบระบบ หากโครงการพัฒนาต่อหลังจากสิ้นสุดงานการศึกษา การนำไปใช้จริงหรือเผยแพร่ต่อสาธารณะจะขึ้นอยู่กับผู้สร้างและข้อกำหนดด้านเทคนิค ความปลอดภัย และกฎหมายที่เกี่ยวข้องในเวลานั้น
+7. สิ่งที่ SafeSpace ไม่ได้ให้
+SafeSpace ไม่ได้ให้การวินิจฉัยทางการแพทย์ แผนการรักษา การเฝ้าติดตามโดยผู้เชี่ยวชาญ การส่งเจ้าหน้าที่ฉุกเฉิน การรับประกันการช่วยเหลือในภาวะวิกฤต หรือการรับประกันว่าผลจากระบบอัตโนมัติจะถูกต้อง แอปไม่สามารถเฝ้าดูสุขภาวะของคุณอย่างต่อเนื่องหรือรู้ทุกอย่างที่เกิดขึ้นในชีวิตคุณ ส่วนนี้มีไว้เพื่ออธิบายขอบเขตของโครงการให้ชัดเจนสำหรับคนที่เพิ่งรู้จัก SafeSpace ด้วย SafeSpace เป็นโครงการที่ผู้สร้างพัฒนาและเป็นเจ้าของด้วยตนเอง โดยจุดเริ่มต้นมาจากงานโครงการขนาดใหญ่ที่โรงเรียนให้ผู้เรียนเลือกหัวข้อและลงมือสร้าง แต่บริบทของงานในโรงเรียนไม่ได้ทำให้โรงเรียนเป็นเจ้าของ ผู้ดำเนินการ หรือผู้รับผิดชอบระบบ หากโครงการพัฒนาต่อหลังจากสิ้นสุดงานการศึกษา การนำไปใช้จริงหรือเผยแพร่ต่อสาธารณะจะขึ้นอยู่กับผู้สร้างและข้อกำหนดด้านเทคนิค ความปลอดภัย และกฎหมายที่เกี่ยวข้องในเวลานั้น
+8. การสร้างบัญชี
+คุณสามารถสร้างบัญชีด้วยวิธีที่แอปเปิดให้ใช้ในปัจจุบัน ปัจจุบันรองรับการสมัครด้วยอีเมล/รหัสผ่านและการยืนยันตัวตนผ่าน Google พฤติกรรมการยืนยันหรือการเปิดใช้บัญชีอาจขึ้นอยู่กับผู้ให้บริการและการตั้งค่าปัจจุบัน ส่วนนี้ต้องการอธิบายสิ่งที่จะเกิดขึ้นจริงในการใช้งาน ไม่ใช่เพียงบอกชื่อฟีเจอร์ การทำงานของบัญชีเชื่อมโยงกับระบบยืนยันตัวตนและบริการ backend ดังนั้นหน้าที่ผู้ใช้เห็นจึงเป็นเพียงส่วนหนึ่งของระบบทั้งหมด การสร้างบัญชี เข้าสู่ระบบ หรือกู้คืนการเข้าถึงอาจต้องอาศัยองค์ประกอบทางเทคนิคหลายส่วนทำงานร่วมกัน
+9. บัญชีอีเมลและรหัสผ่าน
+ในการสมัครด้วยอีเมล/รหัสผ่าน SafeSpace จะส่งข้อมูลรับรองไปยังบริการยืนยันตัวตนที่โครงการใช้ แอปมีการตรวจสอบรูปแบบรหัสผ่านและตรวจสอบรหัสผ่านที่เคยถูกพบในฐานข้อมูลการรั่วไหลในฝั่งไคลเอนต์ก่อนสมัคร แต่การตรวจสอบนี้ไม่ใช่การป้องกันฝั่งเซิร์ฟเวอร์แทนระบบ Auth ห้ามใช้รหัสผ่านสำคัญซ้ำและห้ามบอกรหัสผ่านให้ผู้ใช้คนอื่นหรือบุคคลที่อ้างตัวเป็นเจ้าหน้าที่ SafeSpace ส่วนนี้ต้องการอธิบายสิ่งที่จะเกิดขึ้นจริงในการใช้งาน ไม่ใช่เพียงบอกชื่อฟีเจอร์ การทำงานของบัญชีเชื่อมโยงกับระบบยืนยันตัวตนและบริการ backend ดังนั้นหน้าที่ผู้ใช้เห็นจึงเป็นเพียงส่วนหนึ่งของระบบทั้งหมด การสร้างบัญชี เข้าสู่ระบบ หรือกู้คืนการเข้าถึงอาจต้องอาศัยองค์ประกอบทางเทคนิคหลายส่วนทำงานร่วมกัน
+10. การเข้าสู่ระบบด้วย Google
+การเข้าสู่ระบบด้วย Google สามารถใช้บริการยืนยันตัวตนของ Google และอาจเกี่ยวข้องกับข้อมูลบัญชี Google ที่จำเป็นต่อการสร้างเซสชัน SafeSpace โดยทั่วไป SafeSpace ไม่ได้รับรหัสผ่าน Google ผ่านกระบวนการ OAuth/ID-token ปกติ แต่ข้อกำหนดและนโยบายความเป็นส่วนตัวของ Google ก็ใช้กับข้อมูลที่ Google ประมวลผลด้วย ส่วนนี้ต้องการอธิบายสิ่งที่จะเกิดขึ้นจริงในการใช้งาน ไม่ใช่เพียงบอกชื่อฟีเจอร์ การทำงานของบัญชีเชื่อมโยงกับระบบยืนยันตัวตนและบริการ backend ดังนั้นหน้าที่ผู้ใช้เห็นจึงเป็นเพียงส่วนหนึ่งของระบบทั้งหมด การสร้างบัญชี เข้าสู่ระบบ หรือกู้คืนการเข้าถึงอาจต้องอาศัยองค์ประกอบทางเทคนิคหลายส่วนทำงานร่วมกัน
+11. การยืนยันอีเมลและการรีเซ็ตรหัสผ่าน
+แอปอาจกำหนดให้ยืนยันอีเมลและมีขั้นตอนรีเซ็ตรหัสผ่าน รหัสยืนยัน ลิงก์รีเซ็ต เซสชัน และโทเค็นเป็นข้อมูลด้านความปลอดภัย ห้ามแชร์ให้ผู้อื่น หากคุณไม่ได้ขออีเมลยืนยันหรือรีเซ็ต ให้ระมัดระวังและอย่าใช้ลิงก์ที่ไม่คาดคิด ส่วนนี้ต้องการอธิบายสิ่งที่จะเกิดขึ้นจริงในการใช้งาน ไม่ใช่เพียงบอกชื่อฟีเจอร์ การทำงานของบัญชีเชื่อมโยงกับระบบยืนยันตัวตนและบริการ backend ดังนั้นหน้าที่ผู้ใช้เห็นจึงเป็นเพียงส่วนหนึ่งของระบบทั้งหมด การสร้างบัญชี เข้าสู่ระบบ หรือกู้คืนการเข้าถึงอาจต้องอาศัยองค์ประกอบทางเทคนิคหลายส่วนทำงานร่วมกัน
+12. ความรับผิดชอบต่อบัญชี
+คุณมีหน้าที่ดูแลบัญชีและวิธีการยืนยันตัวตนของตนเอง ห้ามจงใจแชร์ข้อมูลเข้าสู่ระบบ แอบอ้างเป็นผู้อื่น หรือใช้บัญชีของผู้อื่น หากสงสัยว่าบัญชีถูกเข้าถึงโดยไม่ได้รับอนุญาต ให้หยุดใช้เซสชันที่ได้รับผลกระทบและใช้ช่องทางช่วยเหลือที่มี ส่วนนี้ต้องการอธิบายสิ่งที่จะเกิดขึ้นจริงในการใช้งาน ไม่ใช่เพียงบอกชื่อฟีเจอร์ การทำงานของบัญชีเชื่อมโยงกับระบบยืนยันตัวตนและบริการ backend ดังนั้นหน้าที่ผู้ใช้เห็นจึงเป็นเพียงส่วนหนึ่งของระบบทั้งหมด การสร้างบัญชี เข้าสู่ระบบ หรือกู้คืนการเข้าถึงอาจต้องอาศัยองค์ประกอบทางเทคนิคหลายส่วนทำงานร่วมกัน
+13. ข้อมูลที่เชื่อมโยงกับบัญชี
+ขึ้นอยู่กับฟีเจอร์ที่คุณใช้ บัญชีอาจเชื่อมโยงกับข้อมูลยืนยันตัวตน โปรไฟล์ ประวัติการประเมิน กิจกรรมในชุมชน รายงาน คำขอติดต่อ และระเบียนอื่นที่จำเป็นต่อการทำงานของแอป ไม่ใช่ทุกฟีเจอร์จะสร้างข้อมูลทุกประเภท ส่วนนี้ต้องการอธิบายสิ่งที่จะเกิดขึ้นจริงในการใช้งาน ไม่ใช่เพียงบอกชื่อฟีเจอร์ การทำงานของบัญชีเชื่อมโยงกับระบบยืนยันตัวตนและบริการ backend ดังนั้นหน้าที่ผู้ใช้เห็นจึงเป็นเพียงส่วนหนึ่งของระบบทั้งหมด การสร้างบัญชี เข้าสู่ระบบ หรือกู้คืนการเข้าถึงอาจต้องอาศัยองค์ประกอบทางเทคนิคหลายส่วนทำงานร่วมกัน
+14. ข้อมูลแบบประเมิน
+คำตอบแบบประเมิน อายุ สัญชาติ ผลการคัดกรอง ค่าที่เกี่ยวข้องกับความเสี่ยง สรุปที่สร้างโดยระบบ คำแนะนำ และประวัติที่เกี่ยวข้องอาจเป็นข้อมูลสุขภาวะที่มีความละเอียดอ่อน โดย Assessment Policy มีรายละเอียดและคำเตือนที่แสดงก่อนเริ่มทำแบบประเมิน ฟีเจอร์เหล่านี้มีจุดประสงค์เพื่อช่วยให้ผู้ใช้สะท้อนสภาพความเป็นอยู่ของตนเองและทำความเข้าใจข้อมูลที่แอปแสดง ไม่ได้ถูกสร้างขึ้นเพื่อแทนการพูดคุยกับผู้เชี่ยวชาญ และแอปไม่สามารถรู้บริบทที่ผู้ใช้ไม่ได้ให้ข้อมูลไว้ ดังนั้นผลลัพธ์ควรถูกมองว่าเป็นข้อมูลส่วนหนึ่งในสถานการณ์จริงที่มีรายละเอียดมากกว่านั้น ไม่ใช่คำตัดสินสุดท้ายเกี่ยวกับตัวบุคคล
+15. การทำแบบประเมินแบบผู้เยี่ยมชม
+SafeSpace สามารถให้ทำแบบประเมินแบบ Guest ได้ ในขั้นตอน Guest ปัจจุบันของ frontend ผลจะอยู่ใน state ของการนำทางของเบราว์เซอร์แทนการผูกกับประวัติของบัญชีที่เข้าสู่ระบบ นอกจากนี้ backend ยังมีโครงสร้างข้อมูล Guest assessment ที่ผู้ดูแลระบบจัดการได้ ดังนั้น Guest ไม่ควรถูกเข้าใจว่าเป็นการรับประกันว่าอินเทอร์เน็ตจะไม่สามารถเชื่อมโยงกิจกรรมกับบุคคลได้ ฟีเจอร์เหล่านี้มีจุดประสงค์เพื่อช่วยให้ผู้ใช้สะท้อนสภาพความเป็นอยู่ของตนเองและทำความเข้าใจข้อมูลที่แอปแสดง ไม่ได้ถูกสร้างขึ้นเพื่อแทนการพูดคุยกับผู้เชี่ยวชาญ และแอปไม่สามารถรู้บริบทที่ผู้ใช้ไม่ได้ให้ข้อมูลไว้ ดังนั้นผลลัพธ์ควรถูกมองว่าเป็นข้อมูลส่วนหนึ่งในสถานการณ์จริงที่มีรายละเอียดมากกว่านั้น ไม่ใช่คำตัดสินสุดท้ายเกี่ยวกับตัวบุคคล
+16. ประวัติการประเมิน
+ผู้ที่เข้าสู่ระบบสามารถมีระเบียนผลการประเมินที่เชื่อมกับบัญชีและเข้าถึงประวัติที่แอปรองรับได้ แอปมีฟังก์ชันให้ลบระเบียนการประเมินที่บันทึกไว้ แต่ไม่ควรตีความว่าการลบจากแอปหมายถึงข้อมูลจะหายจากระบบสำรอง บันทึก หรือระบบทางเทคนิคทุกแห่งทันที หากโครงสร้างพื้นฐานไม่ได้รับประกันเช่นนั้น ฟีเจอร์เหล่านี้มีจุดประสงค์เพื่อช่วยให้ผู้ใช้สะท้อนสภาพความเป็นอยู่ของตนเองและทำความเข้าใจข้อมูลที่แอปแสดง ไม่ได้ถูกสร้างขึ้นเพื่อแทนการพูดคุยกับผู้เชี่ยวชาญ และแอปไม่สามารถรู้บริบทที่ผู้ใช้ไม่ได้ให้ข้อมูลไว้ ดังนั้นผลลัพธ์ควรถูกมองว่าเป็นข้อมูลส่วนหนึ่งในสถานการณ์จริงที่มีรายละเอียดมากกว่านั้น ไม่ใช่คำตัดสินสุดท้ายเกี่ยวกับตัวบุคคล
+17. การวิเคราะห์แบบประเมินด้วย AI
+แบบประเมินหลักสามารถใช้การวิเคราะห์อัตโนมัติ โดย flow ที่มีการบันทึกไว้ในปัจจุบันสามารถลองใช้ OpenAI ใช้ Gemini เป็น fallback เมื่อมีการตั้งค่า และใช้ logic fallback ภายในเครื่องเมื่อ AI ภายนอกใช้ไม่ได้ การตั้งค่าผู้ให้บริการอาจเปลี่ยนแปลงได้ และผล AI อาจไม่ถูกต้อง ไม่ครบถ้วน กว้างเกินไป หรือไม่เหมาะกับสถานการณ์เฉพาะบุคคล ระบบอัตโนมัติถูกนำมาใช้เพราะ SafeSpace ต้องการให้ผู้ใช้ได้รับข้อมูลตอบกลับโดยไม่จำเป็นต้องให้ทุกข้อความถูกเขียนโดยคนแบบรายกรณี ความสะดวกนี้มาพร้อมข้อจำกัด เพราะระบบอัตโนมัติอาจเข้าใจภาษาไม่ตรงบริบท พลาดรายละเอียด ให้คำตอบที่แตกต่างกัน หรือได้รับผลจากข้อจำกัดของโมเดลที่ใช้ ด้วยเหตุนี้ SafeSpace จึงถือ AI เป็นส่วนช่วยของผลิตภัณฑ์ ไม่ใช่ผู้มีอำนาจในการตัดสินแทนผู้ใช้
+18. AI และข้อมูลที่ละเอียดอ่อน
+ข้อมูลที่ส่งไปยังฟังก์ชันวิเคราะห์ AI ของแบบประเมินอาจมีข้อมูลส่วนบุคคลด้านสุขภาวะ API key ของผู้ให้บริการควรเก็บไว้ฝั่งเซิร์ฟเวอร์ใน secret storage ของ Edge Function และไม่ควรอยู่ในเบราว์เซอร์ SafeSpace ไม่รับรองว่าการประมวลผลโดยผู้ให้บริการ AI ภายนอกไม่มีความเสี่ยง หรือ SafeSpace สามารถควบคุมการเก็บข้อมูลของผู้ให้บริการได้ทั้งหมด ระบบอัตโนมัติถูกนำมาใช้เพราะ SafeSpace ต้องการให้ผู้ใช้ได้รับข้อมูลตอบกลับโดยไม่จำเป็นต้องให้ทุกข้อความถูกเขียนโดยคนแบบรายกรณี ความสะดวกนี้มาพร้อมข้อจำกัด เพราะระบบอัตโนมัติอาจเข้าใจภาษาไม่ตรงบริบท พลาดรายละเอียด ให้คำตอบที่แตกต่างกัน หรือได้รับผลจากข้อจำกัดของโมเดลที่ใช้ ด้วยเหตุนี้ SafeSpace จึงถือ AI เป็นส่วนช่วยของผลิตภัณฑ์ ไม่ใช่ผู้มีอำนาจในการตัดสินแทนผู้ใช้
+19. AI ไม่ใช่ผู้ตัดสินใจเรื่องบัญชี
+AI ไม่ได้เป็นผู้ตัดสินว่าคุณเข้าสู่ระบบหรือไม่ เป็นเจ้าของข้อมูลหรือไม่ เป็นผู้ดูแลระบบหรือไม่ คำขอใดได้รับอนุญาต หรือ secret ใดถูกต้อง การควบคุมเหล่านี้อยู่ที่ Auth, Edge Functions, สิทธิ์ฐานข้อมูล และโครงสร้างพื้นฐาน ระบบอัตโนมัติถูกนำมาใช้เพราะ SafeSpace ต้องการให้ผู้ใช้ได้รับข้อมูลตอบกลับโดยไม่จำเป็นต้องให้ทุกข้อความถูกเขียนโดยคนแบบรายกรณี ความสะดวกนี้มาพร้อมข้อจำกัด เพราะระบบอัตโนมัติอาจเข้าใจภาษาไม่ตรงบริบท พลาดรายละเอียด ให้คำตอบที่แตกต่างกัน หรือได้รับผลจากข้อจำกัดของโมเดลที่ใช้ ด้วยเหตุนี้ SafeSpace จึงถือ AI เป็นส่วนช่วยของผลิตภัณฑ์ ไม่ใช่ผู้มีอำนาจในการตัดสินแทนผู้ใช้
+20. ข้อจำกัดของ AI
+สรุป คำแนะนำ การจัดหมวดหมู่ ค่าความเสี่ยง หรือคำอธิบายจาก AI ไม่ใช่ความจริงที่แน่นอน AI อาจเข้าใจภาษา บริบท ความหมายทางวัฒนธรรม คำตอบที่ไม่ครบ หรือสถานการณ์ที่ไม่ได้ระบุไว้ผิด ผลควรใช้เป็นข้อมูลสำหรับการทบทวน ไม่ใช่การวินิจฉัยหรือป้ายกำกับถาวร ระบบอัตโนมัติถูกนำมาใช้เพราะ SafeSpace ต้องการให้ผู้ใช้ได้รับข้อมูลตอบกลับโดยไม่จำเป็นต้องให้ทุกข้อความถูกเขียนโดยคนแบบรายกรณี ความสะดวกนี้มาพร้อมข้อจำกัด เพราะระบบอัตโนมัติอาจเข้าใจภาษาไม่ตรงบริบท พลาดรายละเอียด ให้คำตอบที่แตกต่างกัน หรือได้รับผลจากข้อจำกัดของโมเดลที่ใช้ ด้วยเหตุนี้ SafeSpace จึงถือ AI เป็นส่วนช่วยของผลิตภัณฑ์ ไม่ใช่ผู้มีอำนาจในการตัดสินแทนผู้ใช้
+21. การคัดกรองแบบ PHQ-9-style
+SafeSpace มีขั้นตอนคัดกรองแบบ PHQ-9-style โดยระบบคำนวณคะแนนและระดับที่ใช้ในแอป และสามารถสร้างข้อความอธิบายเชิงสนับสนุน คะแนนคัดกรองไม่ใช่การวินิจฉัย และไม่ควรถูกใช้เป็นหลักฐานยืนยันว่าบุคคลหนึ่งมีหรือไม่มีภาวะทางการแพทย์ ระบบอัตโนมัติถูกนำมาใช้เพราะ SafeSpace ต้องการให้ผู้ใช้ได้รับข้อมูลตอบกลับโดยไม่จำเป็นต้องให้ทุกข้อความถูกเขียนโดยคนแบบรายกรณี ความสะดวกนี้มาพร้อมข้อจำกัด เพราะระบบอัตโนมัติอาจเข้าใจภาษาไม่ตรงบริบท พลาดรายละเอียด ให้คำตอบที่แตกต่างกัน หรือได้รับผลจากข้อจำกัดของโมเดลที่ใช้ ด้วยเหตุนี้ SafeSpace จึงถือ AI เป็นส่วนช่วยของผลิตภัณฑ์ ไม่ใช่ผู้มีอำนาจในการตัดสินแทนผู้ใช้
+22. เครื่องมือดูแลใจ
+SafeSpace มีเครื่องมือ เช่น ฝึกหายใจ Grounding วางความกังวล เช็กอินอารมณ์ และเครื่องมือเสียงบรรยากาศ เป็นเครื่องมือด้านสุขภาวะทั่วไป ใช้ได้ตามความสมัครใจ ไม่ใช่การรักษาทางการแพทย์ และอาจไม่เหมาะกับทุกคนหรือทุกสถานการณ์ หากใช้แล้วไม่สบายใจให้หยุด ฟีเจอร์เหล่านี้มีจุดประสงค์เพื่อช่วยให้ผู้ใช้สะท้อนสภาพความเป็นอยู่ของตนเองและทำความเข้าใจข้อมูลที่แอปแสดง ไม่ได้ถูกสร้างขึ้นเพื่อแทนการพูดคุยกับผู้เชี่ยวชาญ และแอปไม่สามารถรู้บริบทที่ผู้ใช้ไม่ได้ให้ข้อมูลไว้ ดังนั้นผลลัพธ์ควรถูกมองว่าเป็นข้อมูลส่วนหนึ่งในสถานการณ์จริงที่มีรายละเอียดมากกว่านั้น ไม่ใช่คำตัดสินสุดท้ายเกี่ยวกับตัวบุคคล
+23. เช็กอินอารมณ์
+Mood check-in มีไว้เพื่อการสะท้อนความรู้สึกสั้น ๆ ไม่ควรถูกมองว่าเป็นการวัดทางคลินิก ระบบเฝ้าติดตามอย่างต่อเนื่อง หรือการทำนายสุขภาพจิตในอนาคต ป้ายกำกับที่แสดงไม่ใช่การวินิจฉัย ฟีเจอร์เหล่านี้มีจุดประสงค์เพื่อช่วยให้ผู้ใช้สะท้อนสภาพความเป็นอยู่ของตนเองและทำความเข้าใจข้อมูลที่แอปแสดง ไม่ได้ถูกสร้างขึ้นเพื่อแทนการพูดคุยกับผู้เชี่ยวชาญ และแอปไม่สามารถรู้บริบทที่ผู้ใช้ไม่ได้ให้ข้อมูลไว้ ดังนั้นผลลัพธ์ควรถูกมองว่าเป็นข้อมูลส่วนหนึ่งในสถานการณ์จริงที่มีรายละเอียดมากกว่านั้น ไม่ใช่คำตัดสินสุดท้ายเกี่ยวกับตัวบุคคล
+24. ภาพรวมชุมชน
+Community เป็นพื้นที่ให้ผู้ใช้อ่านและเมื่อมีสิทธิ์และเข้าสู่ระบบแล้วสามารถแบ่งปันประสบการณ์และพูดคุยเรื่องสุขภาวะ เนื้อหาในชุมชนสร้างโดยผู้ใช้ จึงไม่ควรถูกถือว่าถูกต้อง เป็นคำแนะนำจากผู้เชี่ยวชาญ เป็นข้อมูลส่วนตัว หรือได้รับการรับรองโดย SafeSpace Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+25. การแสดงชื่อแบบนิรนามในชุมชน
+ชุมชนสามารถแสดงชื่อแบบนิรนามเมื่อผู้ใช้เลือกตัวเลือกนั้น การแสดงแบบนิรนามไม่ได้รับประกันว่าบัญชี กิจกรรมทางเทคนิค หรือข้อมูลที่ผู้ใช้เปิดเผยในโพสต์จะไม่สามารถเชื่อมโยงกับบุคคลได้ Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+26. การโพสต์และแสดงความคิดเห็น
+ผู้ใช้ที่เข้าสู่ระบบสามารถโพสต์และแสดงความคิดเห็นตามกฎปัจจุบันและ Community Policy ผู้เยี่ยมชมสามารถอ่านเนื้อหาได้ แต่ต้องเข้าสู่ระบบก่อนโพสต์หรือแสดงความคิดเห็น อาจมีข้อจำกัดด้านจำนวนโพสต์และข้อจำกัดทางเทคนิคอื่น Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+27. ข้อจำกัดการโพสต์ชุมชน
+ปัจจุบันระบบฐานข้อมูลกำหนดให้ผู้ใช้ทั่วไปโพสต์สำเร็จได้ไม่เกิน 2 โพสต์ที่ไม่ใช่ประกาศในช่วงเวลา 30 นาทีแบบ rolling ผู้ดูแลระบบมีเส้นทางสำหรับประกาศ ข้อจำกัดสามารถเปลี่ยนได้เมื่อโครงการพัฒนา Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+28. การดูแลชุมชน
+SafeSpace มีระบบรายงานและเครื่องมือให้ผู้ดูแลระบบจัดการชุมชน ผู้ดูแลสามารถตรวจรายงาน ลบเนื้อหา และจัดการบัญชีตามสิทธิ์ที่ระบบมี นอกจากนี้อาจมีการตรวจสอบความปลอดภัยอัตโนมัติ แต่การตรวจอัตโนมัติอาจผิดพลาดและไม่ใช่การกลั่นกรองที่สมบูรณ์ Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+29. กฎความปลอดภัยของชุมชน
+ห้ามใช้ชุมชนเพื่อกลั่นแกล้ง คุกคาม เลือกปฏิบัติ แอบอ้าง เปิดเผยข้อมูลส่วนตัว สแปม หลอกลวงโดยเจตนา หรือเผยแพร่เนื้อหาที่ Community Policy ห้าม การเข้าร่วมชุมชนต้องปฏิบัติตาม Community Policy ฉบับละเอียด Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+30. การรายงาน
+ผู้ใช้ที่เข้าสู่ระบบสามารถรายงานเนื้อหาชุมชนผ่านฟีเจอร์รายงาน รายงานควรเป็นความจริงและทำโดยสุจริต ห้ามใช้รายงานเพื่อคุกคามผู้ใช้คนอื่นหรือรายงานเท็จโดยเจตนา เพราะอาจรบกวนการดูแลชุมชน Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+31. ข้อมูลชุมชนที่เป็นสาธารณะ
+โพสต์และความคิดเห็นในชุมชนถูกออกแบบให้เป็นข้อมูลที่ผู้ใช้ในชุมชนเข้าถึงได้ อย่าถือว่าโพสต์สาธารณะเป็นไดอารี่ส่วนตัว ห้ามใส่รหัสผ่าน ที่อยู่แบบละเอียด ข้อมูลติดต่อส่วนตัว เลขประจำตัว ข้อมูลเข้าสู่ระบบ หรือข้อมูลลับของผู้อื่น Community เป็นฟีเจอร์ที่มีการสื่อสารระหว่างผู้ใช้ คุณภาพและความปลอดภัยจึงไม่ได้ขึ้นอยู่กับโค้ดเพียงอย่างเดียว แต่ขึ้นอยู่กับพฤติกรรมของผู้ใช้ด้วย กฎทางเทคนิคสามารถช่วยลดหรือลบพฤติกรรมบางประเภทได้ แต่ระบบอัตโนมัติไม่สามารถเข้าใจทุกบทสนทนาได้อย่างสมบูรณ์ ผู้ใช้จึงควรใช้กฎของแอปควบคู่กับการระวังภัยบนอินเทอร์เน็ตและไม่เปิดเผยข้อมูลที่อาจทำให้ตนเองหรือผู้อื่นเสี่ยง
+32. แหล่งข้อมูลและสายด่วน
+SafeSpace มีข้อมูลสุขภาพจิต แหล่งข้อมูล และสายด่วน รายละเอียดเรื่องเวลาให้บริการ สิทธิ์ในการใช้บริการ และช่องทางติดต่อสามารถเปลี่ยนแปลงได้ แอปไม่ควรถูกใช้แทนระบบแจ้งเหตุฉุกเฉิน ในประเทศไทยแอปปัจจุบันแสดงสายด่วนสุขภาพจิต กรมสุขภาพจิต 1323 หากเกิดอันตรายทันทีหรือต้องการการแพทย์เร่งด่วน ให้ใช้บริการฉุกเฉินในพื้นที่ที่เหมาะสม ความเป็นส่วนตัวของ SafeSpace เน้นการลดการเปิดเผยข้อมูลที่ไม่จำเป็นและใช้การควบคุมสิทธิ์ในส่วนที่ระบบรองรับ ความเป็นส่วนตัวไม่ได้หมายความว่าจะรับประกันว่าไม่เคยมีข้อมูลทางเทคนิคใด ๆ เกิดขึ้น โดยเฉพาะเมื่อระบบเกี่ยวข้องกับการยืนยันตัวตน การโฮสต์ ฐานข้อมูล หรือบริการ AI ภายนอก ผู้ใช้จึงควรพิจารณาอย่างรอบคอบก่อนใส่ข้อมูลลงในแต่ละฟีเจอร์
+33. ข้อจำกัดด้านเหตุฉุกเฉิน
+SafeSpace ไม่สามารถเฝ้าดูคุณแบบเรียลไทม์ ส่งเจ้าหน้าที่ฉุกเฉิน รับประกันว่าข้อความจะถูกอ่านทันที หรือรับประกันว่า AI จะรู้สถานการณ์เร่งด่วน อย่ารอผลแบบประเมิน การตอบจาก AI การตอบจากชุมชน หรือการตอบจากผู้ดูแลเมื่อจำเป็นต้องได้รับความช่วยเหลือจริงทันที ความเป็นส่วนตัวของ SafeSpace เน้นการลดการเปิดเผยข้อมูลที่ไม่จำเป็นและใช้การควบคุมสิทธิ์ในส่วนที่ระบบรองรับ ความเป็นส่วนตัวไม่ได้หมายความว่าจะรับประกันว่าไม่เคยมีข้อมูลทางเทคนิคใด ๆ เกิดขึ้น โดยเฉพาะเมื่อระบบเกี่ยวข้องกับการยืนยันตัวตน การโฮสต์ ฐานข้อมูล หรือบริการ AI ภายนอก ผู้ใช้จึงควรพิจารณาอย่างรอบคอบก่อนใส่ข้อมูลลงในแต่ละฟีเจอร์
+34. การติดต่อผู้ดูแล
+ผู้ใช้ที่เข้าสู่ระบบสามารถใช้ฟีเจอร์ติดต่อ/ช่วยเหลือเพื่อส่งปัญหา ข้อเสนอแนะ คำถาม และคำขออื่น ๆ ข้อความติดต่อไม่ใช่เนื้อหาสาธารณะและมีไว้สำหรับการจัดการโดยผู้ดูแล ห้ามใส่รหัสผ่าน รหัสยืนยัน ข้อมูลการเงิน หรือข้อมูลละเอียดอ่อนที่ไม่จำเป็น ความเป็นส่วนตัวของ SafeSpace เน้นการลดการเปิดเผยข้อมูลที่ไม่จำเป็นและใช้การควบคุมสิทธิ์ในส่วนที่ระบบรองรับ ความเป็นส่วนตัวไม่ได้หมายความว่าจะรับประกันว่าไม่เคยมีข้อมูลทางเทคนิคใด ๆ เกิดขึ้น โดยเฉพาะเมื่อระบบเกี่ยวข้องกับการยืนยันตัวตน การโฮสต์ ฐานข้อมูล หรือบริการ AI ภายนอก ผู้ใช้จึงควรพิจารณาอย่างรอบคอบก่อนใส่ข้อมูลลงในแต่ละฟีเจอร์
+35. รายงานและคำขอช่วยเหลือ
+รายงานและคำขอติดต่ออาจมีข้อมูลละเอียดอ่อน โครงสร้างฐานข้อมูลปัจจุบันออกแบบให้ผู้ใช้ทั่วไปไม่มีสิทธิ์อ่านคำขอติดต่อส่วนตัวของผู้อื่นโดยทั่วไป ขณะที่ผู้ดูแลสามารถตรวจข้อมูลที่จำเป็นต่อการดูแลและสนับสนุน ความเป็นส่วนตัวของ SafeSpace เน้นการลดการเปิดเผยข้อมูลที่ไม่จำเป็นและใช้การควบคุมสิทธิ์ในส่วนที่ระบบรองรับ ความเป็นส่วนตัวไม่ได้หมายความว่าจะรับประกันว่าไม่เคยมีข้อมูลทางเทคนิคใด ๆ เกิดขึ้น โดยเฉพาะเมื่อระบบเกี่ยวข้องกับการยืนยันตัวตน การโฮสต์ ฐานข้อมูล หรือบริการ AI ภายนอก ผู้ใช้จึงควรพิจารณาอย่างรอบคอบก่อนใส่ข้อมูลลงในแต่ละฟีเจอร์
+36. ความเป็นส่วนตัวและการลดข้อมูล
+ให้ข้อมูลเฉพาะที่จำเป็นอย่างสมเหตุสมผลต่อฟีเจอร์ที่กำลังใช้ ห้ามใส่รหัสผ่าน รหัสใช้ครั้งเดียว ข้อมูลธนาคาร/การชำระเงิน เลขประจำตัวรัฐ ที่อยู่บ้านแบบละเอียด ข้อมูลเข้าสู่ระบบส่วนตัว หรือข้อมูลลับของผู้อื่นลงในคำตอบ โพสต์ ความคิดเห็น รายงาน หรือข้อความติดต่อ ความเป็นส่วนตัวของ SafeSpace เน้นการลดการเปิดเผยข้อมูลที่ไม่จำเป็นและใช้การควบคุมสิทธิ์ในส่วนที่ระบบรองรับ ความเป็นส่วนตัวไม่ได้หมายความว่าจะรับประกันว่าไม่เคยมีข้อมูลทางเทคนิคใด ๆ เกิดขึ้น โดยเฉพาะเมื่อระบบเกี่ยวข้องกับการยืนยันตัวตน การโฮสต์ ฐานข้อมูล หรือบริการ AI ภายนอก ผู้ใช้จึงควรพิจารณาอย่างรอบคอบก่อนใส่ข้อมูลลงในแต่ละฟีเจอร์
+37. ข้อมูลทางเทคนิค
+บริการออนไลน์จำเป็นต้องประมวลผลข้อมูลทางเทคนิคสำหรับการยืนยันตัวตน เซสชัน คำขอ การโฮสต์ การเข้าถึงฐานข้อมูล มาตรการความปลอดภัย และการทำงานของบริการ ผู้ใช้จะไม่เห็นเหตุการณ์ทางเทคนิคหรือบันทึกโครงสร้างพื้นฐานทุกประเภทผ่านหน้าจอ SafeSpace มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+38. Supabase และโครงสร้างพื้นฐาน
+แอปปัจจุบันใช้ Supabase Auth, Postgres, Row Level Security, Realtime และ Edge Functions ดังนั้น Supabase จึงมีส่วนในการประมวลผลทางเทคนิคที่จำเป็นต่อฟีเจอร์เหล่านั้น นโยบายของผู้ให้บริการและการตั้งค่าจริงอาจเปลี่ยนแปลงแยกจากโค้ด frontend มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+39. GitHub Pages และการโฮสต์ frontend
+frontend ปัจจุบันถูกเผยแพร่ผ่าน GitHub Pages ส่วน frontend แยกจาก backend ของ Supabase การที่เว็บไซต์อยู่บน GitHub Pages ไม่ได้หมายความว่า GitHub repository เป็นฐานข้อมูลหรือระบบยืนยันตัวตนของ SafeSpace มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+40. การควบคุมการเข้าถึงฐานข้อมูล
+โครงการใช้ Supabase Row Level Security และฟังก์ชันฝั่งเซิร์ฟเวอร์/ฐานข้อมูลเพื่อจำกัดการดำเนินการที่ละเอียดอ่อน สิทธิ์ของเจ้าของข้อมูลและผู้ดูแล การสร้างโพสต์แบบควบคุม และคำขอ AI ที่ได้รับการป้องกันมีเป้าหมายให้ถูกบังคับใช้เกินกว่าปุ่มบน frontend มาตรการเหล่านี้ลดความเสี่ยงแต่ไม่รับประกันความปลอดภัยสมบูรณ์ มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+41. การป้องกัน AI endpoint
+ฟังก์ชัน AI ที่มีการบันทึกไว้ใช้เซสชันที่ยืนยันตัวตน การตรวจข้อมูล ขีดจำกัดขนาดคำขอ และ rate limit ต่อผู้ใช้ ปัจจุบันมีการบันทึกขีดจำกัด 5 คำขอต่อ 60 วินาทีต่อผู้ใช้สำหรับ AI endpoint หลัก โดยแต่ละ endpoint มีขีดจำกัดขนาดคำขอของตนเอง มาตรการนี้เป็นการลดการใช้งานผิดวัตถุประสงค์ ไม่ใช่การรับประกันว่าจะป้องกันการโจมตีทุกชนิด มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+42. ความปลอดภัยของเบราว์เซอร์
+frontend มี Content Security Policy และมาตรการด้านความปลอดภัยระดับแอปอื่น ๆ เอกสารความปลอดภัยปัจจุบันระบุว่า CSP ถูกใช้งานเป็น meta tag แทน HTTP response header มาตรการด้านเบราว์เซอร์ใด ๆ ไม่สามารถรับประกันว่าเว็บไซต์จะไม่มีช่องโหว่ มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+43. ข้อจำกัดด้านความปลอดภัย
+SafeSpace เป็นโครงการโรงเรียนและไม่ได้อ้างว่ามีความปลอดภัย ความเป็นนิรนาม ความพร้อมใช้งาน หรือการปฏิบัติตามข้อกำกับดูแลอย่างสมบูรณ์ ข้อจำกัดที่มีการบันทึกไว้ ได้แก่ การตรวจรหัสผ่านบางส่วนอยู่ฝั่ง client และสามารถหลีกเลี่ยงได้โดยการเรียก API โดยตรง, Edge Functions บางตัวใช้ CORS ที่กว้างแม้มี JWT เป็นตัวควบคุมหลัก และยังมี compatibility functions รุ่นเก่าระหว่างการย้ายระบบ สิ่งเหล่านี้เป็นข้อจำกัดทางวิศวกรรมที่มีการบันทึกไว้ มาตรการเหล่านี้มีไว้เพื่อลดความเสี่ยงที่เกิดขึ้นได้จริง ไม่ใช่เพื่ออ้างว่าระบบปลอดภัยอย่างสมบูรณ์ ความปลอดภัยเป็นงานที่ต้องปรับปรุงต่อเนื่อง เพราะเบราว์เซอร์ dependency ผู้ให้บริการ ระบบยืนยันตัวตน และรูปแบบการโจมตีสามารถเปลี่ยนแปลงได้ หากพบข้อจำกัดด้านความปลอดภัย ข้อจำกัดนั้นควรถูกมองเป็นประเด็นที่ต้องพัฒนา ไม่ใช่หลักฐานว่าระบบทั้งหมดไม่ปลอดภัย
+44. ความพร้อมใช้งานและปัญหาทางเทคนิค
+เว็บไซต์ ระบบยืนยันตัวตน ฐานข้อมูล ผู้ให้บริการ AI อีเมล Google authentication Realtime และบริการอื่นอาจขัดข้อง เปลี่ยนพฤติกรรม หรือทำงานช้าลง SafeSpace ไม่รับประกันว่าจะพร้อมใช้งานตลอดเวลาหรือทุกผลลัพธ์จะสร้างสำเร็จ เนื่องจาก SafeSpace เป็นแอปออนไลน์ การทำงานบางส่วนจึงขึ้นอยู่กับบริการที่อยู่นอกโค้ด frontend หากผู้ให้บริการมีปัญหา เปลี่ยนนโยบาย เปลี่ยนการตั้งค่า เครือข่ายขัดข้อง หรือจำกัดบริการ ฟีเจอร์อาจได้รับผลกระทบแม้โค้ดหน้าตาเว็บไซต์จะไม่ได้เปลี่ยน โครงการจึงจำเป็นต้องปรับปรุงตามการเปลี่ยนแปลงของทั้งระบบและบริการที่เกี่ยวข้อง
+45. บริการของบุคคลที่สาม
+SafeSpace พึ่งพาบริการภายนอกสำหรับบางส่วนของการยืนยันตัวตน การโฮสต์ ฐานข้อมูล การประมวลผล AI และฟังก์ชันที่เกี่ยวข้อง บริการภายนอกมีนโยบาย มาตรการความปลอดภัย การหยุดให้บริการ และการเปลี่ยนแปลงของตนเอง SafeSpace ไม่สามารถควบคุมทุกการประมวลผลของผู้ให้บริการเหล่านั้น เนื่องจาก SafeSpace เป็นแอปออนไลน์ การทำงานบางส่วนจึงขึ้นอยู่กับบริการที่อยู่นอกโค้ด frontend หากผู้ให้บริการมีปัญหา เปลี่ยนนโยบาย เปลี่ยนการตั้งค่า เครือข่ายขัดข้อง หรือจำกัดบริการ ฟีเจอร์อาจได้รับผลกระทบแม้โค้ดหน้าตาเว็บไซต์จะไม่ได้เปลี่ยน โครงการจึงจำเป็นต้องปรับปรุงตามการเปลี่ยนแปลงของทั้งระบบและบริการที่เกี่ยวข้อง
+46. การเปลี่ยนแปลงฟีเจอร์
+SafeSpace อยู่ระหว่างการพัฒนา คำถาม วิธีให้คะแนน โมเดล AI prompt แหล่งข้อมูล กฎชุมชน พฤติกรรมการเข้าสู่ระบบ มาตรการความปลอดภัย โครงสร้างฐานข้อมูล และส่วนติดต่อผู้ใช้อาจเปลี่ยนแปลง ดังนั้นฟีเจอร์ที่อธิบายในเอกสารนี้อาจทำงานต่างจากเวอร์ชันในอนาคต เนื่องจาก SafeSpace เป็นแอปออนไลน์ การทำงานบางส่วนจึงขึ้นอยู่กับบริการที่อยู่นอกโค้ด frontend หากผู้ให้บริการมีปัญหา เปลี่ยนนโยบาย เปลี่ยนการตั้งค่า เครือข่ายขัดข้อง หรือจำกัดบริการ ฟีเจอร์อาจได้รับผลกระทบแม้โค้ดหน้าตาเว็บไซต์จะไม่ได้เปลี่ยน โครงการจึงจำเป็นต้องปรับปรุงตามการเปลี่ยนแปลงของทั้งระบบและบริการที่เกี่ยวข้อง
+47. การเปลี่ยนแปลงนโยบาย
+นโยบายนี้อาจถูกปรับปรุงเมื่อ SafeSpace เพิ่ม ลบ หรือเปลี่ยนฟีเจอร์ การใช้ข้อมูล มาตรการความปลอดภัย หรือกฎอย่างมีนัยสำคัญ ระบบจะแสดงเวอร์ชันและวันที่ปรับปรุงล่าสุดเพื่อให้ผู้ใช้ทราบว่ากำลังอ่านนโยบายฉบับใด เนื่องจาก SafeSpace เป็นแอปออนไลน์ การทำงานบางส่วนจึงขึ้นอยู่กับบริการที่อยู่นอกโค้ด frontend หากผู้ให้บริการมีปัญหา เปลี่ยนนโยบาย เปลี่ยนการตั้งค่า เครือข่ายขัดข้อง หรือจำกัดบริการ ฟีเจอร์อาจได้รับผลกระทบแม้โค้ดหน้าตาเว็บไซต์จะไม่ได้เปลี่ยน โครงการจึงจำเป็นต้องปรับปรุงตามการเปลี่ยนแปลงของทั้งระบบและบริการที่เกี่ยวข้อง
+48. นโยบายเฉพาะฟีเจอร์ยังคงใช้
+นโยบายนี้เป็นภาพรวมระดับผลิตภัณฑ์ Assessment Policy ยังคงเป็นนโยบายละเอียดสำหรับแบบประเมิน และ Community Policy ยังคงเป็นนโยบายละเอียดสำหรับชุมชน หากฟีเจอร์ใดแสดงประกาศด้านความปลอดภัยหรือความเป็นส่วนตัวเฉพาะ ให้ศึกษาเนื้อหานั้นก่อนใช้ฟีเจอร์ เนื่องจาก SafeSpace เป็นแอปออนไลน์ การทำงานบางส่วนจึงขึ้นอยู่กับบริการที่อยู่นอกโค้ด frontend หากผู้ให้บริการมีปัญหา เปลี่ยนนโยบาย เปลี่ยนการตั้งค่า เครือข่ายขัดข้อง หรือจำกัดบริการ ฟีเจอร์อาจได้รับผลกระทบแม้โค้ดหน้าตาเว็บไซต์จะไม่ได้เปลี่ยน โครงการจึงจำเป็นต้องปรับปรุงตามการเปลี่ยนแปลงของทั้งระบบและบริการที่เกี่ยวข้อง
+49. การใช้งาน SafeSpace ในทางที่ไม่เหมาะสม
+ห้ามพยายามหลีกเลี่ยงการยืนยันตัวตน สิทธิ์ฐานข้อมูล rate limit การกลั่นกรอง ข้อจำกัดบัญชี หรือมาตรการความปลอดภัย ห้ามใช้ SafeSpace เพื่อโจมตีระบบ ใช้บัญชีผู้อื่นโดยมิชอบ ทำให้โครงสร้างพื้นฐานทำงานหนักโดยเจตนา ดึงข้อมูลส่วนตัว หรือรบกวนการใช้งานของผู้อื่น กฎเหล่านี้มีไว้เพื่อกำหนดวิธีใช้ SafeSpace และปกป้องผู้ที่เข้ามาใช้งาน กฎไม่ได้มีเป้าหมายเพื่อห้ามการเห็นต่างหรือความผิดพลาดโดยสุจริต แต่ต้องการกำหนดขอบเขตที่สมเหตุสมผลด้านความปลอดภัย ความเป็นส่วนตัว ความมั่นคงของระบบ และการอยู่ร่วมกัน การบังคับใช้สามารถเกิดขึ้นทั้งจากระบบทางเทคนิคและการตรวจสอบโดยผู้ดูแล
+50. การเคารพผู้ใช้คนอื่น
+SafeSpace ตั้งใจให้เป็นพื้นที่สนับสนุน ผู้ใช้แต่ละคนอาจมีประสบการณ์ ภูมิหลัง ความคิดเห็น และระดับความสบายใจแตกต่างกัน สามารถเห็นต่างได้ตามกฎชุมชน แต่การคุกคาม ทำให้อับอาย เลือกปฏิบัติ ข่มขู่ หรือเปิดเผยข้อมูลส่วนตัวโดยเจตนาไม่เป็นที่ยอมรับ กฎเหล่านี้มีไว้เพื่อกำหนดวิธีใช้ SafeSpace และปกป้องผู้ที่เข้ามาใช้งาน กฎไม่ได้มีเป้าหมายเพื่อห้ามการเห็นต่างหรือความผิดพลาดโดยสุจริต แต่ต้องการกำหนดขอบเขตที่สมเหตุสมผลด้านความปลอดภัย ความเป็นส่วนตัว ความมั่นคงของระบบ และการอยู่ร่วมกัน การบังคับใช้สามารถเกิดขึ้นทั้งจากระบบทางเทคนิคและการตรวจสอบโดยผู้ดูแล
+51. สิทธิในเนื้อหาและการแบ่งปัน
+เมื่อส่งโพสต์ ความคิดเห็น รายงาน หรือเนื้อหาอื่น คุณควรส่งเฉพาะสิ่งที่คุณมีสิทธิ์แบ่งปัน ห้ามอัปโหลดเนื้อหาที่มีลิขสิทธิ์โดยไม่มีสิทธิ์ เนื้อหาส่วนตัวของผู้อื่น หรือสิ่งที่ละเมิดสิทธิของบุคคลอื่น สิ่งที่ผู้ใช้ส่งเข้าสู่ระบบอาจส่งผลต่อคนอื่นด้วย ไม่ใช่เฉพาะตัวผู้ส่ง ผู้ใช้ควรพิจารณาว่าตนมีสิทธิ์เผยแพร่เนื้อหาหรือไม่ และข้อมูลนั้นอาจทำให้ใครสูญเสียความเป็นส่วนตัวหรือได้รับผลกระทบโดยไม่จำเป็นหรือไม่ แนวทางที่ปลอดภัยที่สุดคือส่งเฉพาะข้อมูลที่จำเป็นต่อวัตถุประสงค์ของฟีเจอร์นั้น
+52. การจำกัดหรือลบบัญชีและการกลั่นกรอง
+SafeSpace อาจจำกัดหรือลบบัญชี โพสต์ ความคิดเห็น หรือสิทธิ์เข้าถึงเมื่อจำเป็นตามมาตรการกลั่นกรองและความปลอดภัย เช่น การละเมิด Community Policy การใช้งานในทางที่ไม่เหมาะสม หรือความเสี่ยงด้านความปลอดภัย การบังคับใช้สามารถเกิดจากระบบทางเทคนิคและการตรวจสอบโดยผู้ดูแล สิ่งที่ผู้ใช้ส่งเข้าสู่ระบบอาจส่งผลต่อคนอื่นด้วย ไม่ใช่เฉพาะตัวผู้ส่ง ผู้ใช้ควรพิจารณาว่าตนมีสิทธิ์เผยแพร่เนื้อหาหรือไม่ และข้อมูลนั้นอาจทำให้ใครสูญเสียความเป็นส่วนตัวหรือได้รับผลกระทบโดยไม่จำเป็นหรือไม่ แนวทางที่ปลอดภัยที่สุดคือส่งเฉพาะข้อมูลที่จำเป็นต่อวัตถุประสงค์ของฟีเจอร์นั้น
+53. ไม่มีการรับประกันว่าเป็นนิรนาม
+คำว่า anonymous ในบางฟีเจอร์หมายถึงวิธีที่ข้อมูลถูกแสดงหรือจัดการภายในฟีเจอร์นั้น ไม่ใช่คำรับประกันว่า SafeSpace, Supabase, Google, ผู้ให้บริการ AI, ระบบโฮสต์ เครือข่าย เบราว์เซอร์ อุปกรณ์ หรือระบบทางเทคนิคอื่นจะไม่สามารถเชื่อมโยงกิจกรรมกับบุคคลได้ สิ่งที่ผู้ใช้ส่งเข้าสู่ระบบอาจส่งผลต่อคนอื่นด้วย ไม่ใช่เฉพาะตัวผู้ส่ง ผู้ใช้ควรพิจารณาว่าตนมีสิทธิ์เผยแพร่เนื้อหาหรือไม่ และข้อมูลนั้นอาจทำให้ใครสูญเสียความเป็นส่วนตัวหรือได้รับผลกระทบโดยไม่จำเป็นหรือไม่ แนวทางที่ปลอดภัยที่สุดคือส่งเฉพาะข้อมูลที่จำเป็นต่อวัตถุประสงค์ของฟีเจอร์นั้น
+54. ไม่มีการรับประกันความถูกต้อง
+ข้อมูล ผล AI รายละเอียดแหล่งช่วยเหลือ การตีความการคัดกรอง เนื้อหาจากชุมชน และสถานะทางเทคนิคอาจมีข้อผิดพลาด สำหรับการตัดสินใจที่สำคัญด้านสุขภาพ ความปลอดภัย เหตุฉุกเฉิน กฎหมาย หรือความปลอดภัยของบัญชี ให้ตรวจสอบกับแหล่งที่เหมาะสมหรือผู้เชี่ยวชาญ สิ่งที่ผู้ใช้ส่งเข้าสู่ระบบอาจส่งผลต่อคนอื่นด้วย ไม่ใช่เฉพาะตัวผู้ส่ง ผู้ใช้ควรพิจารณาว่าตนมีสิทธิ์เผยแพร่เนื้อหาหรือไม่ และข้อมูลนั้นอาจทำให้ใครสูญเสียความเป็นส่วนตัวหรือได้รับผลกระทบโดยไม่จำเป็นหรือไม่ แนวทางที่ปลอดภัยที่สุดคือส่งเฉพาะข้อมูลที่จำเป็นต่อวัตถุประสงค์ของฟีเจอร์นั้น
+55. ผู้ใช้อายุน้อยและผู้ใหญ่ที่ไว้ใจ
+SafeSpace ออกแบบโดยคำนึงถึงเยาวชน ผู้ใช้อายุน้อยควรหลีกเลี่ยงการเปิดเผยข้อมูลส่วนตัวที่ไม่จำเป็นทางออนไลน์ และควรพิจารณาพูดคุยกับพ่อแม่ ผู้ปกครอง ครู ที่ปรึกษาโรงเรียน บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่ไว้ใจ เมื่อไม่แน่ใจเกี่ยวกับผลลัพธ์ ความเป็นส่วนตัว หรือสถานการณ์ที่ยากลำบาก เนื่องจาก SafeSpace ถูกออกแบบโดยคำนึงถึงเยาวชน โครงการจึงใช้แนวทางระมัดระวังกับข้อมูลส่วนตัวและฟีเจอร์ด้านสุขภาวะ ผู้ใช้อายุน้อยอาจมีประสบการณ์เกี่ยวกับความเป็นส่วนตัวออนไลน์แตกต่างกันและอาจไม่รู้ว่าข้อมูลบางอย่างสามารถใช้ระบุตัวตนภายหลังได้ ระบบจึงสนับสนุนให้เปิดเผยข้อมูลเท่าที่จำเป็นและขอความช่วยเหลือจากคนจริงที่ไว้ใจเมื่อสถานการณ์เกินขอบเขตที่ซอฟต์แวร์ควรรับมือ
+56. การยอมรับก่อนยืนยันตัวตน
+ก่อนดำเนินการสร้างบัญชีหรือเข้าสู่ระบบ คุณจะได้รับโอกาสอ่านนโยบายนี้ การดำเนินการต่อหลังขั้นตอนยอมรับหมายความว่าคุณรับทราบว่าได้มีโอกาสอ่านและเข้าใจลักษณะและข้อจำกัดหลักของ SafeSpace การยืนยันตัวตนยังคงอยู่ภายใต้ข้อกำหนดของผู้ให้บริการ Auth นโยบายนี้เขียนขึ้นสำหรับ SafeSpace เวอร์ชันปัจจุบันและควรอ่านร่วมกับประกาศเฉพาะฟีเจอร์ที่แสดงในแอป โครงการไม่ได้หยุดนิ่ง เพราะโค้ด โครงสร้างพื้นฐาน ผู้ให้บริการ ข้อจำกัด และพฤติกรรมของส่วนติดต่อผู้ใช้อาจเปลี่ยนตามการพัฒนา การกำหนดเวอร์ชันของนโยบายทำให้ผู้ใช้ทราบว่านโยบายฉบับใดเป็นฉบับที่แอปนำเสนอในช่วงเวลาหนึ่ง
+57. เวอร์ชันนโยบายและการจดจำการยอมรับ
+SafeSpace แสดงเวอร์ชันนโยบายและวันที่ปรับปรุงล่าสุด แอปสามารถจดจำว่าบราวเซอร์นี้ยอมรับนโยบายเวอร์ชันใดแล้ว เพื่อไม่ให้การแจ้งเตือนเดิมรบกวนทุกครั้งที่เข้าสู่ระบบ และเมื่อมีเวอร์ชันใหม่สามารถขอให้ยอมรับอีกครั้ง นโยบายนี้เขียนขึ้นสำหรับ SafeSpace เวอร์ชันปัจจุบันและควรอ่านร่วมกับประกาศเฉพาะฟีเจอร์ที่แสดงในแอป โครงการไม่ได้หยุดนิ่ง เพราะโค้ด โครงสร้างพื้นฐาน ผู้ให้บริการ ข้อจำกัด และพฤติกรรมของส่วนติดต่อผู้ใช้อาจเปลี่ยนตามการพัฒนา การกำหนดเวอร์ชันของนโยบายทำให้ผู้ใช้ทราบว่านโยบายฉบับใดเป็นฉบับที่แอปนำเสนอในช่วงเวลาหนึ่ง
+58. ข้อความสุดท้าย
+SafeSpace เป็นโครงการด้านสุขภาวะและความตระหนัก ไม่ใช่สิ่งทดแทนคนที่สามารถช่วยคุณโดยตรง ให้ข้อมูลเฉพาะที่คุณสบายใจจะให้ มองผลอัตโนมัติเป็นข้อมูลคัดกรองที่มีข้อจำกัด ปกป้องบัญชี ปฏิบัติตามกฎชุมชน และขอความช่วยเหลือจากคนจริงหรือบริการที่เหมาะสมเมื่อจำเป็น
+
+============================================================
+2. ASSESSMENT POLICY
+============================================================
+
+--- ENGLISH ---
+1. What is the SafeSpace Assessment?
+The SafeSpace Assessment is a wellbeing screening and reflection tool. It asks structured questions about experiences that may relate to mood, stress, everyday wellbeing, relationships, school or home experiences, and other areas included in the current assessment. The purpose is to help you reflect on your answers and provide general information that may be useful to you. It is not a test of your worth, personality, intelligence, character, or future.
+2. Who is the assessment for?
+SafeSpace is designed with young people and general wellbeing in mind. You should only continue if you understand that this is an informational tool rather than a medical service. If you are unsure whether using an online wellbeing tool is appropriate for you, consider talking with a parent, guardian, teacher, school counselor, healthcare professional, or another trusted adult.
+3. Participation is voluntary
+You choose whether to use the assessment. You may leave before submitting your answers, and you should not feel pressured to continue because you have already started. If a question makes you uncomfortable, you may pause or stop. Agreeing to this policy does not mean that you must answer every future question outside the assessment either.
+4. What questions may ask about
+Questions can cover feelings, thoughts, stress, sleep or daily functioning, relationships, school or home experiences, and other wellbeing-related topics. The exact questions can change as the project develops. The assessment is designed to collect responses to its displayed questions; it is not a request for a full personal history.
+5. Answer honestly, but share only what is necessary
+Choose the answer that best represents your experience for the period or situation described by the question. You do not need to add extra personal details to explain an answer. Do not put passwords, account credentials, payment information, identification numbers, exact addresses, private contact details, or another person's private information into assessment responses.
+6. Why does SafeSpace ask for age?
+Age is requested because experiences and wellbeing needs can differ across age groups. It provides context for the assessment and may be used with the submitted answers when the analysis is generated. Age is not intended to determine your value or to label you as a person. You should enter your age accurately enough for the assessment to use the appropriate context.
+7. Why may SafeSpace ask for nationality?
+The current assessment can request a broad nationality category to provide additional context for analysis and presentation. It is not a request for your home address, precise location, immigration documents, identification number, or other unnecessary identifying information. If a field does not apply to you, use the option provided by the interface rather than entering unrelated personal information.
+8. What information is submitted?
+When you submit the assessment, the application can send the assessment answers together with the information needed for the assessment, such as language, age, and nationality. Depending on whether you are signed in, the request may also be associated with account/session information needed to provide the feature. Do not assume that a text field is anonymous simply because it does not ask for your name.
+9. How are answers processed?
+After submission, SafeSpace sends the assessment information to its analysis function so that a result can be generated. The application may use automated or AI-assisted analysis to interpret the answers and produce information such as a risk level, summary, trends, factors, or general recommendations. Automated analysis can misunderstand language, context, sarcasm, cultural differences, or an individual's circumstances. Its output must therefore be treated as an estimate or screening result, not as a definitive statement about you.
+10. AI limitations and human judgment
+AI can produce answers that are incomplete, inaccurate, overly general, or inappropriate for a particular person. The system does not know everything about your life and cannot directly observe your circumstances. A generated result should not override your own understanding of your experience or the advice of an appropriately qualified professional. If the result seems wrong, confusing, or inconsistent with what you are experiencing, you do not have to accept it as true.
+11. This is not a medical diagnosis
+The SafeSpace Assessment is not a diagnostic examination and does not establish that you have depression, anxiety, another mental health condition, or any other medical condition. A score, risk level, label, or AI explanation from SafeSpace should not be presented to another person as a professional diagnosis. Diagnosis and treatment decisions require appropriate professional assessment and context.
+12. What does a result mean?
+A result is an interpretation of the information provided through the assessment. It can indicate areas that may deserve attention, but it cannot measure every part of your wellbeing and cannot predict your future. A lower or higher result does not make someone better or worse than another person. The result should be used as one piece of information for reflection, not as a permanent label.
+13. If the result does not feel accurate
+Your experience is more than a number or automated summary. If a result does not match how you feel, consider the possibility that the tool has limitations or that the questions did not capture your situation. You can discuss what you are experiencing with someone you trust or with a qualified professional. You do not need to change your understanding of yourself just to match an automated result.
+14. If the assessment brings up difficult feelings
+Some wellbeing questions may make you think about experiences that are difficult, stressful, or upsetting. You may pause or stop if you need to. Consider moving to a comfortable place and talking with a trusted person if you need support. SafeSpace is not a substitute for real-world support from people who can understand your circumstances and respond directly.
+15. If you need urgent or emergency help
+SafeSpace is not an emergency response service and cannot monitor your safety in real time. If you or another person is in immediate danger or needs urgent medical assistance, do not wait for an assessment result. Contact an appropriate emergency service, healthcare service, trusted adult, or other local source of immediate help. In Thailand, the Department of Mental Health hotline is 1323; emergency services may also be appropriate depending on the situation.
+16. Extra care for younger users
+SafeSpace may be used by teenagers and other young people. Younger users should take particular care not to disclose unnecessary identifying information online. If you are unsure about a question, privacy, or what to do after receiving a result, consider involving a parent, guardian, teacher, school counselor, healthcare professional, or another trusted adult.
+17. Signed-in assessment data
+If you are signed in, assessment information can be associated with your account so that account-related features can work, including access to relevant assessment records where supported by the application. Signed-in assessment information is intended to be separate from public community posts. You should still avoid entering unnecessary personal information because account association does not make unnecessary disclosure safe.
+18. Guest assessment
+SafeSpace can allow an assessment to be completed as a guest. Guest results are handled differently from signed-in account records and can be returned through the current guest/session experience. Guest mode should not be understood as a guarantee of complete anonymity: browsers, devices, networks, and technical services can retain or process information outside the visible assessment screen. Do not use guest mode as a reason to submit sensitive identifying information.
+19. Is the assessment public?
+Your assessment answers are not intended to become a public community post, public comment, or public profile simply because you complete the assessment. Assessment and community features are separate parts of SafeSpace. If you later choose to share a result or describe your experience publicly, you are responsible for deciding what personal information you are comfortable disclosing.
+20. Who may technically process information?
+Operating an online assessment requires technical services to receive, store, transmit, authenticate, or process information. Depending on the feature and implementation, this can include the SafeSpace application, database or storage infrastructure, authentication services, hosting infrastructure, and the service used to perform the assessment analysis. The exact technical providers and configurations can change as the project develops. SafeSpace should not claim that online processing is completely risk-free.
+21. How SafeSpace approaches security
+SafeSpace uses technical controls intended to reduce unauthorized access and misuse. Depending on the feature, these can include authentication, database access controls, row-level security, server-side validation, input validation, request limits, restricted access to private records, and controls around analysis requests. Security measures reduce risk but cannot guarantee that a system will never experience an error, vulnerability, outage, or unauthorized access.
+22. Data minimization: what you should not submit
+Only provide information that is reasonably necessary for the assessment. Do not submit passwords, one-time codes, payment or banking details, government identification numbers, exact home addresses, private phone numbers, private social-media credentials, or another person's confidential information. If a question can be answered without identifying a person, prefer the non-identifying answer.
+23. Privacy is not the same as complete anonymity
+An online service cannot honestly promise that a user is completely anonymous simply because the interface does not ask for a name. Account information, technical information, session information, network information, and combinations of details can sometimes make activity linkable to a person. SafeSpace therefore asks users to avoid unnecessary identifying information rather than relying on a promise of anonymity.
+24. Use of assessment information
+Assessment information is collected in order to provide the assessment and related application functionality. It should not be treated as a public social-media post. Any additional use of assessment information should be consistent with the information presented to users and the actual implementation of the project. If the project materially changes how assessment information is used, this policy should be reviewed and updated.
+25. Advertising and sale of assessment information
+The assessment is not presented as a feature for selling your private wellbeing answers to other users. Your assessment responses should not be treated as ordinary public content. SafeSpace should only describe data uses that are actually supported by the project. If future features introduce a materially different use of wellbeing information, users should receive updated information before relying on the changed behavior.
+26. Retention and deletion
+How long information remains available depends on how the assessment is used and how the application's current storage is configured. Signed-in records may remain associated with an account where the application provides that functionality. Guest results are intended to remain within the guest/session flow rather than becoming a normal account record. SafeSpace should not promise immediate deletion from every backup, log, cache, or technical system unless the project actually provides and verifies that guarantee.
+27. Your responsibility when using the assessment
+You are responsible for reviewing what you submit before pressing the final submission button. Do not submit information about another person unless it is genuinely necessary and you are permitted to share it. Do not use the assessment to test, harass, impersonate, or deliberately mislead the system. Using random or deliberately false answers can make the generated result less meaningful.
+28. Accuracy and technical problems
+The assessment may be affected by software bugs, network failures, service outages, changes to the question set, language differences, or problems in automated analysis. A result may also be affected if answers are incomplete or intentionally inaccurate. If the application reports an error, do not repeatedly submit the same sensitive information just to make the request work; instead, try again later or use an appropriate support channel.
+29. Changes to the assessment
+SafeSpace is a school project that may continue to change. Questions, scoring or analysis methods, interface behavior, technical services, security controls, and privacy practices may be updated. A future version may therefore behave differently from an earlier version. The policy version and update date are shown so users can identify the version they are accepting.
+30. Policy acceptance
+Before the assessment begins, you must have an opportunity to review this policy. The acceptance control is intentionally disabled until you reach the end of the policy. By selecting “Agree & Accept”, you confirm that you have had an opportunity to read the policy, understand that the assessment is voluntary, understand that your answers may be processed by automated or AI-assisted systems, understand that the result is not a diagnosis, understand the importance of avoiding unnecessary personal information, and choose to continue. If you do not agree, you can leave without starting the assessment.
+31. Contact and feedback
+If you find a privacy, safety, security, accessibility, or assessment problem, use the contact or support route provided by SafeSpace where available. When reporting a technical problem, do not include passwords or unnecessary sensitive information in the report. A clear description of what happened, without private details, is usually safer than sending the entire assessment response.
+32. Important reminder before you continue
+Take the assessment only when you are comfortable doing so. Answer the questions based on your own experience, share only what is necessary, and remember that a computer-generated result cannot fully understand a person. SafeSpace is intended to support reflection and awareness, not to replace trusted people, professional care, or emergency services.
+
+--- THAI ---
+1. แบบประเมินของ SafeSpace คืออะไร
+แบบประเมินของ SafeSpace เป็นเครื่องมือสำหรับการคัดกรองและสะท้อนสุขภาวะเบื้องต้น โดยใช้คำถามที่เป็นโครงสร้างเกี่ยวกับประสบการณ์ที่อาจเกี่ยวข้องกับอารมณ์ ความเครียด สุขภาวะในชีวิตประจำวัน ความสัมพันธ์ ประสบการณ์ที่โรงเรียนหรือที่บ้าน และหัวข้ออื่นตามแบบประเมินในปัจจุบัน จุดประสงค์คือช่วยให้คุณทบทวนคำตอบและได้รับข้อมูลทั่วไปที่อาจเป็นประโยชน์ ไม่ใช่การทดสอบคุณค่า บุคลิกภาพ ความฉลาด ลักษณะนิสัย หรืออนาคตของคุณ
+2. แบบประเมินนี้เหมาะกับใคร
+SafeSpace ออกแบบโดยคำนึงถึงวัยรุ่นและสุขภาวะทั่วไปเป็นสำคัญ คุณควรทำต่อเมื่อเข้าใจว่านี่เป็นเครื่องมือให้ข้อมูล ไม่ใช่บริการทางการแพทย์ หากไม่แน่ใจว่าการใช้เครื่องมือด้านสุขภาวะออนไลน์เหมาะกับคุณหรือไม่ ควรพิจารณาพูดคุยกับพ่อแม่ ผู้ปกครอง ครู ที่ปรึกษาโรงเรียน บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่คุณไว้ใจ
+3. การเข้าร่วมเป็นไปโดยสมัครใจ
+คุณเป็นผู้ตัดสินใจว่าจะใช้แบบประเมินหรือไม่ คุณสามารถออกจากแบบประเมินก่อนส่งคำตอบ และไม่ควรรู้สึกว่าต้องทำต่อเพียงเพราะเริ่มไปแล้ว หากคำถามทำให้ไม่สบายใจ คุณสามารถหยุดหรือพักได้ การยอมรับนโยบายนี้ไม่ได้หมายความว่าคุณต้องตอบคำถามอื่นใดนอกเหนือจากแบบประเมินในอนาคต
+4. คำถามอาจเกี่ยวกับเรื่องใดบ้าง
+คำถามอาจเกี่ยวกับความรู้สึก ความคิด ความเครียด การนอนหรือการใช้ชีวิตประจำวัน ความสัมพันธ์ ประสบการณ์ที่โรงเรียนหรือที่บ้าน และหัวข้อด้านสุขภาวะอื่น ๆ ชุดคำถามที่แสดงอาจเปลี่ยนแปลงได้เมื่อโครงการพัฒนา แบบประเมินมีไว้เพื่อรับคำตอบต่อคำถามที่แสดง ไม่ได้ขอประวัติชีวิตทั้งหมดของคุณ
+5. ตอบตามประสบการณ์จริง แต่ให้ข้อมูลเท่าที่จำเป็น
+เลือกคำตอบที่ตรงกับประสบการณ์ของคุณมากที่สุดตามช่วงเวลาหรือสถานการณ์ที่คำถามกล่าวถึง คุณไม่จำเป็นต้องเพิ่มรายละเอียดส่วนตัวเพื่ออธิบายคำตอบ ห้ามใส่รหัสผ่าน ข้อมูลเข้าสู่ระบบ ข้อมูลการชำระเงิน เลขประจำตัว ที่อยู่แบบละเอียด ข้อมูลติดต่อส่วนตัว หรือข้อมูลส่วนตัวของผู้อื่นลงในคำตอบ
+6. ทำไม SafeSpace จึงถามอายุ
+เราขออายุเพราะประสบการณ์และความต้องการด้านสุขภาวะอาจแตกต่างกันตามช่วงวัย อายุช่วยให้ระบบมีบริบทในการประเมินและอาจถูกใช้ร่วมกับคำตอบเพื่อสร้างผลลัพธ์ อายุไม่ได้มีไว้เพื่อกำหนดคุณค่าหรือติดป้ายว่าคุณเป็นคนแบบใด ควรกรอกอายุให้ถูกต้องเพียงพอสำหรับการใช้บริบทที่เหมาะสม
+7. ทำไม SafeSpace จึงอาจถามสัญชาติ
+แบบประเมินปัจจุบันสามารถขอข้อมูลสัญชาติในรูปแบบกว้าง ๆ เพื่อเพิ่มบริบทในการวิเคราะห์และการนำเสนอข้อมูล ไม่ใช่การขอที่อยู่ ตำแหน่งที่แน่นอน เอกสารตรวจคนเข้าเมือง เลขประจำตัว หรือข้อมูลระบุตัวตนอื่นที่ไม่จำเป็น หากช่องข้อมูลไม่ตรงกับคุณ ให้ใช้ตัวเลือกที่ระบบมีแทนการกรอกข้อมูลส่วนตัวอื่น
+8. ข้อมูลอะไรถูกส่งเมื่อส่งแบบประเมิน
+เมื่อคุณส่งแบบประเมิน แอปสามารถส่งคำตอบพร้อมข้อมูลที่จำเป็นต่อการประเมิน เช่น ภาษา อายุ และสัญชาติ ขึ้นอยู่กับว่าคุณเข้าสู่ระบบหรือไม่ คำขออาจเชื่อมโยงกับข้อมูลบัญชีหรือเซสชันที่จำเป็นต่อการให้บริการ อย่าคิดว่าช่องข้อความเป็นนิรนามเพียงเพราะช่องนั้นไม่ได้ถามชื่อ
+9. คำตอบถูกประมวลผลอย่างไร
+หลังจากส่งคำตอบ SafeSpace จะส่งข้อมูลแบบประเมินไปยังฟังก์ชันวิเคราะห์เพื่อสร้างผลลัพธ์ ระบบอาจใช้การประมวลผลอัตโนมัติหรือ AI เพื่อวิเคราะห์คำตอบและสร้างข้อมูล เช่น ระดับความเสี่ยง สรุป แนวโน้ม ปัจจัย หรือคำแนะนำทั่วไป การวิเคราะห์อัตโนมัติอาจเข้าใจภาษา บริบท การประชด ความแตกต่างทางวัฒนธรรม หรือสถานการณ์เฉพาะบุคคลผิดได้ ดังนั้นผลลัพธ์ควรถูกมองว่าเป็นผลคัดกรองหรือการประมาณ ไม่ใช่ข้อสรุปที่แน่นอนเกี่ยวกับตัวคุณ
+10. ข้อจำกัดของ AI และความสำคัญของการใช้วิจารณญาณ
+AI อาจสร้างคำตอบที่ไม่ครบถ้วน ไม่ถูกต้อง กว้างเกินไป หรือไม่เหมาะกับบุคคลใดบุคคลหนึ่ง ระบบไม่รู้ทุกอย่างเกี่ยวกับชีวิตของคุณและไม่สามารถสังเกตสถานการณ์จริงของคุณได้โดยตรง ผลลัพธ์ที่สร้างขึ้นไม่ควรมีอำนาจเหนือความเข้าใจของคุณเองหรือคำแนะนำจากผู้เชี่ยวชาญที่มีคุณสมบัติเหมาะสม หากผลไม่ถูกต้อง สับสน หรือไม่ตรงกับสิ่งที่คุณกำลังเผชิญ คุณไม่จำเป็นต้องเชื่อว่าเป็นความจริงเพียงเพราะระบบสร้างผลนั้นขึ้นมา
+11. แบบประเมินนี้ไม่ใช่การวินิจฉัยโรค
+แบบประเมิน SafeSpace ไม่ใช่การตรวจวินิจฉัยและไม่สามารถยืนยันว่าคุณเป็นโรคซึมเศร้า ภาวะวิตกกังวล ภาวะทางสุขภาพจิตอื่น หรือโรคทางการแพทย์ใด ๆ คะแนน ระดับความเสี่ยง ป้ายกำกับ หรือคำอธิบายจาก AI ไม่ควรถูกนำเสนอแก่ผู้อื่นว่าเป็นการวินิจฉัยจากผู้เชี่ยวชาญ การวินิจฉัยและการตัดสินใจเรื่องการรักษาต้องอาศัยการประเมินที่เหมาะสมและบริบทจากผู้เชี่ยวชาญ
+12. ผลการประเมินหมายความว่าอย่างไร
+ผลลัพธ์เป็นการตีความข้อมูลที่คุณให้ผ่านแบบประเมิน อาจชี้ให้เห็นบางด้านที่ควรใส่ใจ แต่ไม่สามารถวัดสุขภาวะของคุณได้ทุกด้านและไม่สามารถทำนายอนาคตได้ ผลที่ต่ำหรือสูงกว่าไม่ได้ทำให้ใครดีกว่าหรือแย่กว่าอีกคน และผลลัพธ์ไม่ควรถูกใช้เป็นป้ายกำกับถาวรของตัวคุณ
+13. หากผลลัพธ์ไม่ตรงกับความรู้สึกของคุณ
+ประสบการณ์ของคุณมีมากกว่าตัวเลขหรือสรุปจากระบบอัตโนมัติ หากผลไม่ตรงกับความรู้สึกของคุณ ให้พิจารณาว่าเครื่องมืออาจมีข้อจำกัดหรือคำถามอาจไม่ครอบคลุมสถานการณ์ของคุณ คุณสามารถพูดคุยกับคนที่ไว้ใจหรือผู้เชี่ยวชาญที่เหมาะสมเกี่ยวกับสิ่งที่คุณกำลังเผชิญ ไม่จำเป็นต้องเปลี่ยนความเข้าใจต่อตัวเองเพียงเพื่อให้ตรงกับผลจากระบบ
+14. หากแบบประเมินทำให้เกิดความรู้สึกที่ยากลำบาก
+คำถามด้านสุขภาวะบางข้ออาจทำให้คุณนึกถึงประสบการณ์ที่ยาก เครียด หรือไม่สบายใจ คุณสามารถหยุดหรือออกจากแบบประเมินได้ หากต้องการความช่วยเหลือ ลองอยู่ในสถานที่ที่รู้สึกปลอดภัยและพูดคุยกับคนที่ไว้ใจ SafeSpace ไม่สามารถทดแทนการสนับสนุนจากคนจริงที่เข้าใจสถานการณ์ของคุณและสามารถตอบสนองได้โดยตรง
+15. หากต้องการความช่วยเหลือเร่งด่วนหรือฉุกเฉิน
+SafeSpace ไม่ใช่บริการตอบสนองเหตุฉุกเฉินและไม่สามารถเฝ้าดูความปลอดภัยของคุณแบบเรียลไทม์ หากคุณหรือผู้อื่นอยู่ในอันตรายทันทีหรือต้องการความช่วยเหลือทางการแพทย์เร่งด่วน อย่ารอผลแบบประเมิน ให้ติดต่อหน่วยฉุกเฉิน บริการสุขภาพ ผู้ใหญ่ที่ไว้ใจ หรือแหล่งช่วยเหลือในพื้นที่ที่เหมาะสม ในประเทศไทยสามารถติดต่อสายด่วนสุขภาพจิต กรมสุขภาพจิต 1323 และในสถานการณ์ฉุกเฉินอาจต้องติดต่อบริการฉุกเฉินที่เหมาะสม
+16. การดูแลเพิ่มเติมสำหรับผู้ใช้อายุน้อย
+SafeSpace อาจถูกใช้โดยวัยรุ่นและเยาวชน ผู้ใช้อายุน้อยควรระมัดระวังเป็นพิเศษไม่เปิดเผยข้อมูลที่สามารถระบุตัวตนโดยไม่จำเป็นทางออนไลน์ หากไม่แน่ใจเกี่ยวกับคำถาม ความเป็นส่วนตัว หรือควรทำอย่างไรหลังได้รับผลลัพธ์ ควรพิจารณาพูดคุยกับพ่อแม่ ผู้ปกครอง ครู ที่ปรึกษาโรงเรียน บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่ไว้ใจ
+17. ข้อมูลแบบประเมินเมื่อเข้าสู่ระบบ
+หากคุณเข้าสู่ระบบ ข้อมูลแบบประเมินสามารถเชื่อมโยงกับบัญชีเพื่อให้ฟีเจอร์ของบัญชีทำงานได้ รวมถึงการเข้าถึงข้อมูลการประเมินที่แอปรองรับ ข้อมูลแบบประเมินที่เข้าสู่ระบบมีจุดประสงค์ให้แยกจากโพสต์สาธารณะในชุมชน อย่างไรก็ตาม การเชื่อมโยงกับบัญชีไม่ได้ทำให้การเปิดเผยข้อมูลส่วนตัวที่ไม่จำเป็นปลอดภัย จึงควรให้ข้อมูลเท่าที่จำเป็น
+18. การทำแบบประเมินแบบผู้เยี่ยมชม
+SafeSpace สามารถเปิดให้ทำแบบประเมินแบบผู้เยี่ยมชมได้ ผลของผู้เยี่ยมชมถูกจัดการแตกต่างจากระเบียนบัญชีและสามารถส่งกลับผ่านประสบการณ์ของผู้เยี่ยมชม/เซสชัน โหมดผู้เยี่ยมชมไม่ควรถูกเข้าใจว่าเป็นการรับประกันความไม่ระบุตัวตนอย่างสมบูรณ์ เพราะเบราว์เซอร์ อุปกรณ์ เครือข่าย และบริการทางเทคนิคอาจเก็บหรือประมวลผลข้อมูลนอกหน้าจอแบบประเมิน อย่าใช้โหมดผู้เยี่ยมชมเป็นเหตุผลในการส่งข้อมูลระบุตัวตนที่ละเอียดอ่อน
+19. แบบประเมินเป็นข้อมูลสาธารณะหรือไม่
+คำตอบแบบประเมินไม่ได้มีจุดประสงค์ให้กลายเป็นโพสต์ ความคิดเห็น หรือโปรไฟล์สาธารณะเพียงเพราะคุณทำแบบประเมินเสร็จ แบบประเมินและชุมชนเป็นฟีเจอร์คนละส่วน หากคุณเลือกแชร์ผลหรือเล่าประสบการณ์ต่อสาธารณะภายหลัง คุณควรตัดสินใจด้วยตัวเองว่าข้อมูลส่วนตัวใดที่ยอมเปิดเผย
+20. ใครอาจประมวลผลข้อมูลในทางเทคนิค
+การให้บริการแบบประเมินออนไลน์จำเป็นต้องมีบริการทางเทคนิคสำหรับรับ ส่ง จัดเก็บ ยืนยันตัวตน หรือประมวลผลข้อมูล ขึ้นอยู่กับฟีเจอร์และการติดตั้งจริง อาจรวมถึงแอป SafeSpace โครงสร้างพื้นฐานฐานข้อมูลหรือพื้นที่จัดเก็บ ระบบยืนยันตัวตน โฮสติ้ง และบริการที่ใช้วิเคราะห์แบบประเมิน ผู้ให้บริการและการตั้งค่าทางเทคนิคอาจเปลี่ยนแปลงได้เมื่อโครงการพัฒนา SafeSpace ไม่ควรอ้างว่าการประมวลผลออนไลน์ไม่มีความเสี่ยงเลย
+21. SafeSpace ดูแลความปลอดภัยของข้อมูลอย่างไร
+SafeSpace ใช้มาตรการทางเทคนิคเพื่อลดการเข้าถึงโดยไม่ได้รับอนุญาตและการใช้งานที่ไม่เหมาะสม โดยขึ้นอยู่กับฟีเจอร์ เช่น การยืนยันตัวตน การควบคุมการเข้าถึงฐานข้อมูล Row-level security การตรวจสอบฝั่งเซิร์ฟเวอร์ การตรวจสอบข้อมูล การจำกัดคำขอ การจำกัดการเข้าถึงระเบียนส่วนตัว และการควบคุมคำขอที่เกี่ยวข้องกับการวิเคราะห์ มาตรการเหล่านี้ช่วยลดความเสี่ยง แต่ไม่สามารถรับประกันได้ว่าระบบจะไม่มีข้อผิดพลาด ช่องโหว่ การหยุดให้บริการ หรือการเข้าถึงโดยไม่ได้รับอนุญาต
+22. การลดการเก็บข้อมูล: สิ่งที่ไม่ควรส่ง
+ควรให้เฉพาะข้อมูลที่จำเป็นต่อแบบประเมินอย่างสมเหตุสมผล ห้ามส่งรหัสผ่าน รหัสใช้ครั้งเดียว ข้อมูลธนาคารหรือการชำระเงิน เลขประจำตัวของรัฐ ที่อยู่บ้านแบบละเอียด เบอร์โทรศัพท์ส่วนตัว ข้อมูลเข้าสู่ระบบโซเชียลมีเดีย หรือข้อมูลลับของผู้อื่น หากสามารถตอบคำถามได้โดยไม่ระบุตัวบุคคล ควรเลือกคำตอบที่ไม่เปิดเผยข้อมูลดังกล่าว
+23. ความเป็นส่วนตัวไม่เท่ากับการไม่เปิดเผยตัวตนโดยสมบูรณ์
+บริการออนไลน์ไม่สามารถรับประกันอย่างซื่อสัตย์ว่าผู้ใช้เป็นนิรนามโดยสมบูรณ์เพียงเพราะหน้าจอไม่ได้ถามชื่อ ข้อมูลบัญชี ข้อมูลทางเทคนิค ข้อมูลเซสชัน ข้อมูลเครือข่าย และการรวมรายละเอียดหลายอย่างอาจทำให้กิจกรรมเชื่อมโยงกับบุคคลได้ ด้วยเหตุนี้ SafeSpace จึงขอให้ผู้ใช้หลีกเลี่ยงข้อมูลระบุตัวตนที่ไม่จำเป็น แทนการพึ่งพาคำรับรองว่าเป็นนิรนาม
+24. การใช้ข้อมูลแบบประเมิน
+ข้อมูลแบบประเมินถูกเก็บเพื่อให้บริการแบบประเมินและฟังก์ชันที่เกี่ยวข้องของแอป ไม่ควรถูกถือเป็นเนื้อหาสาธารณะทั่วไป การใช้ข้อมูลเพิ่มเติมควรสอดคล้องกับข้อมูลที่อธิบายแก่ผู้ใช้และการทำงานจริงของโครงการ หากโครงการเปลี่ยนแปลงการใช้ข้อมูลแบบประเมินอย่างมีนัยสำคัญ ควรทบทวนและปรับปรุงนโยบายนี้
+25. โฆษณาและการขายข้อมูลแบบประเมิน
+แบบประเมินไม่ได้ถูกนำเสนอว่าเป็นฟีเจอร์สำหรับขายคำตอบด้านสุขภาวะส่วนตัวของคุณให้ผู้ใช้อื่น คำตอบแบบประเมินไม่ควรถูกถือเป็นเนื้อหาสาธารณะทั่วไป SafeSpace ควรอธิบายเฉพาะการใช้ข้อมูลที่โครงการรองรับจริง หากในอนาคตมีการใช้ข้อมูลด้านสุขภาวะในรูปแบบที่แตกต่างอย่างมีนัยสำคัญ ควรให้ข้อมูลที่อัปเดตแก่ผู้ใช้ก่อนที่จะคาดหวังให้ผู้ใช้พึ่งพาพฤติกรรมใหม่
+26. การเก็บรักษาและการลบข้อมูล
+ระยะเวลาที่ข้อมูลยังเข้าถึงได้ขึ้นอยู่กับวิธีใช้แบบประเมินและการตั้งค่าการจัดเก็บข้อมูลของแอปในปัจจุบัน สำหรับผู้ที่เข้าสู่ระบบ ระเบียนอาจยังเชื่อมกับบัญชีตามฟังก์ชันที่แอปรองรับ ส่วนผลของผู้เยี่ยมชมมีจุดประสงค์ให้อยู่ในขั้นตอนผู้เยี่ยมชม/เซสชันแทนระเบียนบัญชีทั่วไป SafeSpace ไม่ควรรับประกันว่าจะลบข้อมูลจากทุกสำเนาสำรอง บันทึก แคช หรือระบบทางเทคนิคทันที หากโครงการไม่ได้รับประกันและตรวจสอบเรื่องนั้นจริง
+27. ความรับผิดชอบของคุณเมื่อใช้แบบประเมิน
+คุณมีหน้าที่ตรวจสอบสิ่งที่ส่งก่อนกดส่งแบบประเมิน ไม่ควรส่งข้อมูลของบุคคลอื่นเว้นแต่จำเป็นจริงและคุณมีสิทธิ์ในการแบ่งปันข้อมูลนั้น ห้ามใช้แบบประเมินเพื่อทดสอบระบบในลักษณะที่สร้างความเสียหาย รบกวน แอบอ้างเป็นผู้อื่น หรือจงใจทำให้ระบบเข้าใจผิด การตอบแบบสุ่มหรือจงใจให้ข้อมูลเท็จอาจทำให้ผลลัพธ์มีความหมายลดลง
+28. ความถูกต้องและปัญหาทางเทคนิค
+แบบประเมินอาจได้รับผลกระทบจากข้อผิดพลาดของซอฟต์แวร์ ปัญหาเครือข่าย บริการขัดข้อง การเปลี่ยนชุดคำถาม ความแตกต่างของภาษา หรือปัญหาในการวิเคราะห์อัตโนมัติ ผลลัพธ์อาจได้รับผลกระทบหากคำตอบไม่ครบหรือจงใจให้ข้อมูลไม่ตรงความจริง หากแอปแจ้งข้อผิดพลาด อย่าส่งข้อมูลส่วนตัวที่ละเอียดซ้ำหลายครั้งเพียงเพื่อให้คำขอสำเร็จ ให้ลองใหม่ภายหลังหรือใช้ช่องทางช่วยเหลือที่เหมาะสม
+29. การเปลี่ยนแปลงของแบบประเมิน
+SafeSpace เป็นโครงการโรงเรียนที่อาจพัฒนาต่อเนื่อง คำถาม วิธีให้คะแนนหรือวิเคราะห์ พฤติกรรมของหน้าเว็บ บริการทางเทคนิค มาตรการความปลอดภัย และแนวทางความเป็นส่วนตัวอาจเปลี่ยนแปลง ทำให้เวอร์ชันในอนาคตอาจทำงานแตกต่างจากเวอร์ชันก่อนหน้า จึงแสดงเวอร์ชันนโยบายและวันที่ปรับปรุงล่าสุดเพื่อให้ผู้ใช้ทราบว่ากำลังยอมรับนโยบายฉบับใด
+30. การยอมรับนโยบาย
+ก่อนเริ่มแบบประเมิน คุณต้องมีโอกาสอ่านนโยบายนี้ ปุ่มยอมรับจะถูกปิดไว้จนกว่าคุณจะเลื่อนอ่านถึงท้ายเอกสาร เมื่อเลือก “ยอมรับและดำเนินการต่อ” คุณยืนยันว่าได้มีโอกาสอ่านนโยบาย เข้าใจว่าการทำแบบประเมินเป็นไปโดยสมัครใจ เข้าใจว่าคำตอบอาจถูกประมวลผลด้วยระบบอัตโนมัติหรือ AI เข้าใจว่าผลลัพธ์ไม่ใช่การวินิจฉัย เข้าใจความสำคัญของการไม่ส่งข้อมูลส่วนตัวที่ไม่จำเป็น และเลือกที่จะดำเนินการต่อ หากไม่ยอมรับ คุณสามารถออกจากแบบประเมินโดยไม่เริ่มทำ
+31. การติดต่อและการแจ้งปัญหา
+หากพบปัญหาด้านความเป็นส่วนตัว ความปลอดภัย ความมั่นคงของระบบ การเข้าถึง หรือแบบประเมิน ให้ใช้ช่องทางติดต่อหรือช่วยเหลือที่ SafeSpace มีให้เมื่อมีช่องทางดังกล่าว เมื่อต้องแจ้งปัญหาทางเทคนิค อย่าส่งรหัสผ่านหรือข้อมูลส่วนตัวที่ไม่จำเป็น ควรอธิบายว่าเกิดอะไรขึ้นโดยตัดข้อมูลส่วนตัวออกแทนการส่งคำตอบแบบประเมินทั้งหมด
+32. ข้อความสำคัญก่อนดำเนินการต่อ
+ทำแบบประเมินเมื่อคุณพร้อมและสบายใจ ตอบคำถามตามประสบการณ์ของตัวเอง ให้ข้อมูลเท่าที่จำเป็น และจำไว้ว่าผลจากคอมพิวเตอร์ไม่สามารถเข้าใจคนคนหนึ่งได้ทั้งหมด SafeSpace มีจุดประสงค์เพื่อช่วยให้เกิดการทบทวนและความตระหนัก ไม่ได้มีไว้แทนที่คนที่คุณไว้ใจ การดูแลจากผู้เชี่ยวชาญ หรือบริการฉุกเฉิน
+
+============================================================
+3. COMMUNITY POLICY
+============================================================
+
+--- ENGLISH ---
+# SafeSpace Community Policy
+**Version 1.0 — Community Guidelines and Terms of Participation**
+
+**Last updated:** September 2026
+
+Welcome to the SafeSpace Community.
+
+The SafeSpace Community is designed to provide a place where people can share experiences, talk about everyday difficulties, encourage one another, and learn from different perspectives in a respectful environment.
+
+Because conversations in this community may involve personal experiences, stress, emotions, relationships, school, family, or mental wellbeing, we place particular importance on **respect, privacy, safety, and responsible communication**.
+
+By selecting **“Agree and Continue”**, you confirm that you have read and understood this policy and agree to follow it when using the Community.
+
+---
+
+# 1. About the SafeSpace Community
+
+The Community is a social discussion feature within SafeSpace.
+
+It allows users to:
+
+- Read posts written by other users.
+- Share their own experiences.
+- Ask questions.
+- Give encouragement.
+- Discuss everyday experiences.
+- Comment on posts.
+- React to posts.
+- Participate in community discussions.
+- Use available wellbeing tools.
+
+The Community is intended to support **peer-to-peer conversation and sharing**.
+
+It is not intended to replace:
+
+- A doctor.
+- A psychologist.
+- A psychiatrist.
+- A counselor.
+- A teacher or school counselor.
+- A parent or guardian.
+- Emergency services.
+- Professional mental-health treatment.
+
+Information or opinions posted by community members should not automatically be treated as professional advice.
+
+---
+
+# 2. Who Can Use the Community
+
+SafeSpace may be used by people of different ages and backgrounds.
+
+Because the Community may include younger users, everyone is expected to communicate in a way that is appropriate for a general and youth-friendly environment.
+
+Users must not use age, anonymity, or the online nature of the platform as a reason to behave in a way that could place another person at risk.
+
+The Community is **not a dating service** and should not be used to seek romantic, sexual, or private relationships with other users.
+
+---
+
+# 3. Guest Access
+
+Users who are not signed in may still access publicly available Community content.
+
+Guest users may:
+
+- Read posts.
+- Read comments.
+- Browse Community categories.
+- Use available public wellbeing features.
+- Learn about the Community.
+
+Guest users cannot:
+
+- Create posts.
+- Comment on posts.
+- Perform actions that require an authenticated account.
+
+If a guest attempts to post or comment, SafeSpace will explain that an account is required.
+
+Choosing Guest access does not create an account or grant permission to bypass Community restrictions.
+
+---
+
+# 4. Account Responsibility
+
+Users are responsible for activity performed through their account.
+
+Users should:
+
+- Keep their login credentials private.
+- Avoid sharing passwords.
+- Log out when using a shared device.
+- Avoid allowing other people to use their account.
+- Provide accurate information where information is required by the service.
+- Follow this Community Policy.
+
+Users should contact SafeSpace if they believe someone has gained unauthorized access to their account.
+
+SafeSpace may take action against an account when there is evidence of abuse, regardless of whether the account owner personally performed the activity.
+
+---
+
+# 5. Be Respectful
+
+The most important rule of the Community is simple:
+
+> **Treat other people as people, not as targets.**
+
+Users may disagree with one another.
+
+Disagreement itself is not a violation.
+
+However, disagreements should remain respectful.
+
+Users should avoid:
+
+- Insults.
+- Personal attacks.
+- Mocking someone for their feelings.
+- Ridiculing someone's experiences.
+- Deliberately embarrassing another user.
+- Threatening another user.
+- Harassing another user.
+- Repeatedly targeting a particular user.
+- Encouraging other people to attack or harass someone.
+
+You may disagree with someone's opinion without attacking the person who expressed it.
+
+---
+
+# 6. Bullying and Harassment
+
+SafeSpace does not permit bullying or harassment.
+
+Harassment can include repeated unwanted behavior intended to intimidate, humiliate, pressure, or distress another user.
+
+Examples include:
+
+- Repeatedly insulting someone.
+- Following someone from post to post to provoke them.
+- Encouraging others to target a particular user.
+- Repeatedly responding to someone after they have clearly asked you to stop.
+- Threatening another user.
+- Deliberately spreading personal information about another user.
+- Creating posts specifically to humiliate another person.
+
+A single disagreement is not automatically harassment.
+
+Moderation may consider the **context, frequency, intent, and overall pattern of behavior** when reviewing a report.
+
+---
+
+# 7. Hate and Discrimination
+
+The Community must remain welcoming to people from different backgrounds.
+
+Users must not attack, threaten, or encourage discrimination against people based on characteristics such as:
+
+- Race.
+- Ethnicity.
+- Nationality.
+- Religion.
+- Disability.
+- Gender.
+- Sexual orientation.
+- Age.
+- Other protected or personal characteristics.
+
+Users may discuss difficult social issues or express opinions about ideas, policies, or experiences.
+
+However, discussion should not become an excuse for targeting or demeaning another person or group.
+
+---
+
+# 8. Privacy and Personal Information
+
+**Think carefully before sharing personal information.**
+
+The Community is not the appropriate place to publish sensitive information about yourself or another person.
+
+Users should avoid posting:
+
+- Full names when unnecessary.
+- Home addresses.
+- Phone numbers.
+- Passwords.
+- Account credentials.
+- School identification numbers.
+- Government identification numbers.
+- Financial information.
+- Precise locations.
+- Private conversations without permission.
+- Private photographs of another person without permission.
+- Information that could allow someone to identify or locate another person.
+
+Do not ask another user for sensitive personal information.
+
+For example, asking someone to publicly provide their phone number, home address, school location, or private social-media account is inappropriate.
+
+---
+
+# 9. Protecting Other People's Privacy
+
+You must not publish someone else's private information simply because you know it.
+
+This includes information obtained:
+
+- In person.
+- Through school.
+- Through social media.
+- Through private messages.
+- Through another website.
+- From friends.
+- From screenshots.
+- From leaked or accidentally exposed information.
+
+If another person shares something with you privately, that does not automatically give you permission to publish it in SafeSpace.
+
+---
+
+# 10. Appropriate Posts and Discussions
+
+Users are encouraged to share experiences that can contribute positively to the Community.
+
+Examples include:
+
+- “I've been feeling stressed about school lately. How do you manage your workload?”
+- “I had a difficult week and wanted somewhere to talk about it.”
+- “What helps you relax after a stressful day?”
+- “I found this way of organizing my homework useful.”
+- “I hope everyone who is having a difficult week gets some rest.”
+
+Users can talk honestly about difficult emotions.
+
+The goal is not to force everyone to be positive all the time.
+
+People are allowed to have difficult days.
+
+What matters is that discussions remain respectful and do not create unnecessary risk for other users.
+
+---
+
+# 11. Mental-Health Discussions
+
+Mental-health experiences can be discussed in the Community.
+
+However, users should remember that another person's experience may be very different from their own.
+
+When responding to someone, it is generally better to:
+
+- Listen.
+- Show understanding.
+- Encourage appropriate support.
+- Share personal experience carefully.
+- Respect differences between people.
+
+Users should avoid presenting themselves as a professional when they are not one.
+
+For example, users should not confidently diagnose another person based on a post.
+
+Statements such as:
+
+> “You definitely have a particular disorder.”
+
+or
+
+> “You don't need professional help.”
+
+can be misleading and should be avoided.
+
+A personal experience can be shared as an experience rather than presented as a universal medical fact.
+
+---
+
+# 12. Medical and Mental-Health Advice
+
+Community members may share information about things that helped them.
+
+However, personal experience is not necessarily appropriate advice for someone else.
+
+Users should not:
+
+- Diagnose other users.
+- Tell someone to stop prescribed treatment.
+- Claim that a particular treatment is guaranteed to work.
+- Present personal experience as professional medical advice.
+- Discourage someone from seeking appropriate professional help.
+- Make promises about someone's health or recovery.
+
+When a situation appears serious or outside the scope of ordinary peer discussion, users should encourage the person to speak with a trusted adult, qualified professional, or appropriate service.
+
+---
+
+# 13. Dangerous or Harmful Content
+
+The Community must not be used to encourage users to participate in dangerous behavior.
+
+This includes content that encourages:
+
+- Dangerous challenges.
+- Harmful experimentation.
+- Unsafe use of substances.
+- Dangerous activities.
+- Deliberately putting another person in danger.
+- Instructions intended to facilitate serious harm.
+
+Content may be removed when it presents a meaningful safety risk even if the poster claims that it was intended as a joke.
+
+---
+
+# 14. Sexual and Inappropriate Content
+
+SafeSpace is intended to remain appropriate for younger users.
+
+The Community must not be used for:
+
+- Sexual content.
+- Sexual solicitation.
+- Sexualized interactions involving minors.
+- Requests for intimate photographs.
+- Sharing intimate photographs without permission.
+- Sexual roleplay.
+- Sexual services or offers.
+- Attempts to move young users into inappropriate private interactions.
+
+Users should never pressure another person to provide photographs or personal information.
+
+Any interaction that appears to place a young person at risk may be treated as a serious Community Policy concern.
+
+---
+
+# 15. Dating and Private Relationships
+
+SafeSpace is not a dating platform.
+
+Users should not use the Community to:
+
+- Search for romantic partners.
+- Pressure another user into a relationship.
+- Request private contact information.
+- Repeatedly ask someone to move a conversation to another platform.
+- Manipulate another user into sharing private information.
+- Pursue romantic or sexual interactions with younger users.
+
+Friendly conversation is allowed.
+
+The distinction is that the Community exists for **support and discussion**, not relationship-seeking.
+
+---
+
+# 16. Threats and Safety Concerns
+
+Threatening another person is not permitted.
+
+This includes:
+
+- Direct threats.
+- Threats against another person's property.
+- Threats intended to intimidate.
+- Encouraging others to threaten someone.
+- Publishing information with the apparent purpose of enabling someone to be targeted.
+
+If a situation appears to involve an immediate safety concern, SafeSpace may prioritize safety over ordinary Community interactions and may restrict relevant content or accounts.
+
+---
+
+# 17. Spam and Repeated Content
+
+The Community should remain useful and readable.
+
+Users must not intentionally flood the Community with:
+
+- Repeated posts.
+- Repeated comments.
+- Advertising.
+- Promotional messages.
+- Automated messages.
+- Unrelated links.
+- Repeated requests for attention.
+- Content copied repeatedly into multiple discussions.
+
+SafeSpace may apply posting limits to reduce spam.
+
+For example, ordinary accounts may have a limit of **2 posts within a 30-minute period**.
+
+This limit is a technical safeguard and does not replace the Community Policy.
+
+---
+
+# 18. Advertising and Promotion
+
+The Community is not intended to function as an advertising platform.
+
+Users should not use ordinary Community posts to promote:
+
+- Products.
+- Services.
+- Websites.
+- Referral links.
+- Paid programs.
+- Unrelated social-media accounts.
+- Commercial opportunities.
+
+Relevant educational resources may be shared when appropriate to the discussion, provided that they are not being used primarily for promotion.
+
+---
+
+# 19. Misleading Information
+
+Users should make a reasonable effort not to deliberately spread false or misleading information.
+
+This is particularly important when discussing:
+
+- Health.
+- Mental health.
+- Safety.
+- Medical treatment.
+- Emergency situations.
+
+Users may share personal opinions and experiences.
+
+However, intentionally presenting an unverified claim as a guaranteed fact can be harmful.
+
+SafeSpace may remove content that creates a significant safety risk because of misleading information.
+
+---
+
+# 20. Links and External Websites
+
+Users should be careful when clicking links shared by other users.
+
+SafeSpace cannot guarantee the safety, accuracy, availability, or privacy practices of every external website.
+
+Users should avoid sharing suspicious links, malicious files, scams, or links intended to collect another person's private information.
+
+SafeSpace may remove links that appear to create a security or safety risk.
+
+---
+
+# 21. Copyright and Ownership
+
+Users should respect the rights of creators.
+
+Do not upload or reproduce material that you do not have permission to use when doing so would violate another person's rights.
+
+This includes:
+
+- Artwork.
+- Photographs.
+- Videos.
+- Written material.
+- Private messages.
+- Other copyrighted content.
+
+Users should not claim another person's work as their own.
+
+If you share something created by someone else, provide appropriate attribution where applicable.
+
+---
+
+# 22. Impersonation
+
+Users must not pretend to be:
+
+- Another SafeSpace user.
+- A teacher.
+- A counselor.
+- A medical professional.
+- A SafeSpace administrator.
+- Another real person.
+
+Users should not create misleading accounts intended to deceive other members.
+
+Parody or clearly fictional content should not be presented in a way that could reasonably cause users to believe it is an official account.
+
+---
+
+# 23. Reporting Content
+
+If you believe a post or comment violates this policy, use the available reporting feature.
+
+A report should provide enough information for the moderators to understand the concern.
+
+You do not need to confront the person yourself.
+
+Reports should not be used simply because:
+
+- You disagree with someone's opinion.
+- You dislike someone's personality.
+- Someone disagreed with you.
+- Someone gave you an answer you did not like.
+
+Reports are intended to identify genuine Community Policy or safety concerns.
+
+---
+
+# 24. False or Abusive Reports
+
+The reporting system should not be used as a tool for harassment.
+
+Repeatedly submitting intentionally false reports against another user may itself be considered misuse of the Community.
+
+SafeSpace may consider patterns of abusive reporting when taking moderation action.
+
+---
+
+# 25. Moderation
+
+SafeSpace may review content that:
+
+- Has been reported.
+- Appears to violate this policy.
+- Creates a significant safety concern.
+- Appears to involve spam or abuse.
+- Requires investigation following a moderation event.
+
+Moderation decisions may consider:
+
+- The content itself.
+- The surrounding conversation.
+- Previous behavior where relevant.
+- Whether the behavior was repeated.
+- The potential impact on other users.
+- The seriousness of the violation.
+
+A single word or phrase should not always be considered in isolation.
+
+---
+
+# 26. Possible Moderation Actions
+
+Depending on the situation, SafeSpace may:
+
+1. Leave the content available.
+2. Ask the user to modify the content.
+3. Remove a post.
+4. Remove a comment.
+5. Restrict certain Community functions.
+6. Temporarily restrict an account.
+7. Suspend an account.
+8. Ban an account.
+
+The action taken may depend on the seriousness and frequency of the behavior.
+
+Severe violations may result in stronger action without multiple warnings.
+
+---
+
+# 27. Repeat Violations
+
+Repeatedly violating the Community Policy may result in progressively stronger restrictions.
+
+For example, an account that repeatedly posts prohibited content after receiving warnings may receive restrictions or suspension.
+
+Creating another account to deliberately avoid an existing restriction may itself be treated as a policy violation.
+
+---
+
+# 28. Appeals and Contact
+
+If a user believes moderation action was made incorrectly, they should be able to contact SafeSpace through the available administrator/contact channel.
+
+An appeal should explain:
+
+- What action occurred.
+- Why the user believes it was incorrect.
+- Any relevant context.
+
+Appeals should not contain threats, harassment, or unrelated content.
+
+SafeSpace may review an appeal and determine whether the original action should remain, change, or be reversed.
+
+---
+
+# 29. Privacy Does Not Mean Complete Anonymity
+
+Users should not assume that posting anonymously means that their activity is completely untraceable.
+
+SafeSpace may maintain technical information necessary to operate, secure, and protect the service, subject to its applicable privacy practices.
+
+Users should therefore avoid posting sensitive personal information even when using an anonymous display name.
+
+**Anonymous posting is not a guarantee of complete anonymity.**
+
+---
+
+# 30. Community Content and SafeSpace
+
+Posts and comments are created by users.
+
+A user's post does not necessarily represent the views of SafeSpace.
+
+SafeSpace does not automatically endorse:
+
+- Opinions.
+- Experiences.
+- Medical claims.
+- Advice.
+- Recommendations.
+- Statements made by community members.
+
+Users should evaluate information carefully.
+
+---
+
+# 31. No Guarantee of a Completely Risk-Free Community
+
+SafeSpace will take reasonable steps within the capabilities of the platform to maintain a respectful Community.
+
+However, no online community can guarantee that every inappropriate post, comment, or interaction will be detected immediately.
+
+Content may sometimes remain visible until it is reported or identified through moderation.
+
+If you encounter something concerning, reporting it helps SafeSpace identify the issue.
+
+---
+
+# 32. Protecting Young Users
+
+Because SafeSpace may be used by young people, additional care should be taken when interacting with other users.
+
+Do not:
+
+- Ask another young person for their private contact information.
+- Ask for private photographs.
+- Encourage someone to meet you privately.
+- Pressure someone to leave SafeSpace for another platform.
+- Attempt to discover someone's school or home location.
+- Manipulate another user into revealing personal information.
+- Use emotional vulnerability to pressure another user.
+
+If a conversation begins to make you uncomfortable, you do not have to continue it.
+
+---
+
+# 33. When You Need Help
+
+The Community can provide conversation and peer support, but it cannot replace professional assistance.
+
+If you are dealing with something that feels too difficult to manage alone, consider speaking with:
+
+- A parent or guardian.
+- A trusted teacher.
+- A school counselor.
+- A qualified mental-health professional.
+- Another trusted adult.
+
+In Thailand, the **Department of Mental Health hotline 1323** is available for mental-health support.
+
+If there is an immediate emergency or someone is in immediate danger, contact the appropriate emergency service rather than waiting for a Community response.
+
+---
+
+# 34. Respect for Different Experiences
+
+There is no single experience that represents everyone.
+
+Two people can experience the same situation differently.
+
+Users should therefore avoid statements such as:
+
+> “Everyone feels this way.”
+
+or
+
+> “Your problem isn't serious.”
+
+Instead, allow people to describe their own experiences.
+
+A person's feelings do not need to be identical to yours for them to deserve respect.
+
+---
+
+# 35. Constructive Disagreement
+
+Healthy disagreement is allowed.
+
+A useful disagreement focuses on the **idea**, rather than attacking the person.
+
+For example:
+
+**Acceptable:**
+
+> “I had a different experience with that. For me, it worked differently because…”
+
+**Not acceptable:**
+
+> “You're stupid for thinking that.”
+
+The goal is not to eliminate disagreement.
+
+The goal is to prevent disagreement from becoming personal abuse.
+
+---
+
+# 36. Community Culture
+
+SafeSpace aims to build a culture where users can:
+
+**Listen before judging.  
+Share without pressuring.  
+Disagree without attacking.  
+Protect each other's privacy.  
+Ask for help when needed.  
+Give support without pretending to be a professional.**
+
+A good Community is not one where everyone agrees.
+
+It is one where people can participate without being afraid of being mocked, attacked, or exploited.
+
+---
+
+# 37. Changes to This Policy
+
+SafeSpace may update this policy as the Community develops.
+
+Changes may be made to:
+
+- Improve user safety.
+- Clarify existing rules.
+- Address new types of abuse.
+- Reflect changes to Community features.
+- Improve moderation procedures.
+- Comply with applicable requirements.
+
+When significant changes are made, SafeSpace may require users to review and accept the updated policy before continuing to use posting or commenting features.
+
+The version and update date should be displayed whenever the policy is presented.
+
+---
+
+# 38. Agreement
+
+Before posting or commenting, users must confirm that they have read this policy.
+
+By selecting:
+
+### **“ตกลงและดำเนินการต่อ”**
+
+you confirm that:
+
+- You have read the Community Policy.
+- You understand the rules.
+- You agree to follow the policy.
+- You understand that violations may result in moderation action.
+- You understand that SafeSpace Community content is created by users.
+- You understand that SafeSpace is not a replacement for professional or emergency services.
+
+---
+
+## SafeSpace Community
+
+**แบ่งปันอย่างปลอดภัย • รับฟังอย่างเคารพ • ดูแลกันและกัน**
+
+This policy is intended to make the Community a place where people can talk honestly while still respecting the safety, privacy, and dignity of everyone who uses SafeSpace.
+
+--- THAI ---
+# นโยบายชุมชน SafeSpace
+**ฉบับที่ 1.0 — แนวทางและข้อกำหนดการเข้าร่วมชุมชน**
+
+**อัปเดตล่าสุด:** กันยายน 2026
+
+ยินดีต้อนรับสู่ชุมชน SafeSpace
+
+ชุมชน SafeSpace จัดทำขึ้นเพื่อเป็นพื้นที่สำหรับแบ่งปันประสบการณ์ พูดคุยเกี่ยวกับปัญหาในชีวิตประจำวัน ให้กำลังใจซึ่งกันและกัน และเรียนรู้จากมุมมองที่หลากหลายอย่างเคารพซึ่งกันและกัน
+
+เนื่องจากการสนทนาในชุมชนอาจเกี่ยวข้องกับประสบการณ์ส่วนตัว ความเครียด อารมณ์ ความสัมพันธ์ การเรียน ครอบครัว หรือสุขภาวะทางใจ เราจึงให้ความสำคัญเป็นพิเศษกับ **ความเคารพ ความเป็นส่วนตัว ความปลอดภัย และการสื่อสารอย่างมีความรับผิดชอบ**
+
+เมื่อเลือก **“ยอมรับและดำเนินการต่อ”** คุณยืนยันว่าได้อ่านและเข้าใจนโยบายนี้ และตกลงที่จะปฏิบัติตามเมื่อใช้งานชุมชน
+
+---
+
+# 1. เกี่ยวกับชุมชน SafeSpace
+
+ชุมชนเป็นฟังก์ชันสำหรับการพูดคุยและแลกเปลี่ยนความคิดเห็นภายใน SafeSpace
+
+ผู้ใช้สามารถ:
+- อ่านโพสต์ของผู้ใช้อื่น
+- แบ่งปันประสบการณ์ของตนเอง
+- ตั้งคำถาม
+- ให้กำลังใจผู้อื่น
+- พูดคุยเกี่ยวกับประสบการณ์ในชีวิตประจำวัน
+- แสดงความคิดเห็นในโพสต์
+- แสดงปฏิกิริยาต่อโพสต์
+- มีส่วนร่วมในการสนทนาในชุมชน
+- ใช้เครื่องมือดูแลสุขภาวะที่มีให้
+
+ชุมชนมีจุดประสงค์เพื่อสนับสนุน **การพูดคุยและการแบ่งปันระหว่างผู้ใช้งาน**
+
+ชุมชนไม่ได้มีวัตถุประสงค์เพื่อทดแทน:
+- แพทย์
+- นักจิตวิทยา
+- จิตแพทย์
+- นักให้คำปรึกษา
+- ครูหรือครูแนะแนว
+- ผู้ปกครองหรือผู้ดูแล
+- หน่วยบริการฉุกเฉิน
+- การรักษาหรือบริการด้านสุขภาพจิตโดยผู้เชี่ยวชาญ
+
+ข้อมูลหรือความคิดเห็นที่ผู้ใช้โพสต์ไม่ควรถูกถือว่าเป็นคำแนะนำจากผู้เชี่ยวชาญโดยอัตโนมัติ
+
+---
+
+# 2. ผู้ที่สามารถใช้ชุมชนได้
+
+SafeSpace อาจมีผู้ใช้งานที่มีอายุและภูมิหลังแตกต่างกัน
+
+เนื่องจากชุมชนอาจมีผู้ใช้งานที่เป็นเด็กหรือเยาวชน ทุกคนจึงควรสื่อสารในลักษณะที่เหมาะสมกับพื้นที่ทั่วไปและเป็นมิตรต่อเยาวชน
+
+ผู้ใช้ต้องไม่ใช้เรื่องอายุ การไม่เปิดเผยตัวตน หรือการใช้งานออนไลน์เป็นเหตุผลในการกระทำที่อาจทำให้บุคคลอื่นตกอยู่ในความเสี่ยง
+
+ชุมชน **ไม่ใช่บริการหาคู่** และไม่ควรใช้เพื่อแสวงหาความสัมพันธ์เชิงชู้สาว ทางเพศ หรือความสัมพันธ์ส่วนตัวกับผู้ใช้งานคนอื่น
+
+---
+
+# 3. การใช้งานแบบ Guest
+
+ผู้ที่ยังไม่ได้เข้าสู่ระบบสามารถเข้าถึงเนื้อหาชุมชนที่เปิดเผยต่อสาธารณะได้
+
+ผู้ใช้แบบ Guest สามารถ:
+- อ่านโพสต์
+- อ่านความคิดเห็น
+- ดูหมวดหมู่ของชุมชน
+- ใช้เครื่องมือดูแลสุขภาวะที่เปิดให้สาธารณะ
+- เรียนรู้เกี่ยวกับชุมชน
+
+ผู้ใช้แบบ Guest ไม่สามารถ:
+- สร้างโพสต์
+- แสดงความคิดเห็นในโพสต์
+- ดำเนินการที่จำเป็นต้องใช้บัญชีที่เข้าสู่ระบบ
+
+หาก Guest พยายามโพสต์หรือแสดงความคิดเห็น SafeSpace จะแจ้งว่าจำเป็นต้องเข้าสู่ระบบ
+
+การเลือกใช้งานแบบ Guest ไม่ถือเป็นการสร้างบัญชี และไม่อนุญาตให้หลีกเลี่ยงข้อจำกัดของชุมชน
+
+---
+
+# 4. ความรับผิดชอบของบัญชี
+
+ผู้ใช้มีความรับผิดชอบต่อกิจกรรมที่เกิดขึ้นผ่านบัญชีของตน
+
+ผู้ใช้ควร:
+- เก็บข้อมูลเข้าสู่ระบบไว้เป็นความลับ
+- ไม่เปิดเผยรหัสผ่าน
+- ออกจากระบบเมื่อใช้อุปกรณ์ร่วมกับผู้อื่น
+- ไม่อนุญาตให้ผู้อื่นใช้บัญชีของตน
+- ให้ข้อมูลที่ถูกต้องเมื่อระบบกำหนดให้ต้องให้ข้อมูล
+- ปฏิบัติตามนโยบายชุมชนนี้
+
+หากเชื่อว่ามีผู้อื่นเข้าถึงบัญชีโดยไม่ได้รับอนุญาต ควรติดต่อ SafeSpace
+
+SafeSpace อาจดำเนินการกับบัญชีเมื่อมีหลักฐานว่าบัญชีถูกใช้ในทางที่ไม่เหมาะสม แม้เจ้าของบัญชีจะไม่ได้เป็นผู้กระทำด้วยตนเองก็ตาม
+
+---
+
+# 5. การให้เกียรติผู้อื่น
+
+กฎสำคัญที่สุดของชุมชนคือ:
+
+> **ปฏิบัติต่อผู้อื่นในฐานะมนุษย์ ไม่ใช่เป้าหมายของการโจมตี**
+
+ผู้ใช้สามารถมีความคิดเห็นที่แตกต่างกันได้
+
+การไม่เห็นด้วยไม่ได้ถือเป็นการละเมิดโดยตัวมันเอง
+
+อย่างไรก็ตาม ความคิดเห็นที่แตกต่างควรอยู่บนพื้นฐานของความเคารพ
+
+ควรหลีกเลี่ยง:
+- การดูถูก
+- การโจมตีตัวบุคคล
+- การล้อเลียนความรู้สึกของผู้อื่น
+- การทำให้ประสบการณ์ของผู้อื่นเป็นเรื่องน่าขบขัน
+- การจงใจทำให้ผู้อื่นอับอาย
+- การข่มขู่
+- การคุกคาม
+- การมุ่งเป้าผู้ใช้งานคนใดคนหนึ่งซ้ำ ๆ
+- การชักชวนผู้อื่นให้โจมตีหรือคุกคามบุคคลใด
+
+คุณสามารถไม่เห็นด้วยกับความคิดเห็นโดยไม่โจมตีผู้ที่แสดงความคิดเห็น
+
+---
+
+# 6. การกลั่นแกล้งและการคุกคาม
+
+SafeSpace ไม่อนุญาตให้มีการกลั่นแกล้งหรือคุกคาม
+
+การคุกคามอาจรวมถึงพฤติกรรมที่ไม่พึงประสงค์ซ้ำ ๆ ซึ่งมีจุดประสงค์เพื่อข่มขู่ ทำให้อับอาย กดดัน หรือทำให้ผู้ใช้งานคนอื่นเดือดร้อน
+
+ตัวอย่างเช่น:
+- ดูถูกบุคคลเดิมซ้ำ ๆ
+- ติดตามตอบโพสต์ของบุคคลอื่นเพื่อยั่วยุ
+- ชักชวนผู้อื่นให้มุ่งเป้าผู้ใช้คนใดคนหนึ่ง
+- ตอบกลับซ้ำ ๆ หลังจากอีกฝ่ายขอให้หยุด
+- ข่มขู่ผู้ใช้งานคนอื่น
+- เผยแพร่ข้อมูลส่วนตัวเพื่อทำให้บุคคลอื่นตกเป็นเป้าหมาย
+- สร้างโพสต์เพื่อทำให้อีกคนอับอายโดยเฉพาะ
+
+การไม่เห็นด้วยเพียงครั้งเดียวไม่ได้ถือเป็นการคุกคามโดยอัตโนมัติ
+
+การตรวจสอบอาจพิจารณา **บริบท ความถี่ เจตนา และรูปแบบพฤติกรรมโดยรวม**
+
+---
+
+# 7. ความเกลียดชังและการเลือกปฏิบัติ
+
+ชุมชนควรเป็นพื้นที่ที่ต้อนรับผู้คนจากภูมิหลังที่แตกต่างกัน
+
+ห้ามโจมตี ข่มขู่ หรือสนับสนุนการเลือกปฏิบัติต่อบุคคลหรือกลุ่มบุคคลโดยอาศัยลักษณะ เช่น:
+- เชื้อชาติ
+- ชาติพันธุ์
+- สัญชาติ
+- ศาสนา
+- ความพิการ
+- เพศ
+- รสนิยมทางเพศ
+- อายุ
+- ลักษณะส่วนบุคคลอื่น ๆ
+
+ผู้ใช้สามารถพูดคุยเกี่ยวกับประเด็นทางสังคมหรือแสดงความคิดเห็นเกี่ยวกับแนวคิด นโยบาย หรือประสบการณ์ที่ยากลำบากได้
+
+อย่างไรก็ตาม การสนทนาไม่ควรกลายเป็นข้ออ้างในการโจมตีหรือลดคุณค่าของบุคคลหรือกลุ่มบุคคล
+
+---
+
+# 8. ความเป็นส่วนตัวและข้อมูลส่วนบุคคล
+
+**คิดให้รอบคอบก่อนแบ่งปันข้อมูลส่วนตัว**
+
+ชุมชนไม่ใช่สถานที่สำหรับเผยแพร่ข้อมูลส่วนตัวที่ละเอียดอ่อนของตนเองหรือผู้อื่น
+
+ควรหลีกเลี่ยงการโพสต์:
+- ชื่อ-นามสกุลเมื่อไม่จำเป็น
+- ที่อยู่บ้าน
+- หมายเลขโทรศัพท์
+- รหัสผ่าน
+- ข้อมูลบัญชี
+- หมายเลขประจำตัวนักเรียน
+- หมายเลขประจำตัวของทางราชการ
+- ข้อมูลทางการเงิน
+- ตำแหน่งที่อยู่ที่ละเอียดเกินความจำเป็น
+- บทสนทนาส่วนตัวโดยไม่ได้รับอนุญาต
+- รูปภาพส่วนตัวของผู้อื่นโดยไม่ได้รับอนุญาต
+- ข้อมูลที่สามารถใช้ระบุตัวหรือติดตามบุคคลอื่นได้
+
+อย่าขอข้อมูลส่วนตัวที่ละเอียดอ่อนจากผู้ใช้งานคนอื่น
+
+ตัวอย่างเช่น การขอให้ใครเผยแพร่หมายเลขโทรศัพท์ ที่อยู่บ้าน โรงเรียน หรือบัญชีโซเชียลส่วนตัวในที่สาธารณะเป็นสิ่งที่ไม่เหมาะสม
+
+---
+
+# 9. การปกป้องความเป็นส่วนตัวของผู้อื่น
+
+ห้ามเผยแพร่ข้อมูลส่วนตัวของบุคคลอื่นเพียงเพราะคุณรู้ข้อมูลนั้น
+
+ข้อมูลดังกล่าวอาจมาจาก:
+- การพบกันในชีวิตจริง
+- โรงเรียน
+- โซเชียลมีเดีย
+- ข้อความส่วนตัว
+- เว็บไซต์อื่น
+- เพื่อน
+- ภาพหน้าจอ
+- ข้อมูลที่รั่วไหลหรือถูกเปิดเผยโดยไม่ได้ตั้งใจ
+
+หากมีคนบอกบางอย่างกับคุณเป็นการส่วนตัว ไม่ได้หมายความว่าคุณได้รับอนุญาตให้นำข้อมูลนั้นมาเผยแพร่ใน SafeSpace
+
+---
+
+# 10. โพสต์และการสนทนาที่เหมาะสม
+
+ผู้ใช้สามารถแบ่งปันประสบการณ์ที่ช่วยสร้างประโยชน์ให้กับชุมชนได้
+
+ตัวอย่างเช่น:
+- “ช่วงนี้ฉันเครียดเรื่องเรียนมาก มีวิธีจัดการงานกันอย่างไรบ้าง?”
+- “สัปดาห์นี้เป็นช่วงที่ยากสำหรับฉัน และอยากมีพื้นที่พูดคุย”
+- “อะไรช่วยให้ทุกคนผ่อนคลายหลังจากวันที่เครียด?”
+- “ฉันพบว่าวิธีจัดการการบ้านแบบนี้ช่วยฉันได้”
+- “หวังว่าทุกคนที่กำลังเจอสัปดาห์ที่ยากลำบากจะได้พักผ่อนบ้าง”
+
+ผู้ใช้สามารถพูดถึงอารมณ์หรือช่วงเวลาที่ยากลำบากได้อย่างจริงใจ
+
+ชุมชนไม่ได้บังคับให้ทุกคนต้องคิดบวกตลอดเวลา
+
+ทุกคนสามารถมีวันที่ยากลำบากได้
+
+สิ่งสำคัญคือการสนทนาต้องยังคงเคารพผู้อื่นและไม่สร้างความเสี่ยงที่ไม่จำเป็น
+
+---
+
+# 11. การพูดคุยเกี่ยวกับสุขภาพจิต
+
+สามารถพูดคุยเกี่ยวกับประสบการณ์ด้านสุขภาพจิตในชุมชนได้
+
+อย่างไรก็ตาม ผู้ใช้ควรจำไว้ว่าประสบการณ์ของแต่ละคนอาจแตกต่างกัน
+
+เมื่อตอบความคิดเห็นของผู้อื่น ควร:
+- รับฟัง
+- แสดงความเข้าใจ
+- สนับสนุนให้ได้รับความช่วยเหลือที่เหมาะสม
+- แบ่งปันประสบการณ์ส่วนตัวอย่างระมัดระวัง
+- เคารพความแตกต่างระหว่างบุคคล
+
+ผู้ใช้ไม่ควรแสดงตนว่าเป็นผู้เชี่ยวชาญหากไม่ได้เป็นผู้เชี่ยวชาญ
+
+ไม่ควรวินิจฉัยบุคคลอื่นจากโพสต์เพียงอย่างเดียว
+
+ตัวอย่างข้อความเช่น:
+
+> “คุณเป็นโรคนี้แน่นอน”
+
+หรือ
+
+> “คุณไม่จำเป็นต้องขอความช่วยเหลือจากผู้เชี่ยวชาญ”
+
+อาจทำให้เกิดความเข้าใจผิดและควรหลีกเลี่ยง
+
+ควรแบ่งปันประสบการณ์ในฐานะประสบการณ์ส่วนตัว แทนการนำเสนอว่าเป็นข้อเท็จจริงทางการแพทย์ที่ใช้ได้กับทุกคน
+
+---
+
+# 12. คำแนะนำทางการแพทย์และสุขภาพจิต
+
+ผู้ใช้สามารถแบ่งปันสิ่งที่เคยช่วยตนเองได้
+
+อย่างไรก็ตาม ประสบการณ์ส่วนตัวไม่ได้หมายความว่าจะเหมาะกับคนอื่นเสมอไป
+
+ผู้ใช้ไม่ควร:
+- วินิจฉัยผู้ใช้งานคนอื่น
+- บอกให้ผู้อื่นหยุดการรักษาที่ได้รับ
+- อ้างว่าการรักษาใด ๆ รับประกันว่าจะได้ผล
+- นำประสบการณ์ส่วนตัวมาเสนอเป็นคำแนะนำทางการแพทย์จากผู้เชี่ยวชาญ
+- ห้ามหรือทำให้ผู้อื่นไม่กล้าขอความช่วยเหลือที่เหมาะสม
+- ให้คำมั่นเกี่ยวกับสุขภาพหรือการฟื้นตัวของผู้อื่น
+
+เมื่อสถานการณ์ดูรุนแรงหรือเกินขอบเขตของการพูดคุยทั่วไป ควรสนับสนุนให้บุคคลนั้นพูดคุยกับผู้ใหญ่ที่ไว้ใจได้ ผู้เชี่ยวชาญที่มีคุณสมบัติเหมาะสม หรือบริการที่เกี่ยวข้อง
+
+---
+
+# 13. เนื้อหาที่เป็นอันตราย
+
+ห้ามใช้ชุมชนเพื่อสนับสนุนให้ผู้ใช้งานทำพฤติกรรมที่เป็นอันตราย
+
+รวมถึงเนื้อหาที่สนับสนุน:
+- ความท้าทายที่เป็นอันตราย
+- การทดลองที่ไม่ปลอดภัย
+- การใช้สารต่าง ๆ อย่างไม่ปลอดภัย
+- กิจกรรมที่อันตราย
+- การจงใจทำให้ตนเองหรือผู้อื่นตกอยู่ในอันตราย
+- การสนับสนุนให้ผู้อื่นทำสิ่งที่อาจก่อให้เกิดอันตรายร้ายแรง
+
+เนื้อหาอาจถูกลบเมื่อสร้างความเสี่ยงด้านความปลอดภัยอย่างมีนัยสำคัญ แม้ผู้โพสต์จะอ้างว่าเป็นเรื่องล้อเล่นก็ตาม
+
+---
+
+# 14. เนื้อหาทางเพศและเนื้อหาที่ไม่เหมาะสม
+
+SafeSpace มีเป้าหมายให้เหมาะสมกับผู้ใช้งานที่อายุน้อย
+
+ห้ามใช้ชุมชนเพื่อ:
+- เผยแพร่เนื้อหาทางเพศ
+- ชักชวนทางเพศ
+- ปฏิสัมพันธ์เชิงเพศกับผู้เยาว์
+- ขอรูปภาพส่วนตัวหรือภาพลับ
+- เผยแพร่ภาพส่วนตัวหรือภาพลับของผู้อื่นโดยไม่ได้รับอนุญาต
+- การสวมบทบาททางเพศ
+- เสนอหรือซื้อขายบริการทางเพศ
+- พยายามชักนำผู้ใช้งานเยาวชนไปสู่ปฏิสัมพันธ์ส่วนตัวที่ไม่เหมาะสม
+
+ไม่ควรกดดันให้บุคคลอื่นส่งรูปภาพหรือข้อมูลส่วนตัว
+
+การโต้ตอบที่ดูเหมือนอาจทำให้เยาวชนตกอยู่ในความเสี่ยงอาจถูกพิจารณาเป็นการละเมิดที่ร้ายแรง
+
+---
+
+# 15. การหาคู่และความสัมพันธ์ส่วนตัว
+
+SafeSpace ไม่ใช่แพลตฟอร์มหาคู่
+
+ผู้ใช้ไม่ควรใช้ชุมชนเพื่อ:
+- ค้นหาคู่รัก
+- กดดันผู้ใช้งานอื่นให้มีความสัมพันธ์
+- ขอข้อมูลติดต่อส่วนตัว
+- ขอให้อีกฝ่ายย้ายการสนทนาไปยังแพลตฟอร์มอื่นซ้ำ ๆ
+- หลอกล่อหรือกดดันให้อีกฝ่ายเปิดเผยข้อมูลส่วนตัว
+- แสวงหาความสัมพันธ์เชิงชู้สาวหรือทางเพศกับผู้ใช้งานที่อายุน้อยกว่า
+
+การพูดคุยอย่างเป็นมิตรสามารถทำได้
+
+ความแตกต่างคือชุมชนมีไว้สำหรับ **การสนับสนุนและการพูดคุย ไม่ใช่การแสวงหาความสัมพันธ์**
+
+---
+
+# 16. การข่มขู่และข้อกังวลด้านความปลอดภัย
+
+ไม่อนุญาตให้ข่มขู่บุคคลอื่น
+
+รวมถึง:
+- การข่มขู่โดยตรง
+- การข่มขู่ต่อทรัพย์สิน
+- การข่มขู่เพื่อทำให้ผู้อื่นหวาดกลัว
+- การชักชวนผู้อื่นให้ข่มขู่บุคคลใด
+- การเผยแพร่ข้อมูลโดยมีเจตนาหรือมีลักษณะที่เอื้อให้บุคคลอื่นตกเป็นเป้าหมาย
+
+หากสถานการณ์ดูเหมือนเกี่ยวข้องกับความปลอดภัยอย่างเร่งด่วน SafeSpace อาจให้ความสำคัญกับความปลอดภัยเหนือกระบวนการชุมชนทั่วไป และอาจจำกัดเนื้อหาหรือบัญชีที่เกี่ยวข้อง
+
+---
+
+# 17. สแปมและเนื้อหาซ้ำ
+
+ชุมชนควรเป็นพื้นที่ที่อ่านง่ายและมีประโยชน์
+
+ห้ามจงใจทำให้ชุมชนเต็มไปด้วย:
+- โพสต์ซ้ำ
+- ความคิดเห็นซ้ำ
+- โฆษณา
+- ข้อความประชาสัมพันธ์
+- ข้อความอัตโนมัติ
+- ลิงก์ที่ไม่เกี่ยวข้อง
+- การขอความสนใจซ้ำ ๆ
+- เนื้อหาที่คัดลอกไปโพสต์หลายการสนทนา
+
+SafeSpace อาจกำหนดข้อจำกัดในการโพสต์เพื่อลดสแปม
+
+ตัวอย่างเช่น บัญชีทั่วไปอาจมีข้อจำกัด **ไม่เกิน 2 โพสต์ภายใน 30 นาที**
+
+ข้อจำกัดนี้เป็นมาตรการทางเทคนิคและไม่ได้แทนที่นโยบายชุมชน
+
+---
+
+# 18. การโฆษณาและการประชาสัมพันธ์
+
+ชุมชนไม่ได้มีวัตถุประสงค์เพื่อเป็นพื้นที่โฆษณา
+
+ผู้ใช้ไม่ควรใช้โพสต์ทั่วไปเพื่อประชาสัมพันธ์:
+- สินค้า
+- บริการ
+- เว็บไซต์
+- ลิงก์แนะนำหรือ Referral
+- โปรแกรมที่มีค่าใช้จ่าย
+- บัญชีโซเชียลมีเดียที่ไม่เกี่ยวข้อง
+- โอกาสทางการค้า
+
+แหล่งข้อมูลด้านการศึกษาหรือข้อมูลที่เกี่ยวข้องสามารถแบ่งปันได้เมื่อเหมาะสมกับการสนทนา โดยไม่ควรใช้เป็นช่องทางหลักเพื่อการโฆษณา
+
+---
+
+# 19. ข้อมูลที่ทำให้เข้าใจผิด
+
+ผู้ใช้ควรพยายามอย่างสมเหตุสมผลที่จะไม่จงใจเผยแพร่ข้อมูลเท็จหรือทำให้เข้าใจผิด
+
+เรื่องนี้มีความสำคัญเป็นพิเศษเมื่อพูดถึง:
+- สุขภาพ
+- สุขภาพจิต
+- ความปลอดภัย
+- การรักษาทางการแพทย์
+- สถานการณ์ฉุกเฉิน
+
+ผู้ใช้สามารถแบ่งปันความคิดเห็นและประสบการณ์ส่วนตัวได้
+
+อย่างไรก็ตาม การจงใจนำเสนอข้อมูลที่ยังไม่ได้รับการตรวจสอบว่าเป็นข้อเท็จจริงที่รับรองแล้วอาจก่อให้เกิดอันตราย
+
+SafeSpace อาจลบเนื้อหาที่ก่อให้เกิดความเสี่ยงด้านความปลอดภัยอย่างมีนัยสำคัญจากข้อมูลที่ทำให้เข้าใจผิด
+
+---
+
+# 20. ลิงก์และเว็บไซต์ภายนอก
+
+ผู้ใช้ควรระมัดระวังเมื่อลิงก์ที่ผู้อื่นแชร์
+
+SafeSpace ไม่สามารถรับประกันความปลอดภัย ความถูกต้อง ความพร้อมใช้งาน หรือแนวทางการคุ้มครองความเป็นส่วนตัวของเว็บไซต์ภายนอกทุกแห่งได้
+
+ควรหลีกเลี่ยงการแชร์ลิงก์ที่น่าสงสัย ไฟล์อันตราย การหลอกลวง หรือลิงก์ที่มีจุดประสงค์เพื่อขโมยข้อมูลส่วนตัว
+
+SafeSpace อาจลบลิงก์ที่ดูเหมือนก่อให้เกิดความเสี่ยงด้านความปลอดภัย
+
+---
+
+# 21. ลิขสิทธิ์และสิทธิของเจ้าของผลงาน
+
+ผู้ใช้ควรเคารพสิทธิของผู้สร้างผลงาน
+
+อย่าอัปโหลดหรือทำซ้ำผลงานที่คุณไม่มีสิทธิใช้งาน หากการกระทำนั้นเป็นการละเมิดสิทธิของผู้อื่น
+
+รวมถึง:
+- งานศิลปะ
+- ภาพถ่าย
+- วิดีโอ
+- งานเขียน
+- ข้อความส่วนตัว
+- เนื้อหาที่มีลิขสิทธิ์อื่น ๆ
+
+ไม่ควรอ้างผลงานของผู้อื่นว่าเป็นผลงานของตนเอง
+
+หากแบ่งปันผลงานที่สร้างโดยบุคคลอื่น ควรให้เครดิตอย่างเหมาะสมเมื่อจำเป็น
+
+---
+
+# 22. การแอบอ้างตัวตน
+
+ผู้ใช้ต้องไม่แอบอ้างเป็น:
+- ผู้ใช้งาน SafeSpace คนอื่น
+- ครู
+- ผู้ให้คำปรึกษา
+- ผู้เชี่ยวชาญทางการแพทย์
+- ผู้ดูแล SafeSpace
+- บุคคลจริงอื่น ๆ
+
+ไม่ควรสร้างบัญชีที่มีจุดประสงค์เพื่อหลอกให้ผู้ใช้งานคนอื่นเข้าใจผิด
+
+เนื้อหาล้อเลียนหรือเรื่องสมมติควรแสดงให้ชัดเจนว่าไม่ใช่บัญชีจริงหรือบัญชีทางการ
+
+---
+
+# 23. การรายงานเนื้อหา
+
+หากคิดว่าโพสต์หรือความคิดเห็นละเมิดนโยบายนี้ สามารถใช้ฟังก์ชันรายงานที่มีให้
+
+รายงานควรให้ข้อมูลเพียงพอเพื่อช่วยให้ผู้ดูแลเข้าใจข้อกังวล
+
+คุณไม่จำเป็นต้องเผชิญหน้ากับบุคคลนั้นด้วยตนเอง
+
+ไม่ควรใช้การรายงานเพียงเพราะ:
+- ไม่เห็นด้วยกับความคิดเห็น
+- ไม่ชอบบุคลิกของใคร
+- มีคนไม่เห็นด้วยกับคุณ
+- มีคนให้คำตอบที่คุณไม่ชอบ
+
+การรายงานมีไว้เพื่อระบุข้อกังวลด้านนโยบายหรือความปลอดภัยที่เกิดขึ้นจริง
+
+---
+
+# 24. การรายงานเท็จหรือใช้ระบบรายงานในทางที่ผิด
+
+ไม่ควรใช้ระบบรายงานเป็นเครื่องมือในการคุกคาม
+
+การส่งรายงานเท็จซ้ำ ๆ โดยเจตนาเพื่อกลั่นแกล้งผู้ใช้งานคนอื่นอาจถือเป็นการใช้ชุมชนในทางที่ผิดเช่นกัน
+
+SafeSpace อาจพิจารณารูปแบบการใช้ระบบรายงานในทางที่ผิดเมื่อดำเนินการด้านการดูแลชุมชน
+
+---
+
+# 25. การดูแลและตรวจสอบเนื้อหา
+
+SafeSpace อาจตรวจสอบเนื้อหาที่:
+- ถูกรายงาน
+- ดูเหมือนละเมิดนโยบาย
+- ก่อให้เกิดข้อกังวลด้านความปลอดภัยอย่างมีนัยสำคัญ
+- ดูเหมือนเป็นสแปมหรือการใช้งานในทางที่ผิด
+- จำเป็นต้องตรวจสอบหลังจากเกิดเหตุการณ์ด้านการดูแลชุมชน
+
+การพิจารณาอาจคำนึงถึง:
+- ตัวเนื้อหา
+- บริบทของการสนทนา
+- พฤติกรรมก่อนหน้าเมื่อเกี่ยวข้อง
+- การกระทำซ้ำ
+- ผลกระทบที่อาจเกิดกับผู้ใช้งานคนอื่น
+- ความรุนแรงของการละเมิด
+
+ไม่ควรพิจารณาคำเพียงคำเดียวหรือประโยคเดียวโดยแยกออกจากบริบทเสมอไป
+
+---
+
+# 26. การดำเนินการด้านการดูแลชุมชน
+
+ตามสถานการณ์ SafeSpace อาจ:
+1. ปล่อยเนื้อหาไว้ตามเดิม
+2. ขอให้ผู้ใช้แก้ไขเนื้อหา
+3. ลบโพสต์
+4. ลบความคิดเห็น
+5. จำกัดฟังก์ชันบางอย่างของชุมชน
+6. จำกัดบัญชีชั่วคราว
+7. ระงับบัญชี
+8. แบนบัญชี
+
+การดำเนินการอาจขึ้นอยู่กับความรุนแรงและความถี่ของพฤติกรรม
+
+การละเมิดที่ร้ายแรงอาจนำไปสู่การดำเนินการที่เข้มงวดขึ้นโดยไม่จำเป็นต้องมีการเตือนหลายครั้ง
+
+---
+
+# 27. การละเมิดซ้ำ
+
+การละเมิดนโยบายชุมชนซ้ำ ๆ อาจนำไปสู่ข้อจำกัดที่เข้มงวดขึ้น
+
+ตัวอย่างเช่น บัญชีที่โพสต์เนื้อหาต้องห้ามซ้ำหลังจากได้รับคำเตือน อาจถูกจำกัดหรือระงับการใช้งาน
+
+การสร้างบัญชีใหม่เพื่อจงใจหลีกเลี่ยงข้อจำกัดที่มีอยู่ อาจถือเป็นการละเมิดนโยบายเช่นกัน
+
+---
+
+# 28. การอุทธรณ์และการติดต่อ
+
+หากผู้ใช้คิดว่าการดำเนินการด้านการดูแลชุมชนเกิดขึ้นโดยผิดพลาด ควรสามารถติดต่อ SafeSpace ผ่านช่องทางติดต่อผู้ดูแลที่มีให้
+
+การอุทธรณ์ควรอธิบาย:
+- เกิดการดำเนินการใดขึ้น
+- เหตุใดผู้ใช้จึงคิดว่าการดำเนินการนั้นไม่ถูกต้อง
+- บริบทเพิ่มเติมที่เกี่ยวข้อง
+
+การอุทธรณ์ไม่ควรมีการข่มขู่ การคุกคาม หรือเนื้อหาที่ไม่เกี่ยวข้อง
+
+SafeSpace อาจตรวจสอบการอุทธรณ์และพิจารณาว่าจะคง เปลี่ยนแปลง หรือยกเลิกการดำเนินการเดิม
+
+---
+
+# 29. ความเป็นส่วนตัวไม่ได้หมายถึงการไม่สามารถระบุตัวตนได้อย่างสมบูรณ์
+
+ผู้ใช้ไม่ควรคิดว่าการใช้ชื่อที่ไม่เปิดเผยตัวตนหมายความว่ากิจกรรมของตนไม่สามารถเชื่อมโยงกลับมาได้อย่างสมบูรณ์
+
+SafeSpace อาจเก็บข้อมูลทางเทคนิคที่จำเป็นต่อการให้บริการ รักษาความปลอดภัย และปกป้องระบบ ภายใต้แนวทางด้านความเป็นส่วนตัวที่เกี่ยวข้อง
+
+ดังนั้น ผู้ใช้ควรหลีกเลี่ยงการโพสต์ข้อมูลส่วนตัวที่ละเอียดอ่อน แม้จะใช้ชื่อที่ไม่เปิดเผยตัวตนก็ตาม
+
+**การโพสต์แบบไม่เปิดเผยตัวตนไม่ได้รับประกันว่าจะไม่สามารถระบุตัวตนได้อย่างสมบูรณ์**
+
+---
+
+# 30. เนื้อหาของชุมชนและ SafeSpace
+
+โพสต์และความคิดเห็นสร้างขึ้นโดยผู้ใช้งาน
+
+โพสต์ของผู้ใช้ไม่ได้หมายความว่าเป็นความคิดเห็นของ SafeSpace
+
+SafeSpace ไม่ได้รับรองโดยอัตโนมัติ:
+- ความคิดเห็น
+- ประสบการณ์
+- ข้อกล่าวอ้างทางการแพทย์
+- คำแนะนำ
+- คำแนะนำการปฏิบัติ
+- ข้อความที่สมาชิกชุมชนโพสต์
+
+ผู้ใช้ควรพิจารณาข้อมูลอย่างรอบคอบ
+
+---
+
+# 31. ไม่มีการรับประกันว่าชุมชนจะปราศจากความเสี่ยงโดยสมบูรณ์
+
+SafeSpace จะดำเนินการตามสมควรภายใต้ความสามารถของระบบเพื่อรักษาชุมชนที่เคารพซึ่งกันและกัน
+
+อย่างไรก็ตาม ไม่มีชุมชนออนไลน์ใดสามารถรับประกันได้ว่าโพสต์ ความคิดเห็น หรือการโต้ตอบที่ไม่เหมาะสมทุกอย่างจะถูกตรวจพบในทันที
+
+เนื้อหาบางอย่างอาจยังคงมองเห็นได้จนกว่าจะถูกรายงานหรือถูกตรวจพบผ่านกระบวนการดูแล
+
+หากพบสิ่งที่น่ากังวล การรายงานจะช่วยให้ SafeSpace ตรวจพบปัญหาได้
+
+---
+
+# 32. การคุ้มครองผู้ใช้งานเยาวชน
+
+เนื่องจาก SafeSpace อาจมีผู้ใช้งานที่เป็นเยาวชน จึงควรใช้ความระมัดระวังเป็นพิเศษในการติดต่อกับผู้ใช้งานคนอื่น
+
+อย่า:
+- ขอข้อมูลติดต่อส่วนตัวจากเยาวชนคนอื่น
+- ขอรูปภาพส่วนตัว
+- ชักชวนให้พบกันเป็นการส่วนตัว
+- กดดันให้อีกฝ่ายออกจาก SafeSpace ไปยังแพลตฟอร์มอื่น
+- พยายามค้นหาโรงเรียนหรือที่อยู่บ้าน
+- หลอกล่อให้เปิดเผยข้อมูลส่วนตัว
+- ใช้ความเปราะบางทางอารมณ์เพื่อกดดันผู้ใช้งานคนอื่น
+
+หากการสนทนาทำให้รู้สึกไม่สบายใจ คุณไม่จำเป็นต้องสนทนาต่อ
+
+---
+
+# 33. เมื่อคุณต้องการความช่วยเหลือ
+
+ชุมชนสามารถให้การพูดคุยและการสนับสนุนจากเพื่อนผู้ใช้งานได้ แต่ไม่สามารถทดแทนความช่วยเหลือจากผู้เชี่ยวชาญได้
+
+หากกำลังเผชิญกับสิ่งที่รู้สึกว่าหนักเกินกว่าจะจัดการได้คนเดียว ลองพูดคุยกับ:
+- ผู้ปกครองหรือผู้ดูแล
+- ครูที่ไว้ใจได้
+- ครูแนะแนว
+- ผู้เชี่ยวชาญด้านสุขภาพจิตที่มีคุณสมบัติเหมาะสม
+- ผู้ใหญ่ที่ไว้ใจได้
+
+ในประเทศไทย สามารถติดต่อ **สายด่วนสุขภาพจิต 1323** เพื่อขอคำปรึกษาด้านสุขภาพจิต
+
+หากเกิดเหตุฉุกเฉินหรือมีบุคคลตกอยู่ในอันตราย ควรติดต่อหน่วยบริการฉุกเฉินที่เหมาะสม แทนการรอคำตอบจากชุมชน
+
+---
+
+# 34. เคารพความแตกต่างของประสบการณ์
+
+ไม่มีประสบการณ์ใดที่เป็นตัวแทนของทุกคน
+
+คนสองคนอาจพบสถานการณ์เดียวกันแต่มีประสบการณ์แตกต่างกัน
+
+ดังนั้นควรหลีกเลี่ยงข้อความเช่น:
+
+> “ทุกคนก็รู้สึกแบบนี้”
+
+หรือ
+
+> “ปัญหาของคุณไม่ได้ร้ายแรง”
+
+ควรเปิดโอกาสให้แต่ละคนอธิบายประสบการณ์ของตนเอง
+
+ความรู้สึกของคนอื่นไม่จำเป็นต้องเหมือนกับของคุณเพื่อที่พวกเขาจะสมควรได้รับความเคารพ
+
+---
+
+# 35. ความเห็นต่างอย่างสร้างสรรค์
+
+การไม่เห็นด้วยอย่างสุภาพสามารถทำได้
+
+การโต้แย้งที่สร้างสรรค์ควรมุ่งไปที่ **แนวคิด** ไม่ใช่โจมตีบุคคล
+
+ตัวอย่างที่เหมาะสม:
+
+> “ฉันมีประสบการณ์ต่างออกไป สำหรับฉันมันเป็นอีกแบบหนึ่งเพราะ…”
+
+ตัวอย่างที่ไม่เหมาะสม:
+
+> “คุณโง่ที่คิดแบบนั้น”
+
+เป้าหมายไม่ใช่การกำจัดความคิดเห็นที่แตกต่าง
+
+แต่คือการป้องกันไม่ให้ความแตกต่างกลายเป็นการทำร้ายกัน
+
+---
+
+# 36. วัฒนธรรมของชุมชน
+
+SafeSpace ต้องการสร้างวัฒนธรรมที่ผู้ใช้สามารถ:
+
+**ฟังก่อนตัดสิน  
+แบ่งปันโดยไม่กดดัน  
+เห็นต่างโดยไม่โจมตี  
+ปกป้องความเป็นส่วนตัวของกันและกัน  
+ขอความช่วยเหลือเมื่อจำเป็น  
+ให้การสนับสนุนโดยไม่แอบอ้างว่าเป็นผู้เชี่ยวชาญ**
+
+ชุมชนที่ดีไม่ใช่ชุมชนที่ทุกคนเห็นด้วยกันทั้งหมด
+
+แต่เป็นชุมชนที่ผู้คนสามารถมีส่วนร่วมได้โดยไม่ต้องกลัวว่าจะถูกล้อเลียน โจมตี หรือเอาเปรียบ
+
+---
+
+# 37. การเปลี่ยนแปลงนโยบาย
+
+SafeSpace อาจปรับปรุงนโยบายนี้เมื่อชุมชนมีการพัฒนา
+
+การเปลี่ยนแปลงอาจทำขึ้นเพื่อ:
+- เพิ่มความปลอดภัยของผู้ใช้งาน
+- ชี้แจงกฎที่มีอยู่
+- รับมือกับรูปแบบการใช้งานในทางที่ผิดรูปแบบใหม่
+- สะท้อนการเปลี่ยนแปลงของฟังก์ชันชุมชน
+- ปรับปรุงกระบวนการดูแลชุมชน
+- ปฏิบัติตามข้อกำหนดที่เกี่ยวข้อง
+
+เมื่อมีการเปลี่ยนแปลงที่สำคัญ SafeSpace อาจกำหนดให้ผู้ใช้ทบทวนและยอมรับนโยบายฉบับใหม่ก่อนใช้งานฟังก์ชันการโพสต์หรือแสดงความคิดเห็นต่อไป
+
+ควรแสดงเวอร์ชันและวันที่อัปเดตของนโยบายทุกครั้งที่มีการนำเสนอนโยบาย
+
+---
+
+# 38. การยอมรับ
+
+ก่อนโพสต์หรือแสดงความคิดเห็น ผู้ใช้ต้องยืนยันว่าได้อ่านนโยบายนี้แล้ว
+
+เมื่อเลือก:
+
+### **“ยอมรับและดำเนินการต่อ”**
+
+คุณยืนยันว่า:
+- ได้อ่านนโยบายชุมชน
+- เข้าใจกฎ
+- ตกลงที่จะปฏิบัติตามนโยบาย
+- เข้าใจว่าการละเมิดอาจนำไปสู่การดำเนินการด้านการดูแลชุมชน
+- เข้าใจว่าเนื้อหาในชุมชนถูกสร้างโดยผู้ใช้งาน
+- เข้าใจว่าชุมชน SafeSpace ไม่ใช่สิ่งทดแทนบริการจากผู้เชี่ยวชาญหรือบริการฉุกเฉิน
+
+---
+
+## ชุมชน SafeSpace
+
+**แบ่งปันอย่างปลอดภัย • รับฟังอย่างเคารพ • ดูแลกันและกัน**
+
+============================================================
+END OF POLICIES
+============================================================
