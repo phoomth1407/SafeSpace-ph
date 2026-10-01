@@ -47,7 +47,7 @@ export default function Layout() {
     <div className={cn("min-h-screen relative overflow-x-clip", theme === "light" && "theme-light", pageTheme)}>
       <BreathingBackdrop />
       <header className="site-header sticky top-0 z-40">
-        <div className="site-header-inner max-w-6xl mx-auto px-4 h-16 flex items-center gap-2 min-w-0">
+        <div className="site-header-inner w-full max-w-none mx-0 px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-2 min-w-0">
           <Link to="/" className="brand-lockup flex items-center gap-2.5 desktop-header-brand">
             <img src={`${import.meta.env.BASE_URL}icons/safespace-icon.svg`} alt="SafeSpace" className="w-9 h-9 rounded-2xl object-cover ring-1 ring-white/15 shadow-lg" />
             <span className="font-semibold tracking-tight text-slate-100 text-sm">SafeSpace<span className="text-rose-500">.</span></span>
