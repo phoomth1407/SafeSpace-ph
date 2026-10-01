@@ -27,16 +27,18 @@ end; $$;
 drop trigger if exists initialize_assessment_sharing_preference on auth.users;
 create trigger initialize_assessment_sharing_preference after insert on auth.users for each row execute function public.initialize_assessment_sharing_preference();
 create or replace function public.sync_assessment_share_choice()
-returns trigger language plpgsql security definer set search_path = public as $$
+returns trigger language plpgsql security definer set search_path = public as $
+declare chosen boolean := false;
 begin
   if new.created_by_id is not null then
-    select coalesce(share_risk_score, false) into new.share_with_admin
-    from public.assessment_sharing_preferences where user_id::text = new.created_by_id;
-    new.share_with_admin := coalesce(new.share_with_admin, false) and coalesce(new.share_with_admin, false);
-    if not found then new.share_with_admin := false; end if;
-  else new.share_with_admin := false; end if;
+    select coalesce(p.share_risk_score, false) into chosen
+    from public.assessment_sharing_preferences p where p.user_id::text = new.created_by_id;
+    new.share_with_admin := coalesce(chosen, false);
+  else
+    new.share_with_admin := false;
+  end if;
   return new;
-end; $$;
+end; $;
 drop trigger if exists assessments_sync_share_choice on public.assessments;
 create trigger assessments_sync_share_choice before insert or update of share_with_admin, created_by_id on public.assessments for each row execute function public.sync_assessment_share_choice();
 drop policy if exists assessments_read on public.assessments;
