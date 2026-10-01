@@ -31,7 +31,7 @@ Assessment answers can contain wellbeing-related personal information. Where req
 
 ## 7. Signed-In and Guest Assessment
 
-When signed in, assessment records may be associated with the account and supported history features may show saved records. The application provides deletion of saved assessment records, but deletion through the interface should not be described as instantaneous removal from every backup, cache, log, or technical system unless verified. Guest assessment is also available. The current documented frontend guest flow keeps the result in browser navigation state, while the backend contains an administrator-controlled guest-assessment data model. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
+When signed in, assessment records may be associated with the account and supported history features may show saved records. The application provides deletion of saved assessment records, but deletion through the interface should not be described as instantaneous removal from every backup, cache, log, or technical system unless verified. Guest assessment is also available. The frontend offers a guest option, but the current analyze-assessment Edge Function requires authentication and only saves signed-in assessments. Guest submission is therefore not confirmed to work or to be stored server-side in the current implementation. Guest server-side retention is not specified until the feature is implemented and verified. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
 
 ## 8. Security, Data Minimisation, and Limits of Anonymity
 
@@ -39,7 +39,7 @@ Assessment requests can involve authentication, database access controls, Row Le
 
 ## 9. Retention, Responsibilities, Contact, and Changes
 
-Retention placeholders requiring developer confirmation: signed-in assessment records [until user deletes or account is deleted]; guest assessment information [TO CONFIRM based on actual deployed storage]; related technical/security logs [90 days]. Do not promise immediate deletion from every backup, cache, log, or technical system unless verified. You are responsible for reviewing what you submit and for not submitting another person's information unless permitted. Privacy contact: [privacy contact email — to be filled in by the developer]. Version 1.0 — September 2026.
+Retention placeholders requiring developer confirmation: signed-in assessment records [until user deletes or account is deleted]; guest assessment information: no verified server-side retention period; the current analysis function requires authentication; related technical/security logs [1 day on the Supabase Free plan; confirm again if the project plan or provider settings change]. Do not promise immediate deletion from every backup, cache, log, or technical system unless verified. You are responsible for reviewing what you submit and for not submitting another person's information unless permitted. Privacy contact: safespacect@gmail.com. Version 1.0 — September 2026.
 
 ## 10. Emergency Support and Final Reminder
 
@@ -73,7 +73,7 @@ SafeSpace ออกแบบโดยคำนึงถึงเยาวชน�
 
 ## 7. แบบประเมินสำหรับผู้เข้าสู่ระบบและ Guest
 
-เมื่อเข้าสู่ระบบ ข้อมูลแบบประเมินอาจเชื่อมกับบัญชีและประวัติที่รองรับอาจแสดงผลที่บันทึกไว้ แอปมีการลบประวัติแบบประเมินที่บันทึก แต่ไม่ควรกล่าวว่าลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันทีหากยังไม่ตรวจสอบ Guest assessment ก็มีได้ โดย frontend ที่บันทึกไว้เก็บผลใน browser navigation state และ backend มีโมเดลข้อมูล guest assessment ที่ผู้ดูแลควบคุม Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ ข้อมูลแบบประเมินไม่ตั้งใจให้กลายเป็นโพสต์ชุมชนสาธารณะ
+เมื่อเข้าสู่ระบบ ข้อมูลแบบประเมินอาจเชื่อมกับบัญชีและประวัติที่รองรับอาจแสดงผลที่บันทึกไว้ แอปมีการลบประวัติแบบประเมินที่บันทึก แต่ไม่ควรกล่าวว่าลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันทีหากยังไม่ตรวจสอบ Guest assessment ก็มีได้ หน้าเว็บมีตัวเลือก Guest แต่ Edge Function analyze-assessment ปัจจุบันกำหนดให้ต้องเข้าสู่ระบบและบันทึกเฉพาะแบบประเมินของผู้ที่เข้าสู่ระบบ จึงยังยืนยันไม่ได้ว่าการส่งแบบประเมิน Guest ทำงานหรือถูกเก็บบนเซิร์ฟเวอร์ในระบบปัจจุบัน ระยะเวลาเก็บข้อมูล Guest ยังไม่ระบุจนกว่าจะพัฒนาและตรวจสอบฟีเจอร์นี้ Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ ข้อมูลแบบประเมินไม่ตั้งใจให้กลายเป็นโพสต์ชุมชนสาธารณะ
 
 ## 8. ความปลอดภัย การลดข้อมูล และข้อจำกัดของการไม่เปิดเผยตัวตน
 
@@ -81,7 +81,7 @@ SafeSpace ออกแบบโดยคำนึงถึงเยาวชน�
 
 ## 9. การเก็บรักษา ความรับผิดชอบ การติดต่อ และการเปลี่ยนแปลง
 
-ระยะเวลาที่ต้องยืนยัน: ประวัติแบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ข้อมูล guest [TO CONFIRM ตาม storage ที่ใช้งานจริง]; log ทางเทคนิค/ความปลอดภัย [90 วัน] ไม่ควรรับประกันการลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันที คุณมีหน้าที่ตรวจสอบสิ่งที่ส่งและไม่ส่งข้อมูลของผู้อื่นหากไม่มีสิทธิ ติดต่อความเป็นส่วนตัว: [privacy contact email — to be filled in by the developer] Version 1.0 — กันยายน 2569
+ระยะเวลาที่ต้องยืนยัน: ประวัติแบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ข้อมูล Guest: ยังไม่มีระยะเวลาเก็บบนเซิร์ฟเวอร์ที่ยืนยันได้ เนื่องจากฟังก์ชันวิเคราะห์ปัจจุบันต้องเข้าสู่ระบบ; log ทางเทคนิค/ความปลอดภัย [1 วันสำหรับ Supabase Free plan; โปรดตรวจสอบอีกครั้งหากเปลี่ยนแพ็กเกจหรือการตั้งค่าผู้ให้บริการ] ไม่ควรรับประกันการลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันที คุณมีหน้าที่ตรวจสอบสิ่งที่ส่งและไม่ส่งข้อมูลของผู้อื่นหากไม่มีสิทธิ ติดต่อความเป็นส่วนตัว: safespacect@gmail.com Version 1.0 — กันยายน 2569
 
 ## 10. ความช่วยเหลือฉุกเฉินและข้อเตือนสุดท้าย
 
