@@ -46,7 +46,7 @@ export default function Register() {
 
   const handleSubmit = async () => {
     setError("");
-    const birthMatch = /^(\\d{2})\\/(\\d{2})\\/(\\d{4})$/.exec(birthDate.trim());
+    const birthMatch = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/.exec(birthDate.trim());
     if (!birthMatch) {
       setError("Enter your birthdate as DD/MM/YYYY.");
       return;
