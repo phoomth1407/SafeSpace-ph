@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
-import { Home, Users, Phone, History as HistoryIcon, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
+import { Home, Users, Phone, History as HistoryIcon, Settings, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
@@ -34,7 +34,8 @@ export default function Layout() {
     { to: "/", label: t("nav.home"), icon: Home },
     { to: "/history", label: t("nav.history"), icon: HistoryIcon },
     { to: "/community", label: t("nav.community"), icon: Users },
-    { to: "/resources", label: t("nav.resources"), icon: Phone }
+    { to: "/resources", label: t("nav.resources"), icon: Phone },
+    ...(isAuthenticated ? [{ to: "/sharing-preferences", label: lang === "en" ? "Sharing" : "แบ่งปันข้อมูล", icon: Settings }] : [])
   ];
 
   const handleLogout = () => {
