@@ -33,7 +33,7 @@ const PopupText = ({ lang }) => (
   <div className="space-y-4">
     <p>{lang === "en"
       ? <>SafeSpace is a youth wellbeing and awareness web app created as an independent school project. It is <strong>not a hospital, clinic, therapist, doctor, emergency service, or replacement for professional care</strong>. The school is not the owner or operator of SafeSpace.</>
-      : <>SafeSpace เป็นเว็บแอปด้านสุขภาวะและการตระหนักรู้สำหรับเยาวชน พัฒนาเป็นโครงการอิสระที่เริ่มจากงานโรงเรียน <strong>ไม่ใช่โรงพยาบาล คลินิก นักบำบัด แพทย์ บริการฉุกเฉิน หรือสิ่งทดแทนการดูแลจากผู้เชี่ยวชาญ</strong> และโรงเรียนไม่ได้เป็นเจ้าของหรือผู้ดำเนินการ SafeSpace</>}</p>
+      : <>SafeSpace เป็นเว็บแอปด้านสุขภาวะและการตระหนักรู้สำหรับเยาวชน พัฒนาเป็นโครงการอิสระที่เริ่มจากงานโรงเรียน ระหว่างสมัคร ผู้ใช้ต้องอ่านนโยบายและให้ความยินยอมอย่างชัดเจนต่อการประมวลผลข้อมูลสุขภาวะที่จำเป็น วันเกิดใช้เพื่อคำนวณอายุโดยไม่ส่งวันเกิดแบบเต็ม และผู้ใช้เลือกได้ว่าจะแบ่งปันเฉพาะคะแนนและระดับความเสี่ยงให้ผู้ดูแลหรือไม่ โดยค่าเริ่มต้นปิดการแบ่งปันและไม่รวมคำตอบหรือข้อความที่เขียน <strong>ไม่ใช่โรงพยาบาล คลินิก นักบำบัด แพทย์ บริการฉุกเฉิน หรือสิ่งทดแทนการดูแลจากผู้เชี่ยวชาญ</strong> และโรงเรียนไม่ได้เป็นเจ้าของหรือผู้ดำเนินการ SafeSpace</>}</p>
     <p>{lang === "en" ? "When you use an account, SafeSpace may process account data, wellbeing/assessment data, Community data, and technical/security data needed to operate the service." : "เมื่อใช้บัญชี SafeSpace อาจประมวลผลข้อมูลบัญชี ข้อมูลสุขภาวะ/แบบประเมิน ข้อมูลชุมชน และข้อมูลทางเทคนิค/ความปลอดภัยที่จำเป็นต่อการให้บริการ"}</p>
     <p>{lang === "en"
       ? "Assessment and wellbeing information may be processed by OpenAI or Google Gemini. Supabase provides backend services and GitHub Pages hosts the frontend. These providers may process information outside Thailand. SafeSpace relies on their standard contractual safeguards but does not claim third-party processing is risk-free."
@@ -50,7 +50,7 @@ const PopupText = ({ lang }) => (
       <p>1323 — {lang === "en" ? "Department of Mental Health hotline" : "สายด่วนสุขภาพจิต กรมสุขภาพจิต"}</p>
       <p>1300 — {lang === "en" ? "MSDHS social assistance line, including children and young people" : "สายด่วนช่วยเหลือสังคม พม. รวมถึงเด็กและเยาวชน"}</p>
     </div>
-    <p>{lang === "en" ? "Cookies: [TO CONFIRM] whether SafeSpace uses cookies or analytics beyond what is strictly necessary for authentication." : "การตั้งค่าหน้าเว็บปัจจุบันให้ Supabase Auth บันทึก session ใน browser localStorage และไม่พบการเชื่อมต่อ analytics ในโค้ดแอปที่ตรวจสอบ SafeSpace ไม่ได้ตั้งใจสร้าง first-party cookies แต่ Google sign-in หรือโครงสร้าง hosting อาจใช้คุกกี้ที่ผู้ให้บริการควบคุม ข้อความนี้อธิบายการตั้งค่าที่ตรวจสอบ ไม่ใช่การรับประกันทุกเบราว์เซอร์หรือคำขอจากบุคคลที่สาม"}</p>
+    <p>{lang === "en" ? "The inspected frontend configures Supabase Auth to persist sessions in browser localStorage; no analytics integration was identified in the inspected app code. Provider-controlled cookies or other browser storage may still be used by Google sign-in or hosting." : "การตั้งค่าหน้าเว็บปัจจุบันให้ Supabase Auth บันทึก session ใน browser localStorage และไม่พบการเชื่อมต่อ analytics ในโค้ดแอปที่ตรวจสอบ SafeSpace ไม่ได้ตั้งใจสร้าง first-party cookies แต่ Google sign-in หรือโครงสร้าง hosting อาจใช้คุกกี้ที่ผู้ให้บริการควบคุม ข้อความนี้อธิบายการตั้งค่าที่ตรวจสอบ ไม่ใช่การรับประกันทุกเบราว์เซอร์หรือคำขอจากบุคคลที่สาม"}</p>
   </div>
 );
 
