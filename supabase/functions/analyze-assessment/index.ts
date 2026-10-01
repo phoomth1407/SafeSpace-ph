@@ -323,23 +323,20 @@ async function main(req: Request) {
     }
   }
 
+  // Minimize server-side retention: only save the screening score/category and
+  // operational metadata. Full answers and narrative analysis are returned to
+  // the user's browser but are not written to the assessments table.
   const row = {
     id: crypto.randomUUID(),
     created_by_id: userData.user.id,
     risk_level: validLevels.includes(result.risk_level) ? result.risk_level : "moderate",
     risk_score: Math.max(0, Math.min(100, Math.round(Number(result.risk_score) || 0))),
-    depression_chance: result.depression_chance || "",
-    answers,
-    ai_summary: result.ai_summary || "",
-    similar_case: result.similar_case || "",
-    recommendations: Array.isArray(result.recommendations) ? result.recommendations.slice(0, 5) : [],
-    tool_recommendations: Array.isArray(result.tool_recommendations) ? result.tool_recommendations.slice(0, 4) : [],
-    age: ageNum,
-    age_group: ageGroup,
-    nationality: nat,
+    screening_type: "wellbeing",
+    analysis_source: aiSucceeded ? (apiKey ? "ai" : "ai") : "offline-model",
+    language,
   };
 
-  const { data: saved, error: saveError } = await userClient.from("assessments").insert(row).select("*").single();
+  const { data: saved, error: saveError } = await userClient.from("assessments").insert(row).select("id,created_date,risk_level,risk_score,screening_type,analysis_source,language").single();
   if (saveError) {
     return new Response(JSON.stringify({ error: `บันทึกผลไม่สำเร็จ: ${saveError.message}` }), { status: 500, headers: corsHeaders });
   }
@@ -347,11 +344,11 @@ async function main(req: Request) {
   return new Response(JSON.stringify({
     risk_level: row.risk_level,
     risk_score: row.risk_score,
-    depression_chance: row.depression_chance,
-    ai_summary: row.ai_summary,
-    similar_case: row.similar_case,
-    recommendations: row.recommendations,
-    tool_recommendations: row.tool_recommendations,
+    depression_chance: result.depression_chance || "",
+    ai_summary: result.ai_summary || "",
+    similar_case: result.similar_case || "",
+    recommendations: Array.isArray(result.recommendations) ? result.recommendations.slice(0, 5) : [],
+    tool_recommendations: Array.isArray(result.tool_recommendations) ? result.tool_recommendations.slice(0, 4) : [],
     id: saved.id,
     is_guest: false,
     analysis_source: aiSucceeded ? (apiKey ? "openai" : "gemini") : "fallback",
