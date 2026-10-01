@@ -140,6 +140,13 @@
     overflow-wrap: anywhere;
   }
 
+  /* Community modals live inside the page's isolated stacking context.
+     Raise that context while a modal is open so the mobile dock cannot sit above it. */
+  .page-shell:has(.community-modal-layer) {
+    position: relative !important;
+    z-index: 10001 !important;
+  }
+
   /* Bottom navigation: a compact floating dock instead of a full-width slab. */
   .mobile-nav {
     left: 10px !important;
