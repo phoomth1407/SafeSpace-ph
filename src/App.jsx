@@ -131,6 +131,48 @@ const VersionGate = ({ children }) => {
   );
 };
 
+class RootErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    // Keep technical details in the browser console for debugging without
+    // exposing potentially sensitive runtime data in the page UI.
+    console.error("SafeSpace render error:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <main className="flex min-h-screen items-center justify-center bg-slate-50 px-5 py-10 text-slate-900 dark:bg-slate-950 dark:text-white" role="alert">
+          <section className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-xl dark:border-slate-800 dark:bg-slate-900">
+            <h1 className="text-xl font-bold">SafeSpace couldn't load</h1>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              Something went wrong while opening the app. Please reload and try again. If this keeps happening, share the first red error in the browser console with the developer.
+            </p>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">SafeSpace ไม่สามารถโหลดได้ กรุณาลองโหลดหน้าเว็บใหม่</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-6 inline-flex items-center justify-center rounded-xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+            >
+              Reload SafeSpace / โหลดใหม่
+            </button>
+          </section>
+        </main>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const RouteLoading = () => (
   <div className="min-h-[40vh] flex items-center justify-center" role="status" aria-live="polite">
     <div className="w-8 h-8 border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" aria-label="Loading" />
@@ -190,7 +232,8 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <RootErrorBoundary>
+      <>
       {!booted && <Preloader onComplete={handleBootComplete} />}
       <LanguageProvider>
       <ThemeProvider>
@@ -208,6 +251,7 @@ export default function App() {
         </AuthProvider>
       </ThemeProvider>
       </LanguageProvider>
-    </>
+      </>
+    </RootErrorBoundary>
   );
 }
