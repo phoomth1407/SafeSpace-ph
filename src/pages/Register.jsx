@@ -82,7 +82,6 @@ export default function Register() {
     if (method === "google") {
       setLoading(true);
       try {
-        sessionStorage.setItem("safespace_pending_share_risk_score", shareRiskScore ? "yes" : "no");
         await appClient.auth.loginWithProvider("google", safeReturnTo(), age, shareRiskScore);
       } catch (err) {
         sessionStorage.removeItem("safespace_pending_share_risk_score");
@@ -119,7 +118,6 @@ export default function Register() {
     try {
       await appClient.auth.verifyOtp({ email, otpCode });
       // Hydrate the authenticated user and apply the pending sharing choice before navigation.
-      await appClient.auth.me();
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
       await appClient.auth.me();
@@ -138,7 +136,7 @@ export default function Register() {
   const SelectField = ({ label, value, onChange, children, ariaLabel }) => (
     <div className="min-w-0 flex-1 space-y-2">
       <Label>{label}</Label>
-      <select size={5} aria-label={ariaLabel} value={value} onChange={(e) => onChange(e.target.value)} className="h-12 w-full rounded-xl border border-input bg-background px-3 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring">
+      <select size={5} aria-label={ariaLabel} value={value} onChange={(e) => onChange(e.target.value)} className="h-32 w-full rounded-xl border border-input bg-background px-2 py-2 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring">
         {children}
       </select>
     </div>
