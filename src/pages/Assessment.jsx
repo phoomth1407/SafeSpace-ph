@@ -182,7 +182,7 @@ export default function Assessment() {
       if (result.is_guest) {
         if (shareRiskScore) {
           const bytes = crypto.getRandomValues(new Uint8Array(32));
-          const claimToken = btoa(String.fromCharCode(...bytes)).replace(/\\+/g, "-").replace(/\\//g, "_").replace(/=+$/g, "");
+          const claimToken = Array.from(bytes).map((byte) => byte.toString(16).padStart(2, "0")).join("");
           try {
             const shared = await appClient.functions.invoke("saveGuestScore", { risk_score: result.risk_score, risk_level: result.risk_level, language: lang, claim_token: claimToken });
             if (shared.data?.error || shared.data?.saved !== true) throw new Error("score_save_failed");
