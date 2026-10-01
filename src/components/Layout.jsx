@@ -149,6 +149,7 @@ export default function Layout() {
 
       <SafeSpacePolicyModal
         open={policyOpen}
+        requiresAcceptance={false}
         persistAcknowledgement={false}
         onAccept={() => setPolicyOpen(false)}
         onClose={() => setPolicyOpen(false)}
