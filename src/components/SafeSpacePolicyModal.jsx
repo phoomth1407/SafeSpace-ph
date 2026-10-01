@@ -50,7 +50,7 @@ const PopupText = ({ lang }) => (
       <p>1323 — {lang === "en" ? "Department of Mental Health hotline" : "สายด่วนสุขภาพจิต กรมสุขภาพจิต"}</p>
       <p>1300 — {lang === "en" ? "MSDHS social assistance line, including children and young people" : "สายด่วนช่วยเหลือสังคม พม. รวมถึงเด็กและเยาวชน"}</p>
     </div>
-    <p>{lang === "en" ? "Cookies: [TO CONFIRM] whether SafeSpace uses cookies or analytics beyond what is strictly necessary for authentication." : "การตั้งค่าหน้าเว็บปัจจุบันให้ Supabase Auth บันทึก session ใน browser localStorage และไม่ได้ตั้งค่า analytics โดยเจตนา SafeSpace ไม่ได้ตั้งใจสร้าง first-party cookies แต่ Google sign-in หรือโครงสร้าง hosting อาจใช้คุกกี้ที่ผู้ให้บริการควบคุม ควรตรวจสอบพฤติกรรมบนเว็บไซต์ที่เผยแพร่จริงก่อนถือเป็นคำยืนยันถาวร"}</p>
+    <p>{lang === "en" ? "Cookies: [TO CONFIRM] whether SafeSpace uses cookies or analytics beyond what is strictly necessary for authentication." : "การตั้งค่าหน้าเว็บปัจจุบันให้ Supabase Auth บันทึก session ใน browser localStorage และไม่พบการเชื่อมต่อ analytics ในโค้ดแอปที่ตรวจสอบ SafeSpace ไม่ได้ตั้งใจสร้าง first-party cookies แต่ Google sign-in หรือโครงสร้าง hosting อาจใช้คุกกี้ที่ผู้ให้บริการควบคุม ข้อความนี้อธิบายการตั้งค่าที่ตรวจสอบ ไม่ใช่การรับประกันทุกเบราว์เซอร์หรือคำขอจากบุคคลที่สาม"}</p>
   </div>
 );
 
@@ -90,7 +90,7 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
               {requiresAcceptance && <>
                 <label className="flex items-start gap-3 mt-5 rounded-2xl border border-slate-800 bg-slate-900/60 px-4 py-3 cursor-pointer">
                   <input type="checkbox" checked={checks.age} onChange={e=>setChecks(v=>({...v,age:e.target.checked}))} className="mt-1 h-4 w-4 shrink-0 accent-sky-500" />
-                  <span className="text-xs leading-5">{lang === "en" ? "I am at least 13 years old, or I have the required parent/guardian consent." : "ฉันมีอายุอย่างน้อย 13 ปี หรือได้รับความยินยอมจากผู้ปกครองตามที่กำหนด"}</span>
+                  <span className="text-xs leading-5">{lang === "en" ? "I confirm that I am at least 13 years old. Users under 13 may not create a SafeSpace account." : "ฉันยืนยันว่ามีอายุอย่างน้อย 13 ปี ผู้ที่อายุต่ำกว่า 13 ปีไม่สามารถสร้างบัญชี SafeSpace ได้"}</span>
                 </label>
                 <label className="flex items-start gap-3 mt-3 rounded-2xl border border-slate-800 bg-slate-900/60 px-4 py-3 cursor-pointer">
                   <input type="checkbox" checked={checks.policy} onChange={e=>setChecks(v=>({...v,policy:e.target.checked}))} className="mt-1 h-4 w-4 shrink-0 accent-sky-500" />
