@@ -1,6 +1,6 @@
 # SafeSpace Data Model
 
-Last reviewed: 2026-09-20
+Last reviewed: 2026-10-01
 
 This is a practical map of the data SafeSpace uses. It is not meant to replace the actual Supabase schema or migrations.
 
@@ -11,8 +11,8 @@ One important detail: the repository does not contain the original full database
 | Table | Main purpose | Sensitivity | Main access |
 | --- | --- | --- | --- |
 | `users` | User profile information | Private | User owns profile; admins manage |
-| `assessments` | Saved assessment/screening results | Sensitive | Owner + admin |
-| `guest_assessments` | Stored guest assessment records | Sensitive | Admin only |
+| `assessments` | Signed-in screening score metadata | Sensitive | Owner/admin RLS; authenticated Data API access limited to metadata columns |
+| `guest_assessments` | Legacy/admin-managed guest screening records | Sensitive | Admin-only RLS; authenticated Data API reads limited to score metadata |
 | `community_posts` | Public Community posts | Public-facing | Public read; controlled authenticated create; owner/admin management |
 | `community_comments` | Comments on Community posts | Public-facing | Public read; authenticated write; owner/admin management |
 | `reports` | Reports about Community content | Sensitive | Authenticated create; admin management |
@@ -28,7 +28,7 @@ There is not a huge relational model with dozens of joins. Most important relati
 
 ### Users -> assessments
 
-Signed-in assessment rows are tied to the authenticated Supabase user ID. RLS limits normal users to their own records. Admins have a separate management path.
+Signed-in assessment rows are tied to the authenticated Supabase user ID. RLS limits rows to the owner or an administrator. In addition, authenticated Data API column grants now expose only `id`, timestamps, `created_by_id`, `risk_level`, `risk_score`, `screening_type`, `analysis_source`, and `language`; answers, age, nationality, narrative summaries, recommendations, and PHQ-9 detail columns are not selectable through the authenticated Data API. New signed-in assessment submissions still send answers to the analysis function and configured AI provider(s), but only score metadata is written to the `assessments` row. Full result details may be kept in the user's browser localStorage cache (up to 20 entries) for result display; this is browser-local storage, not server-side history, and can be exposed on a shared/unlocked device.
 
 ### Users -> Community posts
 
@@ -78,17 +78,11 @@ See [RLS audit](RLS_AUDIT.md) for the current checks.
 
 Guest behavior is different from signed-in users.
 
-The current guest UI does not attach the result to an authenticated account. The result is kept in browser navigation state so a user can see it without creating an account.
-
-There is also a `guest_assessments` table in the backend. Its database access is admin-only.
-
-So the existence of that table does not mean every guest result is automatically written to it by the current frontend flow.
+The current guest UI computes the result locally and keeps it in browser navigation state so it can be shown without creating an account. A persistent browser-only guest history has not been implemented, and the guest result is not submitted to the analysis Edge Function by the current guest path. A `guest_assessments` table also exists for legacy/admin-managed records; authenticated reads are limited to `id`, timestamps, `risk_level`, `risk_score`, and `language`, with row access controlled by the admin-only RLS policies. Its existence does not mean new guest results are automatically written to it.
 
 ## Assessment history and deletion
 
-Signed-in assessment results can appear in the History page.
-
-Users can delete their saved assessment records. The database DELETE policy is part of the access model, not just a hidden UI action.
+Signed-in score metadata can appear in the History page. The full result shown immediately after analysis is cached in browser localStorage where available (up to 20 entries); if that cache is unavailable or cleared, older server rows provide score metadata only, not the full narrative or answers. Users can delete their saved assessment records through the History feature, subject to the database DELETE policy.
 
 Guest results are not added to the signed-in user's history.
 
@@ -113,9 +107,10 @@ Do not put real user data into tests, screenshots, issues, pull requests, or exa
 
 Tracked database changes live under `supabase/migrations/`.
 
-The current repository includes September 2026 security work for:
+The current repository includes September–October 2026 security work for:
 
 - security hardening
+- assessment and guest-assessment column-level access restrictions
 - rate-limit RPC grants/locking
 - Community rolling post limits
 - database-enforced Community post creation
