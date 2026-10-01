@@ -73,11 +73,11 @@ SafeSpace เป็นเว็บแอปอิสระที่เริ่�
 
 ### 5. ข้อมูลที่เกี่ยวข้องกับบัญชี
 
-ขึ้นอยู่กับฟีเจอร์ที่คุณใช้ บัญชีอาจเกี่ยวข้องกับข้อมูลยืนยันตัวตน ข้อมูลโปรไฟล์ ประวัติแบบประเมิน กิจกรรมในชุมชน รายงาน คำขอติดต่อ/สนับสนุน และข้อมูลอื่นที่จำเป็น ฐานทางกฎหมาย: ข้อมูลบัญชี — ความจำเป็นตามสัญญา; ข้อมูลสุขภาวะ/แบบประเมิน — ความยินยอมโดยชัดแจ้ง; เนื้อหาชุมชน — ความยินยอมสำหรับเนื้อหาที่ผู้ใช้ส่ง; ผลประโยชน์โดยชอบด้วยกฎหมายสำหรับรายงานและบันทึกการกลั่นกรอง; ข้อมูลทางเทคนิค/ความปลอดภัย — [TO CONFIRM — ฐานทางกฎหมาย] ข้อมูลสุขภาวะและสุขภาพจิตถือเป็นข้อมูลส่วนบุคคลที่มีความละเอียดอ่อนในนโยบายนี้ และเมื่อจำเป็นต้องใช้ความยินยอมโดยชัดแจ้ง ต้องใช้ช่องยินยอมแยกที่ชัดเจนและไม่เลือกไว้ล่วงหน้า
+ขึ้นอยู่กับฟีเจอร์ที่คุณใช้ บัญชีอาจเกี่ยวข้องกับข้อมูลยืนยันตัวตน ข้อมูลโปรไฟล์ ประวัติแบบประเมิน กิจกรรมในชุมชน รายงาน คำขอติดต่อ/สนับสนุน และข้อมูลอื่นที่จำเป็น ฐานทางกฎหมาย: ข้อมูลบัญชี — ความจำเป็นตามสัญญา; ข้อมูลสุขภาวะ/แบบประเมิน — ความยินยอมโดยชัดแจ้ง; เนื้อหาชุมชน — ความยินยอมสำหรับเนื้อหาที่ผู้ใช้ส่ง; รายงานและบันทึกการกลั่นกรอง — ผลประโยชน์โดยชอบด้วยกฎหมาย; ข้อมูลทางเทคนิค/ความปลอดภัย — ผลประโยชน์โดยชอบด้วยกฎหมาย ข้อมูลสุขภาวะและสุขภาพจิตถือเป็นข้อมูลส่วนบุคคลที่มีความละเอียดอ่อนในนโยบายนี้ และเมื่อจำเป็นต้องใช้ความยินยอมโดยชัดแจ้ง ต้องใช้ช่องยินยอมแยกที่ชัดเจนและไม่เลือกไว้ล่วงหน้า
 
 ### 6. ข้อมูลแบบประเมินและสุขภาวะ
 
-คำตอบแบบประเมิน อายุ สัญชาติ ผลคัดกรอง ค่าที่เกี่ยวข้องกับความเสี่ยง สรุป คำแนะนำ และประวัติที่เกี่ยวข้องอาจเป็นข้อมูลสุขภาวะที่มีความละเอียดอ่อน ผู้ที่เข้าสู่ระบบอาจมีประวัติแบบประเมินเชื่อมกับบัญชี แบบประเมินแบบ Guest ก็มีได้ โดย flow ฝั่งหน้าเว็บปัจจุบันเก็บผลไว้ใน browser navigation state และ backend มีโมเดลข้อมูล guest assessment ที่ผู้ดูแลควบคุม ดังนั้น guest ไม่ควรถูกอธิบายว่าเป็นการไม่เปิดเผยตัวตนโดยสมบูรณ์ ข้อมูลแบบประเมินไม่ใช่เนื้อหาชุมชนทั่วไป
+คำตอบแบบประเมิน อายุ สัญชาติ ผลคัดกรอง ค่าที่เกี่ยวข้องกับความเสี่ยง สรุป คำแนะนำ และประวัติที่เกี่ยวข้องอาจเป็นข้อมูลสุขภาวะที่มีความละเอียดอ่อน ผู้ที่เข้าสู่ระบบอาจมีประวัติแบบประเมินเชื่อมกับบัญชี แบบประเมินแบบ Guest ก็มีได้ หน้าเว็บมีตัวเลือก Guest แต่ Edge Function analyze-assessment ปัจจุบันกำหนดให้ต้องเข้าสู่ระบบและบันทึกเฉพาะแบบประเมินของผู้ที่เข้าสู่ระบบ จึงยังยืนยันไม่ได้ว่าการส่งแบบประเมิน Guest ทำงานหรือถูกเก็บบนเซิร์ฟเวอร์ แม้มีความตั้งใจจะเก็บคำตอบ Guest เพื่อพัฒนาบริการ แต่ยังไม่พบการทำงานดังกล่าวในโค้ดที่ตรวจสอบ อย่าส่งแบบประเมิน Guest จนกว่าจะพัฒนาและตรวจสอบ flow วัตถุประสงค์ ฐานทางกฎหมาย การควบคุมการเข้าถึง และระยะเวลาเก็บรักษา พร้อมแจ้งผู้ใช้อย่างชัดเจน ดังนั้น guest ไม่ควรถูกอธิบายว่าเป็นการไม่เปิดเผยตัวตนโดยสมบูรณ์ ข้อมูลแบบประเมินไม่ใช่เนื้อหาชุมชนทั่วไป
 
 ### 7. การประมวลผลด้วย AI และการประมวลผลข้ามประเทศ
 
@@ -97,7 +97,7 @@ SafeSpace อาจมีแบบฝึกหายใจ การ grounding �
 
 ### 11. PDPA สิทธิ การเก็บรักษา การโอนข้อมูล ผู้เยาว์ และการติดต่อ
 
-SafeSpace มุ่งประมวลผลข้อมูลตามวัตถุประสงค์ที่แจ้งและลดการเก็บข้อมูลที่ไม่จำเป็น คุณสามารถขอเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอมเมื่อฐานคือความยินยอม โดยอยู่ภายใต้กฎหมายและเงื่อนไขที่เกี่ยวข้อง ติดต่อ: safespacect@gmail.com ระยะเวลาเก็บรักษาที่ต้องยืนยัน: แบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ติดต่อ/สนับสนุน [12 เดือน]; log เซิร์ฟเวอร์/ความปลอดภัย [1 วันสำหรับ Supabase Free plan; โปรดตรวจสอบอีกครั้งหากเปลี่ยนแพ็กเกจหรือการตั้งค่าผู้ให้บริการ]; โพสต์ชุมชน [จนกว่าผู้ใช้หรือผู้ดูแลจะลบ] ไม่ควรรับประกันการลบออกจาก backup, cache หรือ log ทุกระบบทันทีหากยังไม่ได้ตรวจสอบ คุกกี้: [TO CONFIRM] ว่ามีคุกกี้หรือ analytics นอกเหนือจากสิ่งที่จำเป็นต่อการยืนยันตัวตนหรือไม่ คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ pdpc.or.th หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม
+SafeSpace มุ่งประมวลผลข้อมูลตามวัตถุประสงค์ที่แจ้งและลดการเก็บข้อมูลที่ไม่จำเป็น คุณสามารถขอเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอมเมื่อฐานคือความยินยอม โดยอยู่ภายใต้กฎหมายและเงื่อนไขที่เกี่ยวข้อง ติดต่อ: safespacect@gmail.com ระยะเวลาเก็บรักษาที่ต้องยืนยัน: แบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ติดต่อ/สนับสนุน [12 เดือน]; log เซิร์ฟเวอร์/ความปลอดภัย [1 วันสำหรับ Supabase Free plan; โปรดตรวจสอบอีกครั้งหากเปลี่ยนแพ็กเกจหรือการตั้งค่าผู้ให้บริการ]; โพสต์ชุมชน [จนกว่าผู้ใช้หรือผู้ดูแลจะลบ] ไม่ควรรับประกันการลบออกจาก backup, cache หรือ log ทุกระบบทันทีหากยังไม่ได้ตรวจสอบ Supabase Auth ถูกตั้งค่าให้บันทึก session ใน browser localStorage และไม่พบการเชื่อมต่อ analytics ในโค้ดแอปที่ตรวจสอบ SafeSpace ไม่ได้ตั้งใจสร้าง first-party cookies แต่อาจมีคุกกี้จาก Google sign-in หรือ hosting ที่ผู้ให้บริการควบคุม คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ pdpc.or.th หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม
 
 ### 12. เหตุฉุกเฉิน การเปลี่ยนแปลงนโยบาย และข้อเตือนสุดท้าย
 
@@ -118,7 +118,7 @@ The SafeSpace Assessment is a wellbeing screening and reflection tool. It asks s
 
 ### 2. Who It Is For, Voluntary Use, and Young Users
 
-SafeSpace is designed with young people and general wellbeing in mind. Participation is voluntary. You may leave before submitting, pause, or stop if a question makes you uncomfortable. Younger users should take particular care with personal information and may involve a parent, guardian, teacher, school counselor, healthcare professional, or trusted adult when needed.
+SafeSpace is designed with young people and general wellbeing in mind. Participation is voluntary. You must be at least 13 years old to create an account; users under 13 may not create one. Whether users aged 13–19 need parent/guardian authorization before sensitive wellbeing data is processed requires legal review; no verified parental-consent flow is currently implemented. You may leave before submitting, pause, or stop if a question makes you uncomfortable. You must be at least 13 years old to create an account; users under 13 may not create one. Whether users aged 13–19 need parent/guardian authorization before sensitive wellbeing data is processed requires legal review. No verified parental-consent flow is currently implemented.
 
 ### 3. What the Assessment Asks
 
@@ -138,7 +138,7 @@ Assessment answers can contain wellbeing-related personal information. Where req
 
 ### 7. Signed-In and Guest Assessment
 
-When signed in, assessment records may be associated with the account and supported history features may show saved records. The application provides deletion of saved assessment records, but deletion through the interface should not be described as instantaneous removal from every backup, cache, log, or technical system unless verified. Guest assessment is also available. The frontend offers a guest option, but the current analyze-assessment Edge Function requires authentication and only saves signed-in assessments. Guest submission is therefore not confirmed to work or to be stored server-side in the current implementation. SafeSpace's stated intention is to retain guest answers for service improvement, but this collection is not implemented or verified. Do not submit a guest assessment until the guest flow, purpose, legal basis, access controls, and retention period are implemented and disclosed. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
+When signed in, assessment records may be associated with the account and supported history features may show saved records. Users can request deletion of saved assessment records through the available account feature. Removal from backups, caches, logs, or other technical systems may take longer and is not guaranteed to be immediate. Guest assessment is also available. The frontend offers a guest option, but the current analyze-assessment Edge Function requires authentication and only saves signed-in assessments. Guest submission is therefore not confirmed to work or to be stored server-side in the current implementation. SafeSpace's stated intention is to retain guest answers for service improvement, but this collection is not implemented or verified. Do not submit a guest assessment until the guest flow, purpose, legal basis, access controls, and retention period are implemented and disclosed. Guest mode is not a guarantee of complete anonymity. Assessment answers are not intended to become public Community posts.
 
 ### 8. Security, Data Minimisation, and Limits of Anonymity
 
@@ -180,7 +180,7 @@ SafeSpace ออกแบบโดยคำนึงถึงเยาวชน�
 
 ### 7. แบบประเมินสำหรับผู้เข้าสู่ระบบและ Guest
 
-เมื่อเข้าสู่ระบบ ข้อมูลแบบประเมินอาจเชื่อมกับบัญชีและประวัติที่รองรับอาจแสดงผลที่บันทึกไว้ แอปมีการลบประวัติแบบประเมินที่บันทึก แต่ไม่ควรกล่าวว่าลบจาก backup, cache, log หรือระบบเทคนิคทุกแห่งทันทีหากยังไม่ตรวจสอบ Guest assessment ก็มีได้ หน้าเว็บมีตัวเลือก Guest แต่ Edge Function analyze-assessment ปัจจุบันกำหนดให้ต้องเข้าสู่ระบบและบันทึกเฉพาะแบบประเมินของผู้ที่เข้าสู่ระบบ จึงยังยืนยันไม่ได้ว่าการส่งแบบประเมิน Guest ทำงานหรือถูกเก็บบนเซิร์ฟเวอร์ แม้มีความตั้งใจจะเก็บคำตอบ Guest เพื่อพัฒนาบริการ แต่ยังไม่พบการทำงานดังกล่าวในโค้ดที่ตรวจสอบ อย่าส่งแบบประเมิน Guest จนกว่าจะพัฒนาและตรวจสอบ flow วัตถุประสงค์ ฐานทางกฎหมาย การควบคุมการเข้าถึง และระยะเวลาเก็บรักษา พร้อมแจ้งผู้ใช้อย่างชัดเจน Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ ข้อมูลแบบประเมินไม่ตั้งใจให้กลายเป็นโพสต์ชุมชนสาธารณะ
+เมื่อเข้าสู่ระบบ ข้อมูลแบบประเมินอาจเชื่อมกับบัญชีและประวัติที่รองรับอาจแสดงผลที่บันทึกไว้ ผู้ใช้สามารถขอลบประวัติแบบประเมินที่บันทึกผ่านฟีเจอร์บัญชีที่มีอยู่ การนำออกจาก backup, cache, log หรือระบบเทคนิคอื่นอาจใช้เวลานานกว่าและไม่รับประกันว่าจะเกิดขึ้นทันที Guest assessment ก็มีได้ หน้าเว็บมีตัวเลือก Guest แต่ Edge Function analyze-assessment ปัจจุบันกำหนดให้ต้องเข้าสู่ระบบและบันทึกเฉพาะแบบประเมินของผู้ที่เข้าสู่ระบบ จึงยังยืนยันไม่ได้ว่าการส่งแบบประเมิน Guest ทำงานหรือถูกเก็บบนเซิร์ฟเวอร์ แม้มีความตั้งใจจะเก็บคำตอบ Guest เพื่อพัฒนาบริการ แต่ยังไม่พบการทำงานดังกล่าวในโค้ดที่ตรวจสอบ อย่าส่งแบบประเมิน Guest จนกว่าจะพัฒนาและตรวจสอบ flow วัตถุประสงค์ ฐานทางกฎหมาย การควบคุมการเข้าถึง และระยะเวลาเก็บรักษา พร้อมแจ้งผู้ใช้อย่างชัดเจน Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ ข้อมูลแบบประเมินไม่ตั้งใจให้กลายเป็นโพสต์ชุมชนสาธารณะ
 
 ### 8. ความปลอดภัย การลดข้อมูล และข้อจำกัดของการไม่เปิดเผยตัวตน
 
@@ -209,7 +209,7 @@ The SafeSpace Community is a place for users to read, share experiences, discuss
 
 ### 2. Voluntary Participation and Basic Expectations
 
-Guests can read Community content but must sign in before posting or commenting. Users are responsible for following this policy and protecting their own account. Ordinary users may make up to two successful non-announcement posts in a rolling 30-minute window. SafeSpace has an administrator announcement path. Technical limits may change. Share only information you have the right to share and avoid unnecessary personal information.
+Guests can read Community content but must sign in before posting or commenting. You must be at least 13 years old to create an account; users under 13 may not create one. Whether users aged 13–19 need parent/guardian authorization before sensitive wellbeing data is processed requires legal review; no verified parental-consent flow is currently implemented. Users are responsible for following this policy and protecting their own account. Ordinary users may make up to two successful non-announcement posts in a rolling 30-minute window. SafeSpace has an administrator announcement path. Technical limits may change. Share only information you have the right to share and avoid unnecessary personal information.
 
 ### 3. Respectful Participation, Harassment, and Discrimination
 
