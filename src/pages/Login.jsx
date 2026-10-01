@@ -16,21 +16,6 @@ import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const getDeclaredAge = () => {
-    const match = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/.exec(birthDate.trim());
-    if (!match) return null;
-    const [, d, m, y] = match;
-    const day = Number(d), month = Number(m), year = Number(y);
-    const birth = new Date(year, month - 1, day), today = new Date();
-    if (birth.getFullYear() !== year || birth.getMonth() !== month - 1 || birth.getDate() !== day || birth > today) return null;
-    let age = today.getFullYear() - year;
-    if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age--;
-    return age;
-  };
-  const googleAge = getDeclaredAge();
-  const googleAgeEligible = Number.isInteger(googleAge) && googleAge >= 13 && googleAge <= 120;
-
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -73,8 +58,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    if (!googleAgeEligible) { setError(googleAge !== null && googleAge < 13 ? "You must be at least 13 years old to create a SafeSpace account." : "Enter your birthdate first to continue with Google."); return; }
-    requirePolicy(() => appClient.auth.loginWithProvider("google", returnTo, googleAge));
+    requirePolicy(() => appClient.auth.loginWithProvider("google", returnTo));
   };
 
   return (
@@ -108,7 +92,7 @@ export default function Login() {
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={returnTo} enabled={policyAcceptedThisVisit && googleAgeEligible} age={googleAge} />
+      
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
@@ -126,11 +110,6 @@ export default function Login() {
       )}
 
       <form onSubmit={(e) => { e.preventDefault(); if (policyAcceptedThisVisit) handleSubmit(); else requirePolicy(handleSubmit); }} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="birthdate">Birthdate (DD/MM/YYYY, Christian calendar)</Label>
-          <Input id="birthdate" type="text" inputMode="numeric" autoComplete="bday" placeholder="DD/MM/YYYY" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} maxLength={10} />
-          <p className="text-xs text-muted-foreground">Used as a self-declared age check for Google sign-in.</p>
-        </div>
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
