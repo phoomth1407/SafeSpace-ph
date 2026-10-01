@@ -260,6 +260,13 @@ async function claimPendingGuestScores() {
   if (data === true) { try { window.localStorage.removeItem(GUEST_SCORE_CLAIM_KEY); } catch {} }
 }
 const invoke = async (name, payload = {}) => {
+  if (name === "adminGuestScoreShares") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { data, error } = await supabase.rpc("admin_list_guest_score_shares");
+    if (error) throw error;
+    return { data: data || [] };
+  }
   if (name === "saveGuestScore") {
     const token = payload.claim_token;
     if (!/^[A-Za-z0-9_-]{40,100}$/.test(token || "")) return { data: { error: "invalid_claim_token" } };
