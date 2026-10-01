@@ -385,11 +385,15 @@ body {
 /* ===== Feedback fixes ===== */
 .desktop-header-brand { position: relative; z-index: 2; }
 .desktop-centered-nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: .5rem;
-  white-space: nowrap;
+  /* Keep navigation in the header's flex layout so it cannot overlap the
+     right-aligned account, theme, language, or admin controls. */
+  position: static;
+  left: auto;
+  top: auto;
+  transform: none;
+  white-space: normal;
+  width: 100%;
+  min-width: 0;
 }
 .hero-panel { position: relative; isolation: isolate; }
 .theme-light .hero-panel {
