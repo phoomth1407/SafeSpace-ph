@@ -514,9 +514,10 @@ const auth = {
   },
   async loginWithProvider(provider = "google", returnTo = "/", age, shareRiskScore) {
     try {
-      if (!Number.isInteger(age) || age < 13 || age > 120) throw new Error("A valid age of 13 or older is required.");
+      if (age !== undefined && (!Number.isInteger(age) || age < 13 || age > 120)) throw new Error("A valid age of 13 or older is required.");
       if (shareRiskScore !== undefined && typeof shareRiskScore !== "boolean") throw new Error("Choose whether to share assessment risk scores.");
-      sessionStorage.setItem("safespace_pending_oauth_age", String(age));
+      if (Number.isInteger(age)) sessionStorage.setItem("safespace_pending_oauth_age", String(age));
+      else sessionStorage.removeItem("safespace_pending_oauth_age");
       if (typeof shareRiskScore === "boolean") {
         sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
       }
@@ -540,8 +541,9 @@ const auth = {
   },
 
   async loginWithGoogleIdToken(idToken, returnTo = "/", nonce, age) {
-    if (!Number.isInteger(age) || age < 13 || age > 120) throw new Error("A valid age of 13 or older is required.");
-    sessionStorage.setItem("safespace_pending_oauth_age", String(age));
+    if (age !== undefined && (!Number.isInteger(age) || age < 13 || age > 120)) throw new Error("A valid age of 13 or older is required.");
+    if (Number.isInteger(age)) sessionStorage.setItem("safespace_pending_oauth_age", String(age));
+    else sessionStorage.removeItem("safespace_pending_oauth_age");
     sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
     const { error } = await supabase.auth.signInWithIdToken({
       provider: "google",
