@@ -1,7 +1,7 @@
 # SafeSpace Policy
 
-**Version 1.0**  
-**Last updated: September 2026**
+**Version 1.1**  
+**Last updated: October 2026**
 
 ## English
 
@@ -27,7 +27,7 @@ Depending on the features you use, your account may be associated with authentic
 
 ## 6. Assessment and Wellbeing Data
 
-Assessment answers, age, nationality, screening results, risk-related values, generated summaries, recommendations, and related history can contain sensitive wellbeing information. Signed-in users can have assessment records associated with their account. Guest assessment is also available; the current documented frontend guest flow keeps the result in browser navigation state, while the backend contains an administrator-controlled guest-assessment data model. Guest use must not be described as complete internet anonymity. Assessment information is not ordinary public Community content.
+Assessment answers, age, nationality, screening results, risk-related values, generated summaries, recommendations, and related history can contain sensitive wellbeing information. For new signed-in submissions, answers are sent to the authenticated analysis function and may be processed by configured AI providers, but only score/category and operational metadata are saved in the `assessments` table. Full result details may be cached in browser localStorage (up to 20 entries) to display results on that device; this can be visible to someone with access to an unlocked or shared browser profile. Signed-in History reads only score metadata from the database. Guest assessment is calculated locally and shown through browser navigation state; persistent guest history is not implemented and new guest results are not written to `guest_assessments`. Legacy/admin-managed guest records may exist, but authenticated Data API reads are restricted to score metadata and RLS limits rows to administrators. Guest use is not complete internet anonymity. Assessment information is not ordinary public Community content.
 
 ## 7. AI-Assisted Processing and Cross-Border Processing
 
@@ -77,7 +77,7 @@ SafeSpace เป็นเว็บแอปอิสระที่เริ่�
 
 ## 6. ข้อมูลแบบประเมินและสุขภาวะ
 
-คำตอบแบบประเมิน อายุ สัญชาติ ผลคัดกรอง ค่าที่เกี่ยวข้องกับความเสี่ยง สรุป คำแนะนำ และประวัติที่เกี่ยวข้องอาจเป็นข้อมูลสุขภาวะที่มีความละเอียดอ่อน ผู้ที่เข้าสู่ระบบอาจมีประวัติแบบประเมินเชื่อมกับบัญชี แบบประเมินแบบ Guest ก็มีได้ หน้าเว็บมีตัวเลือก Guest แต่ Edge Function analyze-assessment ปัจจุบันกำหนดให้ต้องเข้าสู่ระบบและบันทึกเฉพาะแบบประเมินของผู้ที่เข้าสู่ระบบ จึงยังยืนยันไม่ได้ว่าการส่งแบบประเมิน Guest ทำงานหรือถูกเก็บบนเซิร์ฟเวอร์ แม้มีความตั้งใจจะเก็บคำตอบ Guest เพื่อพัฒนาบริการ แต่ยังไม่พบการทำงานดังกล่าวในโค้ดที่ตรวจสอบ อย่าส่งแบบประเมิน Guest จนกว่าจะพัฒนาและตรวจสอบ flow วัตถุประสงค์ ฐานทางกฎหมาย การควบคุมการเข้าถึง และระยะเวลาเก็บรักษา พร้อมแจ้งผู้ใช้อย่างชัดเจน ดังนั้น guest ไม่ควรถูกอธิบายว่าเป็นการไม่เปิดเผยตัวตนโดยสมบูรณ์ ข้อมูลแบบประเมินไม่ใช่เนื้อหาชุมชนทั่วไป
+คำตอบแบบประเมิน อายุ สัญชาติ ผลคัดกรอง ค่าที่เกี่ยวข้องกับความเสี่ยง สรุป คำแนะนำ และประวัติที่เกี่ยวข้องอาจเป็นข้อมูลสุขภาวะที่ละเอียดอ่อน สำหรับการส่งแบบประเมินใหม่ของผู้เข้าสู่ระบบ คำตอบจะถูกส่งไปยังฟังก์ชันวิเคราะห์ที่ต้องยืนยันตัวตนและอาจประมวลผลโดยผู้ให้บริการ AI ตามการตั้งค่า แต่ฐานข้อมูลจะบันทึกเฉพาะคะแนน/ระดับผลและข้อมูลทางเทคนิคที่จำเป็น รายละเอียดผลฉบับเต็มอาจถูกเก็บใน localStorage ของเบราว์เซอร์ (สูงสุด 20 รายการ) เพื่อแสดงผลบนอุปกรณ์นั้น ซึ่งผู้ที่เข้าถึงโปรไฟล์เบราว์เซอร์ที่เปิดค้างหรือใช้ร่วมกันอาจเห็นได้ หน้า History อ่านจากฐานข้อมูลเฉพาะข้อมูลคะแนน แบบประเมิน Guest คำนวณภายในเครื่องและแสดงผลผ่านสถานะการนำทาง ยังไม่มีประวัติ Guest แบบถาวรและไม่มีการบันทึกผล Guest ใหม่ลง `guest_assessments` อาจมีข้อมูล Guest เดิมหรือข้อมูลที่ผู้ดูแลจัดการ แต่การอ่านผ่าน Data API จำกัดไว้เฉพาะข้อมูลคะแนนและ RLS จำกัดแถวให้ผู้ดูแล Guest ไม่ใช่การรับประกันว่าจะไม่สามารถเชื่อมโยงตัวตนได้ และข้อมูลแบบประเมินไม่ใช่เนื้อหาชุมชนสาธารณะ
 
 ## 7. การประมวลผลด้วย AI และการประมวลผลข้ามประเทศ
 
