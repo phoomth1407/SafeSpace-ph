@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail } from "lucide-react";
 import { appClient } from "@/api/appClient";
@@ -11,6 +10,7 @@ import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
 import { supabase } from "@/lib/supabaseClient";
 import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH } from "@/lib/communityPolicy";
+import PolicyConsentModal from "@/components/PolicyConsentModal";
 
 export default function Community() {
   const navigate = useNavigate();
@@ -534,37 +534,39 @@ export default function Community() {
         </div>
       )}
 
-      {policyOpen && (
-        <div className="community-modal-layer" role="dialog" aria-modal="true" aria-labelledby="community-policy-title">
-          <div className="community-modal-backdrop" />
-          <div className="community-modal-card community-policy-modal">
-            <div className="community-modal-icon"><Heart className="h-5 w-5" /></div>
-            <span className="community-modal-kicker">SafeSpace Community</span>
-            <h2 id="community-policy-title">{t("community.policyTitle")}</h2>
-            <p className="community-policy-lead">{t("community.policyLead")}</p>
-            <div className="community-policy-scroll" onScroll={handlePolicyScroll}>
-<ReactMarkdown
-                components={{
-                  h1: ({children}) => <h3 className="community-policy-md-title">{children}</h3>,
-                  h2: ({children}) => <h3 className="community-policy-md-title">{children}</h3>,
-                  h3: ({children}) => <h3 className="community-policy-md-title">{children}</h3>,
-                  p: ({children}) => <p>{children}</p>,
-                  ul: ({children}) => <ul>{children}</ul>,
-                  ol: ({children}) => <ol>{children}</ol>,
-                  li: ({children}) => <li>{children}</li>,
-                  blockquote: ({children}) => <blockquote>{children}</blockquote>,
-                  strong: ({children}) => <strong>{children}</strong>,
-                }}
-              >
-                {lang === "th" ? COMMUNITY_POLICY_TH : COMMUNITY_POLICY_EN}
-              </ReactMarkdown>
-            </div>
-            <button onClick={acceptCommunityPolicy} disabled={!policyScrolled} className="community-primary-button w-full disabled:opacity-40 disabled:cursor-not-allowed">
-              {policyScrolled ? t("community.policyAccept") : t("community.policyScroll")}
-            </button>
+      <PolicyConsentModal
+        open={policyOpen}
+        title={lang === "en" ? "Before you post" : "ก่อนโพสต์"}
+        lang={lang}
+        popupContent={
+          <div className="space-y-4">
+            <p>{lang === "en" ? <>The SafeSpace Community is a user-created discussion area for sharing experiences and wellbeing-related conversations. It is <strong>not a private diary, dating service, medical service, therapist, or emergency service.</strong></> : <>ชุมชน SafeSpace เป็นพื้นที่สนทนาที่สร้างโดยผู้ใช้ สำหรับแบ่งปันประสบการณ์และพูดคุยเรื่องสุขภาวะ <strong>ไม่ใช่ไดอารี่ส่วนตัว บริการหาคู่ บริการทางการแพทย์ นักบำบัด หรือบริการฉุกเฉิน</strong></>}</p>
+            <p>{lang === "en" ? "Community posts and comments are visible to users within the Community. An anonymous-style display name does not guarantee that your account, technical activity, or disclosed information cannot be associated with you." : "โพสต์และความคิดเห็นในชุมชนสามารถมองเห็นได้โดยผู้ใช้ในชุมชน การใช้ชื่อแบบนิรนามไม่ได้รับประกันว่าบัญชี กิจกรรมทางเทคนิค หรือข้อมูลที่เปิดเผยจะไม่สามารถเชื่อมโยงกลับมาหาคุณได้"}</p>
+            <p>{lang === "en" ? "Do not post passwords or login codes, exact addresses or private contact details, government or school identification numbers, financial information, another person's private information, sexual or inappropriate material, harassment, threats, discrimination, impersonation, spam, or deliberately misleading content." : "ห้ามโพสต์รหัสผ่านหรือรหัสเข้าสู่ระบบ ที่อยู่แบบละเอียดหรือข้อมูลติดต่อส่วนตัว เลขประจำตัวของรัฐหรือโรงเรียน ข้อมูลทางการเงิน ข้อมูลส่วนตัวของผู้อื่น เนื้อหาทางเพศหรือไม่เหมาะสม การคุกคาม ข่มขู่ เลือกปฏิบัติ แอบอ้าง สแปม หรือข้อมูลที่ทำให้ผู้อื่นเข้าใจผิดโดยเจตนา"}</p>
+            <p>{lang === "en" ? "Guests may read Community content but must sign in before posting or commenting. Ordinary users are currently limited to two successful non-announcement posts in a rolling 30-minute period." : "ผู้เยี่ยมชมอ่านเนื้อหาได้แต่ต้องเข้าสู่ระบบก่อนโพสต์หรือแสดงความคิดเห็น ปัจจุบันผู้ใช้ทั่วไปโพสต์สำเร็จที่ไม่ใช่ประกาศได้ไม่เกิน 2 โพสต์ในช่วงเวลา 30 นาทีแบบ rolling"}</p>
+            <p>{lang === "en" ? <>Community content legal basis: <strong>[TO CONFIRM — developer/legal review required]</strong>. Privacy contact: <strong>[privacy contact email — to be filled in by the developer]</strong>.</> : <>ฐานทางกฎหมายสำหรับเนื้อหาชุมชน: <strong>[TO CONFIRM — ต้องตรวจสอบโดยผู้พัฒนา/ผู้เชี่ยวชาญ]</strong> ติดต่อเรื่องความเป็นส่วนตัว: <strong>[privacy contact email — to be filled in by the developer]</strong></>}</p>
+            <p>{lang === "en" ? <>You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at <strong>pdpc.or.th</strong> if you believe your personal data has been mishandled.</> : <>คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ <strong>pdpc.or.th</strong> หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม</>}</p>
+            <p>{lang === "en" ? "Emergency support in Thailand: 1669 medical emergency; 1323 Department of Mental Health hotline; 1300 MSDHS social assistance line, especially for children and young people." : "ช่องทางฉุกเฉินในประเทศไทย: 1669 เหตุฉุกเฉินทางการแพทย์; 1323 สายด่วนสุขภาพจิต กรมสุขภาพจิต; 1300 สายด่วนช่วยเหลือสังคม พม. โดยเฉพาะเด็กและเยาวชน"}</p>
           </div>
-        </div>
-      )}
+        }
+        fullPolicy={lang === "en" ? COMMUNITY_POLICY_EN : COMMUNITY_POLICY_TH}
+        requiredConsents={[
+          { id: "policy", label: lang === "en" ? "I have read and agree to the Community Policy." : "ฉันได้อ่านและยอมรับ Community Policy" }
+        ]}
+        onAccept={() => {
+          const action = pendingCommunityAction;
+          if (isAuthenticated && user?.id) {
+            try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, "1"); } catch {}
+            setPolicyAccepted(true);
+          }
+          setPendingCommunityAction(null);
+          setPolicyOpen(false);
+          if (action?.type === "enter") setIntroComplete(true);
+          if (action?.type === "post") setShowForm(true);
+          if (action?.type === "comment") setFocusedPostId(action.postId);
+        }}
+        onDecline={() => { setPolicyOpen(false); setPendingCommunityAction(null); }}
+      />
 
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
