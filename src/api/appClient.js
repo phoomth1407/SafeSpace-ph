@@ -106,6 +106,22 @@ const currentAppUser = async () => {
     window.sessionStorage.removeItem("safespace_pending_oauth_age");
   } catch {}
 
+  // Apply the explicit signup sharing choice once a session exists (email OTP or OAuth).
+  try {
+    const pendingShare = window.sessionStorage.getItem("safespace_pending_share_risk_score");
+    if (pendingShare === "true" || pendingShare === "false") {
+      const shareRisk = pendingShare === "true";
+      const { error: preferenceError } = await supabase.from("assessment_sharing_preferences").upsert({
+        user_id: authUser.id,
+        share_risk_score: shareRisk,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id" });
+      if (!preferenceError) {
+        window.sessionStorage.removeItem("safespace_pending_share_risk_score");
+      }
+    }
+  } catch {}
+  
   const { data: profile, error } = await supabase
     .from("users")
     .select("id,email,full_name,role,banned,banned_until,created_date,updated_date")
