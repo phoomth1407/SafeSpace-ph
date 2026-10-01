@@ -9,7 +9,7 @@ import GroundingModal from "@/components/GroundingModal";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
 import { supabase } from "@/lib/supabaseClient";
-import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH } from "@/lib/communityPolicy";
+import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH, COMMUNITY_POLICY_VERSION } from "@/lib/communityPolicy";
 import PolicyConsentModal from "@/components/PolicyConsentModal";
 
 export default function Community() {
@@ -46,7 +46,7 @@ export default function Community() {
       return;
     }
     try {
-      setPolicyAccepted(localStorage.getItem(`safespace_community_policy_accepted:${user.id}`) === "1");
+      setPolicyAccepted((() => { try { const v = JSON.parse(localStorage.getItem(`safespace_community_policy_accepted:${user.id}`) || "null"); return v?.accepted === true && v?.version === COMMUNITY_POLICY_VERSION; } catch { return false; } })());
     } catch {
       setPolicyAccepted(false);
     }
@@ -109,7 +109,7 @@ export default function Community() {
     if (!policyScrolled || !pendingCommunityAction) return;
     const action = pendingCommunityAction;
     if (isAuthenticated && user?.id) {
-      try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, "1"); } catch {}
+      try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, JSON.stringify({ accepted: true, version: COMMUNITY_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
       setPolicyAccepted(true);
     }
     setPendingCommunityAction(null);
