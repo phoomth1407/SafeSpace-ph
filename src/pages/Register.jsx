@@ -82,10 +82,10 @@ export default function Register() {
     if (method === "google") {
       setLoading(true);
       try {
-        sessionStorage.setItem("safespace_pending_signup_share", shareRiskScore ? "yes" : "no");
+        sessionStorage.setItem("safespace_pending_share_risk_score", shareRiskScore ? "yes" : "no");
         await appClient.auth.loginWithProvider("google", safeReturnTo(), age, shareRiskScore);
       } catch (err) {
-        sessionStorage.removeItem("safespace_pending_signup_share");
+        sessionStorage.removeItem("safespace_pending_share_risk_score");
         setError(err.message || (en ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ"));
       } finally { setLoading(false); }
     } else {
@@ -109,7 +109,7 @@ export default function Register() {
       }
       setShowOtp(true);
     } catch (err) {
-      sessionStorage.removeItem("safespace_pending_signup_share");
+      sessionStorage.removeItem("safespace_pending_share_risk_score");
       setError(err.message || t("auth.registrationFailed"));
     } finally { setLoading(false); }
   };
