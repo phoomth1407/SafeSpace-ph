@@ -46,7 +46,7 @@ export default function Admin() {
     const load = async () => {
       try {
         const [a, g, p, r, cr, sharedScores] = await Promise.all([
-          appClient.entities.Assessment.list("-created_date", 200),
+          appClient.functions.invoke("adminSharedAssessments").then((result) => { if (result.data?.error) throw new Error(result.data.error); return result.data; }),
           appClient.entities.GuestAssessment.list("-created_date", 200),
           appClient.entities.CommunityPost.list("-created_date", 200),
           appClient.entities.Report.filter({ status: "pending" }, "-created_date", 100),
