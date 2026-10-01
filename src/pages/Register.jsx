@@ -118,6 +118,8 @@ export default function Register() {
     setError(""); setLoading(true);
     try {
       await appClient.auth.verifyOtp({ email, otpCode });
+      // Hydrate the authenticated user and apply the pending sharing choice before navigation.
+      await appClient.auth.me();
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
       const dest = safeReturnTo();
