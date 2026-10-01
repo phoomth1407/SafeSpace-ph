@@ -11,7 +11,7 @@ The SafeSpace Community is a place for users to read, share experiences, discuss
 
 ## 2. Voluntary Participation and Basic Expectations
 
-Guests can read Community content but must sign in before posting or commenting. Users are responsible for following this policy and protecting their own account. Ordinary users may make up to two successful non-announcement posts in a rolling 30-minute window. SafeSpace has an administrator announcement path. Technical limits may change. Share only information you have the right to share and avoid unnecessary personal information.
+Guests can read Community content but must sign in before posting or commenting. You must be at least 13 years old to create an account; users under 13 may not create one. Whether users aged 13–19 need parent/guardian authorization before sensitive wellbeing data is processed requires legal review; no verified parental-consent flow is currently implemented. Users are responsible for following this policy and protecting their own account. Ordinary users may make up to two successful non-announcement posts in a rolling 30-minute window. SafeSpace has an administrator announcement path. Technical limits may change. Share only information you have the right to share and avoid unnecessary personal information.
 
 ## 3. Respectful Participation, Harassment, and Discrimination
 
