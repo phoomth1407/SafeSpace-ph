@@ -40,7 +40,7 @@ async function createNonce() {
   return { raw, hashed };
 }
 
-export default function GoogleOneTap({ returnTo = "/", enabled = true }) {
+export default function GoogleOneTap({ returnTo = "/", enabled = true, age }) {
   const { lang } = useTranslation();
   const [message, setMessage] = useState("");
 
@@ -60,7 +60,7 @@ export default function GoogleOneTap({ returnTo = "/", enabled = true }) {
           callback: async (response) => {
             if (!response?.credential) return;
             try {
-              await appClient.auth.loginWithGoogleIdToken(response.credential, returnTo, raw);
+              await appClient.auth.loginWithGoogleIdToken(response.credential, returnTo, raw, age);
             } catch (error) {
               if (!cancelled) {
                 setMessage(error?.message || (lang === "en" ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ"));
@@ -88,7 +88,7 @@ export default function GoogleOneTap({ returnTo = "/", enabled = true }) {
         window.google?.accounts?.id?.cancel();
       } catch {}
     };
-  }, [returnTo, lang, enabled]);
+  }, [returnTo, lang, enabled, age]);
 
   if (!message) return null;
 
