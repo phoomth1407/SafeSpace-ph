@@ -1,28 +1,104 @@
 # SafeSpace Policy
 
-Version: 2.0
-Last updated: 1 October 2026
+**Version 1.0**  
+**Last updated: September 2026**
 
-The policy is now split into a short acceptance summary and a full policy page.
+## English
 
-Source of truth:
-- src/lib/safespacePolicy.js
-- website page: /policies/safespace
+## 1. What SafeSpace Is and Is Not
 
-The full policy is organized into 12 thematic sections:
-1. What SafeSpace is and is not
-2. Who the policy applies to and voluntary use
-3. Accounts and sign-in
-4. Account information and service records
-5. Assessment and wellbeing data
-6. AI-assisted processing
-7. Self-care tools and mood check-ins
-8. Community
-9. Privacy, security, and infrastructure
-10. Processing purposes, third parties, and international transfers
-11. Retention, data rights, privacy contact, and complaints
-12. Minors, cookies, changes, and final reminder
+SafeSpace is an independent school-project web application focused on youth wellbeing and awareness. Depending on the current version, it can provide wellbeing assessments, PHQ-9-style screening, assessment history for signed-in users, mood check-ins, breathing, grounding, worry-release and ambient-sound tools, a Community, resources and hotline information, authentication, contact/support requests, and administrative moderation. SafeSpace is not a hospital, clinic, therapist, doctor, emergency service, clinical monitoring system, or replacement for professional care. It does not provide medical diagnosis, treatment plans, emergency dispatch, guaranteed crisis intervention, or guaranteed correct automated results. The school is not the owner, operator, publisher, or endorser of SafeSpace.
 
-The acceptance dialog is intentionally a short summary. The complete policy is available separately so users are not forced to read a very long document inside a modal.
+## 2. Who This Policy Applies To and Voluntary Use
 
-The policy also uses versioning so a material policy change can require a new acknowledgement.
+This policy applies when you create an account, sign in, use an authenticated feature, or otherwise use SafeSpace. Using SafeSpace is voluntary. Feature-specific policies also apply: the Assessment Policy covers assessments and related processing, and the Community Policy covers Community participation. SafeSpace is designed with young people in mind. Young users should avoid unnecessary personal disclosure and consider involving a parent, guardian, teacher, school counselor, healthcare professional, or another trusted adult when they need help understanding a result, privacy issue, or difficult situation. Minimum account age: [TO CONFIRM]. Parental/guardian consent below that age: [TO CONFIRM].
+
+## 3. Account Creation and Sign-In
+
+SafeSpace currently supports email/password registration and Google-based authentication. Credentials are sent to the authentication service used by the project. SafeSpace applies a client-side password policy and breached-password screening before registration, but client-side checks are not a replacement for server-side authentication protections. Do not reuse an important password or share it. Google sign-in can use Google's authentication services and information needed to establish a SafeSpace session. SafeSpace does not receive your Google password through the normal OAuth/ID-token flow. Email verification and password-reset flows may be provided. Verification codes, reset links, sessions, and authentication tokens are security-sensitive.
+
+## 4. Account Responsibility
+
+You are responsible for protecting access to your account and authentication methods. Do not intentionally share credentials, use another person's account, impersonate another person, or bypass authentication or account restrictions. If you believe your account was accessed without permission, stop using the affected session and use the available account/support process. Authentication, database permissions, and server-side controls are separate from what is visible in the frontend.
+
+## 5. Information Associated With Your Account
+
+Depending on the features you use, your account may be associated with authentication information, profile information, assessment history, Community activity, reports, contact/support requests, and other records needed by the application. Not every feature creates every type of record. Legal basis: account data — contractual necessity; wellbeing/assessment data — explicit consent; Community content — [TO CONFIRM — legal basis]; technical/security data — [TO CONFIRM — legal basis]. Wellbeing and mental-health information is treated as sensitive personal data for this policy. Where explicit consent is required, SafeSpace must obtain it through a separate, clear, unticked consent control.
+
+## 6. Assessment and Wellbeing Data
+
+Assessment answers, age, nationality, screening results, risk-related values, generated summaries, recommendations, and related history can contain sensitive wellbeing information. Signed-in users can have assessment records associated with their account. Guest assessment is also available; the current documented frontend guest flow keeps the result in browser navigation state, while the backend contains an administrator-controlled guest-assessment data model. Guest use must not be described as complete internet anonymity. Assessment information is not ordinary public Community content.
+
+## 7. AI-Assisted Processing and Cross-Border Processing
+
+The main assessment can use automated analysis. The documented flow can try OpenAI, use Google Gemini as a fallback when configured, and use local fallback logic when remote AI is unavailable. AI may generate summaries, recommendations, categories, risk-related values, explanations, trends, or other supportive information. AI is an assistive component, not an authority. It can misunderstand language, context, cultural meaning, sarcasm, incomplete answers, or circumstances that were never provided. OpenAI, Google Gemini, Google sign-in, Supabase, and GitHub Pages may process information outside Thailand. SafeSpace relies on the providers' standard contractual safeguards and does not claim third-party processing is risk-free.
+
+## 8. Self-Care Tools and Mood Check-ins
+
+SafeSpace can provide breathing exercises, grounding, worry-release tools, mood check-ins, and an ambient sound mixer. These are general wellbeing tools. They are optional and are not medical treatment. A mood check-in is not a clinical measurement, continuous monitoring system, prediction of future mental health, or diagnosis. If a tool makes you uncomfortable, stop using it and seek appropriate real-world support when needed.
+
+## 9. Community
+
+The Community allows users to read and, when authenticated and permitted, share wellbeing-related experiences and discussions. Guests can read Community content but must sign in before posting or commenting. Ordinary users can currently make up to two successful non-announcement posts within a rolling 30-minute window; an administrator announcement path also exists. Community content is user-generated and is not automatically accurate, professional, private, or endorsed. Users must not bully, harass, discriminate, impersonate, expose private information, spam, deliberately mislead others, or otherwise violate the Community Policy.
+
+## 10. Privacy, Security, and Technical Infrastructure
+
+Only provide information reasonably necessary for the feature you are using. Do not submit passwords, one-time codes, payment information, government identification numbers, exact home addresses, private credentials, or another person's confidential information. SafeSpace uses Supabase Auth, Supabase Postgres, Supabase Row Level Security, Supabase Realtime, Supabase Edge Functions, and GitHub Pages for the frontend, alongside server-side/database controls, validation, request limits, authenticated AI functions, and browser security controls. These measures reduce realistic risks but do not guarantee perfect security. The current browser security documentation notes that CSP is implemented as a meta tag rather than an HTTP response header. SafeSpace documents known limitations internally and works to fix them; the current version should not be assumed to be free of security weaknesses.
+
+## 11. PDPA, Data Rights, Retention, Transfers, Minors, and Privacy Contact
+
+SafeSpace aims to process information according to the purposes presented to users and to minimise unnecessary collection. Subject to applicable law and relevant conditions, you may request access, a copy/portability, correction, deletion, objection, restriction, and withdrawal of consent where processing is based on consent. Privacy contact: [privacy contact email — to be filled in by the developer]. Retention placeholders: assessment records [until user deletes or account is deleted]; contact/support requests [12 months]; server/security logs [90 days]; Community posts [until deleted by user or moderation]. SafeSpace should not promise immediate removal from every backup, cache, log, or technical system unless verified. Cookies: [TO CONFIRM] whether any cookies or analytics beyond those strictly necessary for authentication are used. You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at pdpc.or.th if you believe your personal data has been mishandled.
+
+## 12. Emergency Support, Policy Changes, and Final Reminder
+
+Thailand emergency support: 1669 — medical emergency; 1323 — Department of Mental Health hotline; 1300 — MSDHS social assistance line, especially for children and young people. SafeSpace cannot monitor you in real time, dispatch emergency responders, guarantee that a message will be seen immediately, or guarantee that AI will recognise an urgent situation. Version 1.0 — September 2026. SafeSpace may update this policy when features, data processing, security behaviour, or rules materially change. Before account creation or sign-in, users must receive an opportunity to review the policy. Consent boxes must not be pre-ticked, and accepting and declining should be presented clearly and comparably.
+
+## ไทย
+
+## 1. SafeSpace คืออะไรและไม่ใช่อะไร
+
+SafeSpace เป็นเว็บแอปอิสระที่เริ่มจากโครงการโรงเรียน เน้นสุขภาวะและการตระหนักรู้ของเยาวชน โดยขึ้นอยู่กับเวอร์ชันปัจจุบัน อาจมีแบบประเมินสุขภาวะ การคัดกรองรูปแบบ PHQ-9 ประวัติแบบประเมินสำหรับผู้ที่เข้าสู่ระบบ การเช็กอินอารมณ์ เครื่องมือหายใจ ผ่อนคลาย ปล่อยความกังวล เสียงบรรยากาศ ชุมชน แหล่งข้อมูลและสายด่วน ระบบบัญชี การติดต่อ และการดูแลโดยผู้ดูแล SafeSpace ไม่ใช่โรงพยาบาล คลินิก นักบำบัด แพทย์ บริการฉุกเฉิน ระบบติดตามทางคลินิก หรือสิ่งทดแทนการดูแลจากผู้เชี่ยวชาญ โรงเรียนไม่ใช่เจ้าของ ผู้ดำเนินการ ผู้เผยแพร่ หรือผู้รับรอง SafeSpace
+
+## 2. นโยบายนี้ใช้กับใครและการใช้งานโดยสมัครใจ
+
+นโยบายนี้ใช้เมื่อคุณสร้างบัญชี เข้าสู่ระบบ ใช้ฟีเจอร์ที่ต้องยืนยันตัวตน หรือใช้ SafeSpace ในรูปแบบอื่น การใช้ SafeSpace เป็นไปโดยสมัครใจ โดยมี Assessment Policy สำหรับแบบประเมินและ Community Policy สำหรับชุมชน SafeSpace ออกแบบโดยคำนึงถึงเยาวชน ผู้ใช้อายุน้อยควรหลีกเลี่ยงการเปิดเผยข้อมูลส่วนตัวที่ไม่จำเป็น และอาจปรึกษาผู้ปกครอง ครู ที่ปรึกษา บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่ไว้ใจได้เมื่อจำเป็น อายุขั้นต่ำของบัญชี: [TO CONFIRM] การยินยอมจากผู้ปกครองสำหรับอายุต่ำกว่านั้น: [TO CONFIRM]
+
+## 3. การสร้างบัญชีและการเข้าสู่ระบบ
+
+ปัจจุบัน SafeSpace รองรับการสมัครด้วยอีเมล/รหัสผ่านและการยืนยันตัวตนด้วย Google ข้อมูลสำหรับการยืนยันตัวตนจะถูกส่งไปยังบริการยืนยันตัวตนของโครงการ SafeSpace มีการตรวจสอบรหัสผ่านฝั่งไคลเอนต์และตรวจสอบรหัสผ่านที่เคยรั่วไหล แต่ไม่ใช่สิ่งทดแทนการป้องกันฝั่งเซิร์ฟเวอร์ Google sign-in อาจใช้บริการของ Google และข้อมูลที่จำเป็นต่อการสร้างเซสชัน SafeSpace โดยปกติ SafeSpace ไม่ได้รับรหัสผ่าน Google ของคุณผ่าน OAuth/ID-token การยืนยันอีเมลและการรีเซ็ตรหัสผ่านอาจถูกใช้ รหัสยืนยัน ลิงก์รีเซ็ต เซสชัน และโทเค็นเป็นข้อมูลที่ต้องรักษาความปลอดภัย
+
+## 4. ความรับผิดชอบต่อบัญชี
+
+คุณมีหน้าที่ปกป้องบัญชีและวิธีการยืนยันตัวตนของคุณ ห้ามแบ่งปันข้อมูลเข้าสู่ระบบ ใช้บัญชีของผู้อื่น แอบอ้างเป็นผู้อื่น หรือหลีกเลี่ยงข้อจำกัดของระบบ หากสงสัยว่าบัญชีถูกเข้าถึงโดยไม่ได้รับอนุญาต ให้หยุดใช้เซสชันที่เกี่ยวข้องและใช้ช่องทางบัญชีหรือการสนับสนุนที่มี ระบบยืนยันตัวตน สิทธิฐานข้อมูล และการควบคุมฝั่งเซิร์ฟเวอร์เป็นส่วนแยกจากสิ่งที่แสดงในหน้าเว็บ
+
+## 5. ข้อมูลที่เกี่ยวข้องกับบัญชี
+
+ขึ้นอยู่กับฟีเจอร์ที่คุณใช้ บัญชีอาจเกี่ยวข้องกับข้อมูลยืนยันตัวตน ข้อมูลโปรไฟล์ ประวัติแบบประเมิน กิจกรรมในชุมชน รายงาน คำขอติดต่อ/สนับสนุน และข้อมูลอื่นที่จำเป็น ฐานทางกฎหมาย: ข้อมูลบัญชี — ความจำเป็นตามสัญญา; ข้อมูลสุขภาวะ/แบบประเมิน — ความยินยอมโดยชัดแจ้ง; เนื้อหาชุมชน — [TO CONFIRM — ฐานทางกฎหมาย]; ข้อมูลทางเทคนิค/ความปลอดภัย — [TO CONFIRM — ฐานทางกฎหมาย] ข้อมูลสุขภาวะและสุขภาพจิตถือเป็นข้อมูลส่วนบุคคลที่มีความละเอียดอ่อนในนโยบายนี้ และเมื่อจำเป็นต้องใช้ความยินยอมโดยชัดแจ้ง ต้องใช้ช่องยินยอมแยกที่ชัดเจนและไม่เลือกไว้ล่วงหน้า
+
+## 6. ข้อมูลแบบประเมินและสุขภาวะ
+
+คำตอบแบบประเมิน อายุ สัญชาติ ผลคัดกรอง ค่าที่เกี่ยวข้องกับความเสี่ยง สรุป คำแนะนำ และประวัติที่เกี่ยวข้องอาจเป็นข้อมูลสุขภาวะที่มีความละเอียดอ่อน ผู้ที่เข้าสู่ระบบอาจมีประวัติแบบประเมินเชื่อมกับบัญชี แบบประเมินแบบ Guest ก็มีได้ โดย flow ฝั่งหน้าเว็บปัจจุบันเก็บผลไว้ใน browser navigation state และ backend มีโมเดลข้อมูล guest assessment ที่ผู้ดูแลควบคุม ดังนั้น guest ไม่ควรถูกอธิบายว่าเป็นการไม่เปิดเผยตัวตนโดยสมบูรณ์ ข้อมูลแบบประเมินไม่ใช่เนื้อหาชุมชนทั่วไป
+
+## 7. การประมวลผลด้วย AI และการประมวลผลข้ามประเทศ
+
+แบบประเมินหลักสามารถใช้การวิเคราะห์อัตโนมัติ โดย flow ที่บันทึกไว้สามารถลอง OpenAI ใช้ Google Gemini เป็นตัวสำรองเมื่อกำหนดค่าไว้ และใช้ logic สำรองภายในเครื่องเมื่อ AI ภายนอกใช้ไม่ได้ AI อาจสร้างสรุป คำแนะนำ หมวดหมู่ ค่าความเสี่ยง คำอธิบาย หรือแนวโน้ม AI เป็นเพียงส่วนช่วย ไม่ใช่ผู้มีอำนาจตัดสิน และอาจเข้าใจภาษา บริบท ความหมายทางวัฒนธรรม การประชด คำตอบไม่ครบ หรือสถานการณ์ที่ไม่ได้ให้ข้อมูลผิดพลาดได้ OpenAI, Google Gemini, Google sign-in, Supabase และ GitHub Pages อาจประมวลผลข้อมูลนอกประเทศไทย SafeSpace อาศัยมาตรการคุ้มครองตามสัญญามาตรฐานของผู้ให้บริการและไม่รับรองว่าการประมวลผลโดยบุคคลที่สามไม่มีความเสี่ยง
+
+## 8. เครื่องมือดูแลตนเองและการเช็กอินอารมณ์
+
+SafeSpace อาจมีแบบฝึกหายใจ การ grounding เครื่องมือปล่อยความกังวล การเช็กอินอารมณ์ และเสียงบรรยากาศ เครื่องมือเหล่านี้เป็นเครื่องมือด้านสุขภาวะทั่วไป เป็นทางเลือก และไม่ใช่การรักษาทางการแพทย์ การเช็กอินอารมณ์ไม่ใช่การวัดทางคลินิก ระบบติดตามต่อเนื่อง การทำนายสุขภาพจิตในอนาคต หรือการวินิจฉัย หากเครื่องมือทำให้ไม่สบายใจให้หยุดใช้และขอความช่วยเหลือจากโลกจริงที่เหมาะสมเมื่อจำเป็น
+
+## 9. ชุมชน
+
+ชุมชนเปิดให้ผู้ใช้อ่านและเมื่อได้รับอนุญาตสามารถแบ่งปันประสบการณ์และพูดคุยเรื่องสุขภาวะ ผู้เยี่ยมชมอ่านได้แต่ต้องเข้าสู่ระบบก่อนโพสต์หรือแสดงความคิดเห็น ปัจจุบันผู้ใช้ทั่วไปโพสต์สำเร็จที่ไม่ใช่ประกาศได้ไม่เกินสองโพสต์ในช่วงเวลา rolling 30 นาที และมีช่องทางประกาศสำหรับผู้ดูแล เนื้อหาชุมชนสร้างโดยผู้ใช้ ไม่ได้หมายความว่าถูกต้อง เป็นคำแนะนำจากผู้เชี่ยวชาญ เป็นส่วนตัว หรือได้รับการรับรอง ผู้ใช้ต้องไม่กลั่นแกล้ง คุกคาม เลือกปฏิบัติ แอบอ้าง เปิดเผยข้อมูลส่วนตัว สแปม ทำให้เข้าใจผิดโดยเจตนา หรือฝ่าฝืน Community Policy
+
+## 10. ความเป็นส่วนตัว ความปลอดภัย และโครงสร้างทางเทคนิค
+
+ให้ข้อมูลเท่าที่จำเป็นต่อฟีเจอร์ที่ใช้ ห้ามส่งรหัสผ่าน รหัสครั้งเดียว ข้อมูลการเงิน เลขประจำตัวรัฐ ที่อยู่แบบละเอียด ข้อมูลรับรองส่วนตัว หรือข้อมูลลับของผู้อื่น SafeSpace ใช้ Supabase Auth, Supabase Postgres, Supabase Row Level Security, Supabase Realtime, Supabase Edge Functions และ GitHub Pages รวมถึงการตรวจสอบฝั่งเซิร์ฟเวอร์/ฐานข้อมูล การจำกัดคำขอ ฟังก์ชัน AI ที่ยืนยันตัวตน และการควบคุมความปลอดภัยของเบราว์เซอร์ มาตรการเหล่านี้ช่วยลดความเสี่ยงแต่ไม่รับประกันความปลอดภัยสมบูรณ์ เอกสารความปลอดภัยปัจจุบันระบุว่า CSP ถูกใช้เป็น meta tag ไม่ใช่ HTTP response header SafeSpace บันทึกข้อจำกัดด้านความปลอดภัยไว้ภายในและทำงานเพื่อแก้ไข โดยไม่ควรถือว่าเวอร์ชันปัจจุบันไม่มีจุดอ่อนด้านความปลอดภัย
+
+## 11. PDPA สิทธิ การเก็บรักษา การโอนข้อมูล ผู้เยาว์ และการติดต่อ
+
+SafeSpace มุ่งประมวลผลข้อมูลตามวัตถุประสงค์ที่แจ้งและลดการเก็บข้อมูลที่ไม่จำเป็น คุณสามารถขอเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอมเมื่อฐานคือความยินยอม โดยอยู่ภายใต้กฎหมายและเงื่อนไขที่เกี่ยวข้อง ติดต่อ: [privacy contact email — to be filled in by the developer] ระยะเวลาเก็บรักษาที่ต้องยืนยัน: แบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ติดต่อ/สนับสนุน [12 เดือน]; log เซิร์ฟเวอร์/ความปลอดภัย [90 วัน]; โพสต์ชุมชน [จนกว่าผู้ใช้หรือผู้ดูแลจะลบ] ไม่ควรรับประกันการลบออกจาก backup, cache หรือ log ทุกระบบทันทีหากยังไม่ได้ตรวจสอบ คุกกี้: [TO CONFIRM] ว่ามีคุกกี้หรือ analytics นอกเหนือจากสิ่งที่จำเป็นต่อการยืนยันตัวตนหรือไม่ คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ pdpc.or.th หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม
+
+## 12. เหตุฉุกเฉิน การเปลี่ยนแปลงนโยบาย และข้อเตือนสุดท้าย
+
+ประเทศไทย: 1669 — เหตุฉุกเฉินทางการแพทย์; 1323 — สายด่วนสุขภาพจิต กรมสุขภาพจิต; 1300 — สายด่วนช่วยเหลือสังคม พม. โดยเฉพาะเด็กและเยาวชน SafeSpace ไม่สามารถติดตามคุณแบบเรียลไทม์ ส่งเจ้าหน้าที่ฉุกเฉิน รับประกันว่าจะมีคนเห็นข้อความทันที หรือรับประกันว่า AI จะตรวจพบสถานการณ์เร่งด่วนได้ Version 1.0 — กันยายน 2569 SafeSpace อาจปรับปรุงนโยบายเมื่อฟีเจอร์ การประมวลผลข้อมูล ความปลอดภัย หรือกฎเปลี่ยนแปลงอย่างมีนัยสำคัญ ก่อนสร้างบัญชีหรือเข้าสู่ระบบต้องมีโอกาสอ่านนโยบาย ห้ามเลือกช่องยินยอมไว้ล่วงหน้า และควรแสดงการยอมรับและปฏิเสธอย่างชัดเจนและเทียบเคียงกันได้
