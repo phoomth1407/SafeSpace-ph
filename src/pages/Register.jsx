@@ -125,14 +125,33 @@ export default function Register() {
     }
   };
 
-  const handleGoogle = () => requirePolicy(async () => {
+  const getDeclaredAge = () => {
+    const match = /^([0-9]{2})\\/([0-9]{2})\\/([0-9]{4})$/.exec(birthDate.trim());
+    if (!match) return null;
+    const [, d, m, y] = match;
+    const day = Number(d), month = Number(m), year = Number(y);
+    const birth = new Date(year, month - 1, day), today = new Date();
+    if (birth.getFullYear() !== year || birth.getMonth() !== month - 1 || birth.getDate() !== day || birth > today) return null;
+    let age = today.getFullYear() - year;
+    if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age--;
+    return age;
+  };
+  const googleAgeEligible = getDeclaredAge() >= 13 && getDeclaredAge() <= 120;
+  const handleGoogle = () => {
+    const declaredAge = getDeclaredAge();
+    if (!Number.isInteger(declaredAge) || declaredAge < 13 || declaredAge > 120) {
+      setError(declaredAge !== null && declaredAge < 13 ? "You must be at least 13 years old to create a SafeSpace account." : "Enter your birthdate first to continue with Google.");
+      return;
+    }
+    requirePolicy(async () => {
     setError("");
     try {
-      await appClient.auth.loginWithProvider("google", safeReturnTo());
+      await appClient.auth.loginWithProvider("google", safeReturnTo(), declaredAge);
     } catch (err) {
       setError(err.message || "Google sign-in failed");
     }
   });
+  };
 
   if (showOtp) {
     return (
@@ -213,12 +232,13 @@ export default function Register() {
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6 text-foreground"
         onClick={handleGoogle}
+        disabled={loading}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
         {t("auth.google")}
       </Button>
 
-      <GoogleOneTap returnTo={safeReturnTo()} enabled={policyAcceptedThisVisit} />
+      <GoogleOneTap returnTo={safeReturnTo()} enabled={policyAcceptedThisVisit && googleAgeEligible} age={getDeclaredAge()} />
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
