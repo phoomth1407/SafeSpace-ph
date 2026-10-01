@@ -11,7 +11,7 @@ SafeSpace is an independent school-project web application focused on youth well
 
 ## 2. Who This Policy Applies To and Voluntary Use
 
-This policy applies when you create an account, sign in, use an authenticated feature, or otherwise use SafeSpace. Using SafeSpace is voluntary. Feature-specific policies also apply: the Assessment Policy covers assessments and related processing, and the Community Policy covers Community participation. SafeSpace is designed with young people in mind. Young users should avoid unnecessary personal disclosure and consider involving a parent, guardian, teacher, school counselor, healthcare professional, or another trusted adult when they need help understanding a result, privacy issue, or difficult situation. Minimum account age: [TO CONFIRM]. Parental/guardian consent below that age: [TO CONFIRM].
+This policy applies when you create an account, sign in, use an authenticated feature, or otherwise use SafeSpace. Using SafeSpace is voluntary. Feature-specific policies also apply: the Assessment Policy covers assessments and related processing, and the Community Policy covers Community participation. SafeSpace is designed with young people in mind. Young users should avoid unnecessary personal disclosure and consider involving a parent, guardian, teacher, school counselor, healthcare professional, or another trusted adult when they need help understanding a result, privacy issue, or difficult situation. You must be at least 13 years old to create a SafeSpace account. Users under 13 may not create an account. Whether parent/guardian authorization is required for users aged 13–19 before processing sensitive wellbeing data needs legal review; SafeSpace does not currently provide a verified parental-consent flow.
 
 ## 3. Account Creation and Sign-In
 
@@ -23,7 +23,7 @@ You are responsible for protecting access to your account and authentication met
 
 ## 5. Information Associated With Your Account
 
-Depending on the features you use, your account may be associated with authentication information, profile information, assessment history, Community activity, reports, contact/support requests, and other records needed by the application. Not every feature creates every type of record. Legal basis: account data — contractual necessity; wellbeing/assessment data — explicit consent; Community content — [TO CONFIRM — legal basis]; technical/security data — [TO CONFIRM — legal basis]. Wellbeing and mental-health information is treated as sensitive personal data for this policy. Where explicit consent is required, SafeSpace must obtain it through a separate, clear, unticked consent control.
+Depending on the features you use, your account may be associated with authentication information, profile information, assessment history, Community activity, reports, contact/support requests, and other records needed by the application. Not every feature creates every type of record. Legal basis: account data — contractual necessity; wellbeing/assessment data — explicit consent; Community content — legitimate interest for technical and security processing; technical/security data — legitimate interest for technical and security processing. Wellbeing and mental-health information is treated as sensitive personal data for this policy. Where explicit consent is required, SafeSpace must obtain it through a separate, clear, unticked consent control.
 
 ## 6. Assessment and Wellbeing Data
 
@@ -47,7 +47,7 @@ Only provide information reasonably necessary for the feature you are using. Do 
 
 ## 11. PDPA, Data Rights, Retention, Transfers, Minors, and Privacy Contact
 
-SafeSpace aims to process information according to the purposes presented to users and to minimise unnecessary collection. Subject to applicable law and relevant conditions, you may request access, a copy/portability, correction, deletion, objection, restriction, and withdrawal of consent where processing is based on consent. Privacy contact: [privacy contact email — to be filled in by the developer]. Retention placeholders: assessment records [until user deletes or account is deleted]; contact/support requests [12 months]; server/security logs [90 days]; Community posts [until deleted by user or moderation]. SafeSpace should not promise immediate removal from every backup, cache, log, or technical system unless verified. Cookies: [TO CONFIRM] whether any cookies or analytics beyond those strictly necessary for authentication are used. You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at pdpc.or.th if you believe your personal data has been mishandled.
+SafeSpace aims to process information according to the purposes presented to users and to minimise unnecessary collection. Subject to applicable law and relevant conditions, you may request access, a copy/portability, correction, deletion, objection, restriction, and withdrawal of consent where processing is based on consent. Privacy contact: safespacect@gmail.com. Retention placeholders: assessment records [until user deletes or account is deleted]; contact/support requests [12 months]; server/security logs [1 day on the Supabase Free plan; confirm again if the project plan or provider settings change]; Community posts [until deleted by user or moderation]. SafeSpace should not promise immediate removal from every backup, cache, log, or technical system unless verified. The current frontend configures Supabase Auth to persist sessions in browser localStorage and does not intentionally configure analytics. SafeSpace does not intentionally set first-party cookies; Google sign-in or hosting infrastructure may use provider-controlled cookies. Recheck deployed browser behavior before treating this as a permanent guarantee. You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at pdpc.or.th if you believe your personal data has been mishandled.
 
 ## 12. Emergency Support, Policy Changes, and Final Reminder
 
@@ -61,7 +61,7 @@ SafeSpace เป็นเว็บแอปอิสระที่เริ่�
 
 ## 2. นโยบายนี้ใช้กับใครและการใช้งานโดยสมัครใจ
 
-นโยบายนี้ใช้เมื่อคุณสร้างบัญชี เข้าสู่ระบบ ใช้ฟีเจอร์ที่ต้องยืนยันตัวตน หรือใช้ SafeSpace ในรูปแบบอื่น การใช้ SafeSpace เป็นไปโดยสมัครใจ โดยมี Assessment Policy สำหรับแบบประเมินและ Community Policy สำหรับชุมชน SafeSpace ออกแบบโดยคำนึงถึงเยาวชน ผู้ใช้อายุน้อยควรหลีกเลี่ยงการเปิดเผยข้อมูลส่วนตัวที่ไม่จำเป็น และอาจปรึกษาผู้ปกครอง ครู ที่ปรึกษา บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่ไว้ใจได้เมื่อจำเป็น อายุขั้นต่ำของบัญชี: [TO CONFIRM] การยินยอมจากผู้ปกครองสำหรับอายุต่ำกว่านั้น: [TO CONFIRM]
+นโยบายนี้ใช้เมื่อคุณสร้างบัญชี เข้าสู่ระบบ ใช้ฟีเจอร์ที่ต้องยืนยันตัวตน หรือใช้ SafeSpace ในรูปแบบอื่น การใช้ SafeSpace เป็นไปโดยสมัครใจ โดยมี Assessment Policy สำหรับแบบประเมินและ Community Policy สำหรับชุมชน SafeSpace ออกแบบโดยคำนึงถึงเยาวชน ผู้ใช้อายุน้อยควรหลีกเลี่ยงการเปิดเผยข้อมูลส่วนตัวที่ไม่จำเป็น และอาจปรึกษาผู้ปกครอง ครู ที่ปรึกษา บุคลากรทางสุขภาพ หรือผู้ใหญ่ที่ไว้ใจได้เมื่อจำเป็น คุณต้องมีอายุอย่างน้อย 13 ปีจึงจะสร้างบัญชี SafeSpace ได้ ผู้ที่อายุต่ำกว่า 13 ปีไม่สามารถสร้างบัญชีได้ ทั้งนี้ ต้องตรวจสอบทางกฎหมายว่าผู้ใช้อายุ 13–19 ปีจำเป็นต้องได้รับความยินยอมจากผู้ปกครองก่อนประมวลผลข้อมูลสุขภาวะที่ละเอียดอ่อนหรือไม่ ปัจจุบัน SafeSpace ยังไม่มีระบบยืนยันความยินยอมจากผู้ปกครอง
 
 ## 3. การสร้างบัญชีและการเข้าสู่ระบบ
 
@@ -73,7 +73,7 @@ SafeSpace เป็นเว็บแอปอิสระที่เริ่�
 
 ## 5. ข้อมูลที่เกี่ยวข้องกับบัญชี
 
-ขึ้นอยู่กับฟีเจอร์ที่คุณใช้ บัญชีอาจเกี่ยวข้องกับข้อมูลยืนยันตัวตน ข้อมูลโปรไฟล์ ประวัติแบบประเมิน กิจกรรมในชุมชน รายงาน คำขอติดต่อ/สนับสนุน และข้อมูลอื่นที่จำเป็น ฐานทางกฎหมาย: ข้อมูลบัญชี — ความจำเป็นตามสัญญา; ข้อมูลสุขภาวะ/แบบประเมิน — ความยินยอมโดยชัดแจ้ง; เนื้อหาชุมชน — [TO CONFIRM — ฐานทางกฎหมาย]; ข้อมูลทางเทคนิค/ความปลอดภัย — [TO CONFIRM — ฐานทางกฎหมาย] ข้อมูลสุขภาวะและสุขภาพจิตถือเป็นข้อมูลส่วนบุคคลที่มีความละเอียดอ่อนในนโยบายนี้ และเมื่อจำเป็นต้องใช้ความยินยอมโดยชัดแจ้ง ต้องใช้ช่องยินยอมแยกที่ชัดเจนและไม่เลือกไว้ล่วงหน้า
+ขึ้นอยู่กับฟีเจอร์ที่คุณใช้ บัญชีอาจเกี่ยวข้องกับข้อมูลยืนยันตัวตน ข้อมูลโปรไฟล์ ประวัติแบบประเมิน กิจกรรมในชุมชน รายงาน คำขอติดต่อ/สนับสนุน และข้อมูลอื่นที่จำเป็น ฐานทางกฎหมาย: ข้อมูลบัญชี — ความจำเป็นตามสัญญา; ข้อมูลสุขภาวะ/แบบประเมิน — ความยินยอมโดยชัดแจ้ง; เนื้อหาชุมชน — ความยินยอมสำหรับเนื้อหาที่ผู้ใช้ส่ง; ผลประโยชน์โดยชอบด้วยกฎหมายสำหรับรายงานและบันทึกการกลั่นกรอง; ข้อมูลทางเทคนิค/ความปลอดภัย — [TO CONFIRM — ฐานทางกฎหมาย] ข้อมูลสุขภาวะและสุขภาพจิตถือเป็นข้อมูลส่วนบุคคลที่มีความละเอียดอ่อนในนโยบายนี้ และเมื่อจำเป็นต้องใช้ความยินยอมโดยชัดแจ้ง ต้องใช้ช่องยินยอมแยกที่ชัดเจนและไม่เลือกไว้ล่วงหน้า
 
 ## 6. ข้อมูลแบบประเมินและสุขภาวะ
 
@@ -97,7 +97,7 @@ SafeSpace อาจมีแบบฝึกหายใจ การ grounding �
 
 ## 11. PDPA สิทธิ การเก็บรักษา การโอนข้อมูล ผู้เยาว์ และการติดต่อ
 
-SafeSpace มุ่งประมวลผลข้อมูลตามวัตถุประสงค์ที่แจ้งและลดการเก็บข้อมูลที่ไม่จำเป็น คุณสามารถขอเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอมเมื่อฐานคือความยินยอม โดยอยู่ภายใต้กฎหมายและเงื่อนไขที่เกี่ยวข้อง ติดต่อ: [privacy contact email — to be filled in by the developer] ระยะเวลาเก็บรักษาที่ต้องยืนยัน: แบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ติดต่อ/สนับสนุน [12 เดือน]; log เซิร์ฟเวอร์/ความปลอดภัย [90 วัน]; โพสต์ชุมชน [จนกว่าผู้ใช้หรือผู้ดูแลจะลบ] ไม่ควรรับประกันการลบออกจาก backup, cache หรือ log ทุกระบบทันทีหากยังไม่ได้ตรวจสอบ คุกกี้: [TO CONFIRM] ว่ามีคุกกี้หรือ analytics นอกเหนือจากสิ่งที่จำเป็นต่อการยืนยันตัวตนหรือไม่ คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ pdpc.or.th หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม
+SafeSpace มุ่งประมวลผลข้อมูลตามวัตถุประสงค์ที่แจ้งและลดการเก็บข้อมูลที่ไม่จำเป็น คุณสามารถขอเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอมเมื่อฐานคือความยินยอม โดยอยู่ภายใต้กฎหมายและเงื่อนไขที่เกี่ยวข้อง ติดต่อ: safespacect@gmail.com ระยะเวลาเก็บรักษาที่ต้องยืนยัน: แบบประเมิน [จนกว่าผู้ใช้จะลบหรือบัญชีถูกลบ]; ติดต่อ/สนับสนุน [12 เดือน]; log เซิร์ฟเวอร์/ความปลอดภัย [1 วันสำหรับ Supabase Free plan; โปรดตรวจสอบอีกครั้งหากเปลี่ยนแพ็กเกจหรือการตั้งค่าผู้ให้บริการ]; โพสต์ชุมชน [จนกว่าผู้ใช้หรือผู้ดูแลจะลบ] ไม่ควรรับประกันการลบออกจาก backup, cache หรือ log ทุกระบบทันทีหากยังไม่ได้ตรวจสอบ คุกกี้: [TO CONFIRM] ว่ามีคุกกี้หรือ analytics นอกเหนือจากสิ่งที่จำเป็นต่อการยืนยันตัวตนหรือไม่ คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ pdpc.or.th หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม
 
 ## 12. เหตุฉุกเฉิน การเปลี่ยนแปลงนโยบาย และข้อเตือนสุดท้าย
 
