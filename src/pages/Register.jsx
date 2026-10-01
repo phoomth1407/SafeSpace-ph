@@ -30,6 +30,7 @@ export default function Register() {
   const todayYear = today.getFullYear();
   useEffect(() => { const refresh = () => setToday(new Date()); const timer = window.setInterval(refresh, 60_000); return () => window.clearInterval(timer); }, []);
   const [step, setStep] = useState("method");
+  const [requestedGoogleFlow] = useState(() => new URLSearchParams(window.location.search).get("method") === "google");
   const [method, setMethod] = useState(null);
   // Start with a valid historical date so the day selector is immediately
   // useful; starting at today's year limited it to only dates up to today.
@@ -63,6 +64,17 @@ export default function Register() {
     setPolicyAccepted(false);
     setPolicyOpen(true);
   };
+
+  useEffect(() => {
+    // A Google sign-in started on the login page lands here and opens the
+    // exact same policy-first signup flow, including DOB and sharing choice.
+    if (requestedGoogleFlow) {
+      setMethod("google");
+      setError("");
+      setPolicyAccepted(false);
+      setPolicyOpen(true);
+    }
+  }, [requestedGoogleFlow]);
   const continueAfterPolicy = () => {
     setPolicyOpen(false);
     setPolicyAccepted(true);
