@@ -36,7 +36,7 @@ const iconMap = { User: UserIcon, ShieldAlert, Home: HomeIcon, GraduationCap, Us
 
 export default function Assessment() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { t, lang } = useTranslation();
   const [guestMode, setGuestMode] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(0);
@@ -49,6 +49,7 @@ export default function Assessment() {
   const [nationality, setNationality] = useState(lang === "en" ? "" : "thai");
   const [mascotMessage, setMascotMessage] = useState(null);
   const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
+  const assessmentPolicyKey = user?.id ? `safespace_assessment_policy_accepted:${user.id}` : null;
   const [policyOpen, setPolicyOpen] = useState(true);
   const [policyScrolledToEnd, setPolicyScrolledToEnd] = useState(false);
 
@@ -71,6 +72,14 @@ export default function Assessment() {
       return () => clearTimeout(timer);
     }
   }, [answeredCount]);
+
+  useEffect(() => {
+    if (!assessmentPolicyKey) { setPrivacyAcknowledged(false); return; }
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(assessmentPolicyKey) || "null");
+      setPrivacyAcknowledged(saved?.accepted === true && saved?.version === "1.0");
+    } catch { setPrivacyAcknowledged(false); }
+  }, [assessmentPolicyKey]);
 
   useEffect(() => {
     if (!policyOpen) return undefined;
@@ -309,7 +318,12 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
             { id: "policy", label: lang === "en" ? "I have read and agree to the Assessment Policy." : "ฉันได้อ่านและยอมรับ Assessment Policy" },
             { id: "sensitive", label: lang === "en" ? "I explicitly consent to SafeSpace processing my assessment answers and related wellbeing information for assessment analysis, including configured AI providers that may process information outside Thailand." : "ฉันให้ความยินยอมโดยชัดแจ้งให้ SafeSpace ประมวลผลคำตอบและข้อมูลสุขภาวะที่เกี่ยวข้องเพื่อวิเคราะห์แบบประเมิน รวมถึงผู้ให้บริการ AI ที่ตั้งค่าไว้ซึ่งอาจประมวลผลข้อมูลนอกประเทศไทย" }
           ]}
-          onAccept={() => { setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null); }}
+          onAccept={() => {
+            if (isAuthenticated && assessmentPolicyKey) {
+              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, version: "1.0", acceptedAt: new Date().toISOString() })); } catch {}
+            }
+            setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null);
+          }}
           onDecline={() => { setPolicyOpen(false); setPolicyScrolledToEnd(false); }}
         />
       </div>
