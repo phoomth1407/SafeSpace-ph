@@ -250,15 +250,25 @@ const GUEST_SCORE_CLAIM_KEY = "safespace_guest_score_claim_token_v1";
 async function claimPendingGuestScores() {
   const authUser = await currentAuthUser();
   if (!authUser || typeof window === "undefined") return;
-  let token = "";
-  try { token = window.localStorage.getItem(GUEST_SCORE_CLAIM_KEY) || ""; } catch {}
-  if (!/^[A-Za-z0-9_-]{40,100}$/.test(token)) return;
-  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
-  const tokenHash = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
-  const { data, error } = await supabase.rpc("claim_guest_score", { p_token_hash: tokenHash });
-  if (error) throw error;
-  if (data === true) { try { window.localStorage.removeItem(GUEST_SCORE_CLAIM_KEY); } catch {} }
+  let tokens = [];
+  try {
+    const stored = JSON.parse(window.localStorage.getItem(GUEST_SCORE_CLAIM_KEY) || "[]");
+    tokens = Array.isArray(stored) ? stored.filter((token) => /^[A-Za-z0-9_-]{40,100}$/.test(token)) : [];
+  } catch {}
+  const remaining = [];
+  for (const token of [...new Set(tokens)]) {
+    const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+    const tokenHash = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    const { data, error } = await supabase.rpc("claim_guest_score", { p_token_hash: tokenHash });
+    if (error) { remaining.push(token); continue; }
+    if (data !== true) remaining.push(token);
+  }
+  try {
+    if (remaining.length) window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, JSON.stringify(remaining));
+    else window.localStorage.removeItem(GUEST_SCORE_CLAIM_KEY);
+  } catch {}
 }
+
 const invoke = async (name, payload = {}) => {
   if (name === "adminGuestScoreShares") {
     const authUser = await currentAuthUser();
@@ -275,7 +285,7 @@ const invoke = async (name, payload = {}) => {
     });
     if (error) throw error;
     if (data?.saved === true) {
-      try { window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, token); } catch {}
+      try {\n        const stored = JSON.parse(window.localStorage.getItem(GUEST_SCORE_CLAIM_KEY) || "[]");\n        const tokens = Array.isArray(stored) ? stored : [];\n        window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, JSON.stringify([...new Set([...tokens, token])].slice(-20)));\n      } catch {}
     }
     return { data: data || {} };
   }
