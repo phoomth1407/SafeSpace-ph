@@ -95,8 +95,17 @@ const currentAuthUser = async () => {
 };
 
 const currentAppUser = async () => {
-  const authUser = await currentAuthUser();
+  let authUser = await currentAuthUser();
   if (!authUser) return null;
+  try {
+    const pendingAge = Number(window.sessionStorage.getItem("safespace_pending_oauth_age"));
+    if (Number.isInteger(pendingAge) && pendingAge >= 13 && pendingAge <= 120 && Number(authUser.user_metadata?.age) !== pendingAge) {
+      const { data, error } = await supabase.auth.updateUser({ data: { age: pendingAge } });
+      if (!error && data?.user) authUser = data.user;
+    }
+    window.sessionStorage.removeItem("safespace_pending_oauth_age");
+  } catch {}
+
   const { data: profile, error } = await supabase
     .from("users")
     .select("id,email,full_name,role,banned,banned_until,created_date,updated_date")
@@ -451,8 +460,10 @@ const auth = {
   redirectToLogin(returnTo = "/") {
     window.location.hash = `/login?returnTo=${encodeURIComponent(returnTo)}`;
   },
-  async loginWithProvider(provider = "google", returnTo = "/") {
+  async loginWithProvider(provider = "google", returnTo = "/", age) {
     try {
+      if (!Number.isInteger(age) || age < 13 || age > 120) throw new Error("A valid age of 13 or older is required.");
+      sessionStorage.setItem("safespace_pending_oauth_age", String(age));
       sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
       const redirectTo = `${window.location.origin}${window.location.pathname}`;
       const { error } = await supabase.auth.signInWithOAuth({
@@ -462,6 +473,7 @@ const auth = {
       if (error) throw error;
     } catch (error) {
       sessionStorage.removeItem("safespace_auth_return_to");
+      sessionStorage.removeItem("safespace_pending_oauth_age");
       const message = error?.message || "Google sign-in failed";
       if (/provider.*not enabled|unsupported provider/i.test(message)) {
         throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet.");
@@ -470,7 +482,9 @@ const auth = {
     }
   },
 
-  async loginWithGoogleIdToken(idToken, returnTo = "/", nonce) {
+  async loginWithGoogleIdToken(idToken, returnTo = "/", nonce, age) {
+    if (!Number.isInteger(age) || age < 13 || age > 120) throw new Error("A valid age of 13 or older is required.");
+    sessionStorage.setItem("safespace_pending_oauth_age", String(age));
     sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
     const { error } = await supabase.auth.signInWithIdToken({
       provider: "google",
@@ -479,6 +493,7 @@ const auth = {
     });
     if (error) {
       sessionStorage.removeItem("safespace_auth_return_to");
+      sessionStorage.removeItem("safespace_pending_oauth_age");
       throw error;
     }
   },
