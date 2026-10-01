@@ -359,9 +359,17 @@ const auth = {
     if (error) throw error;
     return currentAppUser();
   },
-  async register({ email, password }) {
+  async register({ email, password, age }) {
     await validatePasswordBeforeSignup(password);
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (!Number.isInteger(age) || age < 13 || age > 120) {
+      throw new Error("A valid age of 13 or older is required.");
+    }
+    // Store only the calculated age in Auth user metadata; never send the birthdate.
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { age } },
+    });
     if (error) throw error;
     return data.user ? currentAppUser() : data;
   },
