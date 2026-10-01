@@ -36,6 +36,17 @@ function getCachedPrivateAssessment(id) {
     return cache && typeof cache === "object" ? cache[id] || null : null;
   } catch { return null; }
 }
+function removeCachedPrivateAssessment(id) {
+  if (!id || typeof window === "undefined") return;
+  try {
+    const cache = JSON.parse(window.localStorage.getItem(PRIVATE_ASSESSMENT_CACHE) || "{}");
+    if (!cache || typeof cache !== "object" || Array.isArray(cache) || !(id in cache)) return;
+    delete cache[id];
+    window.localStorage.setItem(PRIVATE_ASSESSMENT_CACHE, JSON.stringify(cache));
+  } catch {
+    // Database deletion still proceeds if browser storage is unavailable.
+  }
+}
 
 async function validatePasswordBeforeSignup(password) {
   if (typeof password !== "string" || password.length < 12) {
@@ -176,6 +187,7 @@ const entity = (name) => {
     async delete(id) {
       const { error } = await supabase.from(table).delete().eq("id", id);
       if (error) throw error;
+      if (table === "assessments") removeCachedPrivateAssessment(id);
       return { success: true };
     },
   };
