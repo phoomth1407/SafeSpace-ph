@@ -24,6 +24,7 @@ export default function Admin() {
   const { t, lang } = useTranslation();
   const [assessments, setAssessments] = useState([]);
   const [guestAssessments, setGuestAssessments] = useState([]);
+  const [sharedGuestScores, setSharedGuestScores] = useState([]);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,15 +45,17 @@ export default function Admin() {
     if (user?.role !== "admin") { setLoading(false); return; }
     const load = async () => {
       try {
-        const [a, g, p, r, cr] = await Promise.all([
+        const [a, g, p, r, cr, sharedScores] = await Promise.all([
           appClient.entities.Assessment.list("-created_date", 200),
           appClient.entities.GuestAssessment.list("-created_date", 200),
           appClient.entities.CommunityPost.list("-created_date", 200),
           appClient.entities.Report.filter({ status: "pending" }, "-created_date", 100),
           appClient.entities.ContactRequest.filter({ status: "pending" }, "-created_date", 100),
+          appClient.functions.invoke("adminGuestScoreShares").then((result) => { if (result.data?.error) throw new Error(result.data.error); return result.data; }),
         ]);
         setAssessments(a);
         setGuestAssessments(g);
+        setSharedGuestScores(sharedScores);
         setPosts(p);
         setReports(r);
         setContactRequests(cr);
@@ -218,6 +221,7 @@ export default function Admin() {
   const tabs = [
     { id: "overview", label: t("admin.tab.overview") },
     { id: "guest", label: t("admin.tab.guest") },
+    { id: "shared-scores", label: lang === "en" ? "Shared scores" : "คะแนนที่แบ่งปัน" },
     { id: "reports", label: t("admin.tab.reports") },
     { id: "contact", label: t("admin.tab.contact") },
     { id: "users", label: t("admin.tab.users") },
@@ -495,6 +499,25 @@ export default function Admin() {
             </div>
           </div>
         </div>
+      ) : tab === "shared-scores" ? (
+        <section className="space-y-4">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-100">{lang === "en" ? "Opt-in guest risk scores" : "คะแนนความเสี่ยงจากผู้เยี่ยมชมที่อนุญาตให้แบ่งปัน"}</h3>
+            <p className="text-xs text-slate-500">{lang === "en" ? "Only risk score, level, language and date are shown. No answers or identity details are stored in this view." : "แสดงเฉพาะคะแนน ระดับ ภาษา และวันที่ ไม่มีคำตอบหรือข้อมูลระบุตัวตน"}</p>
+          </div>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2 max-h-[600px] overflow-y-auto">
+            {sharedGuestScores.map((item) => (
+              <div key={item.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 p-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-slate-200">{riskLabels[item.risk_level] || item.risk_level} · {item.risk_score}/100</div>
+                  <div className="text-xs text-slate-500">{item.language === "en" ? "EN" : "ไทย"} · {item.claimed_by ? (lang === "en" ? "Claimed by account" : "เชื่อมกับบัญชีแล้ว") : (lang === "en" ? "Guest" : "ผู้เยี่ยมชม")}</div>
+                </div>
+                <time className="text-xs text-slate-500 flex-shrink-0">{new Date(item.created_at).toLocaleDateString(lang === "en" ? "en-US" : "th-TH", { day: "numeric", month: "short", year: "numeric" })}</time>
+              </div>
+            ))}
+            {sharedGuestScores.length === 0 && <p className="text-xs text-slate-500 text-center py-6">{lang === "en" ? "No shared guest scores yet." : "ยังไม่มีคะแนนที่แบ่งปัน"}</p>}
+          </div>
+        </section>
       ) : tab === "reports" ? (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
