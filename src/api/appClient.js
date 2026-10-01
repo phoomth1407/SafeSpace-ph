@@ -120,7 +120,9 @@ const entity = (name) => {
       const field = order.replace(/^-/, "");
       const columns = table === "assessments"
         ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
-        : "*";
+        : table === "guest_assessments"
+          ? "id,created_date,updated_date,risk_level,risk_score,language"
+          : "*";
       let query = supabase.from(table).select(columns);
       for (const [key, value] of Object.entries(filters)) query = query.eq(key, value);
       query = query.order(field, { ascending: !order.startsWith("-") });
@@ -131,7 +133,9 @@ const entity = (name) => {
     async get(id) {
       const columns = table === "assessments"
         ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
-        : "*";
+        : table === "guest_assessments"
+          ? "id,created_date,updated_date,risk_level,risk_score,language"
+          : "*";
       const { data, error } = await supabase.from(table).select(columns).eq("id", id).maybeSingle();
       if (error) throw error;
       if (!data) return null;
