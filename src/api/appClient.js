@@ -261,7 +261,7 @@ async function claimPendingGuestScores() {
     const tokenHash = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
     const { data, error } = await supabase.rpc("claim_guest_score", { p_token_hash: tokenHash });
     if (error) { remaining.push(token); continue; }
-    if (data !== true) remaining.push(token);
+    // A false result means the one-time token was already claimed or is invalid.
   }
   try {
     if (remaining.length) window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, JSON.stringify(remaining));
@@ -285,7 +285,11 @@ const invoke = async (name, payload = {}) => {
     });
     if (error) throw error;
     if (data?.saved === true) {
-      try {\n        const stored = JSON.parse(window.localStorage.getItem(GUEST_SCORE_CLAIM_KEY) || "[]");\n        const tokens = Array.isArray(stored) ? stored : [];\n        window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, JSON.stringify([...new Set([...tokens, token])].slice(-20)));\n      } catch {}
+      try {
+        const stored = JSON.parse(window.localStorage.getItem(GUEST_SCORE_CLAIM_KEY) || "[]");
+        const tokens = Array.isArray(stored) ? stored : [];
+        window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, JSON.stringify([...new Set([...tokens, token])].slice(-20)));
+      } catch {}
     }
     return { data: data || {} };
   }
