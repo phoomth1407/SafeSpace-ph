@@ -1,27 +1,24 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { appClient } from "@/api/appClient";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus, Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
+import { UserPlus, Mail, Lock, Loader2, CalendarDays, ShieldCheck } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
-import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 
-const SHARE_PENDING_KEY = "safespace_pending_share_risk_score";
-const pad = (n) => String(n).padStart(2, "0");
-const getAge = (year, month, day, today) => {
+const getAge = (year, month, day, today = new Date()) => {
   if (!year || !month || !day) return null;
   const birth = new Date(year, month - 1, day);
   if (birth.getFullYear() !== year || birth.getMonth() !== month - 1 || birth.getDate() !== day || birth > today) return null;
   let age = today.getFullYear() - year;
-  if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) age--;
+  if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age--;
   return age;
 };
 
@@ -29,14 +26,15 @@ export default function Register() {
   const navigate = useNavigate();
   const { t, lang } = useTranslation();
   const en = lang === "en";
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const [step, setStep] = useState("method");
   const [method, setMethod] = useState(null);
-  const [stage, setStage] = useState("choose");
+  const [day, setDay] = useState(String(today.getDate()));
+  const [month, setMonth] = useState(String(today.getMonth() + 1));
+  const [year, setYear] = useState(String(todayYear));
+  const [shareRiskScore, setShareRiskScore] = useState(null);
   const [email, setEmail] = useState("");
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-  const [today, setToday] = useState(() => new Date());
-  const [shareRisk, setShareRisk] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -44,213 +42,160 @@ export default function Register() {
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [policyOpen, setPolicyOpen] = useState(false);
-  const [policyAcceptedThisVisit, setPolicyAcceptedThisVisit] = useState(() => hasAcceptedSafeSpacePolicy());
+  const [policyAccepted, setPolicyAccepted] = useState(false);
 
-  useEffect(() => {
-    const refreshToday = () => setToday(new Date());
-    const timer = window.setInterval(refreshToday, 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const monthDays = useMemo(() => {
-    if (!month || !year) return 31;
-    return new Date(Number(year), Number(month), 0).getDate();
-  }, [month, year]);
-  const maxDay = Number(year) === today.getFullYear() && Number(month) === today.getMonth() + 1
-    ? Math.min(monthDays, today.getDate()) : monthDays;
-  const age = getAge(Number(year), Number(month), Number(day), today);
+  const maxDay = useMemo(() => new Date(Number(year), Number(month), 0).getDate(), [year, month]);
+  const selectedDay = Math.min(Number(day), maxDay);
+  const age = getAge(Number(year), Number(month), selectedDay, today);
   const validAge = Number.isInteger(age) && age >= 13 && age <= 120;
-  const years = useMemo(() => Array.from({ length: 121 }, (_, i) => today.getFullYear() - i), [today.getFullYear()]);
-  const months = en
-    ? ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    : ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+  const days = Array.from({ length: maxDay }, (_, i) => i + 1);
+  const years = Array.from({ length: 121 }, (_, i) => todayYear - i);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const birthDateValid = age !== null && age >= 0 && age <= 120;
 
-  const selectMethod = (nextMethod) => {
-    setMethod(nextMethod);
+  const begin = (selectedMethod) => {
+    setMethod(selectedMethod);
     setError("");
+    setPolicyAccepted(false);
     setPolicyOpen(true);
   };
   const continueAfterPolicy = () => {
     setPolicyOpen(false);
-    setPolicyAcceptedThisVisit(true);
-    setStage("details");
+    setPolicyAccepted(true);
+    setStep("profile");
   };
   const closePolicy = () => {
     setPolicyOpen(false);
     setMethod(null);
-    setStage("choose");
-    setPolicyAcceptedThisVisit(false);
-  };
-  const validateDetails = () => {
-    if (!validAge) {
-      setError(age !== null && age < 13
-        ? (en ? "You must be at least 13 years old to create a SafeSpace account." : "ผู้สมัครต้องมีอายุอย่างน้อย 13 ปีจึงจะสร้างบัญชี SafeSpace ได้")
-        : (en ? "Please select a valid date of birth and check that you are at least 13." : "กรุณาเลือกวันเกิดที่ถูกต้องและยืนยันว่าคุณมีอายุอย่างน้อย 13 ปี"));
-      return false;
-    }
-    if (shareRisk !== "yes" && shareRisk !== "no") {
-      setError(en ? "Please choose Yes or No for sharing assessment risk scores." : "กรุณาเลือก ใช่ หรือ ไม่ใช่ สำหรับการแบ่งปันคะแนนความเสี่ยง");
-      return false;
-    }
-    return true;
-  };
-  const rememberSharingChoice = () => {
-    try { sessionStorage.setItem(SHARE_PENDING_KEY, shareRisk === "yes" ? "true" : "false"); } catch {}
-  };
-  const goToDestination = () => {
-    const dest = safeReturnTo();
-    if (dest.startsWith("http://") || dest.startsWith("https://")) window.location.href = dest;
-    else navigate(dest);
+    setStep("method");
+    setPolicyAccepted(false);
   };
 
-  const handleEmailSubmit = async (event) => {
-    event?.preventDefault();
+  const continueProfile = async () => {
     setError("");
-    if (!validateDetails()) return;
+    if (!policyAccepted) { setError(en ? "Please accept the SafeSpace Policy first." : "กรุณายอมรับนโยบาย SafeSpace ก่อน"); return; }
+    if (!birthDateValid) { setError(en ? "Please select a valid date of birth." : "กรุณาเลือกวันเกิดที่ถูกต้อง"); return; }
+    if (!validAge) { setError(en ? "You must be at least 13 years old to create a SafeSpace account." : "คุณต้องมีอายุอย่างน้อย 13 ปีจึงจะสร้างบัญชี SafeSpace ได้"); return; }
+    if (shareRiskScore === null) { setError(en ? "Choose Yes or No for sharing assessment risk scores." : "กรุณาเลือก ใช่ หรือ ไม่ สำหรับการแบ่งปันคะแนนความเสี่ยง"); return; }
+    if (method === "google") {
+      setLoading(true);
+      try {
+        sessionStorage.setItem("safespace_pending_signup_share", shareRiskScore ? "yes" : "no");
+        await appClient.auth.loginWithProvider("google", safeReturnTo(), age, shareRiskScore);
+      } catch (err) {
+        sessionStorage.removeItem("safespace_pending_signup_share");
+        setError(err.message || (en ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ"));
+      } finally { setLoading(false); }
+    } else {
+      setStep("credentials");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e?.preventDefault();
+    setError("");
+    if (!policyAccepted || !validAge || shareRiskScore === null) { setError(en ? "Complete the policy, age, and sharing steps first." : "กรุณาทำขั้นตอนนโยบาย อายุ และการแบ่งปันให้ครบ"); return; }
     if (password !== confirmPassword) { setError(t("auth.passwordMismatch")); return; }
     setLoading(true);
-    rememberSharingChoice();
     try {
-      const result = await appClient.auth.register({ email, password, age });
+      const result = await appClient.auth.register({ email, password, age, shareRiskScore });
       if (result?.session) {
-        goToDestination();
+        const dest = safeReturnTo();
+        if (dest.startsWith("http://") || dest.startsWith("https://")) window.location.href = dest;
+        else navigate(dest);
         return;
       }
       setShowOtp(true);
     } catch (err) {
+      sessionStorage.removeItem("safespace_pending_signup_share");
       setError(err.message || t("auth.registrationFailed"));
     } finally { setLoading(false); }
   };
 
   const handleVerify = async () => {
-    setError("");
-    setLoading(true);
+    setError(""); setLoading(true);
     try {
       await appClient.auth.verifyOtp({ email, otpCode });
       const { data } = await supabase.auth.getSession();
       if (!data.session) throw new Error("Email verification succeeded, but no login session was created. Please log in.");
-      await appClient.auth.me();
-      goToDestination();
-    } catch (err) {
-      setError(err.message || "Invalid verification code");
-    } finally { setLoading(false); }
+      const dest = safeReturnTo();
+      if (dest.startsWith("http://") || dest.startsWith("https://")) window.location.href = dest;
+      else navigate(dest);
+    } catch (err) { setError(err.message || "Invalid verification code"); }
+    finally { setLoading(false); }
   };
   const handleResend = async () => {
     setError("");
-    try {
-      await appClient.auth.resendOtp(email);
-      toast({ title: en ? "Code sent" : "ส่งรหัสแล้ว", description: en ? "Check your email for the new code." : "ตรวจสอบอีเมลของคุณเพื่อรับรหัสใหม่" });
-    } catch (err) { setError(err.message || "Failed to resend code"); }
-  };
-  const handleGoogle = async () => {
-    setError("");
-    if (!validateDetails()) return;
-    setLoading(true);
-    rememberSharingChoice();
-    try {
-      await appClient.auth.loginWithProvider("google", safeReturnTo(), age);
-    } catch (err) {
-      setError(err.message || "Google sign-in failed");
-      setLoading(false);
-    }
+    try { await appClient.auth.resendOtp(email); toast({ title: en ? "Code sent" : "ส่งรหัสแล้ว", description: en ? "Check your email for the new code." : "ตรวจสอบอีเมลเพื่อรับรหัสใหม่" }); }
+    catch (err) { setError(err.message || "Failed to resend code"); }
   };
 
-  if (showOtp) {
-    return (
-      <AuthLayout icon={Mail} title={t("auth.verifyEmail")} subtitle={`${t("auth.codeSent")} ${email}`}>
-        {error && <div role="alert" className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{error}</div>}
-        <div className="flex justify-center mb-6">
-          <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode} autoFocus autoComplete="one-time-code">
-            <InputOTPGroup>{[0,1,2,3,4,5].map((i) => <InputOTPSlot key={i} index={i} />)}</InputOTPGroup>
-          </InputOTP>
-        </div>
-        <Button className="w-full h-12 font-medium" onClick={handleVerify} disabled={loading || otpCode.length < 6}>
-          {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/>{t("auth.verifying")}</> : (en ? "Verify" : "ยืนยัน")}
-        </Button>
-        <p className="text-center text-sm text-muted-foreground mt-4">{t("auth.didntReceive")}{" "}
-          <button onClick={handleResend} className="text-primary font-medium hover:underline">{en ? "Resend" : "ส่งอีกครั้ง"}</button>
-        </p>
-      </AuthLayout>
-    );
-  }
+  const SelectField = ({ label, value, onChange, children, ariaLabel }) => (
+    <div className="min-w-0 flex-1 space-y-2">
+      <Label>{label}</Label>
+      <select aria-label={ariaLabel} value={value} onChange={(e) => onChange(e.target.value)} className="h-12 w-full rounded-xl border border-input bg-background px-3 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring">
+        {children}
+      </select>
+    </div>
+  );
+
+  if (showOtp) return (
+    <AuthLayout icon={Mail} title={t("auth.verifyEmail")} subtitle={`${t("auth.codeSent")} ${email}`}>
+      {error && <div role="alert" className="mb-4 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+      <div className="mb-6 flex justify-center"><InputOTP maxLength={6} value={otpCode} onChange={setOtpCode} autoFocus autoComplete="one-time-code"><InputOTPGroup>{[0,1,2,3,4,5].map((i) => <InputOTPSlot key={i} index={i} />)}</InputOTPGroup></InputOTP></div>
+      <Button className="h-12 w-full font-medium" onClick={handleVerify} disabled={loading || otpCode.length < 6}>{loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>{t("auth.verifying")}</> : "Verify"}</Button>
+      <p className="mt-4 text-center text-sm text-muted-foreground">{t("auth.didntReceive")} <button onClick={handleResend} className="font-medium text-primary hover:underline">Resend</button></p>
+    </AuthLayout>
+  );
+
+  const titles = {
+    method: en ? "Create your account" : "สร้างบัญชีของคุณ",
+    profile: en ? "A few details first" : "ข้อมูลเบื้องต้น",
+    credentials: en ? "Create login details" : "สร้างข้อมูลเข้าสู่ระบบ",
+  };
+  const subtitles = {
+    method: en ? "Choose how you want to join SafeSpace." : "เลือกวิธีที่ต้องการสมัครใช้งาน SafeSpace",
+    profile: en ? "Your full birthdate stays in this form and is not sent during registration." : "วันเดือนปีเกิดจะอยู่ในแบบฟอร์มนี้ และจะไม่ถูกส่งไปตอนสมัครบัญชี",
+    credentials: en ? "Use an email address and a secure password." : "ใช้อีเมลและรหัสผ่านที่ปลอดภัย",
+  };
 
   return (
-    <AuthLayout
-      icon={UserPlus}
-      title={t("auth.createYourAccount")}
-      subtitle={t("auth.registerSubtitle")}
-      policyOpen={policyOpen}
-      onPolicyAccept={continueAfterPolicy}
-      persistPolicyAcknowledgement
-      onPolicyClose={closePolicy}
-      footer={<>{t("auth.haveAccount")}{" "}<Link to={"/login" + (safeReturnTo() !== "/" ? "?returnTo=" + encodeURIComponent(safeReturnTo()) : "")} className="text-primary font-medium hover:underline">Log in</Link></>}
-    >
-      {stage === "choose" && <>
-        <p className="text-sm text-muted-foreground text-center mb-4">{en ? "Choose how you would like to join SafeSpace." : "เลือกวิธีที่คุณต้องการใช้สมัคร SafeSpace"}</p>
-        <Button variant="outline" className="w-full h-12 mb-3 text-foreground" onClick={() => selectMethod("google")}>
-          <GoogleIcon className="w-5 h-5 mr-2"/>{t("auth.google")}
-        </Button>
-        <Button className="w-full h-12" onClick={() => selectMethod("email")}>
-          <Mail className="w-4 h-4 mr-2"/>{en ? "Create an account with email" : "สร้างบัญชีด้วยอีเมล"}
-        </Button>
-      </>}
-
-      {stage === "details" && <>
-        <button type="button" onClick={() => { setStage("choose"); setMethod(null); setError(""); }} className="mb-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="w-4 h-4"/>{en ? "Back" : "กลับ"}
-        </button>
-        <div className="mb-5 rounded-xl border border-border bg-muted/40 p-3 text-sm">
-          <p className="font-medium text-foreground">{en ? "Step 2: Date of birth" : "ขั้นตอนที่ 2: วันเดือนปีเกิด"}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{en ? "Choose your date of birth. SafeSpace calculates your age and does not send or store the full date of birth during signup." : "เลือกวันเดือนปีเกิดเพื่อคำนวณอายุ โดย SafeSpace จะไม่ส่งหรือจัดเก็บวันเกิดแบบเต็มระหว่างสมัคร"}</p>
+    <AuthLayout icon={step === "method" ? UserPlus : step === "profile" ? CalendarDays : Lock} title={titles[step]} subtitle={subtitles[step]} policyOpen={policyOpen} onPolicyAccept={continueAfterPolicy} persistPolicyAcknowledgement onPolicyClose={closePolicy} footer={<>{t("auth.haveAccount")}{" "}<Link to={"/login" + (safeReturnTo() !== "/" ? "?returnTo=" + encodeURIComponent(safeReturnTo()) : "")} className="font-medium text-primary hover:underline">Log in</Link></>}>
+      {error && <div role="alert" className="mb-4 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+      {step === "method" && <div className="space-y-4">
+        <Button variant="outline" className="h-12 w-full text-sm font-medium text-foreground" onClick={() => begin("google")}><GoogleIcon className="mr-2 h-5 w-5"/>{t("auth.google")}</Button>
+        <div className="relative py-2"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border"/></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-3 text-muted-foreground">{t("auth.or")}</span></div></div>
+        <Button className="h-12 w-full font-medium" onClick={() => begin("email")}><Mail className="mr-2 h-4 w-4"/>{en ? "Create an account with email" : "สร้างบัญชีด้วยอีเมล"}</Button>
+      </div>}
+      {step === "profile" && <div className="space-y-5">
+        <div className="space-y-2">
+          <Label>{en ? "Date of birth" : "วันเดือนปีเกิด"}</Label>
+          <div className="flex gap-2">
+            <SelectField label={en ? "Day" : "วัน"} ariaLabel="Day" value={day} onChange={setDay}>{days.map((d) => <option key={d} value={d}>{String(d).padStart(2,"0")}</option>)}</SelectField>
+            <SelectField label={en ? "Month" : "เดือน"} ariaLabel="Month" value={month} onChange={setMonth}>{months.map((m) => <option key={m} value={m}>{en ? new Date(2000,m-1,1).toLocaleString("en",{month:"short"}) : new Date(2000,m-1,1).toLocaleString("th",{month:"short"})}</option>)}</SelectField>
+            <SelectField label={en ? "Year" : "ปี"} ariaLabel="Year" value={year} onChange={setYear}>{years.map((y) => <option key={y} value={y}>{y}</option>)}</SelectField>
+          </div>
+          <p className="text-xs text-muted-foreground">{en ? `Latest selectable date: ${today.toLocaleDateString("en-GB")} · Calculated age: ${birthDateValid ? age : "—"}` : `เลือกวันเกิดได้ถึง: ${today.toLocaleDateString("th-TH")} · อายุที่คำนวณได้: ${birthDateValid ? age : "—"}`}</p>
+          <p className="text-xs text-muted-foreground">{en ? "Only your calculated age is used for account features; the full date is not stored." : "ระบบใช้เฉพาะอายุที่คำนวณได้สำหรับฟีเจอร์บัญชี โดยไม่จัดเก็บวันเกิดแบบเต็ม"}</p>
         </div>
-        <div className="grid grid-cols-3 gap-3">
-          <div className="space-y-2"><Label htmlFor="birth-day">{en ? "Day" : "วัน"}</Label>
-            <select id="birth-day" size={5} value={day} onChange={(e) => setDay(e.target.value)} className="w-full h-32 rounded-xl border border-input bg-background px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring" aria-label={en ? "Day of birth" : "วันเกิด"}>
-              <option value="">{en ? "Day" : "วัน"}</option>{Array.from({length:maxDay},(_,i)=>i+1).map(v=><option key={v} value={String(v)}>{v}</option>)}
-            </select>
-          </div>
-          <div className="space-y-2"><Label htmlFor="birth-month">{en ? "Month" : "เดือน"}</Label>
-            <select id="birth-month" size={5} value={month} onChange={(e) => { setMonth(e.target.value); setDay(""); }} className="w-full h-32 rounded-xl border border-input bg-background px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring" aria-label={en ? "Month of birth" : "เดือนเกิด"}>
-              <option value="">{en ? "Month" : "เดือน"}</option>{months.map((name,i)=><option key={name} value={String(i+1)}>{name}</option>)}
-            </select>
-          </div>
-          <div className="space-y-2"><Label htmlFor="birth-year">{en ? "Year" : "ปี"}</Label>
-            <select id="birth-year" size={5} value={year} onChange={(e) => { setYear(e.target.value); setDay(""); }} className="w-full h-32 rounded-xl border border-input bg-background px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring" aria-label={en ? "Year of birth" : "ปีเกิด"}>
-              <option value="">{en ? "Year" : "ปี"}</option>{years.map(v=><option key={v} value={String(v)}>{v}</option>)}
-            </select>
-          </div>
-        </div>
-        {age !== null && <p className={`mt-2 text-xs ${validAge ? "text-muted-foreground" : "text-destructive"}`}>{en ? `Calculated age: ${age}` : `อายุที่คำนวณได้: ${age} ปี`}</p>}
-        <div className="mt-6 space-y-3">
-          <div><p className="font-medium text-sm text-foreground">{en ? "Step 3: Share assessment risk scores?" : "ขั้นตอนที่ 3: แบ่งปันคะแนนความเสี่ยงจากแบบประเมินหรือไม่?"}</p>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{en ? "Choose whether admins may view your risk score and risk level. Your answers and written responses are not shared. You can change this later." : "เลือกว่าจะอนุญาตให้ผู้ดูแลดูคะแนนและระดับความเสี่ยงหรือไม่ คำตอบและข้อความที่เขียนจะไม่ถูกแบ่งปัน และคุณเปลี่ยนการตั้งค่านี้ภายหลังได้"}</p>
-          </div>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary"/><Label>{en ? "Share assessment risk scores with admins?" : "อนุญาตให้ผู้ดูแลดูคะแนนความเสี่ยงจากแบบประเมินหรือไม่?"}</Label></div>
+          <p className="text-xs leading-relaxed text-muted-foreground">{en ? "This shares risk scores and risk levels only—not your answers or written responses. You can change this later." : "จะแบ่งปันเฉพาะคะแนนและระดับความเสี่ยงเท่านั้น ไม่รวมคำตอบหรือข้อความที่คุณเขียน และคุณเปลี่ยนการตั้งค่านี้ภายหลังได้"}</p>
           <div className="grid grid-cols-2 gap-3">
-            <button type="button" aria-pressed={shareRisk === "yes"} onClick={() => setShareRisk("yes")} className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${shareRisk === "yes" ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground hover:bg-muted"}`}>{en ? "Yes, share scores" : "ใช่ แบ่งปันคะแนน"}</button>
-            <button type="button" aria-pressed={shareRisk === "no"} onClick={() => setShareRisk("no")} className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${shareRisk === "no" ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground hover:bg-muted"}`}>{en ? "No, keep private" : "ไม่แบ่งปัน เก็บเป็นส่วนตัว"}</button>
+            <Button type="button" variant={shareRiskScore === true ? "default" : "outline"} className="h-11" aria-pressed={shareRiskScore === true} onClick={() => setShareRiskScore(true)}>{en ? "Yes, share" : "ใช่ แบ่งปัน"}</Button>
+            <Button type="button" variant={shareRiskScore === false ? "default" : "outline"} className="h-11" aria-pressed={shareRiskScore === false} onClick={() => setShareRiskScore(false)}>{en ? "No, keep private" : "ไม่ แยกเป็นส่วนตัว"}</Button>
           </div>
         </div>
-        {error && <div role="alert" className="mt-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{error}</div>}
-        {method === "google" ? <Button className="w-full h-12 mt-6" onClick={handleGoogle} disabled={loading}>
-          {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/>{en ? "Connecting…" : "กำลังเชื่อมต่อ…"}</> : <><GoogleIcon className="w-5 h-5 mr-2"/>{en ? "Continue with Google" : "ดำเนินการต่อด้วย Google"}</>}
-        </Button> : <form onSubmit={handleEmailSubmit} className="mt-6 space-y-4">
-          <div className="space-y-2"><Label htmlFor="email">{t("auth.email")}</Label><div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true"/>
-            <Input id="email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(e)=>setEmail(e.target.value)} className="pl-10 h-12" required/>
-          </div></div>
-          <div className="space-y-2"><Label htmlFor="password">{t("auth.password")}</Label><div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true"/>
-            <Input id="password" type="password" autoComplete="new-password" placeholder="••••••••" value={password} onChange={(e)=>setPassword(e.target.value)} className="pl-10 h-12" required/>
-          </div></div>
-          <div className="space-y-2"><Label htmlFor="confirm">{t("auth.confirmPassword")}</Label><div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true"/>
-            <Input id="confirm" type="password" autoComplete="new-password" placeholder="••••••••" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} className="pl-10 h-12" required/>
-          </div></div>
-          <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
-            {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/>{t("auth.creating")}</> : (en ? "Create account" : "สร้างบัญชี")}
-          </Button>
-        </form>}
-      </>}
+        <Button className="h-12 w-full" disabled={!birthDateValid || !validAge || shareRiskScore === null || loading} onClick={continueProfile}>{loading ? <Loader2 className="h-4 w-4 animate-spin"/> : (method === "google" ? (en ? "Continue with Google" : "ดำเนินการต่อด้วย Google") : (en ? "Continue" : "ดำเนินการต่อ"))}</Button>
+        <Button variant="ghost" className="w-full" onClick={() => setStep("method")}>{en ? "Back" : "ย้อนกลับ"}</Button>
+      </div>}
+      {step === "credentials" && <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2"><Label htmlFor="email">{t("auth.email")}</Label><div className="relative"><Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true"/><Input id="email" type="email" autoComplete="email" autoFocus placeholder="you@example.com" value={email} onChange={(e)=>setEmail(e.target.value)} className="h-12 pl-10" required/></div></div>
+        <div className="space-y-2"><Label htmlFor="password">{t("auth.password")}</Label><div className="relative"><Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true"/><Input id="password" type="password" autoComplete="new-password" placeholder="••••••••" value={password} onChange={(e)=>setPassword(e.target.value)} className="h-12 pl-10" required/></div></div>
+        <div className="space-y-2"><Label htmlFor="confirm">{t("auth.confirmPassword")}</Label><div className="relative"><Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true"/><Input id="confirm" type="password" autoComplete="new-password" placeholder="••••••••" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} className="h-12 pl-10" required/></div></div>
+        <Button type="submit" className="h-12 w-full font-medium" disabled={loading}>{loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/>{t("auth.creating")}</> : (en ? "Create account" : "สร้างบัญชี")}</Button>
+        <Button type="button" variant="ghost" className="w-full" onClick={()=>setStep("profile")}>{en ? "Back" : "ย้อนกลับ"}</Button>
+      </form>}
     </AuthLayout>
   );
 }
