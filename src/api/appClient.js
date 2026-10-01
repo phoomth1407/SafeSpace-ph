@@ -116,7 +116,10 @@ const entity = (name) => {
     },
     async filter(filters = {}, order = "created_date", limit = 100) {
       const field = order.replace(/^-/, "");
-      let query = supabase.from(table).select("*");
+      const columns = table === "assessments"
+        ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
+        : "*";
+      let query = supabase.from(table).select(columns);
       for (const [key, value] of Object.entries(filters)) query = query.eq(key, value);
       query = query.order(field, { ascending: !order.startsWith("-") });
       const { data, error } = await query.limit(limit);
@@ -124,7 +127,10 @@ const entity = (name) => {
       return data || [];
     },
     async get(id) {
-      const { data, error } = await supabase.from(table).select("*").eq("id", id).maybeSingle();
+      const columns = table === "assessments"
+        ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
+        : "*";
+      const { data, error } = await supabase.from(table).select(columns).eq("id", id).maybeSingle();
       if (error) throw error;
       if (!data) return null;
       const privateResult = table === "assessments" ? getCachedPrivateAssessment(id) : null;
