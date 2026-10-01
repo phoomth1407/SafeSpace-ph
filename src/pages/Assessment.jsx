@@ -54,6 +54,7 @@ export default function Assessment() {
   const [nationality, setNationality] = useState(lang === "en" ? "" : "thai");
   const [mascotMessage, setMascotMessage] = useState(null);
   const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
+  const [sensitiveConsent, setSensitiveConsent] = useState(false);
   const assessmentPolicyKey = user?.id ? `safespace_assessment_policy_accepted:${user.id}` : null;
   const [policyOpen, setPolicyOpen] = useState(true);
   const [policyScrolledToEnd, setPolicyScrolledToEnd] = useState(false);
@@ -82,7 +83,9 @@ export default function Assessment() {
     if (!assessmentPolicyKey) { setPrivacyAcknowledged(false); return; }
     try {
       const saved = JSON.parse(window.localStorage.getItem(assessmentPolicyKey) || "null");
-      setPrivacyAcknowledged(saved?.accepted === true && saved?.version === ASSESSMENT_POLICY_VERSION);
+      const consentIsCurrent = saved?.sensitiveConsent === true && saved?.version === ASSESSMENT_POLICY_VERSION;
+      setSensitiveConsent(consentIsCurrent);
+      setPrivacyAcknowledged(saved?.accepted === true && consentIsCurrent);
     } catch { setPrivacyAcknowledged(false); }
   }, [assessmentPolicyKey]);
 
@@ -148,6 +151,13 @@ export default function Assessment() {
         }
       }
     }
+    if (!sensitiveConsent) {
+      setError(lang === "en" ? "Please review the policy and provide explicit consent before submitting." : "โปรดอ่านนโยบายและให้ความยินยอมโดยชัดแจ้งก่อนส่งแบบประเมิน");
+      setStep("intro");
+      setPolicyScrolledToEnd(false);
+      setPolicyOpen(true);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -158,6 +168,8 @@ export default function Assessment() {
         language: lang,
         age: isAuthenticated && Number.isInteger(Number(user?.age)) ? Number(user.age) : Number(ageInput),
         nationality: nationality,
+        sensitive_data_consent: true,
+        consent_version: ASSESSMENT_POLICY_VERSION,
       });
       const result = res.data;
       if (result?.error) {
@@ -332,9 +344,9 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
           ]}
           onAccept={() => {
             if (isAuthenticated && assessmentPolicyKey) {
-              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, version: ASSESSMENT_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
+              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, sensitiveConsent: true, version: ASSESSMENT_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
             }
-            setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null);
+            setSensitiveConsent(true); setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null);
           }}
           onDecline={() => { setPolicyOpen(false); setPolicyScrolledToEnd(false); }}
         />
