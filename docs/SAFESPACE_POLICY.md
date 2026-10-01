@@ -1,44 +1,28 @@
 # SafeSpace Policy
 
-Version: 1.1
-Last updated: 29 September 2026
+Version: 2.0
+Last updated: 1 October 2026
 
-The complete product policy is implemented in src/lib/safespacePolicy.js and presented through SafeSpacePolicyModal.jsx. This document is a repository-level guide to that policy rather than a second, independently editable copy.
+The policy is now split into a short acceptance summary and a full policy page.
 
-## What the policy covers
+Source of truth:
+- src/lib/safespacePolicy.js
+- website page: /policies/safespace
 
-The current policy contains 58 sections covering:
+The full policy is organized into 12 thematic sections:
+1. What SafeSpace is and is not
+2. Who the policy applies to and voluntary use
+3. Accounts and sign-in
+4. Account information and service records
+5. Assessment and wellbeing data
+6. AI-assisted processing
+7. Self-care tools and mood check-ins
+8. Community
+9. Privacy, security, and infrastructure
+10. Processing purposes, third parties, and international transfers
+11. Retention, data rights, privacy contact, and complaints
+12. Minors, cookies, changes, and final reminder
 
-- SafeSpace's purpose and school-project status
-- independent personal ownership and the project's origin as a school assignment
-- account creation, email/password, Google authentication, verification, and password recovery
-- account security and information associated with accounts
-- assessment, guest assessment, assessment history, and PHQ-9-style screening
-- AI-assisted processing, provider boundaries, local fallback behavior, and AI limitations
-- sensitive wellbeing information and data minimization
-- self-care and mood features
-- Community use, anonymous display names, posts, comments, reactions, moderation, and reports
-- public/private information and anonymity limitations
-- resources, hotline information, and emergency limitations
-- contact requests and administrative handling
-- Supabase, GitHub Pages, RLS, Edge Functions, browser security, and known limitations
-- third-party services, availability, feature changes, and policy versioning
-- prohibited misuse, respect, user-submitted content, moderation, accuracy limits, and youth considerations
-- acknowledgement before authentication and the policy version stored by the browser
+The acceptance dialog is intentionally a short summary. The complete policy is available separately so users are not forced to read a very long document inside a modal.
 
-## Authentication acknowledgement
-
-Login and registration can require the user to review the policy before continuing. The application stores the accepted policy version in browser storage so the same acknowledgement is not repeatedly requested on the same browser. A new policy version can require acknowledgement again.
-
-The policy can also be opened from the global footer without treating that reading action as a new authentication acknowledgement.
-
-## Feature-specific policies
-
-The product policy is not the only policy in SafeSpace:
-
-- docs/ASSESSMENT_POLICY.md covers assessment-specific privacy, screening, and use limitations.
-- docs/COMMUNITY_POLICY.md covers Community posting and interaction rules.
-
-## Source of truth
-
-When this guide and the implementation disagree, inspect src/lib/safespacePolicy.js and src/components/SafeSpacePolicyModal.jsx first, then update this document so the documentation does not drift.
+The policy also uses versioning so a material policy change can require a new acknowledgement.
