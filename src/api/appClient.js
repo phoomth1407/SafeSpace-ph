@@ -115,6 +115,7 @@ const entity = (name) => {
   const table = tableFor(name);
   return {
     async list(order = "-created_date", limit = 50) {
+      if (table === "assessments") await claimPendingGuestScores();
       const field = order.replace(/^-/, "");
       const columns = table === "assessments"
         ? "id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language"
@@ -125,6 +126,11 @@ const entity = (name) => {
       query = query.order(field, { ascending: !order.startsWith("-") });
       const { data, error } = await query.limit(limit);
       if (error) throw error;
+      if (table === "assessments") {
+        const { data: shared, error: sharedError } = await supabase.rpc("get_my_guest_score_shares");
+        if (sharedError) throw sharedError;
+        return [...(data || []), ...(shared || []).map((item) => ({ ...item, created_date: item.created_at, screening_type: "wellbeing", analysis_source: "guest-shared", ai_summary: "Guest-shared risk score", is_shared_guest_score: true }))].sort((a,b) => new Date(b.created_date)-new Date(a.created_date)).slice(0,limit);
+      }
       return data || [];
     },
     async filter(filters = {}, order = "created_date", limit = 100) {
@@ -231,7 +237,32 @@ async function localScreeningAssessment(payload, { isGuest = false } = {}) {
   return fullResult;
 }
 
+const GUEST_SCORE_CLAIM_KEY = "safespace_guest_score_claim_token_v1";
+async function claimPendingGuestScores() {
+  const authUser = await currentAuthUser();
+  if (!authUser || typeof window === "undefined") return;
+  let token = "";
+  try { token = window.localStorage.getItem(GUEST_SCORE_CLAIM_KEY) || ""; } catch {}
+  if (!/^[A-Za-z0-9_-]{40,100}$/.test(token)) return;
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  const tokenHash = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  const { data, error } = await supabase.rpc("claim_guest_score", { p_token_hash: tokenHash });
+  if (error) throw error;
+  if (data === true) { try { window.localStorage.removeItem(GUEST_SCORE_CLAIM_KEY); } catch {} }
+}
 const invoke = async (name, payload = {}) => {
+  if (name === "saveGuestScore") {
+    const token = payload.claim_token;
+    if (!/^[A-Za-z0-9_-]{40,100}$/.test(token || "")) return { data: { error: "invalid_claim_token" } };
+    const { data, error } = await supabase.functions.invoke("save-guest-score", {
+      body: { risk_score: payload.risk_score, risk_level: payload.risk_level, language: payload.language, claim_token: token },
+    });
+    if (error) throw error;
+    if (data?.saved === true) {
+      try { window.localStorage.setItem(GUEST_SCORE_CLAIM_KEY, token); } catch {}
+    }
+    return { data: data || {} };
+  }
   if (name === "analyzeAssessment") {
     const authUser = await currentAuthUser();
     if (!authUser) return { data: await localScreeningAssessment(payload, { isGuest: true }) };
@@ -378,7 +409,9 @@ const invoke = async (name, payload = {}) => {
 
 const auth = {
   async me() {
-    return currentAppUser();
+    const user = await currentAppUser();
+    if (user) await claimPendingGuestScores();
+    return user;
   },
   async loginViaEmailPassword(email, password) {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
