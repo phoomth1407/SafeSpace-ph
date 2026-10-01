@@ -166,7 +166,7 @@ const entity = (name) => {
           .from("assessments")
           .update(patch)
           .eq("id", id)
-          .select("*")
+          .select("id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language")
           .single();
 
         if (!repairError && repaired) return repaired;
@@ -291,7 +291,7 @@ const invoke = async (name, payload = {}) => {
             .from("assessments")
             .update({ language: selectedLanguage })
             .eq("id", data.id)
-            .select("*")
+            .select("id,created_date,updated_date,created_by_id,risk_level,risk_score,screening_type,analysis_source,language")
             .single();
           if (localized) {
             return { data: { ...localized, is_guest: false, analysis_source: localized.analysis_source || data.analysis_source || "ai" } };
