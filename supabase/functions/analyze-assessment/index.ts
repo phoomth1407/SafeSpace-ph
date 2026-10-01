@@ -144,7 +144,7 @@ async function main(req: Request) {
   const ageGroup = ageNum === null ? null : (ageNum < 20 ? "under20" : "over20");
   const nat = body.nationality === "foreigner" ? "foreigner" : "thai";
   const consentVersion = typeof body.consent_version === "string" ? body.consent_version.trim() : "";
-  if (body.sensitive_data_consent !== true || !/^\\d+\\.\\d+$/.test(consentVersion) || consentVersion.length > 32) {
+  if (body.sensitive_data_consent !== true || !/^\d+\.\d+$/.test(consentVersion) || consentVersion.length > 32) {
     return new Response(JSON.stringify({ error: "explicit assessment consent required" }), { status: 400, headers: corsHeaders });
   }
 
