@@ -39,10 +39,10 @@ const PopupText = ({ lang }) => (
       ? "Assessment and wellbeing information may be processed by OpenAI or Google Gemini. Supabase provides backend services and GitHub Pages hosts the frontend. These providers may process information outside Thailand. SafeSpace relies on their standard contractual safeguards but does not claim third-party processing is risk-free."
       : "ข้อมูลแบบประเมินและสุขภาวะอาจถูกประมวลผลโดย OpenAI หรือ Google Gemini ส่วน Supabase ให้บริการ backend และ GitHub Pages ให้บริการโฮสต์ frontend ผู้ให้บริการเหล่านี้อาจประมวลผลข้อมูลนอกประเทศไทย โดย SafeSpace อาศัยมาตรการคุ้มครองตามสัญญามาตรฐาน แต่ไม่รับรองว่าการประมวลผลโดยผู้ให้บริการภายนอกไม่มีความเสี่ยง"}</p>
     <p>{lang === "en"
-      ? <>Privacy contact: <strong>[privacy contact email — to be filled in by the developer]</strong>. Rights may include access, copying/portability, correction, deletion, objection, restriction, and withdrawal of consent, subject to applicable law.</>
-      : <>ติดต่อเรื่องความเป็นส่วนตัว: <strong>[privacy contact email — to be filled in by the developer]</strong> สิทธิอาจรวมถึงการเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอม ภายใต้กฎหมายที่เกี่ยวข้อง</>}</p>
-    <p>{lang === "en" ? <>Legal basis: account data — <strong>contractual necessity</strong>; wellbeing/assessment — <strong>explicit consent</strong>; Community content — <strong>[TO CONFIRM — legal basis]</strong>; technical/security — <strong>[TO CONFIRM — legal basis]</strong>.</> : <>ฐานทางกฎหมาย: ข้อมูลบัญชี — <strong>ความจำเป็นตามสัญญา</strong>; สุขภาวะ/แบบประเมิน — <strong>ความยินยอมโดยชัดแจ้ง</strong>; เนื้อหาชุมชน — <strong>[TO CONFIRM — ฐานทางกฎหมาย]</strong>; เทคนิค/ความปลอดภัย — <strong>[TO CONFIRM — ฐานทางกฎหมาย]</strong></>}</p>
-    <p>{lang === "en" ? "Privacy contact: [privacy contact email — to be filled in by the developer]." : "ติดต่อเรื่องความเป็นส่วนตัว: [privacy contact email — to be filled in by the developer]"}</p>
+      ? <>Privacy contact: <strong>safespacect@gmail.com</strong>. Rights may include access, copying/portability, correction, deletion, objection, restriction, and withdrawal of consent, subject to applicable law.</>
+      : <>ติดต่อเรื่องความเป็นส่วนตัว: <strong>safespacect@gmail.com</strong> สิทธิอาจรวมถึงการเข้าถึง ขอสำเนา/โอนย้าย แก้ไข ลบ คัดค้าน จำกัดการประมวลผล และถอนความยินยอม ภายใต้กฎหมายที่เกี่ยวข้อง</>}</p>
+    <p>{lang === "en" ? <>Legal basis: account data — <strong>contractual necessity</strong>; wellbeing/assessment — <strong>explicit consent</strong>; Community content — <strong>legitimate interest for technical and security processing</strong>; technical/security — <strong>legitimate interest for technical and security processing</strong>.</> : <>ฐานทางกฎหมาย: ข้อมูลบัญชี — <strong>ความจำเป็นตามสัญญา</strong>; สุขภาวะ/แบบประเมิน — <strong>ความยินยอมโดยชัดแจ้ง</strong>; เนื้อหาชุมชน — <strong>[TO CONFIRM — ฐานทางกฎหมาย]</strong>; เทคนิค/ความปลอดภัย — <strong>[TO CONFIRM — ฐานทางกฎหมาย]</strong></>}</p>
+    <p>{lang === "en" ? "Privacy contact: safespacect@gmail.com." : "ติดต่อเรื่องความเป็นส่วนตัว: safespacect@gmail.com"}</p>
     <p>{lang === "en" ? <>You have the right to complain to the Thai Personal Data Protection Committee (PDPC) at <strong>pdpc.or.th</strong> if you believe your personal data has been mishandled.</> : <>คุณมีสิทธิร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPC) ที่ <strong>pdpc.or.th</strong> หากเชื่อว่าข้อมูลส่วนบุคคลของคุณถูกจัดการอย่างไม่เหมาะสม</>}</p>
     <div>
       <p className="font-semibold text-slate-200">{lang === "en" ? "Emergency support in Thailand" : "ช่องทางฉุกเฉินในประเทศไทย"}</p>
@@ -50,7 +50,7 @@ const PopupText = ({ lang }) => (
       <p>1323 — {lang === "en" ? "Department of Mental Health hotline" : "สายด่วนสุขภาพจิต กรมสุขภาพจิต"}</p>
       <p>1300 — {lang === "en" ? "MSDHS social assistance line, including children and young people" : "สายด่วนช่วยเหลือสังคม พม. รวมถึงเด็กและเยาวชน"}</p>
     </div>
-    <p>{lang === "en" ? "Cookies: [TO CONFIRM] whether SafeSpace uses cookies or analytics beyond what is strictly necessary for authentication." : "คุกกี้: [TO CONFIRM] ว่า SafeSpace ใช้คุกกี้หรือ analytics นอกเหนือจากสิ่งที่จำเป็นต่อการยืนยันตัวตนหรือไม่"}</p>
+    <p>{lang === "en" ? "Cookies: [TO CONFIRM] whether SafeSpace uses cookies or analytics beyond what is strictly necessary for authentication." : "การตั้งค่าหน้าเว็บปัจจุบันให้ Supabase Auth บันทึก session ใน browser localStorage และไม่ได้ตั้งค่า analytics โดยเจตนา SafeSpace ไม่ได้ตั้งใจสร้าง first-party cookies แต่ Google sign-in หรือโครงสร้าง hosting อาจใช้คุกกี้ที่ผู้ให้บริการควบคุม ควรตรวจสอบพฤติกรรมบนเว็บไซต์ที่เผยแพร่จริงก่อนถือเป็นคำยืนยันถาวร"}</p>
   </div>
 );
 
@@ -90,7 +90,7 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
               {requiresAcceptance && <>
                 <label className="flex items-start gap-3 mt-5 rounded-2xl border border-slate-800 bg-slate-900/60 px-4 py-3 cursor-pointer">
                   <input type="checkbox" checked={checks.age} onChange={e=>setChecks(v=>({...v,age:e.target.checked}))} className="mt-1 h-4 w-4 shrink-0 accent-sky-500" />
-                  <span className="text-xs leading-5">{lang === "en" ? "I am at least [minimum account age — TO CONFIRM] years old, or I have the required parent/guardian consent." : "ฉันมีอายุอย่างน้อย [อายุขั้นต่ำสำหรับบัญชี — TO CONFIRM] ปี หรือได้รับความยินยอมจากผู้ปกครองตามที่กำหนด"}</span>
+                  <span className="text-xs leading-5">{lang === "en" ? "I am at least 13 years old, or I have the required parent/guardian consent." : "ฉันมีอายุอย่างน้อย 13 ปี หรือได้รับความยินยอมจากผู้ปกครองตามที่กำหนด"}</span>
                 </label>
                 <label className="flex items-start gap-3 mt-3 rounded-2xl border border-slate-800 bg-slate-900/60 px-4 py-3 cursor-pointer">
                   <input type="checkbox" checked={checks.policy} onChange={e=>setChecks(v=>({...v,policy:e.target.checked}))} className="mt-1 h-4 w-4 shrink-0 accent-sky-500" />
