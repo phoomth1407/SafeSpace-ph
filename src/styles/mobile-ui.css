@@ -1,0 +1,694 @@
+/* ===== SafeSpace mobile UI refinement =====
+   Phone-first layout polish. Desktop styling is intentionally untouched.
+*/
+@media (max-width: 767px) {
+  :root {
+    --ss-mobile-gutter: 14px;
+    --ss-mobile-radius: 20px;
+  }
+
+  html, body {
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+
+  .site-header-inner {
+    height: 58px !important;
+    padding-left: 12px !important;
+    padding-right: 10px !important;
+    gap: 6px !important;
+  }
+
+  .desktop-header-brand {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 8px !important;
+  }
+
+  .desktop-header-brand img {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 11px !important;
+  }
+
+  .desktop-header-brand span {
+    font-size: 13px !important;
+  }
+
+  .header-main {
+    display: none !important;
+  }
+
+  .header-actions {
+    gap: 2px !important;
+    margin-left: auto !important;
+  }
+
+  .header-actions > button,
+  .header-actions > div > button {
+    min-width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 8px !important;
+    border-radius: 12px !important;
+  }
+
+  .header-actions > div > button {
+    font-size: 0 !important;
+  }
+
+  .header-actions > div > button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header-actions > div > div {
+    right: -4px;
+    margin-top: 6px;
+    width: 132px;
+  }
+
+  .header-actions .border-l {
+    border-left: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .header-actions .header-user {
+    display: none !important;
+  }
+
+  .header-actions .header-logout,
+  .header-actions a[href*="/login"],
+  .header-actions a[href*="/register"] {
+    min-width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 8px !important;
+    font-size: 0 !important;
+    border-radius: 12px !important;
+  }
+
+  .header-actions .header-logout svg,
+  .header-actions a[href*="/login"] svg,
+  .header-actions a[href*="/register"] svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header-actions .admin-nav-link {
+    min-width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 8px !important;
+    font-size: 0 !important;
+  }
+
+  .page-shell {
+    width: 100%;
+    max-width: none !important;
+    padding: 18px var(--ss-mobile-gutter) 104px !important;
+  }
+
+  .page-shell > * {
+    min-width: 0;
+  }
+
+  .page-shell .space-y-6 > :not([hidden]) ~ :not([hidden]),
+  .page-shell.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 18px;
+  }
+
+  .page-shell .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 22px;
+  }
+
+  .page-shell h1,
+  .page-shell h2,
+  .page-shell h3,
+  .page-shell p {
+    overflow-wrap: anywhere;
+  }
+
+  /* Bottom navigation: a compact floating dock instead of a full-width slab. */
+  .mobile-nav {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+    padding: 6px !important;
+    border: 1px solid rgba(148,163,184,.18);
+    border-radius: 20px;
+    box-shadow: 0 18px 45px rgba(2,6,23,.24);
+  }
+
+  .mobile-nav > div {
+    height: 58px !important;
+    max-width: none !important;
+  }
+
+  .mobile-nav a {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 46px;
+    justify-content: center;
+    gap: 3px !important;
+    padding: 6px 4px !important;
+    border-radius: 15px !important;
+  }
+
+  .mobile-nav a svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  .mobile-nav a span {
+    font-size: 9px !important;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .mobile-nav-active {
+    box-shadow: inset 0 0 0 1px rgba(148,163,184,.12);
+  }
+
+  /* Home: make the welcome area and bento dashboard breathe. */
+  .home-page {
+    width: 100%;
+    padding-bottom: 0 !important;
+  }
+
+  .home-page > section:first-child {
+    gap: 12px !important;
+    padding-top: 0 !important;
+  }
+
+  .home-page > section:first-child h1 {
+    font-size: 23px !important;
+    line-height: 1.15 !important;
+    letter-spacing: -.035em;
+  }
+
+  .home-page > section:first-child h1 > span:first-child {
+    min-width: 0;
+  }
+
+  .home-page > section:first-child > div:first-child {
+    min-width: 0;
+  }
+
+  .home-page > section:first-child > a {
+    width: 100%;
+    align-self: stretch !important;
+    justify-content: flex-start;
+    min-height: 52px;
+    padding: 10px 12px !important;
+  }
+
+  .home-page > .grid {
+    gap: 12px !important;
+  }
+
+  .home-page > .grid > * {
+    min-width: 0;
+  }
+
+  .home-page .wellness-tool-card {
+    min-height: 82px;
+    padding: 14px !important;
+  }
+
+  .home-page .wellness-tool-card svg {
+    flex-shrink: 0;
+  }
+
+  /* Generic cards used by the home dashboard. */
+  .home-page .rounded-3xl {
+    border-radius: var(--ss-mobile-radius) !important;
+  }
+
+  /* Assessment flow */
+  .assessment-page,
+  .assessment-gate {
+    width: 100%;
+    max-width: none !important;
+    min-height: calc(100svh - 120px) !important;
+    padding: 0 2px;
+  }
+
+  .assessment-intro-card,
+  .assessment-gate-card,
+  .assessment-chapter-card,
+  .assessment-question-card {
+    width: 100% !important;
+    border-radius: 22px !important;
+    padding: 20px !important;
+  }
+
+  .assessment-page h1 {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .assessment-page h2 {
+    font-size: 1.25rem;
+    line-height: 1.25;
+  }
+
+  .assessment-page input,
+  .assessment-page select,
+  .assessment-page textarea,
+  .assessment-page button {
+    min-height: 48px;
+  }
+
+  .assessment-page .assessment-flow-header {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .assessment-page .assessment-question-card .space-y-2 > button {
+    min-height: 54px;
+    padding: 13px 14px !important;
+    text-align: left;
+  }
+
+  .assessment-page .assessment-policy-shell {
+    width: calc(100vw - 24px) !important;
+    max-width: none !important;
+    max-height: calc(100svh - 24px) !important;
+    border-radius: 22px !important;
+  }
+
+  /* Result page: stack everything deliberately instead of squeezing columns. */
+  .assessment-result-page,
+  .result-surface {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .assessment-result-page .grid,
+  .assessment-result-page .sm\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .assessment-result-page .result-hero {
+    border-radius: 22px !important;
+    padding: 18px !important;
+  }
+
+  .assessment-result-page .result-hero h1 {
+    font-size: 25px !important;
+    line-height: 1.15 !important;
+  }
+
+  .assessment-result-page .grid.sm\:grid-cols-2 > div > a,
+  .assessment-result-page .grid.sm\:grid-cols-2 > div > button {
+    min-height: 52px;
+  }
+
+  /* History */
+  .history-page {
+    width: 100%;
+  }
+
+  .history-overview-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .history-latest-card,
+  .history-trend-reveal,
+  .history-assessment-card {
+    border-radius: 20px !important;
+  }
+
+  .history-assessment-card .flex.items-center {
+    align-items: flex-start !important;
+    gap: 10px !important;
+    padding: 14px !important;
+  }
+
+  .history-assessment-card .history-list-icon {
+    flex: 0 0 auto;
+  }
+
+  .history-assessment-card .history-summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .history-delete-btn {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+  }
+
+  .history-chart-wrap--wide {
+    min-height: 220px !important;
+    overflow: hidden;
+    border-radius: 18px;
+  }
+
+  /* Community / resources */
+  .community-page,
+  .resources-page {
+    width: 100%;
+    max-width: none !important;
+    padding: 0 0 8px;
+  }
+
+  .community-hero-card {
+    min-height: 0 !important;
+    padding: 20px !important;
+    border-radius: 22px !important;
+  }
+
+  .community-hero-card h1 {
+    font-size: clamp(1.7rem, 8vw, 2.25rem) !important;
+    line-height: 1.12 !important;
+    letter-spacing: -.035em;
+  }
+
+  .community-hero-card p {
+    font-size: .82rem !important;
+    line-height: 1.7 !important;
+  }
+
+  .community-hero-actions {
+    width: 100%;
+    gap: 8px !important;
+  }
+
+  .community-hero-actions > *,
+  .community-primary-button,
+  .community-secondary-button,
+  .community-next-button {
+    min-height: 48px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .community-tools-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .community-tool-card {
+    min-height: 92px !important;
+    padding: 12px !important;
+    border-radius: 17px !important;
+  }
+
+  .community-tool-card strong {
+    font-size: .75rem;
+    line-height: 1.35;
+  }
+
+  .community-feed-header {
+    gap: 10px !important;
+  }
+
+  .community-filter-wrap {
+    width: 100%;
+  }
+
+  .community-filter-scroll {
+    width: 100%;
+    gap: 6px !important;
+  }
+
+  .community-filter-chip,
+  .community-category-chip {
+    min-height: 40px;
+    padding: 8px 11px !important;
+    white-space: nowrap;
+  }
+
+  .community-share-card,
+  .community-composer,
+  .community-login-card {
+    border-radius: 20px !important;
+    padding: 14px !important;
+  }
+
+  .community-share-trigger {
+    min-height: 50px;
+  }
+
+  .community-composer-row {
+    gap: 10px !important;
+  }
+
+  .community-field {
+    min-height: 48px;
+    font-size: 16px !important; /* prevents iOS zoom */
+  }
+
+  .community-textarea {
+    min-height: 130px !important;
+    line-height: 1.6;
+  }
+
+  .community-composer-foot {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+
+  .community-composer-foot > * {
+    width: 100%;
+  }
+
+  .community-posts-list {
+    gap: 10px !important;
+  }
+
+  .community-post-card {
+    border-radius: 20px !important;
+    overflow: hidden;
+  }
+
+  .community-page.is-feed-mode {
+    padding: 10px 0 14px !important;
+  }
+
+  .community-page.is-feed-mode .community-feed-mode-content {
+    width: 100%;
+  }
+
+  .community-modal-layer {
+    align-items: flex-end;
+    padding: 10px !important;
+  }
+
+  .community-modal-card {
+    width: 100% !important;
+    max-height: calc(100svh - 20px) !important;
+    padding: 18px !important;
+    border-radius: 24px !important;
+    overflow-y: auto;
+  }
+
+  .community-policy-scroll {
+    max-height: min(46svh, 20rem) !important;
+  }
+
+  .resources-page .resources-emergency {
+    padding: 15px !important;
+    border-radius: 20px !important;
+  }
+
+  .resources-page .resources-emergency a {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .resources-page .space-y-3 > a {
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .resources-page .space-y-3 > a h3 {
+    font-size: .8rem !important;
+    line-height: 1.45;
+  }
+
+  /* Auth pages */
+  .page-shell:has(.auth-page),
+  .page-shell:has(.login-page),
+  .page-shell:has(.register-page) {
+    padding-top: 12px !important;
+  }
+
+  .auth-page,
+  .login-page,
+  .register-page,
+  .forgot-password-page,
+  .reset-password-page {
+    width: 100%;
+    max-width: none !important;
+    min-height: calc(100svh - 120px);
+    padding: 8px 0;
+  }
+
+  .auth-page > *,
+  .login-page > *,
+  .register-page > * {
+    width: 100% !important;
+    max-width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .auth-page input,
+  .login-page input,
+  .register-page input,
+  .forgot-password-page input,
+  .reset-password-page input {
+    min-height: 50px;
+    font-size: 16px !important;
+  }
+
+  .auth-page button,
+  .login-page button,
+  .register-page button {
+    min-height: 50px;
+  }
+
+  /* Contact/admin */
+  .admin-page,
+  .contact-admin-page {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-page .overflow-x-auto {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 16px;
+  }
+
+  .admin-page table {
+    min-width: 680px;
+  }
+
+  .contact-admin-page textarea {
+    min-height: 150px;
+    font-size: 16px !important;
+  }
+
+  /* Footer: make it feel intentional on a small screen. */
+  footer {
+    padding: 10px var(--ss-mobile-gutter) calc(112px + env(safe-area-inset-bottom)) !important;
+  }
+
+  footer .border-t {
+    padding-top: 20px !important;
+  }
+
+  footer .mt-8 {
+    margin-top: 20px !important;
+  }
+
+  footer .flex-wrap {
+    row-gap: 10px !important;
+    column-gap: 12px !important;
+  }
+
+  /* Prevent accidental horizontal scrolling from long utility strings. */
+  pre, code, .font-mono {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Keep motion, but avoid hover-style transforms being sticky on touch. */
+  button:hover,
+  a:hover {
+    transform: none;
+  }
+}
+
+/* Narrow phones: compact the same design rather than introducing a second theme. */
+@media (max-width: 380px) {
+  .site-header-inner {
+    padding-left: 9px !important;
+    padding-right: 7px !important;
+  }
+
+  .desktop-header-brand span {
+    display: none;
+  }
+
+  .header-actions > button,
+  .header-actions > div > button,
+  .header-actions .header-logout,
+  .header-actions a[href*="/login"],
+  .header-actions a[href*="/register"] {
+    min-width: 34px;
+    min-height: 34px;
+    padding: 7px !important;
+  }
+
+  .page-shell {
+    padding-left: 11px !important;
+    padding-right: 11px !important;
+  }
+
+  .mobile-nav {
+    left: 7px !important;
+    right: 7px !important;
+  }
+
+  .mobile-nav a span {
+    font-size: 8px !important;
+  }
+
+  .community-tools-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .community-hero-card {
+    padding: 17px !important;
+  }
+}
+
+/* Reduce expensive backdrop effects only on coarse-pointer phones. */
+@media (max-width: 767px) and (pointer: coarse) {
+  .site-header,
+  .mobile-nav,
+  .page-shell .bg-slate-900\/60,
+  .page-shell .bg-slate-900\/80,
+  .community-modal-backdrop,
+  .wellness-modal-backdrop {
+    -webkit-backdrop-filter: blur(10px) saturate(125%);
+    backdrop-filter: blur(10px) saturate(125%);
+  }
+
+  .visual-orb,
+  .community-hero-glow,
+  .community-art-orbit {
+    will-change: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav,
+  .community-modal-card,
+  .assessment-intro-card,
+  .assessment-gate-card {
+    scroll-behavior: auto;
+  }
+}
