@@ -31,9 +31,11 @@ export default function Register() {
   useEffect(() => { const refresh = () => setToday(new Date()); const timer = window.setInterval(refresh, 60_000); return () => window.clearInterval(timer); }, []);
   const [step, setStep] = useState("method");
   const [method, setMethod] = useState(null);
-  const [day, setDay] = useState(String(today.getDate()));
+  // Start with a valid historical date so the day selector is immediately
+  // useful; starting at today's year limited it to only dates up to today.
+  const [day, setDay] = useState("1");
   const [month, setMonth] = useState(String(today.getMonth() + 1));
-  const [year, setYear] = useState(String(todayYear));
+  const [year, setYear] = useState(String(todayYear - 18));
   const [shareRiskScore, setShareRiskScore] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
