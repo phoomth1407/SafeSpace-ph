@@ -136,6 +136,19 @@
 .theme-light .bg-slate-800 { background-color: #e2e8f0 !important; }
 .theme-light .bg-slate-700 { background-color: #cbd5e1 !important; }
 
+/* Keep primary actions dark in light mode; the general slate surface override above
+   is intended for panels and otherwise turns white-label buttons invisible. */
+.theme-light button.bg-slate-900,
+.theme-light a.bg-slate-900 {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+.theme-light button.bg-slate-900:hover,
+.theme-light a.bg-slate-900:hover {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
 /* Translucent backgrounds */
 .theme-light .bg-slate-950\/80 { background-color: rgba(248, 250, 252, 0.85) !important; }
 .theme-light .bg-slate-950\/95 { background-color: rgba(248, 250, 252, 0.96) !important; }
