@@ -101,7 +101,11 @@ export default function Home() {
           </div>
           <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-0.5 flex items-center gap-2">
             <span>{greeting.title}</span>
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-white/70 text-sky-500 shadow-sm ring-1 ring-slate-200/70 dark:bg-slate-900/70 dark:text-sky-300 dark:ring-slate-800/70" aria-hidden="true"><GreetingIcon className="h-5 w-5" strokeWidth={1.8} /></span>
+            <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-[1.15rem] bg-gradient-to-br from-white via-sky-50 to-violet-100 text-sky-600 shadow-[0_8px_22px_rgba(59,130,246,.16)] ring-1 ring-white/90 dark:from-sky-300/20 dark:via-indigo-300/10 dark:to-violet-300/20 dark:text-sky-200 dark:ring-white/10" aria-hidden="true">
+              <span className="absolute -right-2 -top-2 h-8 w-8 rounded-full bg-sky-200/60 blur-md dark:bg-sky-300/20" />
+              <GreetingIcon className="relative z-10 h-[1.35rem] w-[1.35rem]" strokeWidth={1.9} />
+              <Sparkles className="absolute right-1 top-1 z-10 h-3 w-3 text-violet-500 dark:text-violet-200" strokeWidth={2} />
+            </span>
           </h1>
           <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-0.5">
             {greeting.message}

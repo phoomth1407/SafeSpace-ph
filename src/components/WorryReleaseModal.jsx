@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Cloud, Flower2, Heart, LockKeyhole, Sparkles, Waves, Wind, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bubbles, Check, Cloud, CloudFog, CloudRain, Flower2, Heart, LockKeyhole, MoonStar, Sparkles, Tornado, Waves, Wind, X } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import ThoughtReleaseScene from "@/components/ThoughtReleaseScene";
 
 const FEELINGS = [
-  { id: "heavy", emoji: "🌧️", en: "Heavy", th: "หนักใจ" },
-  { id: "anxious", emoji: "🌪️", en: "Anxious", th: "กังวล" },
-  { id: "sad", emoji: "🌙", en: "Sad", th: "เศร้า" },
-  { id: "tired", emoji: "🫧", en: "Tired", th: "เหนื่อย" },
-  { id: "unsure", emoji: "🌫️", en: "Not sure", th: "ไม่แน่ใจ" },
+  { id: "heavy", icon: CloudRain, color: "from-sky-100 to-indigo-100 text-sky-700 dark:from-sky-300/15 dark:to-indigo-300/10 dark:text-sky-200", en: "Heavy", th: "หนักใจ" },
+  { id: "anxious", icon: Tornado, color: "from-violet-100 to-fuchsia-100 text-violet-700 dark:from-violet-300/15 dark:to-fuchsia-300/10 dark:text-violet-200", en: "Anxious", th: "กังวล" },
+  { id: "sad", icon: MoonStar, color: "from-amber-100 to-rose-100 text-amber-700 dark:from-amber-300/15 dark:to-rose-300/10 dark:text-amber-200", en: "Sad", th: "เศร้า" },
+  { id: "tired", icon: Bubbles, color: "from-cyan-100 to-sky-100 text-cyan-700 dark:from-cyan-300/15 dark:to-sky-300/10 dark:text-cyan-200", en: "Tired", th: "เหนื่อย" },
+  { id: "unsure", icon: CloudFog, color: "from-slate-100 to-blue-100 text-slate-600 dark:from-slate-300/15 dark:to-blue-300/10 dark:text-slate-200", en: "Not sure", th: "ไม่แน่ใจ" },
 ];
 
 const RITUALS = [
@@ -93,7 +93,7 @@ export default function WorryReleaseModal({ open, onClose }) {
   const stepLabels = en ? ["Notice", "Name it", "Choose", "Pause"] : ["สำรวจใจ", "เขียนออกมา", "เลือกวิธี", "พักสักครู่"];
 
   return createPortal(
-    <div className="wellness-modal-root fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6">
+    <div className="wellness-modal-root fixed inset-0 z-[200] flex h-[100dvh] w-screen items-center justify-center p-0">
       <button type="button" aria-label={copy.close} onClick={closeAndClear} className="wellness-modal-backdrop absolute inset-0" />
       <motion.section
         role="dialog"
@@ -103,7 +103,7 @@ export default function WorryReleaseModal({ open, onClose }) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={reduceMotion ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="relative flex max-h-[min(92dvh,850px)] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-white/70 bg-[#f8f7ff] text-slate-900 shadow-[0_32px_120px_rgba(15,23,42,.38)] dark:border-white/10 dark:bg-[#0f1329] dark:text-white"
+        className="relative flex h-[100dvh] max-h-[100dvh] w-screen max-w-none flex-col overflow-hidden rounded-none border-0 bg-[#f8f7ff] text-slate-900 shadow-none dark:bg-[#0f1329] dark:text-white"
       >
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           <div className="absolute -left-20 -top-28 h-72 w-72 rounded-full bg-rose-300/35 blur-3xl dark:bg-rose-500/15" />
@@ -130,12 +130,12 @@ export default function WorryReleaseModal({ open, onClose }) {
           </div>
         )}
 
-        <div className="relative z-10 min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-8 sm:py-6">
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-4 sm:px-8 sm:py-6">
           <AnimatePresence mode="wait" initial={false}>
             {step === 0 && <motion.div key="feeling" initial={reduceMotion ? false : { opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={reduceMotion ? undefined : { opacity: 0, x: -14 }} transition={{ duration: 0.22 }}>
               <div className="mx-auto max-w-xl text-center"><p className="text-xs font-semibold uppercase tracking-[.14em] text-slate-500 dark:text-slate-400">{en ? "A gentle check-in" : "สำรวจใจเบา ๆ"}</p><h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{copy.feelingTitle}</h3><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{copy.intro}</p></div>
               <div className="mx-auto mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-5">
-                {FEELINGS.map((item) => <button key={item.id} type="button" aria-pressed={feeling === item.id} onClick={() => setFeeling(item.id)} className={`group rounded-2xl border px-3 py-4 text-center transition-all ${feeling === item.id ? "border-violet-400 bg-white/90 shadow-lg shadow-violet-900/10 ring-2 ring-violet-300/50 dark:border-violet-300/70 dark:bg-white/10" : "border-white/80 bg-white/45 hover:-translate-y-0.5 hover:bg-white/80 dark:border-white/10 dark:bg-white/[.04] dark:hover:bg-white/[.08]"}`}><span className="block text-2xl transition-transform group-hover:scale-110" aria-hidden="true">{item.emoji}</span><span className="mt-2 block text-xs font-semibold">{en ? item.en : item.th}</span></button>)}
+                {FEELINGS.map((item) => { const FeelingIcon = item.icon; return <button key={item.id} type="button" aria-pressed={feeling === item.id} onClick={() => setFeeling(item.id)} className={`group rounded-2xl border px-3 py-4 text-center transition-all ${feeling === item.id ? "border-violet-400 bg-white/90 shadow-lg shadow-violet-900/10 ring-2 ring-violet-300/50 dark:border-violet-300/70 dark:bg-white/10" : "border-white/80 bg-white/45 hover:-translate-y-0.5 hover:bg-white/80 dark:border-white/10 dark:bg-white/[.04] dark:hover:bg-white/[.08]"}`}><span className={`mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br shadow-sm transition-transform group-hover:scale-110 ${item.color}`} aria-hidden="true"><FeelingIcon className="h-6 w-6" strokeWidth={1.8} /></span><span className="mt-2 block text-xs font-semibold">{en ? item.en : item.th}</span></button>; })}
               </div>
               <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">{copy.feelingHint}</p>
               <div className="mx-auto mt-8 max-w-xl rounded-3xl border border-white/80 bg-white/55 p-5 dark:border-white/10 dark:bg-white/[.04]"><p className="text-sm font-semibold">{en ? "For this moment, you can…" : "ในช่วงเวลานี้ คุณเลือกได้ที่จะ…"}</p><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Pause without judging yourself. You are more than the thought passing through." : "พักโดยไม่ต้องตัดสินตัวเอง คุณเป็นมากกว่าความคิดที่กำลังผ่านเข้ามา"}</p></div>
@@ -153,15 +153,15 @@ export default function WorryReleaseModal({ open, onClose }) {
               <div className="mx-auto mt-6 max-w-2xl rounded-3xl border border-violet-200/60 bg-violet-100/40 p-4 dark:border-violet-300/10 dark:bg-violet-300/[.06]"><p className="text-[10px] font-bold uppercase tracking-[.15em] text-violet-700 dark:text-violet-200">{en ? "A note to yourself" : "ข้อความถึงตัวเอง"}</p><p className="mt-1 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{en ? "I can come back to this when I have more space. For now, I can rest." : "ฉันกลับมาคิดเรื่องนี้ได้เมื่อพร้อม ตอนนี้ขอพักใจก่อน"}</p></div>
             </motion.div>}
 
-            {step === 3 && <motion.div key="release" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} className="mx-auto w-full max-w-2xl">
+            {step === 3 && <motion.div key="release" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} className="mx-auto flex h-full min-h-[280px] w-full flex-1 flex-col">
               <ThoughtReleaseScene thought={thought} ritual={ritual} language={lang} onContinue={() => setStep(4)} />
             </motion.div>}
 
             {step === 4 && <motion.div key="finish" initial={reduceMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="mx-auto max-w-xl py-3 text-center">
-              <div className="relative mx-auto grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-violet-200 to-sky-100 text-violet-700 shadow-xl shadow-violet-900/10 dark:from-violet-300/15 dark:to-sky-300/10 dark:text-violet-100"><span className="text-5xl" aria-hidden="true">{FEELINGS.find((item) => item.id === feeling)?.emoji || "☁️"}<motion.span className="absolute -right-1 -top-1 text-2xl" animate={reduceMotion ? {} : { y: [0, -6, 0], rotate: [0, 12, 0] }} transition={{ duration: 2.8, repeat: Infinity }}>✨</motion.span></span></div>
+              <div className="relative mx-auto grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-violet-200 to-sky-100 text-violet-700 shadow-xl shadow-violet-900/10 dark:from-violet-300/15 dark:to-sky-300/10 dark:text-violet-100"><span className="relative" aria-hidden="true">{React.createElement(FEELINGS.find((item) => item.id === feeling)?.icon || Cloud, { className: "h-12 w-12", strokeWidth: 1.7 })}<motion.span className="absolute -right-3 -top-3 text-violet-500 dark:text-violet-200" animate={reduceMotion ? {} : { y: [0, -6, 0], rotate: [0, 12, 0] }} transition={{ duration: 2.8, repeat: Infinity }}><Sparkles className="h-5 w-5" /></motion.span></span></div>
               <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-violet-600 dark:text-violet-300">{copy.eyebrow}</p><h3 className="mt-2 text-3xl font-bold tracking-tight">{copy.doneTitle}</h3><p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-600 dark:text-slate-300">{copy.doneText}</p>
               <div className="mt-7 rounded-3xl border border-white/80 bg-white/65 p-5 text-left dark:border-white/10 dark:bg-white/[.05]"><p className="text-sm font-bold">{copy.nextTitle}</p><div className="mt-3 grid gap-2 sm:grid-cols-3">{NEXT_STEPS.map(({ id, icon: Icon, en: labelEn, th: labelTh }) => <button key={id} type="button" aria-pressed={nextStep === id} onClick={() => setNextStep(id)} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-medium transition ${nextStep === id ? "border-violet-400 bg-violet-100/80 text-violet-900 dark:bg-violet-300/10 dark:text-violet-100" : "border-slate-200/80 bg-white/50 hover:bg-white dark:border-white/10 dark:bg-white/[.03] dark:hover:bg-white/[.07]"}`}><Icon className="h-4 w-4 shrink-0" />{en ? labelEn : labelTh}</button>)}</div>{nextStep && <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{en ? "A small step is enough. You can do it in your own time." : "ก้าวเล็ก ๆ ก็เพียงพอ ทำเมื่อพร้อมได้เลย"}</p>}</div>
-              <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row"><button type="button" onClick={closeAndClear} className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-900">{copy.finish}</button><button type="button" onClick={() => { setThought(""); setStep(0); setFeeling("heavy"); setRitual("wind"); setNextStep(null); }} className="rounded-full border border-slate-300 bg-white/50 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/15 dark:bg-white/[.04] dark:text-slate-200 dark:hover:bg-white/[.08]">{copy.restart}</button></div>
+              <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row"><button type="button" onClick={closeAndClear} className="rounded-full !bg-violet-700 px-6 py-3 text-sm font-semibold !text-white shadow-lg transition hover:-translate-y-0.5 hover:!bg-violet-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-700">{copy.finish}</button><button type="button" onClick={() => { setThought(""); setStep(0); setFeeling("heavy"); setRitual("wind"); setNextStep(null); }} className="rounded-full border border-slate-300 bg-white/50 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/15 dark:bg-white/[.04] dark:text-slate-200 dark:hover:bg-white/[.08]">{copy.restart}</button></div>
             </motion.div>}
           </AnimatePresence>
         </div>
