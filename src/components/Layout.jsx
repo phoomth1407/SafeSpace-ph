@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { Home, Users, Phone, History as HistoryIcon, Settings, Pin, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ import PolicyReaderModal from "@/components/PolicyReaderModal";
 import { SAFESPACE_POLICY_EN, SAFESPACE_POLICY_TH } from "@/lib/safespacePolicy";
 import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH } from "@/lib/assessmentPolicy";
 import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH } from "@/lib/communityPolicy";
+import { DESKTOP_MODE_EVENT, isMobileDevice, readDesktopMode } from "@/lib/desktopMode";
 
 export default function Layout() {
   const location = useLocation();
@@ -19,6 +20,8 @@ export default function Layout() {
   const { isAuthenticated, logout, user } = useAuth();
   const { t, lang, setLang } = useTranslation();
   const { theme, toggle } = useTheme();
+  const [desktopMode, setDesktopMode] = useState(readDesktopMode);
+  const [mobileDevice] = useState(isMobileDevice);
   const isAdmin = user?.role === "admin";
   const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : location.pathname === "/assessment" ? "ss-page-assessment" : location.pathname.startsWith("/result") ? "ss-page-result" : location.pathname === "/admin" ? "ss-page-admin" : "ss-page-default";
   const [langOpen, setLangOpen] = useState(false);
@@ -29,6 +32,31 @@ export default function Layout() {
     assessment: { title: lang === "en" ? "Assessment Policy" : "นโยบายการประเมิน", sections: lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH },
     community: { title: lang === "en" ? "Community Policy" : "นโยบายชุมชน", sections: lang === "en" ? COMMUNITY_POLICY_EN : COMMUNITY_POLICY_TH },
   };
+
+  useEffect(() => {
+    const syncDesktopMode = (event) => setDesktopMode(Boolean(event.detail?.enabled));
+    const syncStoredPreference = (event) => {
+      if (event.key === "safespace_mobile_desktop_mode_v1") setDesktopMode(event.newValue === "true");
+    };
+    window.addEventListener(DESKTOP_MODE_EVENT, syncDesktopMode);
+    window.addEventListener("storage", syncStoredPreference);
+    return () => {
+      window.removeEventListener(DESKTOP_MODE_EVENT, syncDesktopMode);
+      window.removeEventListener("storage", syncStoredPreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mobileDevice) return undefined;
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (!viewport) return undefined;
+    viewport.content = desktopMode ? "width=1024, initial-scale=1.0" : "width=device-width, initial-scale=1.0";
+  }, [desktopMode, mobileDevice]);
+
+  useEffect(() => () => {
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) viewport.content = "width=device-width, initial-scale=1.0";
+  }, []);
 
   const navItems = [
     { to: "/", label: t("nav.home"), icon: Home },

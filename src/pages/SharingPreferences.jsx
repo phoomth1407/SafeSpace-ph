@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 import { usePerformanceSettings } from "@/lib/performanceSettings";
+import { DESKTOP_MODE_EVENT, isMobileDevice, readDesktopMode, saveDesktopMode } from "@/lib/desktopMode";
 
 const QUALITY_OPTIONS = ["auto", "low", "balanced", "high", "ultra"];
 
@@ -13,11 +14,26 @@ export default function SharingPreferences() {
   const { lang } = useTranslation();
   const { quality, setQuality, activeQuality, recommendedQuality } = usePerformanceSettings();
   const en = lang === "en";
+  const [desktopMode, setDesktopMode] = useState(readDesktopMode);
+  const [mobileDevice] = useState(isMobileDevice);
   const [sharing, setSharing] = useState(false);
   const [loading, setLoading] = useState(Boolean(isAuthenticated));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const syncDesktopMode = (event) => setDesktopMode(Boolean(event.detail?.enabled));
+    const syncStoredPreference = (event) => {
+      if (event.key === "safespace_mobile_desktop_mode_v1") setDesktopMode(event.newValue === "true");
+    };
+    window.addEventListener(DESKTOP_MODE_EVENT, syncDesktopMode);
+    window.addEventListener("storage", syncStoredPreference);
+    return () => {
+      window.removeEventListener(DESKTOP_MODE_EVENT, syncDesktopMode);
+      window.removeEventListener("storage", syncStoredPreference);
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -90,6 +106,22 @@ export default function SharingPreferences() {
       </div>
       <p className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400"><Sparkles className="w-4 h-4" />{en ? `Active graphics level: ${optionLabels[activeQuality]}` : `ระดับกราฟิกที่ใช้อยู่: ${optionLabels[activeQuality]}`}</p>
     </section>
+
+    {mobileDevice && <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 md:p-8" aria-labelledby="desktop-mode-title">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-indigo-100 dark:bg-indigo-400/15"><MonitorSmartphone className="h-5 w-5 text-indigo-600 dark:text-indigo-300" /></div>
+          <div>
+            <h2 id="desktop-mode-title" className="font-semibold text-slate-900 dark:text-white">{en ? "Desktop mode" : "โหมดเดสก์ท็อป"}</h2>
+            <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Use the wider PC layout on this phone. You can pinch to zoom when needed." : "ใช้รูปแบบหน้าเว็บแบบคอมพิวเตอร์บนโทรศัพท์ และซูมเข้าออกได้ตามต้องการ"}</p>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{desktopMode ? (en ? "On · the page may appear smaller until you zoom in." : "เปิดอยู่ · หน้าเว็บอาจดูเล็กลงจนกว่าจะซูมเข้า") : (en ? "Off by default. Your choice is saved on this device." : "ปิดไว้ตามค่าเริ่มต้น และบันทึกตัวเลือกนี้ในอุปกรณ์นี้")}</p>
+          </div>
+        </div>
+        <button type="button" role="switch" aria-checked={desktopMode} aria-label={en ? "Use desktop mode on this phone" : "ใช้โหมดเดสก์ท็อปบนโทรศัพท์นี้"} onClick={() => { const next = !desktopMode; setDesktopMode(next); saveDesktopMode(next); }} className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 ${desktopMode ? "bg-indigo-600" : "bg-slate-300 dark:bg-slate-600"}`}>
+          <span className={`inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform ${desktopMode ? "translate-x-7" : "translate-x-1"}`} />
+        </button>
+      </div>
+    </section>}
 
     <section className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/80 p-6 md:p-8 space-y-5 shadow-sm">
       <div className="flex items-start gap-3"><ShieldCheck className="w-5 h-5 mt-1 text-violet-500 shrink-0"/><div><h2 className="font-semibold text-slate-900 dark:text-white">{en ? "Data sharing" : "การแบ่งปันข้อมูล"}</h2><p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 mt-1">{en ? "Choose whether SafeSpace administrators may see your assessment risk scores and risk levels. Your answers and written responses are never included in this setting." : "เลือกว่าจะอนุญาตให้ผู้ดูแล SafeSpace เห็นคะแนนและระดับความเสี่ยงจากแบบประเมินหรือไม่ การตั้งค่านี้ไม่รวมคำตอบหรือข้อความที่คุณเขียน"}</p></div></div>
