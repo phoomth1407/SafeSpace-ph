@@ -28,6 +28,7 @@ const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const LanguageSelect = lazy(() => import("@/pages/LanguageSelect"));
 const SharingPreferences = lazy(() => import("@/pages/SharingPreferences"));
+const Toolkit = lazy(() => import("@/pages/Toolkit"));
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION || 'development';
 
@@ -202,6 +203,7 @@ const AuthenticatedApp = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<SharingPreferences />} />
+          <Route path="/toolkit" element={<Toolkit />} />
           <Route path="/sharing-preferences" element={<Navigate to="/settings" replace />} />
           <Route path="/admin" element={<Admin />} />
         </Route>

@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ClipboardList,
@@ -72,12 +72,26 @@ function getFormattedDate(lang) {
   return now.toLocaleDateString("th-TH", { weekday: "long", day: "numeric", month: "long" });
 }
 
+function recommendToolForMood(mood, hour = new Date().getHours()) {
+  const night = hour >= 19 || hour < 5;
+  if (mood === "worried" || mood === "stressed") return "breathing";
+  if (mood === "sad" || mood === "heavy") return night ? "sounds" : "thought";
+  if (night) return "sounds";
+  if (hour >= 5 && hour < 11) return "grounding";
+  return mood === "great" || mood === "good" ? "grounding" : "breathing";
+}
+
 export default function Home() {
   const { t, lang } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const studioRef = useRef(null);
+  const spotlightRef = useRef(null);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
   const [worryOpen, setWorryOpen] = useState(false);
   const [showInsights, setShowInsights] = useState(false);
+  const [recommendation, setRecommendation] = useState(null);
 
   const greeting = useMemo(() => getGreeting(lang), [lang]);
   const formattedDate = useMemo(() => getFormattedDate(lang), [lang]);
@@ -86,6 +100,72 @@ export default function Home() {
   const handleOpenSounds = () => {
     window.dispatchEvent(new Event("safespace:open-sounds"));
   };
+
+  const openTool = (toolId) => {
+    setRecommendation(null);
+    if (toolId === "breathing") setBreathingOpen(true);
+    else if (toolId === "grounding") setGroundingOpen(true);
+    else if (toolId === "thought") setWorryOpen(true);
+    else if (toolId === "sounds") handleOpenSounds();
+  };
+
+  useEffect(() => {
+    const toolId = location.state?.safeSpaceOpenTool;
+    if (!toolId) return;
+    setRecommendation(null);
+    if (toolId === "breathing") setBreathingOpen(true);
+    else if (toolId === "grounding") setGroundingOpen(true);
+    else if (toolId === "thought") setWorryOpen(true);
+    else if (toolId === "sounds") handleOpenSounds();
+    navigate("/", { replace: true, state: null });
+  }, [location.state, navigate]);
+
+  useEffect(() => {
+    const handleMoodSaved = (event) => {
+      const mood = event.detail?.mood;
+      if (!mood) return;
+      const tool = recommendToolForMood(mood);
+      setRecommendation({ mood, tool });
+      window.requestAnimationFrame(() => {
+        studioRef.current?.scrollIntoView({ behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+      });
+    };
+    window.addEventListener("safespace:mood-saved", handleMoodSaved);
+    return () => window.removeEventListener("safespace:mood-saved", handleMoodSaved);
+  }, []);
+
+  useEffect(() => {
+    if (!recommendation) return undefined;
+    let frame = 0;
+    const updateSpotlight = () => {
+      const target = document.querySelector(`[data-tool-id="${recommendation.tool}"]`);
+      const overlay = spotlightRef.current;
+      if (!target || !overlay) return;
+      const bounds = target.getBoundingClientRect();
+      overlay.style.setProperty("--focus-x", `${bounds.left + bounds.width / 2}px`);
+      overlay.style.setProperty("--focus-y", `${bounds.top + bounds.height / 2}px`);
+      overlay.style.setProperty("--focus-rx", `${bounds.width / 2 + 26}px`);
+      overlay.style.setProperty("--focus-ry", `${bounds.height / 2 + 22}px`);
+    };
+    const scheduleUpdate = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(updateSpotlight);
+    };
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [recommendation]);
+
+  const suggestedToolTitle = recommendation?.tool === "breathing" ? t("breath.title")
+    : recommendation?.tool === "grounding" ? t("ground.title")
+      : recommendation?.tool === "thought" ? t("worry.title")
+        : recommendation?.tool === "sounds" ? (lang === "en" ? "Ambient Sounds" : "เสียงบรรยากาศ") : "";
+  const moodTitle = recommendation ? t(`mood.${recommendation.mood}`) : "";
 
   return (
     <div className="home-page space-y-6 md:space-y-8 max-w-5xl mx-auto pb-6">
@@ -203,7 +283,7 @@ export default function Home() {
         </div>
 
         {/* Right Column: Interactive Self-Care Studio (5 cols - 2x2 Grid) */}
-        <div className="lg:col-span-5 flex flex-col justify-between gap-3">
+        <div ref={studioRef} id="self-care-tools" className="lg:col-span-5 flex flex-col justify-between gap-3 scroll-mt-24">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
@@ -220,10 +300,11 @@ export default function Home() {
             {/* Tool 1: Guided Breathing */}
             <motion.button
               type="button"
+              data-tool-id="breathing"
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setBreathingOpen(true)}
-              className="flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-sky-400/60 dark:hover:border-sky-500/40 text-left transition-all shadow-xs hover:shadow-md group"
+              onClick={() => openTool("breathing")}
+              className={`flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-sky-400/60 dark:hover:border-sky-500/40 text-left transition-all shadow-xs hover:shadow-md group ${recommendation?.tool === "breathing" ? "ring-4 ring-sky-300/90 shadow-xl shadow-sky-900/20" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-sky-100 dark:bg-sky-500/10 text-sky-600 dark:text-sky-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
@@ -246,10 +327,11 @@ export default function Home() {
             {/* Tool 2: Grounding Exercise */}
             <motion.button
               type="button"
+              data-tool-id="grounding"
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setGroundingOpen(true)}
-              className="flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400/60 dark:hover:border-emerald-500/40 text-left transition-all shadow-xs hover:shadow-md group"
+              onClick={() => openTool("grounding")}
+              className={`flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400/60 dark:hover:border-emerald-500/40 text-left transition-all shadow-xs hover:shadow-md group ${recommendation?.tool === "grounding" ? "ring-4 ring-emerald-300/90 shadow-xl shadow-emerald-900/20" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
@@ -272,10 +354,11 @@ export default function Home() {
             {/* Tool 3: Worry Release */}
             <motion.button
               type="button"
+              data-tool-id="thought"
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setWorryOpen(true)}
-              className="flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-violet-400/60 dark:hover:border-violet-500/40 text-left transition-all shadow-xs hover:shadow-md group"
+              onClick={() => openTool("thought")}
+              className={`flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-violet-400/60 dark:hover:border-violet-500/40 text-left transition-all shadow-xs hover:shadow-md group ${recommendation?.tool === "thought" ? "ring-4 ring-violet-300/90 shadow-xl shadow-violet-900/20" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-violet-100 dark:bg-violet-500/10 text-violet-600 dark:text-violet-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
@@ -298,10 +381,11 @@ export default function Home() {
             {/* Tool 4: Ambient Sound Mixer */}
             <motion.button
               type="button"
+              data-tool-id="sounds"
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={handleOpenSounds}
-              className="flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-amber-400/60 dark:hover:border-amber-500/40 text-left transition-all shadow-xs hover:shadow-md group"
+              onClick={() => openTool("sounds")}
+              className={`flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-amber-400/60 dark:hover:border-amber-500/40 text-left transition-all shadow-xs hover:shadow-md group ${recommendation?.tool === "sounds" ? "ring-4 ring-amber-300/90 shadow-xl shadow-amber-900/20" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-300 flex items-center justify-center p-2 group-hover:scale-110 transition-transform">
@@ -456,6 +540,17 @@ export default function Home() {
       <BreathingExerciseModal open={breathingOpen} onClose={() => setBreathingOpen(false)} />
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
       <WorryReleaseModal open={worryOpen} onClose={() => setWorryOpen(false)} />
+
+      {recommendation && <>
+        <div ref={spotlightRef} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[65] bg-slate-950/45 backdrop-blur-sm transition-opacity" style={{ "--focus-x": "50vw", "--focus-y": "50vh", "--focus-rx": "120px", "--focus-ry": "90px", maskImage: "radial-gradient(ellipse var(--focus-rx) var(--focus-ry) at var(--focus-x) var(--focus-y), transparent 0%, transparent 84%, black 100%)", WebkitMaskImage: "radial-gradient(ellipse var(--focus-rx) var(--focus-ry) at var(--focus-x) var(--focus-y), transparent 0%, transparent 84%, black 100%)" }} />
+        <aside aria-label={lang === "en" ? "Suggested tool" : "เครื่องมือแนะนำ"} className="fixed bottom-[5.25rem] right-4 z-[80] w-[min(22rem,calc(100vw-2rem))] rounded-3xl border border-white/80 bg-white/95 p-5 text-slate-900 shadow-2xl shadow-slate-950/25 backdrop-blur-xl dark:border-slate-700 dark:bg-slate-900/95 dark:text-white md:bottom-5">
+          <p aria-live="polite" className="text-[10px] font-bold uppercase tracking-[.16em] text-violet-600 dark:text-violet-300">{lang === "en" ? "A gentle suggestion" : "คำแนะนำเบา ๆ"}</p>
+          <h2 className="mt-1 text-lg font-bold">{suggestedToolTitle}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{lang === "en" ? `You checked in as ${moodTitle}. Based on your mood and the time of day, this tool may feel helpful. It is only a suggestion.` : `คุณบันทึกอารมณ์ว่า “${moodTitle}” จากอารมณ์และช่วงเวลานี้ เครื่องมือนี้อาจเหมาะกับคุณ เป็นเพียงคำแนะนำเท่านั้น`}</p>
+          <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{lang === "en" ? "Tap the highlighted tool to open it." : "แตะเครื่องมือที่ไฮไลต์เพื่อเปิดใช้"}</p>
+          <button type="button" onClick={() => setRecommendation(null)} className="mt-4 min-h-10 w-full rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">{lang === "en" ? "Okay, got it" : "เข้าใจแล้ว"}</button>
+        </aside>
+      </>}
     </div>
   );
 }

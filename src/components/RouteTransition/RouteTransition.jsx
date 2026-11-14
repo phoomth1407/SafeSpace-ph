@@ -10,6 +10,7 @@ const LABELS = {
   "/community": { en: "Community", th: "ชุมชน" },
   "/resources": { en: "Resources", th: "แหล่งช่วยเหลือ" },
   "/history": { en: "History", th: "ประวัติ" },
+  "/toolkit": { en: "Toolkit", th: "ชุดเครื่องมือ" },
   "/contact-admin": { en: "Contact", th: "ติดต่อผู้ดูแล" },
   "/admin": { en: "Admin", th: "ผู้ดูแลระบบ" },
   "/login": { en: "Sign in", th: "เข้าสู่ระบบ" },

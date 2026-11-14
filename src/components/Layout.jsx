@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
-import { Home, Users, Phone, History as HistoryIcon, Settings, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
+import { Home, Users, Phone, History as HistoryIcon, Settings, Pin, LogIn, UserPlus, LogOut, Shield, Globe, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
@@ -65,6 +65,7 @@ export default function Layout() {
                   </Link>
                 );
               })}
+              <Link to="/toolkit" className={cn("nav-link flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm transition-all", location.pathname === "/toolkit" ? "nav-link-active" : "text-slate-400 hover:text-slate-100")}><Pin className="w-4 h-4" />{lang === "en" ? "Toolkit" : "ชุดเครื่องมือ"}</Link>
             </nav>
           </div>
 
@@ -118,6 +119,7 @@ export default function Layout() {
             return <Link key={item.to} to={item.to} className={cn("nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", active ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Icon className="w-[18px] h-[18px]" />{item.label}</Link>;
           })}
           {isAdmin && <Link to="/admin" className={cn("flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", location.pathname === "/admin" ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Shield className="w-[18px] h-[18px]" />{t("nav.admin")}</Link>}
+          <Link to="/toolkit" className={cn("flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", location.pathname === "/toolkit" ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Pin className="w-[18px] h-[18px]" />{lang === "en" ? "Toolkit" : "ชุดเครื่องมือ"}</Link>
         </nav>
         <div className="mt-auto px-3 py-3 text-xs leading-relaxed text-slate-400">{lang === "en" ? "A calm space to care for your mind." : "พื้นที่อ่อนโยนสำหรับดูแลใจ"}</div>
       </aside>
@@ -197,6 +199,7 @@ export default function Layout() {
             const active = location.pathname === item.to;
             return <Link key={item.to} to={item.to} className={cn("flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all", active ? "mobile-nav-active" : "text-slate-500")}><Icon className="w-5 h-5" /><span className="text-[10px] font-medium">{item.label}</span></Link>;
           })}
+          <Link to="/toolkit" className={cn("flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-2 rounded-xl transition-all", location.pathname === "/toolkit" ? "mobile-nav-active" : "text-slate-500")}><Pin className="w-5 h-5" /><span className="max-w-full truncate text-[10px] font-medium">{lang === "en" ? "Toolkit" : "ชุดเครื่องมือ"}</span></Link>
         </div>
       </nav>
     </div>

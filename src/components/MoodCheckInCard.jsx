@@ -143,6 +143,7 @@ export default function MoodCheckInCard() {
       setHistory(updated);
       setSaved(true);
       setIsEditing(false);
+      window.dispatchEvent(new CustomEvent("safespace:mood-saved", { detail: { mood } }));
     } catch {
       setSaved(false);
     } finally {
