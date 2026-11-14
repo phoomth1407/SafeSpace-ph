@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Wind } from "lucide-react";
+import { usePerformanceSettings } from "@/lib/performanceSettings";
 
 const RELEASE_AT = 4.8;
 const BREATH_CARD_AT = 13.4;
@@ -26,34 +27,71 @@ const RITUALS = {
   },
   starlight: {
     colors: ["#07091f", "#171746", "#3a2c78", "#82508f"],
-    caption: ["Let it grow smaller beneath a wide sky.", "ปล่อยให้มันเล็กลงใต้ท้องฟ้ากว้าง"],
+    caption: ["Watch your thought become starlight.", "มองความคิดค่อย ๆ กลายเป็นแสงดาว"],
   },
 };
 
-function makeTextParticles(text, width, height, ritual) {
+const QUALITY_BUDGET = { low: 200, balanced: 380, high: 650, ultra: 950 };
+const seededRandom = (value, salt) => {
+  const raw = Math.sin((value + 1) * 127.1 + salt * 311.7) * 43758.5453;
+  return raw - Math.floor(raw);
+};
+
+function splitLongToken(token, context, maxWidth) {
+  const graphemes = typeof Intl.Segmenter === "function"
+    ? Array.from(new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(token), (item) => item.segment)
+    : Array.from(token);
+  const pieces = [];
+  let piece = "";
+  for (const grapheme of graphemes) {
+    if (piece && context.measureText(piece + grapheme).width > maxWidth) {
+      pieces.push(piece);
+      piece = grapheme;
+    } else piece += grapheme;
+  }
+  if (piece) pieces.push(piece);
+  return pieces;
+}
+
+function wrapThought(text, context, maxWidth) {
+  const lines = [];
+  for (const paragraph of text.trim().split(/\n+/)) {
+    let line = "";
+    for (const token of paragraph.match(/\s+|[^\s]+/gu) || []) {
+      if (/^\s+$/u.test(token)) {
+        if (line) line += " ";
+        continue;
+      }
+      const pieces = context.measureText(token).width <= maxWidth
+        ? [token]
+        : splitLongToken(token, context, maxWidth);
+      for (const piece of pieces) {
+        const next = line ? `${line}${piece}` : piece;
+        if (line && context.measureText(next).width > maxWidth) {
+          lines.push(line);
+          line = piece;
+        } else line = next;
+      }
+    }
+    if (line) lines.push(line);
+  }
+  return lines.length ? lines : [""];
+}
+
+function makeTextParticles(text, width, height, ritual, quality) {
   const stamp = document.createElement("canvas");
   stamp.width = Math.ceil(width);
   stamp.height = Math.ceil(height);
   const stampContext = stamp.getContext("2d", { willReadFrequently: true });
   if (!stampContext) return [];
 
-  const maxWidth = width * 0.82;
-  const words = text.trim().split(/\s+/).filter(Boolean);
+  const maxWidth = width * 0.84;
   let fontSize = Math.min(76, width / 5.2);
-  let lines = [];
-  for (; fontSize >= 16; fontSize -= 2) {
+  let lines = [text];
+  for (; fontSize >= 10; fontSize -= 2) {
     stampContext.font = `500 ${fontSize}px Mali, "Segoe Print", "Bradley Hand", cursive`;
-    lines = [];
-    let current = "";
-    for (const word of words) {
-      const next = current ? `${current} ${word}` : word;
-      if (current && stampContext.measureText(next).width > maxWidth) {
-        lines.push(current);
-        current = word;
-      } else current = next;
-    }
-    if (current) lines.push(current);
-    if (lines.length <= 5 && lines.length * fontSize * 1.22 < height * 0.48) break;
+    lines = wrapThought(text || "love", stampContext, maxWidth);
+    if (lines.length * fontSize * 1.18 <= height * 0.5) break;
   }
 
   stampContext.clearRect(0, 0, stamp.width, stamp.height);
@@ -61,14 +99,15 @@ function makeTextParticles(text, width, height, ritual) {
   stampContext.textAlign = "center";
   stampContext.textBaseline = "middle";
   stampContext.fillStyle = "#fff";
-  const lineHeight = fontSize * 1.22;
-  const firstY = height * 0.43 - ((lines.length - 1) * lineHeight) / 2;
+  const lineHeight = Math.min(fontSize * 1.22, (height * 0.5) / Math.max(1, lines.length));
+  const firstY = height * 0.44 - ((lines.length - 1) * lineHeight) / 2;
   lines.forEach((line, index) => stampContext.fillText(line, width / 2, firstY + index * lineHeight, maxWidth));
 
   const pixels = stampContext.getImageData(0, 0, stamp.width, stamp.height).data;
+  const budget = QUALITY_BUDGET[quality] || QUALITY_BUDGET.balanced;
   let sample = 3;
   let points = [];
-  for (const stride of [3, 4, 5, 6, 8]) {
+  for (const stride of [3, 4, 5, 6, 8, 10, 12, 14]) {
     sample = stride;
     points = [];
     for (let y = 0; y < stamp.height; y += stride) {
@@ -76,7 +115,24 @@ function makeTextParticles(text, width, height, ritual) {
         if (pixels[(y * stamp.width + x) * 4 + 3] > 120) points.push({ x, y });
       }
     }
-    if (points.length <= 3400) break;
+    if (points.length <= budget) break;
+  }
+
+  const columns = Math.ceil(Math.sqrt(points.length * (width / Math.max(1, height))));
+  const rows = Math.ceil(points.length / Math.max(1, columns));
+  const targets = Array.from({ length: points.length }, (_, index) => {
+    const column = index % columns;
+    const row = Math.floor(index / columns);
+    const cellWidth = width * 0.76 / columns;
+    const cellHeight = height * 0.58 / rows;
+    return {
+      x: width * 0.12 + (column + 0.5 + (Math.random() - 0.5) * 0.42) * cellWidth,
+      y: height * 0.08 + (row + 0.5 + (Math.random() - 0.5) * 0.42) * cellHeight,
+    };
+  });
+  for (let index = targets.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [targets[index], targets[swapIndex]] = [targets[swapIndex], targets[index]];
   }
 
   return points.map(({ x, y }, index) => ({
@@ -85,14 +141,14 @@ function makeTextParticles(text, width, height, ritual) {
     x,
     y,
     size: sample * (0.45 + Math.random() * 0.55),
-    delay: ritual === "wind" ? ((x / width) * 2.4) + Math.random() * 0.6 : Math.random() * 2.4,
+    delay: ritual === "wind" ? ((x / width) * 2.4) + Math.random() * 0.6 : ritual === "starlight" ? 0.3 + Math.random() * 1.3 : Math.random() * 2.4,
     phase: Math.random() * Math.PI * 2,
-    targetX: width * (0.08 + Math.random() * 0.84),
-    targetY: height * (0.06 + Math.random() * 0.4),
-    sway: (Math.random() - 0.5) * 90,
+    targetX: targets[index]?.x ?? width * 0.5,
+    targetY: targets[index]?.y ?? height * 0.3,
+    sway: (Math.random() - 0.5) * width * 0.14,
     waterY: height * (0.68 + Math.random() * 0.17),
     soilY: height * (0.78 + Math.random() * 0.08),
-    color: `hsl(${Math.random() < 0.35 ? 335 : 145 + Math.random() * 25} 78% 86%)`,
+    color: ritual === "starlight" ? `hsl(${205 + Math.random() * 55} 100% ${76 + Math.random() * 18}%)` : `hsl(${Math.random() < 0.35 ? 335 : 145 + Math.random() * 25} 78% 86%)`,
     index,
   }));
 }
@@ -111,8 +167,10 @@ function drawRidges(context, width, height, y, amplitude, frequency, phase, colo
   context.fill();
 }
 
-function drawScene(context, width, height, time, ritual, particles) {
+function drawScene(context, width, height, time, ritual, particles, quality) {
   const palette = RITUALS[ritual] || RITUALS.wind;
+  const enhanced = quality === "high" || quality === "ultra";
+  const ultra = quality === "ultra";
   const sky = context.createLinearGradient(0, 0, 0, height);
   palette.colors.forEach((color, index) => sky.addColorStop(index / 3, color));
   context.fillStyle = sky;
@@ -121,8 +179,13 @@ function drawScene(context, width, height, time, ritual, particles) {
   if (ritual === "starlight") {
     const moonX = width * 0.8;
     const moonY = height * 0.2;
-    const moonGlow = context.createRadialGradient(moonX, moonY, 0, moonX, moonY, height * 0.52);
-    moonGlow.addColorStop(0, "rgba(225,205,255,.48)");
+    const nebula = context.createRadialGradient(width * 0.38, height * 0.34, 0, width * 0.38, height * 0.34, width * (ultra ? 0.64 : 0.52));
+    nebula.addColorStop(0, `rgba(123,103,210,${ultra ? 0.3 : enhanced ? 0.22 : 0.12})`);
+    nebula.addColorStop(1, "rgba(123,103,210,0)");
+    context.fillStyle = nebula;
+    context.fillRect(0, 0, width, height);
+    const moonGlow = context.createRadialGradient(moonX, moonY, 0, moonX, moonY, height * (ultra ? 0.7 : 0.52));
+    moonGlow.addColorStop(0, ultra ? "rgba(225,205,255,.58)" : "rgba(225,205,255,.42)");
     moonGlow.addColorStop(1, "rgba(225,205,255,0)");
     context.fillStyle = moonGlow;
     context.fillRect(0, 0, width, height);
@@ -130,22 +193,48 @@ function drawScene(context, width, height, time, ritual, particles) {
     context.beginPath();
     context.arc(moonX, moonY, Math.max(7, height * 0.035), 0, Math.PI * 2);
     context.fill();
-    for (let index = 0; index < 100; index += 1) {
-      const x = ((index * 97 + 21) % 997) / 997 * width;
-      const y = ((index * 193 + 87) % 991) / 991 * height * 0.76;
+    if (enhanced) {
+      context.save();
+      context.globalAlpha = 0.14;
+      context.fillStyle = "#a69ad4";
+      context.beginPath();
+      context.arc(moonX - height * 0.012, moonY - height * 0.008, height * 0.009, 0, Math.PI * 2);
+      context.arc(moonX + height * 0.011, moonY + height * 0.01, height * 0.006, 0, Math.PI * 2);
+      context.fill();
+      context.restore();
+    }
+    const starCount = quality === "low" ? 30 : quality === "balanced" ? 58 : ultra ? 170 : 110;
+    for (let index = 0; index < starCount; index += 1) {
+      const x = seededRandom(index, 1) * width;
+      const y = seededRandom(index, 2) * height * 0.76;
       const twinkle = 0.25 + 0.65 * (0.5 + 0.5 * Math.sin(time * 1.4 + index));
       context.globalAlpha = twinkle;
-      context.fillStyle = "#fff";
+      context.fillStyle = index % 7 === 0 ? "#d8dcff" : "#fff8e8";
       context.beginPath();
-      context.arc(x, y, 0.7 + (index % 3) * 0.35, 0, Math.PI * 2);
+      context.arc(x, y, 0.8 + (index % 3) * (ultra ? 0.7 : 0.35), 0, Math.PI * 2);
       context.fill();
+      if (ultra && index % 17 === 0) {
+        context.globalAlpha = twinkle * 0.36;
+        context.strokeStyle = "#e8e5ff";
+        context.lineWidth = 0.8;
+        context.beginPath();
+        context.moveTo(x - 4, y);
+        context.lineTo(x + 4, y);
+        context.moveTo(x, y - 4);
+        context.lineTo(x, y + 4);
+        context.stroke();
+      }
     }
     context.globalAlpha = 1;
+    context.save();
+    if (enhanced) {
+      context.shadowColor = "rgba(4,5,30,.55)";
+      context.shadowBlur = ultra ? 28 : 16;
+    }
     drawRidges(context, width, height, height * 0.8, 14, 0.009, 2, "#151239");
     drawRidges(context, width, height, height * 0.88, 10, 0.013, 5, "#0c0a28");
-    return;
-  }
-
+    context.restore();
+  } else {
   const sunX = ritual === "river" ? width * 0.74 : width * 0.3;
   const sunY = height * (ritual === "river" ? 0.53 : 0.42);
   const sunGlow = context.createRadialGradient(sunX, sunY, 1, sunX, sunY, height * 0.55);
@@ -254,6 +343,7 @@ function drawScene(context, width, height, time, ritual, particles) {
       context.stroke();
     }
   }
+  }
 
   if (ritual === "wind") {
     const wind = smooth(RELEASE_AT - 0.6, RELEASE_AT + 1.5, time)
@@ -272,6 +362,10 @@ function drawScene(context, width, height, time, ritual, particles) {
     context.globalAlpha = 1;
   }
 
+  if (enhanced) {
+    context.shadowColor = ritual === "starlight" ? "rgba(189,205,255,.9)" : "rgba(255,255,255,.65)";
+    context.shadowBlur = ultra ? 14 : 8;
+  }
   particles.forEach((particle) => {
     const age = time - (RELEASE_AT + particle.delay);
     let alpha = smooth(1.4, 2.8, time);
@@ -311,17 +405,32 @@ function drawScene(context, width, height, time, ritual, particles) {
       const progress = smooth(0, 2.6 + (particle.index % 10) * 0.2, age);
       const arc = Math.sin(progress * Math.PI);
       x = mix(particle.homeX, particle.targetX, progress) + arc * particle.sway;
-      y = mix(particle.homeY, particle.targetY, progress) - arc * 22;
-      size *= mix(1, 0.65, progress);
-      alpha = age < 3 ? alpha * (1 - smooth(2.2, 3.2, age)) : 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(time * 2 + particle.phase * 4));
+      y = mix(particle.homeY, particle.targetY, progress) - arc * height * 0.11;
+      size *= mix(1, ritual === "starlight" ? (ultra ? 1.4 : 1.2) : 0.65, progress);
+      if (ritual === "starlight") {
+        const arrived = smooth(1.65, 2.55, age);
+        const twinkle = 0.46 + 0.48 * (0.5 + 0.5 * Math.sin(time * (ultra ? 3.2 : 2.2) + particle.phase * 3));
+        alpha *= mix(1 - smooth(0.25, 1.45, age), twinkle, arrived);
+      } else {
+        alpha = age < 3 ? alpha * (1 - smooth(2.2, 3.2, age)) : 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(time * 2 + particle.phase * 4));
+      }
     }
     if (alpha <= 0.01) return;
     context.globalAlpha = alpha;
-    context.fillStyle = ritual === "garden" && age > 0.4 ? particle.color : "#fff";
+    context.fillStyle = ritual === "garden" && age > 0.4 ? particle.color : ritual === "starlight" ? particle.color : "#fff";
     context.beginPath();
-    context.arc(x, y, Math.max(0.65, size * (ritual === "river" && age > 0.8 ? 1.5 : 1)), 0, Math.PI * 2);
+    if (ritual === "starlight" && age > 1.5 && size >= 2.3) {
+      const radius = Math.min(4.2, Math.max(1.1, size * 0.72));
+      context.moveTo(x, y - radius * 1.8);
+      context.quadraticCurveTo(x + radius * 0.22, y - radius * 0.22, x + radius * 1.8, y);
+      context.quadraticCurveTo(x + radius * 0.22, y + radius * 0.22, x, y + radius * 1.8);
+      context.quadraticCurveTo(x - radius * 0.22, y + radius * 0.22, x - radius * 1.8, y);
+      context.quadraticCurveTo(x - radius * 0.22, y - radius * 0.22, x, y - radius * 1.8);
+      context.closePath();
+    } else context.arc(x, y, Math.max(0.65, size * (ritual === "river" && age > 0.8 ? 1.5 : 1)), 0, Math.PI * 2);
     context.fill();
   });
+  context.shadowBlur = 0;
   context.globalAlpha = 1;
 }
 
@@ -337,6 +446,7 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
   const reduceMotion = useReducedMotion();
+  const { activeQuality } = usePerformanceSettings();
   const [caption, setCaption] = useState("");
   const [breathReady, setBreathReady] = useState(false);
 
@@ -359,11 +469,12 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
       const bounds = stage.getBoundingClientRect();
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
-      ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const qualityScale = activeQuality === "low" ? 1 : activeQuality === "balanced" ? 1.3 : activeQuality === "high" ? 1.75 : 2;
+      ratio = Math.min(window.devicePixelRatio || 1, qualityScale);
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      particles = makeTextParticles(thought || "love", width, height, ritual);
+      particles = makeTextParticles(thought || "love", width, height, ritual, activeQuality);
     };
     fit();
 
@@ -372,7 +483,7 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
 
     const render = (now) => {
       const time = reduceMotion ? BREATH_CARD_AT : (now - startTime) / 1000;
-      drawScene(context, width, height, time, ritual, particles);
+      drawScene(context, width, height, time, ritual, particles, activeQuality);
 
       const nextCaption = reduceMotion ? "" : captionAt(time, ritual, language);
       if (nextCaption !== lastCaption) {
@@ -383,7 +494,7 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
         hasShownBreath = true;
         setBreathReady(true);
       }
-      if (!reduceMotion) animationFrame = requestAnimationFrame(render);
+      if (!reduceMotion && time < BREATH_CARD_AT) animationFrame = requestAnimationFrame(render);
     };
 
     if (reduceMotion) {
@@ -397,10 +508,10 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
       cancelAnimationFrame(animationFrame);
       observer.disconnect();
     };
-  }, [thought, ritual, language, reduceMotion]);
+  }, [thought, ritual, language, reduceMotion, activeQuality]);
 
   return (
-    <div ref={stageRef} className="relative mx-auto aspect-[5/4] min-h-[280px] w-full max-w-2xl overflow-hidden rounded-[1.8rem] bg-[#171746] shadow-[0_22px_70px_rgba(34,24,80,.3)] sm:min-h-[350px]">
+    <div ref={stageRef} data-scene-quality={activeQuality} className={`thought-release-scene relative mx-auto aspect-[5/4] min-h-[280px] w-full max-w-2xl overflow-hidden rounded-[1.8rem] bg-[#171746] ${activeQuality === "ultra" ? "shadow-[0_30px_100px_rgba(75,57,160,.44)]" : activeQuality === "low" ? "shadow-md" : "shadow-[0_22px_70px_rgba(34,24,80,.3)]"} sm:min-h-[350px]`}>
       <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full" />
       <motion.p
         aria-live="polite"
