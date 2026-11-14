@@ -84,6 +84,20 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
   100%{transform:translate3d(2%,2%,0) scale(1.04)}
 }
 
+/* User-selected graphics quality. Low removes continuous decorative work;
+   balanced keeps the atmosphere but holds motion still; high keeps the full FX. */
+:root[data-graphics-quality='low'] .ss-orb,
+:root[data-graphics-quality='low'] .ss-backdrop::before,
+:root[data-graphics-quality='low'] .visual-orb,
+:root[data-graphics-quality='low'] .floating-orb-mobile{display:none!important;animation:none!important;}
+:root[data-graphics-quality='low'] .ss-grain{display:none!important;}
+:root[data-graphics-quality='low'] .ss-surface{backdrop-filter:none;-webkit-backdrop-filter:none;}
+:root[data-graphics-quality='low'] .page-shell [class*='backdrop-blur-']{backdrop-filter:none;-webkit-backdrop-filter:none;}
+:root[data-graphics-quality='balanced'] .ss-orb,
+:root[data-graphics-quality='balanced'] .ss-backdrop::before{animation:none!important;}
+:root[data-graphics-quality='balanced'] .visual-orb{filter:blur(42px);}
+:root[data-graphics-quality='high'] .ss-surface{box-shadow:inset 0 1px 0 rgb(255 255 255/.14),0 14px 36px -12px rgb(var(--ss-shadow)/.2),0 42px 78px -34px rgb(var(--ss-primary)/.24);}
+
 /* Home: warm, welcoming aurora. */
 .ss-page-home .ss-backdrop{
   background:
@@ -1129,3 +1143,4 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
     radial-gradient(circle at 88% 18%,rgb(139 92 246/.07),transparent 32%),
     linear-gradient(150deg,#172033 0%,#1b2336 52%,#17212f 100%);
 }
+

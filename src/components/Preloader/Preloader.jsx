@@ -19,10 +19,10 @@ export default function Preloader({ onComplete }) {
   const shieldRef = useRef(null);
   const cursorRef = useRef(null);
   const ringRef = useRef(null);
-  const soundOnRef = useRef(true);
+  const soundOnRef = useRef(false);
   const startedRef = useRef(false);
   const [gone, setGone] = useState(false);
-  const [soundOn, setSoundOn] = useState(true);
+  const [soundOn, setSoundOn] = useState(false);
 
   useEffect(() => {
     soundOnRef.current = soundOn;
@@ -385,8 +385,6 @@ export default function Preloader({ onComplete }) {
 
         if (progress >= 100) {
           pre.classList.add("preloader-ready");
-          playTone(660, .22, "sine", .08);
-          playTone(880, .34, "sine", .075, .14);
           window.setTimeout(exit, 600);
           return;
         }
@@ -543,3 +541,4 @@ export default function Preloader({ onComplete }) {
     </div>
   );
 }
+

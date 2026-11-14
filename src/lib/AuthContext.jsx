@@ -13,7 +13,19 @@ export const AuthProvider = ({ children }) => {
   const checkUserAuth = useCallback(async () => {
     try {
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) throw sessionError;
+      if (sessionError) {
+        // A refresh token can be revoked or rotated by another tab/device.
+        // Clear only this browser's stale session so Auth can recover cleanly.
+        const message = `${sessionError.message || ""} ${sessionError.code || ""}`.toLowerCase();
+        if (message.includes("refresh token") || message.includes("invalid_grant")) {
+          await supabase.auth.signOut({ scope: "local" });
+          setUser(null);
+          setIsAuthenticated(false);
+          setAuthError(null);
+          return;
+        }
+        throw sessionError;
+      }
 
       if (!sessionData.session) {
         setUser(null);
@@ -36,8 +48,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    checkUserAuth();
-
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       // Update the basic auth state immediately from Supabase, then hydrate
       // the application profile without creating an auth/session race.
@@ -45,13 +55,15 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setIsAuthenticated(false);
         setIsLoadingAuth(false);
+        setAuthError(null);
         return;
       }
 
       // Keep protected routes behind the auth-loading gate until the
       // SafeSpace user profile has finished hydrating after sign-in.
       setIsLoadingAuth(true);
-      void checkUserAuth();
+      // Defer Supabase calls until after the synchronous auth callback returns.
+      window.setTimeout(() => { void checkUserAuth(); }, 0);
 
       if (event === "SIGNED_IN") {
         const pending = sessionStorage.getItem("safespace_auth_return_to");
@@ -101,3 +113,4 @@ export const useAuth = () => {
   if (!context) throw Error("useAuth must be used within an AuthProvider");
   return context;
 };
+

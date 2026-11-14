@@ -35,7 +35,7 @@ export default function Layout() {
     { to: "/history", label: t("nav.history"), icon: HistoryIcon },
     { to: "/community", label: t("nav.community"), icon: Users },
     { to: "/resources", label: t("nav.resources"), icon: Phone },
-    ...(isAuthenticated ? [{ to: "/sharing-preferences", label: lang === "en" ? "Sharing" : "แบ่งปันข้อมูล", icon: Settings }] : [])
+    { to: "/settings", label: lang === "en" ? "Settings" : "ตั้งค่า", icon: Settings }
   ];
 
   const handleLogout = () => {
@@ -54,7 +54,7 @@ export default function Layout() {
           </Link>
 
           <div className="header-main flex items-center gap-2 min-w-0 flex-1">
-            <nav className="hidden md:flex items-center gap-1 nav-rail desktop-centered-nav min-w-0 flex-1 justify-center">
+            <nav className="hidden md:flex lg:hidden items-center gap-1 nav-rail desktop-centered-nav min-w-0 flex-1 justify-center">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = location.pathname === item.to;
@@ -106,13 +106,26 @@ export default function Layout() {
         </div>
       </header>
 
+      <aside className="desktop-sidebar hidden lg:flex fixed left-0 top-16 bottom-0 z-30 w-60 flex-col border-r border-slate-200/70 dark:border-white/10 bg-white/75 dark:bg-slate-950/70 backdrop-blur-xl px-3 py-5" aria-label={lang === "en" ? "Main navigation" : "เมนูหลัก"}>
+        <p className="px-3 pb-3 text-[10px] uppercase tracking-[.18em] font-semibold text-slate-400">{lang === "en" ? "Navigate" : "เมนู"}</p>
+        <nav className="flex flex-col gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = location.pathname === item.to;
+            return <Link key={item.to} to={item.to} className={cn("nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", active ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Icon className="w-[18px] h-[18px]" />{item.label}</Link>;
+          })}
+          {isAdmin && <Link to="/admin" className={cn("flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", location.pathname === "/admin" ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Shield className="w-[18px] h-[18px]" />{t("nav.admin")}</Link>}
+        </nav>
+        <div className="mt-auto px-3 py-3 text-xs leading-relaxed text-slate-400">{lang === "en" ? "A calm space to care for your mind." : "พื้นที่อ่อนโยนสำหรับดูแลใจ"}</div>
+      </aside>
+
       <AmbientSoundPlayer />
 
-      <main className="page-shell max-w-6xl mx-auto px-4 py-8 md:py-10 pb-24 md:pb-10">
+      <main className="page-shell max-w-6xl mx-auto px-4 py-8 md:py-10 pb-24 md:pb-10 lg:ml-[15rem]">
         <Outlet />
       </main>
 
-      <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-6">
+      <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-6 lg:ml-[15rem]">
         <div className="border-t border-slate-200/80 dark:border-white/10 pt-8 pb-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div className="space-y-2 max-w-md">
@@ -182,3 +195,4 @@ export default function Layout() {
     </div>
   );
 }
+

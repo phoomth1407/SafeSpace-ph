@@ -2,12 +2,13 @@ import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientInstance } from '@/lib/query-client';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider, useTranslation } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
+import { PerformanceSettingsProvider } from '@/lib/performanceSettings';
 import { RefreshCw } from "lucide-react";
 import Preloader from "./components/Preloader/Preloader";
 import RouteTransition from "./components/RouteTransition/RouteTransition";
@@ -200,7 +201,8 @@ const AuthenticatedApp = () => {
           <Route path="/contact-admin" element={<ContactAdmin />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/history" element={<History />} />
-          <Route path="/sharing-preferences" element={<SharingPreferences />} />
+          <Route path="/settings" element={<SharingPreferences />} />
+          <Route path="/sharing-preferences" element={<Navigate to="/settings" replace />} />
           <Route path="/admin" element={<Admin />} />
         </Route>
         <Route path="/login" element={<Login />} />
@@ -237,6 +239,7 @@ export default function App() {
       {!booted && <Preloader onComplete={handleBootComplete} />}
       <LanguageProvider>
       <ThemeProvider>
+      <PerformanceSettingsProvider>
         <AuthProvider>
           <QueryClientProvider client={queryClientInstance}>
             <Router>
@@ -249,9 +252,11 @@ export default function App() {
             <Toaster />
           </QueryClientProvider>
         </AuthProvider>
+      </PerformanceSettingsProvider>
       </ThemeProvider>
       </LanguageProvider>
       </>
     </RootErrorBoundary>
   );
 }
+

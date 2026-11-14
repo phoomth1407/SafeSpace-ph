@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { usePerformanceSettings } from "@/lib/performanceSettings";
 
 function useIsPhone() {
   const [isPhone, setIsPhone] = useState(false);
@@ -17,10 +18,13 @@ function useIsPhone() {
 
 export default function FloatingOrbs() {
   const isPhone = useIsPhone();
+  const { activeQuality } = usePerformanceSettings();
+
+  if (activeQuality === "low") return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-      {isPhone ? (
+      {isPhone || activeQuality === "balanced" ? (
         <>
           <div className="floating-orb-mobile floating-orb-mobile-a absolute top-0 left-5 w-72 h-72 bg-rose-300/20 dark:bg-rose-500/10 rounded-full blur-3xl" />
           <div className="floating-orb-mobile floating-orb-mobile-b absolute top-20 right-5 w-80 h-80 bg-sky-300/20 dark:bg-sky-500/10 rounded-full blur-3xl" />
@@ -48,3 +52,4 @@ export default function FloatingOrbs() {
     </div>
   );
 }
+
