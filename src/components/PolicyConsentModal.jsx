@@ -14,17 +14,34 @@ export default function PolicyConsentModal({
 }) {
   const [checks, setChecks] = useState({});
   const [fullOpen, setFullOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     if (open) {
       setChecks({});
       setFullOpen(false);
+      setSaveError("");
+      setSaving(false);
     }
   }, [open]);
 
   if (!open || typeof document === "undefined") return null;
 
   const allRequired = requiredConsents.every((item) => checks[item.id] === true);
+
+  const accept = async () => {
+    if (!allRequired || saving) return;
+    setSaving(true);
+    setSaveError("");
+    try {
+      await onAccept?.();
+    } catch {
+      setSaveError(lang === "en" ? "We couldn't save your acceptance. Please try again." : "บันทึกการยอมรับไม่สำเร็จ กรุณาลองอีกครั้ง");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return createPortal(
     <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 bg-slate-950/45 backdrop-blur-xl" role="dialog" aria-modal="true">
@@ -48,17 +65,18 @@ export default function PolicyConsentModal({
                   <span className="text-xs leading-5 text-slate-300">{item.label}</span>
                 </label>
               ))}
+              {saveError && <p role="alert" className="mt-3 text-sm text-rose-300">{saveError}</p>}
             </div>
             <div className="px-5 sm:px-7 py-4 border-t border-slate-800 bg-slate-950/95 space-y-3">
               <button type="button" onClick={() => { onReadFull?.(); setFullOpen(true); }} className="text-sm text-sky-300 hover:text-sky-200 underline underline-offset-4">
                 {lang === "en" ? "Read the full policy" : "อ่านนโยบายฉบับเต็ม"}
               </button>
               <div className="flex gap-2">
-                <button type="button" onClick={onDecline} className="flex-1 px-5 py-3 rounded-2xl border border-slate-600 text-slate-200 text-sm font-semibold hover:bg-slate-900 transition-colors">
+                <button type="button" onClick={onDecline} disabled={saving} className="flex-1 px-5 py-3 rounded-2xl border border-slate-600 text-slate-200 text-sm font-semibold hover:bg-slate-900 disabled:opacity-50 transition-colors">
                   {lang === "en" ? "Decline" : "ปฏิเสธ"}
                 </button>
-                <button type="button" disabled={!allRequired} onClick={onAccept} className="flex-1 px-5 py-3 rounded-2xl bg-slate-100 text-slate-900 text-sm font-semibold hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  {lang === "en" ? "Agree and Continue" : "ยอมรับและดำเนินการต่อ"}
+                <button type="button" disabled={!allRequired || saving} onClick={accept} className="flex-1 px-5 py-3 rounded-2xl bg-slate-100 text-slate-900 text-sm font-semibold hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  {saving ? (lang === "en" ? "Saving…" : "กำลังบันทึก…") : (lang === "en" ? "Agree and Continue" : "ยอมรับและดำเนินการต่อ")}
                 </button>
               </div>
             </div>

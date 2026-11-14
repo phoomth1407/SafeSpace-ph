@@ -69,6 +69,9 @@ export default function Layout() {
           </div>
 
           <div className="header-actions flex items-center justify-end gap-1.5 flex-shrink-0 ml-auto">
+              <Link to="/settings" aria-label={lang === "en" ? "Settings" : "ตั้งค่า"} title={lang === "en" ? "Settings" : "ตั้งค่า"} className="mobile-settings-link lg:hidden inline-flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/10 transition-colors">
+                <Settings className="w-4 h-4" />
+              </Link>
               <button onClick={toggle} title={t("theme.toggle")} className="flex items-center gap-1 text-xs text-slate-400 px-2.5 py-1.5 rounded-full hover:bg-slate-800 hover:text-slate-200 transition-colors">
                 {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
               </button>
@@ -121,11 +124,14 @@ export default function Layout() {
 
       <AmbientSoundPlayer />
 
-      <main className="page-shell max-w-6xl mx-auto px-4 py-8 md:py-10 pb-24 md:pb-10 lg:ml-[15rem]">
-        <Outlet />
+      <main className="page-shell w-full px-4 py-8 md:py-10 pb-24 md:pb-10 lg:ml-[15rem] lg:w-[calc(100%-15rem)]">
+        <div className="max-w-6xl mx-auto">
+          <Outlet />
+        </div>
       </main>
 
-      <footer className="relative z-[1] max-w-6xl mx-auto px-4 pb-28 md:pb-8 pt-6 lg:ml-[15rem]">
+      <footer className="relative z-[1] w-full px-4 pb-28 md:pb-8 pt-6 lg:ml-[15rem] lg:w-[calc(100%-15rem)]">
+        <div className="max-w-6xl mx-auto">
         <div className="border-t border-slate-200/80 dark:border-white/10 pt-8 pb-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div className="space-y-2 max-w-md">
@@ -171,6 +177,7 @@ export default function Layout() {
             <span>{lang === "en" ? "Take care of your heart every day ❤️" : "ดูแลใจตัวเองในทุกๆ วันนะ ❤️"}</span>
           </div>
         </div>
+        </div>
       </footer>
 
       <PolicyReaderModal open={!!readerPolicy} title={readerPolicy ? policyDocuments[readerPolicy].title : ""} sections={readerPolicy ? policyDocuments[readerPolicy].sections : []} lang={lang} onClose={() => setReaderPolicy(null)} />
@@ -185,7 +192,7 @@ export default function Layout() {
 
       <nav className="mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-40">
         <div className="flex items-center justify-around h-16">
-          {navItems.map((item) => {
+          {navItems.filter((item) => item.to !== "/settings").map((item) => {
             const Icon = item.icon;
             const active = location.pathname === item.to;
             return <Link key={item.to} to={item.to} className={cn("flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all", active ? "mobile-nav-active" : "text-slate-500")}><Icon className="w-5 h-5" /><span className="text-[10px] font-medium">{item.label}</span></Link>;

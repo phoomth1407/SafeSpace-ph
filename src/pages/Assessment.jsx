@@ -6,6 +6,7 @@ import { assessmentCategories } from "@/lib/assessmentQuestions";
 import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH, ASSESSMENT_POLICY_VERSION } from "@/lib/assessmentPolicy";
 import { useAuth } from "@/lib/AuthContext";
 import { appClient } from "@/api/appClient";
+import { supabase } from "@/lib/supabaseClient";
 import { useTranslation } from "@/lib/i18n";
 import Mascot from "@/components/Mascot";
 import PolicyConsentModal from "@/components/PolicyConsentModal";
@@ -57,7 +58,8 @@ export default function Assessment() {
   const [sensitiveConsent, setSensitiveConsent] = useState(false);
   const [shareRiskScore, setShareRiskScore] = useState(false);
   const assessmentPolicyKey = user?.id ? `safespace_assessment_policy_accepted:${user.id}` : null;
-  const [policyOpen, setPolicyOpen] = useState(true);
+  const [policyOpen, setPolicyOpen] = useState(false);
+  const [policyAcceptanceLoading, setPolicyAcceptanceLoading] = useState(true);
   const [policyScrolledToEnd, setPolicyScrolledToEnd] = useState(false);
 
   const showGate = !isAuthenticated && !guestMode;
@@ -81,14 +83,50 @@ export default function Assessment() {
   }, [answeredCount]);
 
   useEffect(() => {
-    if (!assessmentPolicyKey) { setPrivacyAcknowledged(false); return; }
-    try {
-      const saved = JSON.parse(window.localStorage.getItem(assessmentPolicyKey) || "null");
-      const consentIsCurrent = saved?.sensitiveConsent === true && saved?.version === ASSESSMENT_POLICY_VERSION;
-      setSensitiveConsent(consentIsCurrent);
-      setPrivacyAcknowledged(saved?.accepted === true && consentIsCurrent);
-    } catch { setPrivacyAcknowledged(false); }
-  }, [assessmentPolicyKey]);
+    let active = true;
+    const applyStatus = (accepted) => {
+      if (!active) return;
+      setSensitiveConsent(accepted);
+      setPrivacyAcknowledged(accepted);
+      setPolicyOpen(!accepted);
+      setPolicyAcceptanceLoading(false);
+    };
+
+    async function loadAcceptance() {
+      setPolicyAcceptanceLoading(true);
+      if (!isAuthenticated || !user?.id) {
+        applyStatus(false);
+        return;
+      }
+
+      const { data, error: readError } = await supabase.from("user_policy_acceptances")
+        .select("policy_version").eq("user_id", user.id).eq("policy_key", "assessment").maybeSingle();
+      if (!active) return;
+      if (!readError && data?.policy_version === ASSESSMENT_POLICY_VERSION) {
+        applyStatus(true);
+        return;
+      }
+
+      // Migrate a same-device acceptance from older app versions into the
+      // account record so it carries across browsers and devices.
+      try {
+        const legacy = JSON.parse(window.localStorage.getItem(assessmentPolicyKey) || "null");
+        if (!readError && legacy?.accepted === true && legacy?.sensitiveConsent === true && legacy?.version === ASSESSMENT_POLICY_VERSION) {
+          const { error: migrationError } = await supabase.from("user_policy_acceptances").upsert({
+            user_id: user.id,
+            policy_key: "assessment",
+            policy_version: ASSESSMENT_POLICY_VERSION,
+            accepted_at: legacy.acceptedAt || new Date().toISOString(),
+          }, { onConflict: "user_id,policy_key" });
+          if (!migrationError) { applyStatus(true); return; }
+        }
+      } catch { /* Prompt again if the old local acknowledgement is unavailable. */ }
+      applyStatus(false);
+    }
+
+    loadAcceptance().catch(() => applyStatus(false));
+    return () => { active = false; };
+  }, [assessmentPolicyKey, isAuthenticated, user?.id]);
 
   useEffect(() => {
     if (!policyOpen) return undefined;
@@ -334,7 +372,7 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
               if (!privacyAcknowledged) { setPolicyScrolledToEnd(false); setPolicyOpen(true); return; }
               setStep("chapter");
             }}
-            disabled={!canOpenPolicy}
+            disabled={!canOpenPolicy || policyAcceptanceLoading}
             className="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-900 text-sm font-semibold py-3 rounded-2xl hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Check className="w-4 h-4" />
@@ -363,9 +401,17 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
             { id: "policy", label: lang === "en" ? "I have read and agree to the Assessment Policy." : "ฉันได้อ่านและยอมรับ Assessment Policy" },
             { id: "sensitive", label: lang === "en" ? "I explicitly consent to SafeSpace processing my assessment answers and related wellbeing information for assessment analysis, including configured AI providers that may process information outside Thailand." : "ฉันให้ความยินยอมโดยชัดแจ้งให้ SafeSpace ประมวลผลคำตอบและข้อมูลสุขภาวะที่เกี่ยวข้องเพื่อวิเคราะห์แบบประเมิน รวมถึงผู้ให้บริการ AI ที่ตั้งค่าไว้ซึ่งอาจประมวลผลข้อมูลนอกประเทศไทย" }
           ]}
-          onAccept={() => {
-            if (isAuthenticated && assessmentPolicyKey) {
-              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, sensitiveConsent: true, version: ASSESSMENT_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
+          onAccept={async () => {
+            const acceptedAt = new Date().toISOString();
+            if (isAuthenticated && user?.id) {
+              const { error: acceptanceError } = await supabase.from("user_policy_acceptances").upsert({
+                user_id: user.id,
+                policy_key: "assessment",
+                policy_version: ASSESSMENT_POLICY_VERSION,
+                accepted_at: acceptedAt,
+              }, { onConflict: "user_id,policy_key" });
+              if (acceptanceError) throw acceptanceError;
+              try { window.localStorage.setItem(assessmentPolicyKey, JSON.stringify({ accepted: true, sensitiveConsent: true, version: ASSESSMENT_POLICY_VERSION, acceptedAt })); } catch {}
             }
             setSensitiveConsent(true); setPrivacyAcknowledged(true); setPolicyOpen(false); setError(null);
           }}

@@ -287,7 +287,7 @@ export default function Home() {
                   {t("worry.title")}
                 </h4>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  {lang === "en" ? "Write down your heavy thoughts and set them free." : "พิมพ์ความคิดหนักใจแล้วปล่อยให้ลอยลับไป"}
+                  {lang === "en" ? "Check in, write it out, and choose a gentle way to pause." : "สำรวจใจ เขียนสิ่งที่ค้างอยู่ แล้วเลือกวิธีพักอย่างอ่อนโยน"}
                 </p>
               </div>
             </motion.button>

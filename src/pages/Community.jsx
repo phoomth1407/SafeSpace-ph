@@ -36,26 +36,37 @@ export default function Community() {
   const [accessModal, setAccessModal] = useState(null);
   const [guestInfo, setGuestInfo] = useState(null);
   const [policyOpen, setPolicyOpen] = useState(false);
-  const [policyScrolled, setPolicyScrolled] = useState(false);
   const [policyAccepted, setPolicyAccepted] = useState(false);
+  const [policyAcceptanceLoading, setPolicyAcceptanceLoading] = useState(true);
   const [pendingCommunityAction, setPendingCommunityAction] = useState(null);
 
   useEffect(() => {
+    let active = true;
     if (!isAuthenticated || !user?.id) {
       setPolicyAccepted(false);
+      setPolicyAcceptanceLoading(false);
       return;
     }
-    try {
-      setPolicyAccepted((() => { try { const v = JSON.parse(localStorage.getItem(`safespace_community_policy_accepted:${user.id}`) || "null"); return v?.accepted === true && v?.version === COMMUNITY_POLICY_VERSION; } catch { return false; } })());
-    } catch {
-      setPolicyAccepted(false);
-    }
+    setPolicyAcceptanceLoading(true);
+    supabase.from("user_policy_acceptances").select("policy_version")
+      .eq("user_id", user.id).eq("policy_key", "community").maybeSingle()
+      .then(({ data, error: readError }) => {
+        if (!active) return;
+        setPolicyAccepted(!readError && data?.policy_version === COMMUNITY_POLICY_VERSION);
+        setPolicyAcceptanceLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setPolicyAccepted(false);
+        setPolicyAcceptanceLoading(false);
+      });
+    return () => { active = false; };
   }, [isAuthenticated, user?.id]);
 
   const finishIntro = () => {
+    if (policyAcceptanceLoading) return;
     if (!policyAccepted) {
       setPendingCommunityAction({ type: "enter" });
-      setPolicyScrolled(false);
       setPolicyOpen(true);
       return;
     }
@@ -63,13 +74,13 @@ export default function Community() {
   };
 
   const openPolicyFor = (action) => {
+    if (policyAcceptanceLoading) return;
     if (policyAccepted) {
       if (action.type === "post") setShowForm(true);
       if (action.type === "comment") setFocusedPostId(action.postId);
       return;
     }
     setPendingCommunityAction(action);
-    setPolicyScrolled(false);
     setPolicyOpen(true);
   };
 
@@ -103,28 +114,6 @@ export default function Community() {
     if (intent?.type === "comment" && intent.postId) {
       setFocusedPostId(intent.postId);
     }
-  };
-
-  const acceptCommunityPolicy = () => {
-    if (!policyScrolled || !pendingCommunityAction) return;
-    const action = pendingCommunityAction;
-    if (isAuthenticated && user?.id) {
-      try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, JSON.stringify({ accepted: true, version: COMMUNITY_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
-      setPolicyAccepted(true);
-    }
-    setPendingCommunityAction(null);
-    setPolicyOpen(false);
-    if (action.type === "enter") {
-      setIntroComplete(true);
-      return;
-    }
-    if (action.type === "post") setShowForm(true);
-    if (action.type === "comment") setFocusedPostId(action.postId);
-  };
-
-  const handlePolicyScroll = (event) => {
-    const el = event.currentTarget;
-    setPolicyScrolled(el.scrollTop + el.clientHeight >= el.scrollHeight - 12);
   };
 
   const loadPosts = async () => {
@@ -553,10 +542,16 @@ export default function Community() {
         requiredConsents={[
           { id: "policy", label: lang === "en" ? "I have read and agree to the Community Policy." : "ฉันได้อ่านและยอมรับ Community Policy" }
         ]}
-        onAccept={() => {
+        onAccept={async () => {
           const action = pendingCommunityAction;
           if (isAuthenticated && user?.id) {
-            try { localStorage.setItem(`safespace_community_policy_accepted:${user.id}`, JSON.stringify({ accepted: true, version: COMMUNITY_POLICY_VERSION, acceptedAt: new Date().toISOString() })); } catch {}
+            const { error: acceptanceError } = await supabase.from("user_policy_acceptances").upsert({
+              user_id: user.id,
+              policy_key: "community",
+              policy_version: COMMUNITY_POLICY_VERSION,
+              accepted_at: new Date().toISOString(),
+            }, { onConflict: "user_id,policy_key" });
+            if (acceptanceError) throw acceptanceError;
             setPolicyAccepted(true);
           }
           setPendingCommunityAction(null);

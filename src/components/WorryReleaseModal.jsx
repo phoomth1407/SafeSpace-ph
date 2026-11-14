@@ -1,192 +1,199 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowRight, Check, Cloud, Flower2, Heart, Leaf, LockKeyhole, Sparkles, Waves, Wind, X } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
-import { WorryModeIllustration } from "@/components/WellnessIllustration";
 
-const MODES = [
-  { id: "lantern" },
-  { id: "leaves" },
-  { id: "stardust" },
+const FEELINGS = [
+  { id: "heavy", emoji: "🌧️", en: "Heavy", th: "หนักใจ" },
+  { id: "anxious", emoji: "🌪️", en: "Anxious", th: "กังวล" },
+  { id: "sad", emoji: "🌙", en: "Sad", th: "เศร้า" },
+  { id: "tired", emoji: "🫧", en: "Tired", th: "เหนื่อย" },
+  { id: "unsure", emoji: "🌫️", en: "Not sure", th: "ไม่แน่ใจ" },
 ];
 
+const RITUALS = [
+  { id: "wind", icon: Wind, en: "Let the wind carry it", th: "ฝากสายลมพาไป", iconStyle: "bg-sky-100 text-sky-700 dark:bg-sky-300/10 dark:text-sky-200" },
+  { id: "river", icon: Waves, en: "Float it down a river", th: "ปล่อยให้ลอยไปกับสายน้ำ", iconStyle: "bg-cyan-100 text-cyan-700 dark:bg-cyan-300/10 dark:text-cyan-200" },
+  { id: "garden", icon: Flower2, en: "Plant it in a garden", th: "วางไว้ในสวนเงียบ ๆ", iconStyle: "bg-emerald-100 text-emerald-700 dark:bg-emerald-300/10 dark:text-emerald-200" },
+  { id: "starlight", icon: Sparkles, en: "Turn it into starlight", th: "เปลี่ยนเป็นแสงดาว", iconStyle: "bg-violet-100 text-violet-700 dark:bg-violet-300/10 dark:text-violet-200" },
+];
+
+const NEXT_STEPS = [
+  { id: "breathe", en: "Take three slow breaths", th: "หายใจช้า ๆ สามครั้ง", icon: Wind },
+  { id: "water", en: "Get a glass of water", th: "ดื่มน้ำสักแก้ว", icon: Waves },
+  { id: "reach", en: "Reach out to someone", th: "ทักหาคนที่ไว้ใจ", icon: Heart },
+];
+
+const PARTICLES = Array.from({ length: 22 }, (_, index) => ({
+  left: `${8 + ((index * 37) % 84)}%`,
+  top: `${10 + ((index * 53) % 78)}%`,
+  delay: index * 0.035,
+  size: 3 + (index % 3),
+}));
+
 export default function WorryReleaseModal({ open, onClose }) {
-  const { t } = useTranslation();
-  const [text, setText] = useState("");
-  const [mode, setMode] = useState("lantern");
-  const [released, setReleased] = useState(false);
+  const { lang } = useTranslation();
+  const en = lang === "en";
+  const reduceMotion = useReducedMotion();
+  const [step, setStep] = useState(0);
+  const [feeling, setFeeling] = useState("heavy");
+  const [thought, setThought] = useState("");
+  const [ritual, setRitual] = useState("wind");
+  const [nextStep, setNextStep] = useState(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  const copy = {
+    eyebrow: en ? "A SMALL PAUSE FOR YOU" : "พักใจสักครู่",
+    title: en ? "Let the thought rest" : "พักความคิดไว้ก่อน",
+    intro: en ? "You don't have to solve it right now. We'll make a little room around it." : "ตอนนี้ยังไม่ต้องแก้ทุกอย่างก็ได้ เรามาลองเว้นที่ว่างให้ความคิดนี้สักนิด",
+    feelingTitle: en ? "What feels closest right now?" : "ตอนนี้รู้สึกใกล้เคียงกับข้อไหนที่สุด?",
+    feelingHint: en ? "It's okay if you can't name it." : "ถ้ายังบอกไม่ถูกก็ไม่เป็นไร",
+    thoughtTitle: en ? "Give the thought a place to land" : "เขียนความคิดให้มีที่วาง",
+    thoughtHint: en ? "Write a few words, a sentence, or just the part that keeps returning." : "เขียนสั้น ๆ สักคำ ประโยค หรือเฉพาะส่วนที่วนกลับมาในใจ",
+    placeholder: en ? "If I could put one thing down for a moment, it would be…" : "ถ้าพักเรื่องหนึ่งไว้ก่อนได้ เรื่องนั้นคือ…",
+    private: en ? "This stays in this moment and is cleared when you close the exercise." : "ข้อความนี้อยู่แค่ในหน้าต่างนี้ และจะถูกล้างเมื่อปิดกิจกรรม",
+    choose: en ? "Choose how you'd like to set it down" : "เลือกวิธีวางความคิดนี้ลงชั่วคราว",
+    release: en ? "Release this thought" : "ปล่อยความคิดนี้ไป",
+    breathe: en ? "Take one easy breath" : "หายใจสบาย ๆ หนึ่งครั้ง",
+    doneTitle: en ? "You made a little space" : "คุณสร้างพื้นที่ว่างให้ใจได้แล้ว",
+    doneText: en ? "The thought can still be there, and you can still take a gentle next step." : "ความคิดอาจยังอยู่ตรงนั้น และคุณก็ยังเลือกก้าวต่อไปอย่างอ่อนโยนได้",
+    nextTitle: en ? "What would feel kind to do next?" : "ต่อจากนี้ อยากดูแลตัวเองแบบไหนดี?",
+    finish: en ? "Finish this pause" : "จบช่วงพักใจ",
+    restart: en ? "Try another thought" : "ลองพักกับอีกความคิด",
+    close: en ? "Close exercise" : "ปิดกิจกรรม",
+    continue: en ? "Continue" : "ต่อไป",
+    step: en ? "Step" : "ขั้นตอน",
+  };
 
   useEffect(() => {
     if (!open) {
-      setText("");
-      setMode("lantern");
-      setReleased(false);
+      setStep(0);
+      setFeeling("heavy");
+      setThought("");
+      setRitual("wind");
+      setNextStep(null);
+      return undefined;
     }
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event) => { if (event.key === "Escape") onCloseRef.current?.(); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  const release = () => {
-    if (!text.trim()) return;
-    setReleased(true);
+  const closeAndClear = () => {
+    setThought("");
+    onCloseRef.current?.();
   };
 
+  const selectedRitual = RITUALS.find((item) => item.id === ritual) || RITUALS[0];
+  const RitualIcon = selectedRitual.icon;
+  const stepLabels = en ? ["Notice", "Name it", "Choose", "Pause"] : ["สำรวจใจ", "เขียนออกมา", "เลือกวิธี", "พักสักครู่"];
+  const releaseMotion = {
+    wind: { x: -210, y: -150, rotate: -18, scale: 0.45, opacity: 0 },
+    river: { x: 55, y: 185, rotate: 8, scale: 0.68, opacity: 0 },
+    garden: { x: 0, y: -30, rotate: 42, scale: 0.08, opacity: 0 },
+    starlight: { x: 0, y: -205, rotate: 160, scale: 0.08, opacity: 0 },
+  }[ritual];
+
   return createPortal(
-    <div className="wellness-modal-root fixed inset-0 z-[100] w-screen h-screen min-h-dvh flex items-center justify-center p-4 sm:p-6">
-      <button aria-label={t("worry.close")} onClick={onClose} className="wellness-modal-backdrop absolute inset-0" />
+    <div className="wellness-modal-root fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6">
+      <button type="button" aria-label={copy.close} onClick={closeAndClear} className="wellness-modal-backdrop absolute inset-0" />
+      <motion.section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="thought-rest-title"
+        initial={reduceMotion ? false : { opacity: 0, y: 20, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={reduceMotion ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="relative flex max-h-[min(92dvh,850px)] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-white/70 bg-[#f8f7ff] text-slate-900 shadow-[0_32px_120px_rgba(15,23,42,.38)] dark:border-white/10 dark:bg-[#0f1329] dark:text-white"
+      >
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="absolute -left-20 -top-28 h-72 w-72 rounded-full bg-rose-300/35 blur-3xl dark:bg-rose-500/15" />
+          <div className="absolute -right-16 top-12 h-80 w-80 rounded-full bg-sky-300/40 blur-3xl dark:bg-violet-500/20" />
+          <div className="absolute bottom-[-11rem] left-[28%] h-80 w-80 rounded-full bg-violet-300/35 blur-3xl dark:bg-sky-500/15" />
+        </div>
 
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 overflow-hidden">
-        <button type="button" aria-label={t("worry.close")} onClick={onClose} className="absolute right-4 top-4 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900">
-          <X className="w-5 h-5" />
-        </button>
+        <header className="relative z-10 flex items-center justify-between gap-4 border-b border-slate-200/70 px-5 py-4 dark:border-white/10 sm:px-8">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/80 text-violet-600 shadow-sm ring-1 ring-white dark:bg-white/10 dark:text-violet-200 dark:ring-white/10"><Cloud className="h-6 w-6" /></div>
+            <div className="min-w-0"><p className="text-[10px] font-bold tracking-[.18em] text-violet-600 dark:text-violet-300">{copy.eyebrow}</p><h2 id="thought-rest-title" className="truncate text-lg font-bold sm:text-xl">{copy.title}</h2></div>
+          </div>
+          <button type="button" aria-label={copy.close} onClick={closeAndClear} className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-slate-500 transition hover:bg-white/70 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"><X className="h-5 w-5" /></button>
+        </header>
 
-        {!released ? (
-          <>
-            <div className="text-center pt-1">
-              <div className="w-11 h-11 rounded-2xl bg-violet-100 dark:bg-violet-500/10 flex items-center justify-center mx-auto mb-3">
-                <WorryModeIllustration mode="stardust" className="w-8 h-8" />
-              </div>
-              <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">{t("worry.title")}</h2>
-              <p className="text-xs text-slate-400 mt-1">{t("worry.subtitle")}</p>
+        {step < 3 && (
+          <div className="relative z-10 px-5 pt-4 sm:px-8">
+            <div className="flex items-center gap-2" aria-label={`${copy.step} ${step + 1} ${en ? "of 3" : "จาก 3"}`}>
+              {stepLabels.slice(0, 3).map((label, index) => <React.Fragment key={label}>
+                <div className={`flex items-center gap-1.5 text-[10px] font-semibold sm:text-xs ${index <= step ? "text-violet-700 dark:text-violet-200" : "text-slate-400"}`}><span className={`grid h-6 w-6 place-items-center rounded-full ${index < step ? "bg-violet-600 text-white" : index === step ? "bg-white text-violet-700 ring-2 ring-violet-400 dark:bg-violet-300 dark:text-violet-950" : "bg-slate-200/70 dark:bg-white/10"}`}>{index < step ? <Check className="h-3.5 w-3.5" /> : index + 1}</span><span className="hidden sm:inline">{label}</span></div>
+                {index < 2 && <div className={`h-px flex-1 ${index < step ? "bg-violet-400" : "bg-slate-300/70 dark:bg-white/10"}`} />}
+              </React.Fragment>)}
             </div>
-
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              maxLength={500}
-              rows={5}
-              placeholder={t("worry.placeholder")}
-              className="mt-5 w-full resize-none rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4 text-sm text-slate-200 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-violet-300/50"
-            />
-
-            <div className="mt-4">
-              <div className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">{t("worry.chooseMode")}</div>
-              <div className="grid grid-cols-3 gap-2">
-                {MODES.map(({ id }) => (
-                  <button
-                    key={id}
-                    onClick={() => setMode(id)}
-                    className={`rounded-2xl border p-3 text-center transition-colors ${mode === id ? "bg-violet-500/10 border-violet-400/40" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800"}`}
-                  >
-                    <div className="w-12 h-12 mx-auto rounded-xl overflow-hidden"><WorryModeIllustration mode={id} className="w-full h-full" /></div>
-                    <div className="text-[11px] font-medium text-slate-700 dark:text-slate-300 mt-1">{t(`worry.mode.${id}`)}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-3 text-[10px] text-slate-500 dark:text-slate-400 text-right">{text.length}/500</div>
-
-            <button
-              onClick={release}
-              disabled={!text.trim()}
-              className="w-full mt-4 h-12 rounded-2xl !bg-slate-900 !text-white dark:!bg-slate-100 dark:!text-slate-900 font-semibold disabled:opacity-40 transition-opacity"
-            >
-              {t("worry.release")}
-            </button>
-          </>
-        ) : (
-          <div className="relative min-h-[360px] flex flex-col items-center justify-center text-center overflow-hidden">
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute left-1/2 top-1/2 w-24 h-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-300/30 dark:bg-violet-500/20 blur-2xl animate-pulse" />
-              {Array.from({ length: 18 }).map((_, i) => (
-                <span
-                  key={i}
-                  className="absolute w-1.5 h-1.5 rounded-full bg-violet-300/70 dark:bg-violet-300/40 animate-ping"
-                  style={{
-                    left: `${10 + ((i * 37) % 80)}%`,
-                    top: `${10 + ((i * 53) % 80)}%`,
-                    animationDelay: `${i * 70}ms`,
-                  }}
-                />
-              ))}
-            </div>
-
-            <motion.p
-              className="relative z-10 max-w-sm px-4 text-base font-medium !text-black dark:!text-white leading-relaxed break-words whitespace-pre-wrap"
-              initial={{ opacity: 1, y: 0 }}
-              animate={
-                mode === "lantern"
-                  ? { y: -85, opacity: 0, scale: 0.9 }
-                  : mode === "leaves"
-                    ? { x: 120, opacity: 0, rotate: 6 }
-                    : { opacity: 0, scale: 0.55, filter: "blur(5px)" }
-              }
-              transition={{ duration: 2.8, delay: 0.15, ease: "easeInOut" }}
-            >
-              {text}
-            </motion.p>
-
-            <motion.div
-              className="relative text-6xl mb-5"
-              initial={{ y: 0, opacity: 1, scale: 1, rotate: 0 }}
-              animate={
-                mode === "lantern"
-                  ? { y: -120, opacity: 0.15, scale: 0.75, rotate: -4 }
-                  : mode === "leaves"
-                    ? { x: 150, y: -35, opacity: 0.08, rotate: 28 }
-                    : { y: -20, opacity: 0, scale: 0.35, rotate: 180 }
-              }
-              transition={{ duration: 3.2, ease: "easeOut" }}
-            >
-              <WorryModeIllustration mode={mode} className="w-20 h-20" />
-            </motion.div>
-
-            <motion.div
-              className="relative w-full max-w-sm mb-4 min-h-16 flex items-center justify-center"
-              initial="hidden"
-              animate="visible"
-            >
-              {Array.from({ length: mode === "stardust" ? 24 : 10 }).map((_, i) => (
-                <motion.span
-                  key={`release-particle-${i}`}
-                  className={`absolute rounded-full ${mode === "lantern" ? "bg-amber-300" : mode === "leaves" ? "bg-emerald-300" : "bg-violet-300"}`}
-                  style={{
-                    width: mode === "stardust" ? 4 : 5,
-                    height: mode === "stardust" ? 4 : 5,
-                    left: `${45 + ((i * 17) % 20)}%`,
-                    top: `${45 + ((i * 29) % 16)}%`,
-                  }}
-                  initial={{ opacity: 0, x: 0, y: 0, scale: 0.4 }}
-                  animate={{
-                    opacity: [0, 0.9, 0],
-                    x: (i % 2 ? 1 : -1) * (35 + (i % 5) * 14),
-                    y: -30 - (i % 6) * 12,
-                    scale: [0.4, 1, 0.2],
-                  }}
-                  transition={{ duration: 2.6 + (i % 4) * 0.2, delay: i * 0.04, ease: "easeOut" }}
-                />
-              ))}
-            </motion.div>
-
-            <motion.h3
-              className="relative text-xl font-semibold text-slate-100"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
-            >
-              {t("worry.releasedTitle")}
-            </motion.h3>
-            <motion.p
-              className="relative max-w-sm text-sm text-slate-300 mt-2 leading-relaxed"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.15, duration: 0.7 }}
-            >
-              {t(`worry.releaseMessage.${mode}`)}
-            </motion.p>
-
-            <button
-              onClick={onClose}
-              className="relative w-full mt-7 h-11 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium"
-            >
-              {t("worry.close")}
-            </button>
           </div>
         )}
-      </div>
+
+        <div className="relative z-10 min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-8 sm:py-6">
+          <AnimatePresence mode="wait" initial={false}>
+            {step === 0 && <motion.div key="feeling" initial={reduceMotion ? false : { opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={reduceMotion ? undefined : { opacity: 0, x: -14 }} transition={{ duration: 0.22 }}>
+              <div className="mx-auto max-w-xl text-center"><p className="text-xs font-semibold uppercase tracking-[.14em] text-slate-500 dark:text-slate-400">{en ? "A gentle check-in" : "สำรวจใจเบา ๆ"}</p><h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{copy.feelingTitle}</h3><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{copy.intro}</p></div>
+              <div className="mx-auto mt-6 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-5">
+                {FEELINGS.map((item) => <button key={item.id} type="button" aria-pressed={feeling === item.id} onClick={() => setFeeling(item.id)} className={`group rounded-2xl border px-3 py-4 text-center transition-all ${feeling === item.id ? "border-violet-400 bg-white/90 shadow-lg shadow-violet-900/10 ring-2 ring-violet-300/50 dark:border-violet-300/70 dark:bg-white/10" : "border-white/80 bg-white/45 hover:-translate-y-0.5 hover:bg-white/80 dark:border-white/10 dark:bg-white/[.04] dark:hover:bg-white/[.08]"}`}><span className="block text-2xl transition-transform group-hover:scale-110" aria-hidden="true">{item.emoji}</span><span className="mt-2 block text-xs font-semibold">{en ? item.en : item.th}</span></button>)}
+              </div>
+              <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">{copy.feelingHint}</p>
+              <div className="mx-auto mt-8 max-w-xl rounded-3xl border border-white/80 bg-white/55 p-5 dark:border-white/10 dark:bg-white/[.04]"><p className="text-sm font-semibold">{en ? "For this moment, you can…" : "ในช่วงเวลานี้ คุณเลือกได้ที่จะ…"}</p><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Pause without judging yourself. You are more than the thought passing through." : "พักโดยไม่ต้องตัดสินตัวเอง คุณเป็นมากกว่าความคิดที่กำลังผ่านเข้ามา"}</p></div>
+            </motion.div>}
+
+            {step === 1 && <motion.div key="write" initial={reduceMotion ? false : { opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={reduceMotion ? undefined : { opacity: 0, x: -14 }} transition={{ duration: 0.22 }} className="mx-auto max-w-2xl">
+              <div className="mb-5"><span className="inline-flex items-center gap-2 rounded-full bg-violet-100/80 px-3 py-1 text-xs font-semibold text-violet-800 dark:bg-violet-300/10 dark:text-violet-200"><LockKeyhole className="h-3.5 w-3.5" />{en ? "Just for you" : "สำหรับคุณเท่านั้น"}</span><h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">{copy.thoughtTitle}</h3><p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{copy.thoughtHint}</p></div>
+              <div className="rounded-[1.7rem] border border-white/90 bg-white/80 p-3 shadow-xl shadow-violet-950/5 dark:border-white/10 dark:bg-white/[.06] sm:p-4"><textarea autoFocus value={thought} onChange={(event) => setThought(event.target.value)} maxLength={500} rows={7} placeholder={copy.placeholder} className="w-full resize-none rounded-[1.25rem] border-0 bg-transparent p-4 text-base leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-violet-300/60 dark:text-slate-100 dark:placeholder:text-slate-500" /><div className="flex items-center justify-between gap-3 px-4 pb-2"><p className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400"><LockKeyhole className="h-3.5 w-3.5" />{copy.private}</p><span className="shrink-0 text-[11px] tabular-nums text-slate-400">{thought.length}/500</span></div></div>
+              <div className="mt-4 flex flex-wrap gap-2">{(en ? ["What feels out of my hands?", "What do I wish someone knew?", "What can wait until later?"] : ["อะไรที่ควบคุมไม่ได้ตอนนี้?", "อยากให้ใครเข้าใจเรื่องอะไร?", "มีอะไรที่รอไว้ก่อนได้บ้าง?"]).map((prompt) => <button type="button" key={prompt} onClick={() => setThought((current) => current ? `${current}\n${prompt} ` : `${prompt} `)} className="rounded-full border border-white/80 bg-white/50 px-3 py-2 text-left text-[11px] text-slate-600 transition hover:bg-white dark:border-white/10 dark:bg-white/[.04] dark:text-slate-300 dark:hover:bg-white/[.08]">{prompt}</button>)}</div>
+            </motion.div>}
+
+            {step === 2 && <motion.div key="ritual" initial={reduceMotion ? false : { opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={reduceMotion ? undefined : { opacity: 0, x: -14 }} transition={{ duration: 0.22 }}>
+              <div className="mx-auto max-w-xl text-center"><p className="text-xs font-semibold uppercase tracking-[.14em] text-violet-600 dark:text-violet-300">{en ? "Pick a small ritual" : "เลือกพิธีเล็ก ๆ ให้ใจ"}</p><h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{copy.choose}</h3><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{en ? "There is no wrong way. Just choose the image that feels gentle." : "ไม่มีวิธีไหนผิด เลือกภาพที่รู้สึกอ่อนโยนกับใจได้เลย"}</p></div>
+              <div className="mx-auto mt-6 grid max-w-2xl gap-3 sm:grid-cols-2">{RITUALS.map(({ id, icon: Icon, en: labelEn, th: labelTh, iconStyle }) => <button key={id} type="button" aria-pressed={ritual === id} onClick={() => setRitual(id)} className={`flex items-center gap-4 rounded-3xl border p-4 text-left transition-all ${ritual === id ? "border-violet-400 bg-white/90 shadow-lg shadow-violet-900/10 ring-2 ring-violet-300/50 dark:border-violet-300/70 dark:bg-white/[.08]" : "border-white/80 bg-white/45 hover:-translate-y-0.5 hover:bg-white/80 dark:border-white/10 dark:bg-white/[.04] dark:hover:bg-white/[.08]"}`}><span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl ${iconStyle}`}><Icon className="h-7 w-7" /></span><span><span className="block text-sm font-bold">{en ? labelEn : labelTh}</span><span className="mt-1 block text-xs leading-relaxed text-slate-500 dark:text-slate-400">{id === "wind" ? (en ? "Watch it drift beyond your reach." : "มองดูมันลอยไปไกลเกินเอื้อม") : id === "river" ? (en ? "Let the water carry it onward." : "ให้สายน้ำค่อย ๆ พาไป") : id === "garden" ? (en ? "Set it down and let the earth hold it." : "วางไว้ให้ผืนดินช่วยรับน้ำหนัก") : (en ? "Let it grow smaller beneath a wide sky." : "ปล่อยให้มันเล็กลงใต้ท้องฟ้ากว้าง")}</span></span>{ritual === id && <Check className="ml-auto h-4 w-4 shrink-0 text-violet-600 dark:text-violet-300" />}</button>)}</div>
+              <div className="mx-auto mt-6 max-w-2xl rounded-3xl border border-violet-200/60 bg-violet-100/40 p-4 dark:border-violet-300/10 dark:bg-violet-300/[.06]"><p className="text-[10px] font-bold uppercase tracking-[.15em] text-violet-700 dark:text-violet-200">{en ? "A note to yourself" : "ข้อความถึงตัวเอง"}</p><p className="mt-1 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{en ? "I can come back to this when I have more space. For now, I can rest." : "ฉันกลับมาคิดเรื่องนี้ได้เมื่อพร้อม ตอนนี้ขอพักใจก่อน"}</p></div>
+            </motion.div>}
+
+            {step === 3 && <motion.div key="release" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} className="relative mx-auto flex min-h-[400px] max-w-2xl flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-b from-sky-100/80 via-violet-100/70 to-rose-100/70 px-5 py-8 text-center dark:border-white/10 dark:from-sky-300/[.08] dark:via-violet-300/[.08] dark:to-rose-300/[.06] sm:min-h-[470px]">
+              <div className="absolute inset-0 overflow-hidden" aria-hidden="true"><motion.div animate={reduceMotion ? {} : { y: [0, -16, 0], x: [0, 9, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute left-[10%] top-[12%] h-28 w-52 rounded-full bg-white/55 blur-3xl dark:bg-white/10" /><motion.div animate={reduceMotion ? {} : { y: [0, 15, 0], x: [0, -12, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-[10%] right-[8%] h-40 w-56 rounded-full bg-violet-300/45 blur-3xl dark:bg-violet-400/10" />{PARTICLES.map((particle, index) => <motion.span key={index} className="absolute rounded-full bg-white shadow-[0_0_18px_rgba(255,255,255,.9)] dark:bg-violet-200" style={{ left: particle.left, top: particle.top, width: particle.size, height: particle.size }} initial={{ opacity: 0, scale: 0.4 }} animate={reduceMotion ? { opacity: 0.5 } : { opacity: [0, 0.9, 0.25], scale: [0.5, 1.4, 0.7], y: [0, -30 - (index % 4) * 18] }} transition={{ duration: 2.8 + (index % 4) * 0.4, delay: particle.delay, repeat: Infinity, ease: "easeOut" }} />)}</div>
+              <div className="relative z-10 grid h-48 w-48 place-items-center sm:h-56 sm:w-56">
+                {!reduceMotion && <><motion.div className="absolute inset-3 rounded-full border border-white/60 dark:border-white/20" animate={{ scale: [0.84, 1.15, 0.84], opacity: [0.35, 0.9, 0.35] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }} /><motion.div className="absolute inset-[-8px] rounded-full border border-violet-200/70 dark:border-violet-200/20" animate={{ rotate: 360 }} transition={{ duration: 32, repeat: Infinity, ease: "linear" }} /></>}
+                <motion.div className="relative grid h-28 w-28 place-items-center rounded-[2rem] bg-white/70 text-violet-700 shadow-[0_20px_60px_rgba(109,40,217,.16)] backdrop-blur-sm dark:bg-white/10 dark:text-violet-100 sm:h-32 sm:w-32" initial={{ scale: 0.8, opacity: 0 }} animate={reduceMotion ? { scale: 1, opacity: 1 } : { scale: [0.8, 1.08, 1], opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }}><RitualIcon className="h-12 w-12 sm:h-14 sm:w-14" /></motion.div>
+                {thought.trim() && <motion.p initial={{ opacity: 1, y: 0 }} animate={reduceMotion ? { opacity: 0.6 } : releaseMotion} transition={{ duration: 3.1, delay: 0.45, ease: [0.22, 1, 0.36, 1] }} className="absolute z-20 max-w-[78%] rounded-2xl border border-white/80 bg-white/85 px-4 py-3 text-xs font-medium leading-relaxed text-slate-700 shadow-xl dark:border-white/10 dark:bg-slate-950/75 dark:text-slate-100 sm:text-sm">{thought}</motion.p>}
+              </div>
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1, duration: 0.6 }} className="relative z-10 mt-5 max-w-lg"><p className="text-xs font-bold uppercase tracking-[.16em] text-violet-700 dark:text-violet-200">{en ? `A moment for ${FEELINGS.find((item) => item.id === feeling)?.en.toLowerCase() || "you"}` : "ช่วงเวลานี้เป็นของคุณ"}</p><h3 className="mt-2 text-2xl font-bold">{copy.breathe}</h3><p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Follow the glow as it rises… and softens." : "มองแสงที่ค่อย ๆ สว่างขึ้น… แล้วนุ่มนวลลง"}</p></motion.div>
+              <button type="button" onClick={() => setStep(4)} className="relative z-10 mt-7 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-900">{en ? "Continue" : "ไปต่อ"}<ArrowRight className="h-4 w-4" /></button>
+            </motion.div>}
+
+            {step === 4 && <motion.div key="finish" initial={reduceMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="mx-auto max-w-xl py-3 text-center">
+              <div className="relative mx-auto grid h-28 w-28 place-items-center rounded-[2rem] bg-gradient-to-br from-violet-200 to-sky-100 text-violet-700 shadow-xl shadow-violet-900/10 dark:from-violet-300/15 dark:to-sky-300/10 dark:text-violet-100"><span className="text-5xl" aria-hidden="true">{FEELINGS.find((item) => item.id === feeling)?.emoji || "☁️"}<motion.span className="absolute -right-1 -top-1 text-2xl" animate={reduceMotion ? {} : { y: [0, -6, 0], rotate: [0, 12, 0] }} transition={{ duration: 2.8, repeat: Infinity }}>✨</motion.span></span></div>
+              <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-violet-600 dark:text-violet-300">{copy.eyebrow}</p><h3 className="mt-2 text-3xl font-bold tracking-tight">{copy.doneTitle}</h3><p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-600 dark:text-slate-300">{copy.doneText}</p>
+              <div className="mt-7 rounded-3xl border border-white/80 bg-white/65 p-5 text-left dark:border-white/10 dark:bg-white/[.05]"><p className="text-sm font-bold">{copy.nextTitle}</p><div className="mt-3 grid gap-2 sm:grid-cols-3">{NEXT_STEPS.map(({ id, icon: Icon, en: labelEn, th: labelTh }) => <button key={id} type="button" aria-pressed={nextStep === id} onClick={() => setNextStep(id)} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-medium transition ${nextStep === id ? "border-violet-400 bg-violet-100/80 text-violet-900 dark:bg-violet-300/10 dark:text-violet-100" : "border-slate-200/80 bg-white/50 hover:bg-white dark:border-white/10 dark:bg-white/[.03] dark:hover:bg-white/[.07]"}`}><Icon className="h-4 w-4 shrink-0" />{en ? labelEn : labelTh}</button>)}</div>{nextStep && <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{en ? "A small step is enough. You can do it in your own time." : "ก้าวเล็ก ๆ ก็เพียงพอ ทำเมื่อพร้อมได้เลย"}</p>}</div>
+              <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row"><button type="button" onClick={closeAndClear} className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-900">{copy.finish}</button><button type="button" onClick={() => { setThought(""); setStep(0); setFeeling("heavy"); setRitual("wind"); setNextStep(null); }} className="rounded-full border border-slate-300 bg-white/50 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/15 dark:bg-white/[.04] dark:text-slate-200 dark:hover:bg-white/[.08]">{copy.restart}</button></div>
+            </motion.div>}
+          </AnimatePresence>
+        </div>
+
+        {step < 3 && <footer className="relative z-10 flex items-center justify-between gap-3 border-t border-slate-200/70 bg-white/35 px-5 py-4 dark:border-white/10 dark:bg-white/[.02] sm:px-8">
+          <button type="button" onClick={() => setStep((current) => Math.max(0, current - 1))} disabled={step === 0} className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-white/70 disabled:invisible dark:text-slate-300 dark:hover:bg-white/[.08]"><ArrowLeft className="h-4 w-4" />{en ? "Back" : "ย้อนกลับ"}</button>
+          {step < 2 ? <button type="button" onClick={() => setStep((current) => current + 1)} disabled={step === 1 && !thought.trim()} className="inline-flex items-center gap-2 rounded-full bg-violet-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-900/20 transition hover:-translate-y-0.5 hover:bg-violet-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-violet-300 dark:text-violet-950 dark:hover:bg-violet-200">{copy.continue}<ArrowRight className="h-4 w-4" /></button> : <button type="button" onClick={() => setStep(3)} disabled={!thought.trim()} className="inline-flex items-center gap-2 rounded-full bg-violet-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-900/20 transition hover:-translate-y-0.5 hover:bg-violet-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-violet-300 dark:text-violet-950 dark:hover:bg-violet-200">{copy.release}<Sparkles className="h-4 w-4" /></button>}
+        </footer>}
+        {step === 3 && <div className="relative z-10 flex items-center justify-center border-t border-slate-200/50 py-3 text-xs text-slate-500 dark:border-white/10 dark:text-slate-400"><Leaf className="mr-2 h-3.5 w-3.5" />{en ? "Nothing here is saved or sent." : "สิ่งที่เขียนจะไม่ถูกบันทึกหรือส่งไปที่ใด"}</div>}
+      </motion.section>
     </div>,
-    document.body
+    document.body,
   );
 }

@@ -9,7 +9,6 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 import { useTranslation } from "@/lib/i18n";
-import { hasAcceptedSafeSpacePolicy } from "@/components/SafeSpacePolicyModal";
 
 
 export default function Login() {
@@ -20,7 +19,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
-  const [policyAcceptedThisVisit, setPolicyAcceptedThisVisit] = useState(() => hasAcceptedSafeSpacePolicy());
   const { t } = useTranslation();
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
@@ -33,7 +31,6 @@ export default function Login() {
 
   const continueAfterPolicy = () => {
     setPolicyOpen(false);
-    setPolicyAcceptedThisVisit(true);
     const action = pendingAction;
     setPendingAction(null);
     action?.();
@@ -73,7 +70,7 @@ export default function Login() {
       policyOpen={policyOpen}
       onPolicyAccept={continueAfterPolicy}
       persistPolicyAcknowledgement
-      onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); setPolicyAcceptedThisVisit(false); }}
+        onPolicyClose={() => { setPolicyOpen(false); setPendingAction(null); }}
       footer={
         <>
           {t("auth.noAccount")}{" "}
@@ -89,7 +86,7 @@ export default function Login() {
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6 text-foreground"
-        onClick={handleGoogle}
+        onClick={() => requirePolicy(handleGoogle)}
         disabled={loading}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
@@ -113,7 +110,7 @@ export default function Login() {
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); if (policyAcceptedThisVisit) handleSubmit(); else requirePolicy(handleSubmit); }} className="space-y-4">
+      <form onSubmit={(e) => { e.preventDefault(); requirePolicy(handleSubmit); }} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t("auth.email")}</Label>
           <div className="relative">
