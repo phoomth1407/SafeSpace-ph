@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -8,7 +9,6 @@ import {
   ShieldCheck,
   Sparkles,
   Brain,
-  TrendingUp,
   Phone,
   ChevronDown,
   ChevronUp,
@@ -25,7 +25,6 @@ import MoodCheckInCard from "@/components/MoodCheckInCard";
 import BreathingExerciseModal from "@/components/BreathingExerciseModal";
 import GroundingModal from "@/components/GroundingModal";
 import WorryReleaseModal from "@/components/WorryReleaseModal";
-import AnimatedCounter from "@/components/AnimatedCounter";
 import FloatingOrbs from "@/components/FloatingOrbs";
 import MagneticButton from "@/components/MagneticButton";
 import ScenicBackdrop from "@/components/ScenicBackdrop";
@@ -127,7 +126,8 @@ export default function Home() {
       const tool = recommendToolForMood(mood);
       setRecommendation({ mood, tool });
       window.requestAnimationFrame(() => {
-        studioRef.current?.scrollIntoView({ behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+        const target = document.querySelector(`[data-tool-id="${tool}"]`);
+        target?.scrollIntoView({ behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center", inline: "nearest" });
       });
     };
     window.addEventListener("safespace:mood-saved", handleMoodSaved);
@@ -144,8 +144,8 @@ export default function Home() {
       const bounds = target.getBoundingClientRect();
       overlay.style.setProperty("--focus-x", `${bounds.left + bounds.width / 2}px`);
       overlay.style.setProperty("--focus-y", `${bounds.top + bounds.height / 2}px`);
-      overlay.style.setProperty("--focus-rx", `${bounds.width / 2 + 26}px`);
-      overlay.style.setProperty("--focus-ry", `${bounds.height / 2 + 22}px`);
+      overlay.style.setProperty("--focus-rx", `${bounds.width / 2 + 18}px`);
+      overlay.style.setProperty("--focus-ry", `${bounds.height / 2 + 16}px`);
     };
     const scheduleUpdate = () => {
       window.cancelAnimationFrame(frame);
@@ -459,27 +459,31 @@ export default function Home() {
         </Link>
       </div>
 
-      {/* Expandable Project Insights & Public Health Statistics (HDC Data) */}
-      <section className="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/40 overflow-hidden transition-all shadow-xs">
+      {/* Expandable public mental health data. Keep the existing one-tap show/hide entry point. */}
+      <section className="overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/70 shadow-[0_18px_55px_-38px_rgba(35,48,90,.35)] backdrop-blur-xl transition-all dark:border-slate-700/70 dark:bg-slate-900/55">
         <button
           type="button"
           onClick={() => setShowInsights(!showInsights)}
-          className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-slate-100/50 dark:hover:bg-slate-800/30 transition-colors"
+          aria-expanded={showInsights}
+          className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/70 dark:hover:bg-slate-800/50 md:px-6"
         >
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
-              <Info className="w-4 h-4" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 via-indigo-50 to-violet-100 text-indigo-600 shadow-inner dark:from-sky-400/15 dark:via-indigo-400/10 dark:to-violet-400/15 dark:text-sky-200">
+              <Info className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                {lang === "en" ? "Mental Health Insights & HDC Statistics" : "ข้อมูลและสถิติสุขภาพจิตในประเทศไทย (HDC)"}
+              <p className="mb-0.5 text-[10px] font-bold uppercase tracking-[.17em] text-indigo-500 dark:text-indigo-300">
+                {lang === "en" ? "Understand the bigger picture" : "มองภาพรวมสุขภาพใจ"}
+              </p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 md:text-base">
+                {lang === "en" ? "Mental health in Thailand" : "สุขภาพจิตในประเทศไทย"}
               </h3>
-              <p className="text-xs text-slate-400">
-                {lang === "en" ? "Click to view Department of Mental Health data and research" : "คลิกเพื่อดูสถิติและข้อมูลอ้างอิงจากกรมสุขภาพจิต"}
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                {lang === "en" ? "Department of Mental Health data · 2022–2024" : "ข้อมูลกรมสุขภาพจิต · พ.ศ. 2565–2567"}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-xs font-semibold text-slate-500">
+          <div className="flex shrink-0 items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm transition group-hover:border-indigo-200 group-hover:text-indigo-700 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300 dark:group-hover:text-indigo-200">
             <span>{showInsights ? (lang === "en" ? "Hide" : "ซ่อน") : (lang === "en" ? "View" : "ดูสถิติ")}</span>
             {showInsights ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </div>
@@ -492,35 +496,19 @@ export default function Home() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="border-t border-slate-200/80 dark:border-slate-800/80 p-5 md:p-6 space-y-6"
+              className="space-y-5 border-t border-slate-200/70 bg-gradient-to-b from-white/65 to-sky-50/35 p-4 dark:border-slate-800/80 dark:from-slate-900/30 dark:to-indigo-950/15 md:space-y-6 md:p-6"
             >
-              {/* Quick stats numbers */}
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { icon: Brain, value: 21, suffix: "", label: t("home.stats.questions"), color: "text-rose-400 bg-rose-500/10" },
-                  { icon: ShieldCheck, value: 100, suffix: "%", label: t("home.stats.anonymous"), color: "text-sky-400 bg-sky-500/10" },
-                  { icon: TrendingUp, value: 30, suffix: "%", label: t("home.stats.stressed"), color: "text-amber-400 bg-amber-500/10" },
-                ].map((stat, i) => (
-                  <div key={i} className="bg-slate-50 dark:bg-slate-900/60 rounded-2xl p-3 md:p-4 border border-slate-200/60 dark:border-slate-800 text-center">
-                    <div className={`w-8 h-8 rounded-xl ${stat.color} flex items-center justify-center mx-auto mb-1.5`}>
-                      <stat.icon className="w-4 h-4" />
-                    </div>
-                    <div className="text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100">
-                      <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                    </div>
-                    <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Research charts */}
-              <div>
-                <div className="text-center mb-4">
-                  <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">{t("home.why.title")}</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl mx-auto">{t("home.why.subtitle")}</p>
+              <div className="flex flex-col gap-2 rounded-2xl border border-indigo-100/80 bg-gradient-to-r from-indigo-50/80 via-white/75 to-sky-50/80 p-4 dark:border-indigo-400/10 dark:from-indigo-400/10 dark:via-slate-900/40 dark:to-sky-400/10 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">{t("home.why.title")}</h4>
+                  <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-600 dark:text-slate-400">{t("home.why.subtitle")}</p>
                 </div>
-                <StatsDashboard />
+                <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-[10px] font-semibold text-slate-500 shadow-sm dark:bg-slate-800/80 dark:text-slate-300">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                  {lang === "en" ? "Public data" : "ข้อมูลสาธารณะ"}
+                </span>
               </div>
+              <StatsDashboard />
 
               {/* About link */}
               <div className="pt-2 text-center">
@@ -541,16 +529,16 @@ export default function Home() {
       <GroundingModal open={groundingOpen} onClose={() => setGroundingOpen(false)} />
       <WorryReleaseModal open={worryOpen} onClose={() => setWorryOpen(false)} />
 
-      {recommendation && <>
-        <div ref={spotlightRef} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[65] bg-slate-950/45 backdrop-blur-sm transition-opacity" style={{ "--focus-x": "50vw", "--focus-y": "50vh", "--focus-rx": "120px", "--focus-ry": "90px", maskImage: "radial-gradient(ellipse var(--focus-rx) var(--focus-ry) at var(--focus-x) var(--focus-y), transparent 0%, transparent 84%, black 100%)", WebkitMaskImage: "radial-gradient(ellipse var(--focus-rx) var(--focus-ry) at var(--focus-x) var(--focus-y), transparent 0%, transparent 84%, black 100%)" }} />
-        <aside aria-label={lang === "en" ? "Suggested tool" : "เครื่องมือแนะนำ"} className="fixed bottom-[5.25rem] right-4 z-[80] w-[min(22rem,calc(100vw-2rem))] rounded-3xl border border-white/80 bg-white/95 p-5 text-slate-900 shadow-2xl shadow-slate-950/25 backdrop-blur-xl dark:border-slate-700 dark:bg-slate-900/95 dark:text-white md:bottom-5">
+      {recommendation && createPortal(<>
+        <div ref={spotlightRef} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[1000] bg-slate-950/45 backdrop-blur-[2px]" style={{ "--focus-x": "50vw", "--focus-y": "50vh", "--focus-rx": "120px", "--focus-ry": "90px", maskImage: "radial-gradient(ellipse var(--focus-rx) var(--focus-ry) at var(--focus-x) var(--focus-y), transparent 0%, transparent 84%, black 100%)", WebkitMaskImage: "radial-gradient(ellipse var(--focus-rx) var(--focus-ry) at var(--focus-x) var(--focus-y), transparent 0%, transparent 84%, black 100%)", maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }} />
+        <aside aria-label={lang === "en" ? "Suggested tool" : "เครื่องมือแนะนำ"} className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-1/2 z-[1001] max-h-[min(19rem,calc(100dvh-7rem))] w-[min(23rem,calc(100vw-2rem))] -translate-x-1/2 overflow-y-auto rounded-3xl border border-white/80 bg-white/95 p-5 text-slate-900 shadow-2xl shadow-slate-950/25 backdrop-blur-xl md:bottom-5 dark:border-slate-700 dark:bg-slate-900/95 dark:text-white">
           <p aria-live="polite" className="text-[10px] font-bold uppercase tracking-[.16em] text-violet-600 dark:text-violet-300">{lang === "en" ? "A gentle suggestion" : "คำแนะนำเบา ๆ"}</p>
           <h2 className="mt-1 text-lg font-bold">{suggestedToolTitle}</h2>
           <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{lang === "en" ? `You checked in as ${moodTitle}. Based on your mood and the time of day, this tool may feel helpful. It is only a suggestion.` : `คุณบันทึกอารมณ์ว่า “${moodTitle}” จากอารมณ์และช่วงเวลานี้ เครื่องมือนี้อาจเหมาะกับคุณ เป็นเพียงคำแนะนำเท่านั้น`}</p>
           <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{lang === "en" ? "Tap the highlighted tool to open it." : "แตะเครื่องมือที่ไฮไลต์เพื่อเปิดใช้"}</p>
           <button type="button" onClick={() => setRecommendation(null)} className="mt-4 min-h-10 w-full rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">{lang === "en" ? "Okay, got it" : "เข้าใจแล้ว"}</button>
         </aside>
-      </>}
+      </>, document.body)}
     </div>
   );
 }
