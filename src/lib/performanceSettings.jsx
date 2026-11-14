@@ -65,4 +65,3 @@ export function usePerformanceSettings() {
   if (!context) throw new Error("usePerformanceSettings must be used within PerformanceSettingsProvider");
   return context;
 }
-

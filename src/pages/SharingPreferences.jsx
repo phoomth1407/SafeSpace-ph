@@ -109,4 +109,3 @@ export default function SharingPreferences() {
 function SettingsIcon() {
   return <ShieldCheck className="w-6 h-6 text-violet-600 dark:text-violet-300" />;
 }
-
