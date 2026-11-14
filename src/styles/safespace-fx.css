@@ -97,6 +97,12 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 :root[data-graphics-quality='balanced'] .ss-backdrop::before{animation:none!important;}
 :root[data-graphics-quality='balanced'] .visual-orb{filter:blur(42px);}
 :root[data-graphics-quality='high'] .ss-surface{box-shadow:inset 0 1px 0 rgb(255 255 255/.14),0 14px 36px -12px rgb(var(--ss-shadow)/.2),0 42px 78px -34px rgb(var(--ss-primary)/.24);}
+:root[data-graphics-quality='ultra'] .ss-orb--a{animation-duration:7s;filter:saturate(1.35);}
+:root[data-graphics-quality='ultra'] .ss-orb--b{animation-duration:30s;filter:saturate(1.4);}
+:root[data-graphics-quality='ultra'] .ss-orb--c{animation-duration:38s;filter:saturate(1.35);}
+:root[data-graphics-quality='ultra'] .ss-grain{opacity:.05;}
+:root[data-graphics-quality='ultra'] .ss-surface{-webkit-backdrop-filter:blur(23px) saturate(175%);backdrop-filter:blur(23px) saturate(175%);box-shadow:inset 0 1px 0 rgb(255 255 255/.24),0 18px 44px -12px rgb(var(--ss-shadow)/.24),0 48px 90px -32px rgb(var(--ss-primary)/.3);}
+:root[data-graphics-quality='ultra'] .theme-light .ss-surface{box-shadow:inset 0 1px 0 rgb(255 255 255),0 18px 44px -12px rgb(30 50 100/.16),0 48px 90px -32px rgb(var(--ss-primary)/.22);}
 
 /* Home: warm, welcoming aurora. */
 .ss-page-home .ss-backdrop{
@@ -472,7 +478,7 @@ body.ss-fx{background:rgb(var(--ss-bg));color:rgb(var(--ss-ink));-webkit-font-sm
 
 /* Header: keep every control inside the viewport instead of letting the
    authenticated admin cluster push the nav into a clipped state. */
-.site-header{position:relative;}
+.site-header{position:sticky;top:0;z-index:40;}
 .site-header-inner{min-width:0;}
 .header-main{min-width:0;}
 .desktop-centered-nav{overflow:hidden;white-space:nowrap;}

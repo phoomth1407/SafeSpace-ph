@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Wind, Play, Pause, RotateCcw, Sparkles, Waves } from "lucide-react";
+import { X, Wind, Play, Pause, RotateCcw, Waves } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 
 const PATTERNS = {
@@ -112,7 +112,6 @@ export default function BreathingExerciseModal({ open, onClose }) {
                 <div className="relative flex h-[68%] w-[68%] flex-col items-center justify-center rounded-full border border-white/80 bg-gradient-to-br from-white/90 via-sky-50/90 to-violet-100/90 shadow-[0_25px_70px_rgba(99,102,241,.18)] transition-transform duration-1000 dark:border-white/15 dark:from-slate-900/90 dark:via-sky-950/80 dark:to-violet-950/80" style={{ transform: `scale(${scale})` }}>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">{t(`breath.phase.${phase.key}`)}</p><span className="mt-1 text-6xl font-light tabular-nums text-sky-700 dark:text-sky-200 sm:text-7xl">{remaining}</span><span className="text-xs text-slate-500 dark:text-slate-400">{t("breath.seconds")}</span>
                 </div>
-                <Sparkles className="absolute right-[12%] top-[16%] h-5 w-5 text-violet-500/80 dark:text-violet-200" aria-hidden="true" />
               </div>
             </div>
           </section>

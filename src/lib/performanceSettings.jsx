@@ -6,10 +6,11 @@ const PerformanceSettingsContext = createContext(null);
 export function getRecommendedGraphicsQuality({
   isMobile = false,
   prefersReducedMotion = false,
-  cores = 8,
-  memory = 8,
+  cores = null,
+  memory = null,
 } = {}) {
-  if (prefersReducedMotion || (isMobile && (cores <= 6 || memory <= 4)) || cores <= 4 || memory <= 4) return "low";
+  if (prefersReducedMotion || (isMobile && ((cores != null && cores <= 6) || (memory != null && memory <= 4))) || (cores != null && cores <= 4) || (memory != null && memory <= 4)) return "low";
+  if ((isMobile && cores >= 8 && memory >= 8) || (!isMobile && cores >= 12 && memory >= 8)) return "ultra";
   if (!isMobile && cores >= 8 && memory >= 8) return "high";
   return "balanced";
 }
@@ -19,16 +20,16 @@ function detectRecommendedQuality() {
   return getRecommendedGraphicsQuality({
     isMobile: window.matchMedia?.("(max-width: 767px)").matches || false,
     prefersReducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || false,
-    // Missing browser hints should not classify capable devices as low-end.
-    cores: navigator.hardwareConcurrency || 8,
-    memory: navigator.deviceMemory || 8,
+    // Unknown browser hints stay conservative and never auto-select Ultra.
+    cores: navigator.hardwareConcurrency || null,
+    memory: navigator.deviceMemory || null,
   });
 }
 
 function readPreference() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return ["auto", "low", "balanced", "high"].includes(saved) ? saved : "auto";
+    return ["auto", "low", "balanced", "high", "ultra"].includes(saved) ? saved : "auto";
   } catch {
     return "auto";
   }

@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 import { usePerformanceSettings } from "@/lib/performanceSettings";
 
-const QUALITY_OPTIONS = ["auto", "low", "balanced", "high"];
+const QUALITY_OPTIONS = ["auto", "low", "balanced", "high", "ultra"];
 
 export default function SharingPreferences() {
   const { isAuthenticated, user } = useAuth();
@@ -57,12 +57,14 @@ export default function SharingPreferences() {
     low: en ? "Low" : "ต่ำ",
     balanced: en ? "Balanced" : "สมดุล",
     high: en ? "High" : "สูง",
+    ultra: en ? "Ultra" : "อัลตรา",
   };
   const optionCopy = {
     auto: en ? `Use the ${optionLabels[recommendedQuality]} preset recommended for this device.` : `ใช้ค่าที่แนะนำสำหรับอุปกรณ์นี้: ${optionLabels[recommendedQuality]}`,
     low: en ? "Keep the page lightweight and turn off most decorative motion and heavy visual effects." : "ลดการเคลื่อนไหวและเอฟเฟกต์ตกแต่งส่วนใหญ่ เพื่อให้หน้าเว็บเบาและตอบสนองไว",
     balanced: en ? "Keep the core atmosphere with fewer continuous effects." : "คงบรรยากาศหลักไว้ พร้อมลดเอฟเฟกต์ที่ทำงานต่อเนื่อง",
     high: en ? "Keep the full visual atmosphere, motion, and layered effects." : "คงบรรยากาศ การเคลื่อนไหว และเอฟเฟกต์เต็มรูปแบบ",
+    ultra: en ? "For high-end phones and PCs: richer ambient color, stronger glass depth, glow, and more fluid motion." : "สำหรับมือถือและคอมพิวเตอร์ประสิทธิภาพสูง เพิ่มสีสัน มิติของกระจก แสงเรือง และการเคลื่อนไหวที่ลื่นไหลยิ่งขึ้น",
   };
 
   return <div className="max-w-3xl mx-auto space-y-6">

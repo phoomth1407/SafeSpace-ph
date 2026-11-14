@@ -84,19 +84,19 @@ export default function RouteTransition() {
 
     const swap = window.setTimeout(() => {
       fill.style.width = "100%";
-    }, 480);
+    }, 160);
     const leave = window.setTimeout(() => {
       veil.classList.add("leaving");
-    }, 720);
+    }, 260);
     const hide = window.setTimeout(() => {
       veil.classList.remove("on", "leaving");
       fill.classList.add("done");
-    }, 920);
+    }, 420);
     const cleanup = window.setTimeout(() => {
       bar.classList.remove("on");
       fill.style.width = "0%";
       fill.classList.remove("done");
-    }, 1220);
+    }, 520);
     timers.current = [swap, leave, hide, cleanup];
 
     return () => {

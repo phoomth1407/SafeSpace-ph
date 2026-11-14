@@ -104,7 +104,6 @@ export default function Home() {
             <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-[1.15rem] bg-gradient-to-br from-white via-sky-50 to-violet-100 text-sky-600 shadow-[0_8px_22px_rgba(59,130,246,.16)] ring-1 ring-white/90 dark:from-sky-300/20 dark:via-indigo-300/10 dark:to-violet-300/20 dark:text-sky-200 dark:ring-white/10" aria-hidden="true">
               <span className="absolute -right-2 -top-2 h-8 w-8 rounded-full bg-sky-200/60 blur-md dark:bg-sky-300/20" />
               <GreetingIcon className="relative z-10 h-[1.35rem] w-[1.35rem]" strokeWidth={1.9} />
-              <Sparkles className="absolute right-1 top-1 z-10 h-3 w-3 text-violet-500 dark:text-violet-200" strokeWidth={2} />
             </span>
           </h1>
           <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-0.5">

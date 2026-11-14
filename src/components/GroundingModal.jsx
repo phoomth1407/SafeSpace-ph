@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { Check, Compass, RotateCcw, Sparkles, X } from "lucide-react";
+import { Check, Compass, RotateCcw, X } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 
 const STEPS = [
@@ -83,7 +83,6 @@ export default function GroundingModal({ open, onClose }) {
                 {STEPS.map((step, index) => <span key={step.id} aria-current={index === currentIndex && !done ? "step" : undefined} className={`h-2 flex-1 rounded-full transition-colors ${index < completed.length ? "bg-emerald-500" : index === currentIndex && !done ? "bg-emerald-300 dark:bg-emerald-400" : "bg-slate-200 dark:bg-white/10"}`} />)}
               </div>
             </div>
-            <Sparkles className="absolute right-[12%] top-[14%] h-5 w-5 text-emerald-500/70 dark:text-emerald-200/70" aria-hidden="true" />
           </section>
 
           <section className="mx-auto w-full max-w-xl rounded-[2rem] border border-white/75 bg-white/65 p-6 shadow-[0_24px_70px_rgba(15,23,42,.08)] backdrop-blur-xl dark:border-white/10 dark:bg-white/[.05] sm:p-8 lg:max-w-none">
