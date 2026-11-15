@@ -13,7 +13,7 @@ function RangeSetting({ label, value, min, max, step, display, onChange, help })
       </span>
       <span className="shrink-0 rounded-lg bg-violet-50 px-2 py-1 text-xs font-bold tabular-nums text-violet-700 dark:bg-violet-400/10 dark:text-violet-200">{display}</span>
     </span>
-    <input type="range" min={min} max={max} step={step} value={value} onChange={(event) => onChange(Number(event.target.value))} className="mt-4 w-full accent-violet-600" />
+    <input type="range" aria-label={label} min={min} max={max} step={step} value={value} onChange={(event) => onChange(Number(event.target.value))} className="mt-4 w-full accent-violet-600" />
   </label>;
 }
 
