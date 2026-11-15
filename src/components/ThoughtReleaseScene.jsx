@@ -159,7 +159,7 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
     targetX: targets[index]?.x ?? width * 0.5,
     targetY: targets[index]?.y ?? height * 0.3,
     sway: (Math.random() - 0.5) * width * 0.14,
-    waterY: height * (0.63 + Math.random() * 0.25),
+    waterY: height * (0.75 + Math.random() * 0.12),
     windLift: (Math.random() - 0.46) * height * 0.22,
     windSpeed: 65 + Math.random() * 105,
     riverDrift: 42 + Math.random() * 88,
@@ -537,9 +537,11 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
       alpha *= 1 - smooth(1.5, 5, age);
     } else if (ritual === "river") {
       const fall = smooth(0, 0.8, age);
-      const landingY = height * 0.69;
+      // Let the released thought settle clearly into the foreground water,
+      // below the mountain ridge at the far bank.
+      const landingY = height * 0.75;
       x = particle.homeX + Math.max(0, age - 0.8) * particle.riverDrift;
-      y = mix(particle.homeY, Math.min(particle.waterY, landingY + height * 0.14), fall)
+      y = mix(particle.homeY, Math.min(particle.waterY, landingY + height * 0.1), fall)
         + (age > 0.8 ? Math.sin(time * 1.8 + particle.phase) * particle.riverSway : 0);
       size *= age > 0.8 ? 0.9 : 1;
       alpha *= 1 - smooth(3, 7.5, age);
