@@ -35,6 +35,7 @@ export default function SharingPreferences() {
   const [savingProfile, setSavingProfile] = useState(false);
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
+  const [profileConfirm, setProfileConfirm] = useState(null);
   const [setupShareChoice, setSetupShareChoice] = useState(null);
 
   useEffect(() => {
@@ -65,6 +66,15 @@ export default function SharingPreferences() {
   }, [showDeleteDialog, deletingAccount]);
 
   useEffect(() => {
+    if (!profileConfirm) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape" && !savingProfile) setProfileConfirm(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [profileConfirm, savingProfile]);
+
+  useEffect(() => {
     let active = true;
     async function load() {
       if (!user?.id) { setLoading(false); return; }
@@ -84,17 +94,31 @@ export default function SharingPreferences() {
     if (!user?.id || saving) return;
     setSaving(true); setError(""); setSaved(false);
     try {
-      const { error: prefError } = await supabase.from("assessment_sharing_preferences").upsert({
-        user_id: user.id, share_risk_score: next, updated_at: new Date().toISOString()
-      }, { onConflict: "user_id" });
-      if (prefError) throw prefError;
-      const { error: scoreError } = await supabase.from("assessments")
-        .update({ share_with_admin: next }).eq("created_by_id", user.id);
-      if (scoreError) throw scoreError;
+      await appClient.auth.setMyAssessmentSharing(next);
       setSharing(next); setSaved(true);
     } catch {
       setError(en ? "Could not save this change. Please try again." : "บันทึกการตั้งค่าไม่สำเร็จ กรุณาลองอีกครั้ง");
     } finally { setSaving(false); }
+  };
+
+  const persistProfile = async () => {
+    if (!user?.id || savingProfile) return;
+    const nextUsername = username.trim();
+    setProfileConfirm(null);
+    setSavingProfile(true); setProfileError(""); setProfileSaved(false);
+    try {
+      if (!user.birth_date) {
+        await appClient.auth.setMyAssessmentSharing(setupShareChoice);
+        setSharing(setupShareChoice);
+      }
+      await appClient.auth.saveMyProfile({ username: nextUsername, birthDate });
+      await checkUserAuth();
+      setProfileSaved(true);
+    } catch (err) {
+      const message = err?.message || "";
+      if (message.includes("already taken") || err?.code === "23505") setProfileError(en ? "That username is already in use. Choose another one." : "มีผู้ใช้ชื่อนี้แล้ว กรุณาเลือกชื่ออื่น");
+      else setProfileError(message || (en ? "Could not save your profile." : "บันทึกโปรไฟล์ไม่สำเร็จ"));
+    } finally { setSavingProfile(false); }
   };
 
   const saveProfile = async () => {
@@ -114,25 +138,11 @@ export default function SharingPreferences() {
     }
     const usernameChanged = !!user.username && nextUsername !== user.username;
     const birthDateChanged = !!user.birth_date && birthDate !== user.birth_date;
-    if (usernameChanged && !window.confirm(en ? "Change your username? This will update the name on all of your named Community posts and comments." : "เปลี่ยนชื่อผู้ใช้หรือไม่? ชื่อนี้จะอัปเดตในโพสต์และความคิดเห็นที่ไม่ระบุตัวตนทั้งหมดของคุณ")) return;
-    if (birthDateChanged && !window.confirm(en ? "Change your birthdate? Age-based assessments and age-related features may become inconsistent with your previous results. You can change it only once every 365 days." : "เปลี่ยนวันเกิดหรือไม่? ผลประเมินและฟีเจอร์ที่อิงอายุอาจไม่ตรงกับข้อมูลเดิม และเปลี่ยนได้เพียงทุก 365 วัน")) return;
-    setSavingProfile(true); setProfileError(""); setProfileSaved(false);
-    try {
-      if (!user.birth_date) {
-        const { error: preferenceError } = await supabase.from("assessment_sharing_preferences").upsert({ user_id: user.id, share_risk_score: setupShareChoice, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
-        if (preferenceError) throw preferenceError;
-        const { error: scoresError } = await supabase.from("assessments").update({ share_with_admin: setupShareChoice }).eq("created_by_id", user.id);
-        if (scoresError) throw scoresError;
-        setSharing(setupShareChoice);
-      }
-      await appClient.auth.saveMyProfile({ username: nextUsername, birthDate });
-      await checkUserAuth();
-      setProfileSaved(true);
-    } catch (err) {
-      const message = err?.message || "";
-      if (message.includes("already taken") || err?.code === "23505") setProfileError(en ? "That username is already in use. Choose another one." : "มีผู้ใช้ชื่อนี้แล้ว กรุณาเลือกชื่ออื่น");
-      else setProfileError(message || (en ? "Could not save your profile." : "บันทึกโปรไฟล์ไม่สำเร็จ"));
-    } finally { setSavingProfile(false); }
+    if (usernameChanged || birthDateChanged) {
+      setProfileConfirm({ usernameChanged, birthDateChanged });
+      return;
+    }
+    await persistProfile();
   };
 
   const deletePhrase = en ? "DELETE" : "ลบข้อมูล";
@@ -183,6 +193,25 @@ export default function SharingPreferences() {
       <div className="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-500/15 flex items-center justify-center"><SettingsIcon /></div>
       <div><p className="text-xs uppercase tracking-wider text-violet-500 font-semibold">SafeSpace</p><h1 className="text-2xl font-bold text-slate-900 dark:text-white">{en ? "Settings" : "ตั้งค่า"}</h1></div>
     </header>
+
+    {profileConfirm && <div className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-md" onMouseDown={(event) => { if (event.target === event.currentTarget && !savingProfile) setProfileConfirm(null); }}>
+      <section role="alertdialog" aria-modal="true" aria-labelledby="profile-confirm-title" aria-describedby="profile-confirm-description" className="my-auto w-full max-w-lg overflow-hidden rounded-3xl border border-violet-200 bg-white shadow-2xl shadow-violet-950/20 dark:border-violet-400/20 dark:bg-slate-900">
+        <div className="bg-gradient-to-br from-violet-100 via-indigo-50 to-sky-50 p-6 dark:from-violet-500/15 dark:via-indigo-500/10 dark:to-slate-900 sm:p-7">
+          <div className="flex items-start gap-4">
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/90 text-violet-700 shadow-sm dark:bg-violet-400/15 dark:text-violet-200"><ShieldCheck className="h-6 w-6" /></div>
+            <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-600 dark:text-violet-300">SafeSpace · {en ? "Account security" : "ความปลอดภัยบัญชี"}</p><h2 id="profile-confirm-title" className="mt-1 text-xl font-bold text-slate-950 dark:text-white">{en ? "Confirm account changes" : "ยืนยันการเปลี่ยนแปลงบัญชี"}</h2><p id="profile-confirm-description" className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Please review what will change before saving your profile." : "โปรดตรวจสอบข้อมูลที่จะเปลี่ยนก่อนบันทึกโปรไฟล์"}</p></div>
+          </div>
+        </div>
+        <div className="space-y-3 p-6 sm:p-7">
+          {profileConfirm.usernameChanged && <div className="rounded-2xl border border-violet-100 bg-violet-50/80 p-4 dark:border-violet-400/15 dark:bg-violet-400/5"><p className="text-sm font-semibold text-slate-900 dark:text-white">{en ? "Username" : "ชื่อผู้ใช้"} · <span className="text-violet-700 dark:text-violet-300">{username.trim()}</span></p><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Your new username will replace your name on your named Community posts and comments. Anonymous posts stay anonymous." : "ชื่อใหม่นี้จะแทนชื่อเดิมในโพสต์และความคิดเห็นที่ระบุตัวตน ส่วนโพสต์นิรนามจะยังคงนิรนาม"}</p></div>}
+          {profileConfirm.birthDateChanged && <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4 dark:border-sky-400/15 dark:bg-sky-400/5"><p className="text-sm font-semibold text-slate-900 dark:text-white">{en ? "Date of birth" : "วันเดือนปีเกิด"} · <span className="text-sky-700 dark:text-sky-300">{en ? "Private to your account" : "เป็นข้อมูลส่วนตัวของคุณ"}</span></p><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Age-based features and previous assessment history may no longer match. You can change your birthdate once every 365 days." : "ฟีเจอร์ที่อิงอายุและประวัติแบบประเมินเดิมอาจไม่ตรงกัน และคุณเปลี่ยนวันเกิดได้ทุก 365 วัน"}</p></div>}
+          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+            <button type="button" disabled={savingProfile} onClick={() => setProfileConfirm(null)} className="min-h-11 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">{en ? "Go back" : "กลับไปแก้ไข"}</button>
+            <button type="button" disabled={savingProfile} onClick={persistProfile} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-700/20 transition hover:bg-violet-800 disabled:opacity-60 dark:bg-violet-600 dark:hover:bg-violet-500">{savingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}{savingProfile ? (en ? "Saving…" : "กำลังบันทึก…") : (en ? "Confirm changes" : "ยืนยันการเปลี่ยนแปลง")}</button>
+          </div>
+        </div>
+      </section>
+    </div>}
 
     <section className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/80 p-6 md:p-8 space-y-5 shadow-sm">
       <div className="flex items-start gap-3"><div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-100 dark:bg-violet-500/15"><ShieldCheck className="h-5 w-5 text-violet-600 dark:text-violet-300" /></div><div><h2 className="font-semibold text-slate-900 dark:text-white">{en ? "Account identity" : "ข้อมูลบัญชี"}</h2><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Your username is the fixed name used on Community posts and comments unless you choose to stay anonymous. Your birthdate is saved to your account so sign-in will not ask for it again." : "ชื่อผู้ใช้นี้จะแสดงในโพสต์และความคิดเห็น เว้นแต่คุณเลือกไม่ระบุตัวตน วันเกิดจะบันทึกไว้กับบัญชีเพื่อไม่ต้องกรอกซ้ำเมื่อลงชื่อเข้าใช้"}</p></div></div>
@@ -278,3 +307,4 @@ export default function SharingPreferences() {
 function SettingsIcon() {
   return <ShieldCheck className="w-6 h-6 text-violet-600 dark:text-violet-300" />;
 }
+

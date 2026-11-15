@@ -119,6 +119,14 @@ const currentAuthUser = async () => {
   return sessionData.session?.user || null;
 };
 
+const updateMyAssessmentSharing = async (shareRiskScore) => {
+  const { data, error } = await supabase.rpc("set_my_assessment_sharing", {
+    p_share_risk_score: shareRiskScore,
+  });
+  if (error) throw error;
+  return data;
+};
+
 const currentAppUser = async () => {
   let authUser = await currentAuthUser();
   if (!authUser) return null;
@@ -136,14 +144,10 @@ const currentAppUser = async () => {
     const pendingShare = window.sessionStorage.getItem("safespace_pending_share_risk_score");
     if (pendingShare === "true" || pendingShare === "false") {
       const shareRisk = pendingShare === "true";
-      const { error: preferenceError } = await supabase.from("assessment_sharing_preferences").upsert({
-        user_id: authUser.id,
-        share_risk_score: shareRisk,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: "user_id" });
-      if (!preferenceError) {
+      try {
+        await updateMyAssessmentSharing(shareRisk);
         window.sessionStorage.removeItem("safespace_pending_share_risk_score");
-      }
+      } catch {}
     }
   } catch {}
 
@@ -667,6 +671,11 @@ const auth = {
     if (error) throw error;
     return data;
   },
+  async setMyAssessmentSharing(shareRiskScore) {
+    if (typeof shareRiskScore !== "boolean") throw new Error("Choose whether to share assessment risk scores.");
+    return updateMyAssessmentSharing(shareRiskScore);
+  },
 };
 
 export const appClient = { entities, functions: { invoke }, auth };
+
