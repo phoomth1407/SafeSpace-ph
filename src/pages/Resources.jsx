@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AlertCircle, ArrowLeft, ArrowRight, BookOpen, ExternalLink, Heart, Loader2, Phone } from "lucide-react";
+import { AlertCircle, ArrowLeft, ArrowRight, BookOpen, ExternalLink, Heart, HeartHandshake, Loader2, Phone } from "lucide-react";
 import { appClient } from "@/api/appClient";
 import ResourceCard from "@/components/ResourceCard";
 import { useTranslation } from "@/lib/i18n";
@@ -97,6 +97,7 @@ export default function Resources() {
               <div className="community-art-orbit orbit-one" />
               <div className="community-art-orbit orbit-two" />
               <div className="community-art-core">
+                <span className="community-art-main-symbol"><HeartHandshake className="h-10 w-10" strokeWidth={1.7} /></span>
                 <span className="community-art-heart"><Phone className="h-5 w-5" /></span>
               </div>
             </div>

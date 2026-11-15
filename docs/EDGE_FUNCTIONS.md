@@ -1,16 +1,18 @@
 # SafeSpace Edge Functions
 
-Last reviewed: 2026-09-30
+Last reviewed: 2026-11-15
 
 ## What is currently deployed
 
 | Function | Status | Version | JWT |
 | --- | --- | ---: | --- |
-| `analyze-assessment` | ACTIVE | 14 | Required |
+| `analyze-assessment` | ACTIVE | 16 | Required |
 | `analyze-community-post` | ACTIVE | 7 | Required |
 | `analyze-phq9` | ACTIVE | 5 | Required |
-| `analyzeCommunityPost` | ACTIVE | 3 | Required |
+| `delete-account` | ACTIVE | 1 | Required |
+| `analyzeCommunityPost` | ACTIVE | 4 | Required |
 | `communityInteract` | ACTIVE | 3 | Required |
+| `save-guest-score` | ACTIVE | 1 | Not required |
 
 The first three are the current hardened AI endpoints. The latter two are compatibility/legacy-style functions that remain deployed and should be checked before removal.
 
@@ -68,6 +70,21 @@ Controls:
 - result saved to `public.assessments`
 
 The PHQ-9 result is a screening indicator, not a diagnosis.
+
+## `delete-account`
+
+Purpose: permanently remove the authenticated caller's SafeSpace account and account-owned records.
+
+Controls:
+
+- JWT required; the target account ID is taken only from the verified access token, never from the request body
+- service-role access is confined to this Edge Function and is not sent to the browser
+- removes the caller's assessments, legacy guest-assessment rows, community posts/comments, submitted reports/contact requests, stored reactions on other posts, and rate-limit rows
+- deleting the Auth user cascades account profile, mood check-ins, sharing preferences, policy acceptances, claimed guest-share records, and Auth sessions
+- local cached private assessment results and the account's local assessment-policy flag are cleared by the client after a successful response
+- guest data, device-only preferences/imported sounds, provider logs, backups, and previously processed third-party AI data are outside the account deletion operation
+
+Database cleanup runs before Auth deletion so a retry can finish if the Auth API is temporarily unavailable.
 
 ## Rate limiting
 

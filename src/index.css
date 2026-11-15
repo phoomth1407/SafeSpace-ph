@@ -737,6 +737,18 @@ body {
   border: 1px solid rgba(255,255,255,.9);
   box-shadow: 0 15px 35px rgba(71,85,105,.10);
 }
+.community-art-main-symbol {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #0284c7;
+  filter: drop-shadow(0 7px 12px rgba(2,132,199,.16));
+}
+.community-art-main-symbol-community {
+  color: #0f9f83;
+  filter: drop-shadow(0 7px 12px rgba(15,159,131,.16));
+}
 .community-art-person {
   position: absolute;
   border-radius: 999px 999px 45% 45%;

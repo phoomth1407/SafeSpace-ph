@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, LockKeyhole, Loader2, ShieldCheck, Sparkles, Gauge, MonitorSmartphone } from "lucide-react";
+import { AlertTriangle, CheckCircle2, LockKeyhole, Loader2, ShieldCheck, Sparkles, Gauge, MonitorSmartphone, Trash2 } from "lucide-react";
+import { clearCachedPrivateAssessments } from "@/api/appClient";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
@@ -22,6 +23,10 @@ export default function SharingPreferences() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     const syncDesktopMode = (event) => setDesktopMode(Boolean(event.detail?.enabled));
@@ -35,6 +40,15 @@ export default function SharingPreferences() {
       window.removeEventListener("storage", syncStoredPreference);
     };
   }, []);
+
+  useEffect(() => {
+    if (!showDeleteDialog) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape" && !deletingAccount) setShowDeleteDialog(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [showDeleteDialog, deletingAccount]);
 
   useEffect(() => {
     let active = true;
@@ -67,6 +81,32 @@ export default function SharingPreferences() {
     } catch {
       setError(en ? "Could not save this change. Please try again." : "บันทึกการตั้งค่าไม่สำเร็จ กรุณาลองอีกครั้ง");
     } finally { setSaving(false); }
+  };
+
+  const deletePhrase = en ? "DELETE" : "ลบข้อมูล";
+  const deleteAccount = async () => {
+    if (!user?.id || deletingAccount || deleteConfirmation.trim() !== deletePhrase) return;
+    setDeletingAccount(true);
+    setDeleteError("");
+    try {
+      const { data: ownedAssessments } = await supabase.from("assessments")
+        .select("id")
+        .eq("created_by_id", user.id);
+      const { error: deletionError } = await supabase.functions.invoke("delete-account", { method: "POST" });
+      if (deletionError) throw deletionError;
+
+      clearCachedPrivateAssessments((ownedAssessments || []).map((item) => item.id), user.id);
+      try { window.localStorage.removeItem(`safespace_assessment_policy_accepted:${user.id}`); } catch {}
+      try { await supabase.auth.signOut({ scope: "local" }); } catch {}
+      setShowDeleteDialog(false);
+      navigate("/", { replace: true });
+    } catch {
+      setDeleteError(en
+        ? "We couldn't finish deleting the account. Some records may already be removed; please sign in and try again or contact support."
+        : "ลบบัญชีไม่สำเร็จ ข้อมูลบางส่วนอาจถูกลบไปแล้ว กรุณาเข้าสู่ระบบแล้วลองอีกครั้ง หรือติดต่อฝ่ายช่วยเหลือ");
+    } finally {
+      setDeletingAccount(false);
+    }
   };
 
   const optionLabels = {
@@ -140,6 +180,35 @@ export default function SharingPreferences() {
       </>}
       <p className="flex items-start gap-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400"><LockKeyhole className="w-4 h-4 shrink-0" />{en ? "You can change this choice at any time. Turning sharing off removes existing scores from the admin shared-scores view, but does not delete your personal assessment history. Results are screening information, not a medical diagnosis." : "คุณเปลี่ยนการตั้งค่านี้ได้ทุกเมื่อ เมื่อปิดการแบ่งปัน คะแนนเดิมจะไม่แสดงในหน้าคะแนนที่แบ่งปันของผู้ดูแล แต่จะไม่ลบประวัติแบบประเมินส่วนตัว ผลประเมินเป็นข้อมูลคัดกรองเบื้องต้น ไม่ใช่การวินิจฉัยทางการแพทย์"}</p>
     </section>
+
+    <section className="rounded-3xl border border-rose-200 dark:border-rose-500/30 bg-white/90 dark:bg-slate-900/80 p-6 md:p-8 space-y-4 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-rose-100 dark:bg-rose-500/15"><Trash2 className="h-5 w-5 text-rose-700 dark:text-rose-300" /></div>
+        <div><h2 className="font-semibold text-slate-900 dark:text-white">{en ? "Delete your account and data" : "ลบบัญชีและข้อมูลของคุณ"}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Permanently remove your SafeSpace account and the records linked to it. You will be signed out." : "ลบบัญชี SafeSpace และข้อมูลที่เชื่อมโยงกับบัญชีอย่างถาวร แล้วออกจากระบบ"}</p>
+        </div>
+      </div>
+      {!isAuthenticated ? <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/70 p-4 text-sm text-slate-600 dark:text-slate-300">{en ? "Sign in to delete your account data." : "เข้าสู่ระบบเพื่อลบข้อมูลบัญชีของคุณ"} <Link className="font-semibold text-violet-600 dark:text-violet-300 underline underline-offset-2" to="/login?returnTo=/settings">{en ? "Sign in" : "เข้าสู่ระบบ"}</Link></div> : <button type="button" onClick={() => { setDeleteConfirmation(""); setDeleteError(""); setShowDeleteDialog(true); }} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-800 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"> <Trash2 className="h-4 w-4" />{en ? "Delete account and data" : "ลบบัญชีและข้อมูล"}</button>}
+    </section>
+
+    {showDeleteDialog && isAuthenticated && <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-slate-950/65 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !deletingAccount) setShowDeleteDialog(false); }}>
+      <section role="alertdialog" aria-modal="true" aria-labelledby="delete-account-title" aria-describedby="delete-account-description delete-account-caveat" className="my-auto w-full max-w-xl rounded-3xl border border-rose-200 bg-white p-6 shadow-2xl dark:border-rose-500/30 dark:bg-slate-900 sm:p-8">
+        <div className="flex items-start gap-3">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-rose-100 dark:bg-rose-500/15"><AlertTriangle className="h-5 w-5 text-rose-700 dark:text-rose-300" /></div>
+          <div><h2 id="delete-account-title" className="text-xl font-bold text-slate-950 dark:text-white">{en ? "Permanently delete this account?" : "ยืนยันลบบัญชีนี้อย่างถาวรหรือไม่?"}</h2>
+            <p id="delete-account-description" className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "This deletes your sign-in and account profile, assessment history, saved mood check-ins, sharing and policy preferences, your community posts and comments, reports/contact requests you submitted or that concern your account, and your reactions on other posts." : "ระบบจะลบการเข้าสู่ระบบและโปรไฟล์ ประวัติแบบประเมิน การเช็กอินอารมณ์ การตั้งค่าการแบ่งปันและการยอมรับนโยบาย โพสต์และความคิดเห็นของคุณ รายงาน/คำขอติดต่อที่คุณส่งหรือเกี่ยวข้องกับบัญชี และการกดตอบสนองของคุณในโพสต์อื่น"}</p>
+          </div>
+        </div>
+        <div id="delete-account-caveat" className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs leading-relaxed text-amber-950 dark:border-amber-500/25 dark:bg-amber-500/10 dark:text-amber-100">{en ? "This cannot be undone. Guest data and device-only settings or imported sounds are not account records and are not deleted. This cannot immediately erase provider security logs, backups, or data already processed by external AI services." : "ไม่สามารถกู้คืนบัญชีได้ ข้อมูลผู้เยี่ยมชม การตั้งค่าที่เก็บไว้ในอุปกรณ์ และเสียงที่นำเข้าไม่ใช่ข้อมูลบัญชี จึงไม่ถูกลบ และไม่สามารถลบ log ความปลอดภัย backup หรือข้อมูลที่ผู้ให้บริการ AI ภายนอกประมวลผลแล้วได้ทันที"}</div>
+        <label htmlFor="delete-account-confirmation" className="mt-5 block text-sm font-medium text-slate-800 dark:text-slate-100">{en ? `Type ${deletePhrase} to confirm` : `พิมพ์ ${deletePhrase} เพื่อยืนยัน`}</label>
+        <input id="delete-account-confirmation" value={deleteConfirmation} onChange={(event) => setDeleteConfirmation(event.target.value)} autoComplete="off" disabled={deletingAccount} className="mt-2 min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200 dark:border-slate-600 dark:bg-slate-950 dark:text-white dark:focus:ring-rose-500/20" />
+        {deleteError && <p role="alert" className="mt-3 text-sm text-rose-700 dark:text-rose-300">{deleteError}</p>}
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button type="button" disabled={deletingAccount} onClick={() => setShowDeleteDialog(false)} className="min-h-11 rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">{en ? "Cancel" : "ยกเลิก"}</button>
+          <button type="button" disabled={deletingAccount || deleteConfirmation.trim() !== deletePhrase} onClick={deleteAccount} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-rose-700 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-rose-600 dark:hover:bg-rose-500">{deletingAccount ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}{deletingAccount ? (en ? "Deleting…" : "กำลังลบ…") : (en ? "Permanently delete" : "ลบอย่างถาวร")}</button>
+        </div>
+      </section>
+    </div>}
   </div>;
 }
 

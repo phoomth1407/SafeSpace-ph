@@ -19,6 +19,18 @@ const riskColors = {
   severe: "#f87171",
 };
 
+function matchesAgeSegment(assessment, segment) {
+  const age = assessment.age === null || assessment.age === undefined ? NaN : Number(assessment.age);
+  if (Number.isFinite(age)) {
+    return segment === "13to20" ? age >= 13 && age <= 20 : age >= 19;
+  }
+  // Newer data can use the requested ranges directly. Older records only have
+  // the original under-20 / 20-and-up buckets, so retain those as a fallback.
+  return segment === "13to20"
+    ? ["13to20", "under20"].includes(assessment.age_group)
+    : ["19plus", "over20"].includes(assessment.age_group);
+}
+
 export default function Admin() {
   const { user } = useAuth();
   const { t, lang } = useTranslation();
@@ -168,17 +180,17 @@ export default function Admin() {
     (a, b) => new Date(b.created_date) - new Date(a.created_date)
   );
 
-  // Filter by segment: all / under20 / over20 / foreigner
+  // Filter by segment: all / 13to20 / 19plus / foreigner
   const filteredAssessments = segment === "all"
     ? latestAssessments
     : segment === "foreigner"
       ? latestAssessments.filter((a) => a.nationality === "foreigner")
-      : latestAssessments.filter((a) => a.age_group === segment);
+      : latestAssessments.filter((a) => matchesAgeSegment(a, segment));
 
   const segments = [
     { id: "all", label: t("admin.seg.all") },
-    { id: "under20", label: t("admin.seg.under20") },
-    { id: "over20", label: t("admin.seg.over20") },
+    { id: "13to20", label: t("admin.seg.13to20") },
+    { id: "19plus", label: t("admin.seg.19plus") },
     { id: "foreigner", label: t("admin.seg.foreigner") },
   ];
 
@@ -367,7 +379,9 @@ export default function Admin() {
                       <span className="text-xs text-slate-500">{a.risk_score || 0}</span>
                       {a.age_group && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">
-                          {a.age_group === "under20" ? "<20" : "20+"}
+                          {a.age !== null && a.age !== undefined
+                            ? (Number(a.age) >= 19 ? t("admin.seg.19plus") : t("admin.seg.13to20"))
+                            : (["under20", "13to20"].includes(a.age_group) ? t("admin.seg.13to20") : t("admin.seg.19plus"))}
                         </span>
                       )}
                       {a.nationality === "foreigner" && (

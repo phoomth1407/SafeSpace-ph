@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail } from "lucide-react";
+import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail, UsersRound } from "lucide-react";
 import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
 import CommunityPostCard from "@/components/CommunityPostCard";
@@ -364,9 +364,7 @@ export default function Community() {
           <div className="community-art-orbit orbit-one" />
           <div className="community-art-orbit orbit-two" />
           <div className="community-art-core">
-            <div className="community-art-person person-one" />
-            <div className="community-art-person person-two" />
-            <div className="community-art-person person-three" />
+            <span className="community-art-main-symbol community-art-main-symbol-community"><UsersRound className="h-11 w-11" strokeWidth={1.7} /></span>
             <span className="community-art-heart"><Heart className="h-5 w-5" /></span>
           </div>
         </div>

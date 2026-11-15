@@ -48,6 +48,22 @@ function removeCachedPrivateAssessment(id) {
   }
 }
 
+export function clearCachedPrivateAssessments(ids = [], ownerId = null) {
+  if (typeof window === "undefined") return;
+  try {
+    const cache = JSON.parse(window.localStorage.getItem(PRIVATE_ASSESSMENT_CACHE) || "{}");
+    if (!cache || typeof cache !== "object" || Array.isArray(cache)) return;
+    const removeIds = new Set(Array.isArray(ids) ? ids.filter((id) => typeof id === "string") : []);
+    Object.entries(cache).forEach(([id, result]) => {
+      if (removeIds.has(id) || (ownerId && result?.created_by_id === ownerId)) delete cache[id];
+    });
+    if (Object.keys(cache).length) window.localStorage.setItem(PRIVATE_ASSESSMENT_CACHE, JSON.stringify(cache));
+    else window.localStorage.removeItem(PRIVATE_ASSESSMENT_CACHE);
+  } catch {
+    // Account deletion still proceeds if browser storage is unavailable.
+  }
+}
+
 async function validatePasswordBeforeSignup(password) {
   if (typeof password !== "string" || password.length < 12) {
     throw new Error("Password must be at least 12 characters long.");

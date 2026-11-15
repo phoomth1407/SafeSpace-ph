@@ -414,8 +414,8 @@ const translations = {
     "community.aiToggle": "ให้ AI ตอบกลับให้กำลังใจ",
     "community.aiToggleDesc": "เปิดเพื่อให้ AI ให้กำลังใจอัตโนมัติ ปิดหากไม่ต้องการ",
     "admin.seg.all": "ทั้งหมด",
-    "admin.seg.under20": "ต่ำกว่า 20",
-    "admin.seg.over20": "20 ขึ้นไป",
+    "admin.seg.13to20": "13–20 ปี",
+    "admin.seg.19plus": "19 ปีขึ้นไป",
     "admin.seg.foreigner": "ต่างชาติ",
     "admin.segLabel": "กรองตามกลุ่ม",
 
@@ -915,8 +915,8 @@ const translations = {
     "community.aiToggle": "Let AI reply with encouragement",
     "community.aiToggleDesc": "On for AI encouragement, off to skip AI",
     "admin.seg.all": "All",
-    "admin.seg.under20": "Under 20",
-    "admin.seg.over20": "20 and above",
+    "admin.seg.13to20": "13–20",
+    "admin.seg.19plus": "19 or above",
     "admin.seg.foreigner": "Foreigners",
     "admin.segLabel": "Filter by group",
 
