@@ -103,7 +103,7 @@ export default function CommentSection({ post, user, isAdmin, canModerateComment
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-300 p-2 rounded-lg bg-slate-800/60 border border-slate-700 w-32 truncate">{anon ? t("community.anon") : user.username}</span>
                 <label className="flex items-center gap-1 text-[10px] text-slate-500 cursor-pointer select-none">
-                  <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
+                  <input type="checkbox" checked={anon} disabled={!user?.birth_date} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
                   {t("community.anonToggle")}
                 </label>
               </div>

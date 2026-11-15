@@ -315,7 +315,7 @@ export default function Community() {
           <div className="community-composer-row">
             <span className="community-field" aria-live="polite">{anon ? t("community.anon") : user?.username}</span>
             <label className="community-anon-toggle">
-              <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} />
+              <input type="checkbox" checked={anon} disabled={!user?.birth_date} onChange={(e) => setAnon(e.target.checked)} />
               <span>{t("community.anonToggle")}</span>
             </label>
           </div>

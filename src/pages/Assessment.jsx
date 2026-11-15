@@ -342,7 +342,7 @@ export default function Assessment() {
     const canOpenPolicy = effectiveAge >= 13 && effectiveAge <= 120 && (lang !== "en" || nationality);
     const latestEligibleBirthDate = new Date();
     latestEligibleBirthDate.setFullYear(latestEligibleBirthDate.getFullYear() - 13);
-    const belowMinimumAge = (needsBirthDate && birthDateInput && effectiveAge < 13) || (!isAuthenticated && ageInput && effectiveAge < 13);
+    const belowMinimumAge = (isAuthenticated && user?.birth_date && effectiveAge < 13) || (needsBirthDate && birthDateInput && effectiveAge < 13) || (!isAuthenticated && ageInput && effectiveAge < 13);
 const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH;
     const policyTitle = lang === "en" ? "SafeSpace Assessment Policy" : "นโยบายการประเมินของ SafeSpace";
 
