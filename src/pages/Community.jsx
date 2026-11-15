@@ -29,6 +29,9 @@ export default function Community() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("other");
   const [anon, setAnon] = useState(false);
+  useEffect(() => {
+    setAnon(Boolean(user?.id && (!user?.birth_date || !user?.username_changed_at)));
+  }, [user?.id, user?.birth_date, user?.username_changed_at]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
@@ -312,7 +315,7 @@ export default function Community() {
           <div className="community-composer-row">
             <span className="community-field" aria-live="polite">{anon ? t("community.anon") : user?.username}</span>
             <label className="community-anon-toggle">
-              <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} />
+              <input type="checkbox" checked={anon} disabled={!user?.birth_date} onChange={(e) => setAnon(e.target.checked)} />
               <span>{t("community.anonToggle")}</span>
             </label>
           </div>
@@ -587,3 +590,4 @@ export default function Community() {
     </div>
   );
 }
+

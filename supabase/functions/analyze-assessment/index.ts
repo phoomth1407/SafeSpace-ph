@@ -137,11 +137,10 @@ async function main(req: Request) {
   }
 
   const language = normalizeLanguage((body as any).language);
-  const ageNum = typeof (body as any).age === "number" && Number.isFinite((body as any).age) ? (body as any).age : null;
-  if (ageNum !== null && (!Number.isInteger(ageNum) || ageNum < 1 || ageNum > 120)) {
-    return new Response(JSON.stringify({ error: "invalid age" }), { status: 400, headers: corsHeaders });
+  const requestedAge = typeof (body as any).age === "number" && Number.isFinite((body as any).age) ? (body as any).age : null;
+  if (requestedAge !== null && (!Number.isInteger(requestedAge) || requestedAge < 13 || requestedAge > 120)) {
+    return new Response(JSON.stringify({ error: "You must be at least 13 years old to use the assessment." }), { status: 403, headers: corsHeaders });
   }
-  const ageGroup = ageNum === null ? null : (ageNum < 20 ? "under20" : "over20");
   const nat = body.nationality === "foreigner" ? "foreigner" : "thai";
   const consentVersion = typeof body.consent_version === "string" ? body.consent_version.trim() : "";
   if (body.sensitive_data_consent !== true || !/^\d+\.\d+$/.test(consentVersion) || consentVersion.length > 32) {
@@ -157,6 +156,30 @@ async function main(req: Request) {
   if (userError || !userData.user) {
     return new Response(JSON.stringify({ error: "authentication required" }), { status: 401, headers: corsHeaders });
   }
+
+  let ageNum = requestedAge;
+  if (userData.user.is_anonymous !== true) {
+    const { data: privateProfiles, error: profileError } = await userClient.rpc("get_my_private_profile");
+    const privateProfile = Array.isArray(privateProfiles) ? privateProfiles[0] : null;
+    const birthDate = privateProfile?.birth_date;
+    if (profileError || !birthDate) {
+      return new Response(JSON.stringify({ error: "Save your private date of birth before using the assessment." }), { status: 403, headers: corsHeaders });
+    }
+    const birthDateValue = new Date(`${birthDate}T00:00:00Z`);
+    if (Number.isNaN(birthDateValue.getTime()) || birthDateValue.toISOString().slice(0, 10) !== birthDate) {
+      return new Response(JSON.stringify({ error: "A valid private date of birth is required." }), { status: 403, headers: corsHeaders });
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    const [birthYear, birthMonth, birthDay] = birthDate.split("-").map(Number);
+    const [todayYear, todayMonth, todayDay] = today.split("-").map(Number);
+    ageNum = todayYear - birthYear - (todayMonth < birthMonth || (todayMonth === birthMonth && todayDay < birthDay) ? 1 : 0);
+    if (ageNum < 13 || ageNum > 120) {
+      return new Response(JSON.stringify({ error: "You must be at least 13 years old to use the assessment." }), { status: 403, headers: corsHeaders });
+    }
+  } else if (ageNum === null || ageNum < 13) {
+    return new Response(JSON.stringify({ error: "You must be at least 13 years old to use the assessment." }), { status: 403, headers: corsHeaders });
+  }
+  const ageGroup = ageNum < 20 ? "under20" : "over20";
 
   const { data: allowed, error: rateLimitError } = await userClient.rpc("consume_rate_limit", {
     p_endpoint: "analyze-assessment",
@@ -362,3 +385,4 @@ async function main(req: Request) {
 }
 
 Deno.serve(main);
+

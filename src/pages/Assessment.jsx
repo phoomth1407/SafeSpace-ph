@@ -35,9 +35,22 @@ const MASCOT_EN = [
 
 const iconMap = { User: UserIcon, ShieldAlert, Home: HomeIcon, GraduationCap, Users: UsersIcon, Apple, Sparkles };
 
+const ageFromBirthDate = (value) => {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const [year, month, day] = value.split("-").map(Number);
+  const parsed = new Date(year, month - 1, day);
+  if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) return null;
+  const today = new Date();
+  let age = today.getFullYear() - year;
+  if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) age -= 1;
+  return age;
+};
+
+const localDateString = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
 export default function Assessment() {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, checkUserAuth } = useAuth();
   const { t, lang } = useTranslation();
   const [guestMode, setGuestMode] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(0);
@@ -47,6 +60,9 @@ export default function Assessment() {
   const [error, setError] = useState(null);
   const [step, setStep] = useState("intro");
   const [ageInput, setAgeInput] = useState("");
+  const [birthDateInput, setBirthDateInput] = useState(user?.birth_date || "");
+  const [savingBirthDate, setSavingBirthDate] = useState(false);
+  useEffect(() => setBirthDateInput(user?.birth_date || ""), [user?.id, user?.birth_date]);
   useEffect(() => {
     if (isAuthenticated && Number.isInteger(Number(user?.age)) && Number(user.age) >= 13) {
       setAgeInput(String(user.age));
@@ -317,8 +333,16 @@ export default function Assessment() {
 
   // Intro step — collect minimal details, then require policy acceptance before the assessment begins
   if (step === "intro") {
-    const effectiveAge = isAuthenticated && Number.isInteger(Number(user?.age)) ? Number(user.age) : Number(ageInput);
+    const needsBirthDate = isAuthenticated && !user?.birth_date;
+    const effectiveAge = user?.birth_date
+      ? ageFromBirthDate(user.birth_date)
+      : needsBirthDate
+        ? ageFromBirthDate(birthDateInput)
+        : Number(ageInput);
     const canOpenPolicy = effectiveAge >= 13 && effectiveAge <= 120 && (lang !== "en" || nationality);
+    const latestEligibleBirthDate = new Date();
+    latestEligibleBirthDate.setFullYear(latestEligibleBirthDate.getFullYear() - 13);
+    const belowMinimumAge = (isAuthenticated && user?.birth_date && effectiveAge < 13) || (needsBirthDate && birthDateInput && effectiveAge < 13) || (!isAuthenticated && ageInput && effectiveAge < 13);
 const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH;
     const policyTitle = lang === "en" ? "SafeSpace Assessment Policy" : "นโยบายการประเมินของ SafeSpace";
 
@@ -330,15 +354,23 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
             <p className="text-sm text-slate-400 leading-relaxed">{t("assess.intro.subtitle")}</p>
           </div>
 
-          {(!isAuthenticated || !Number.isInteger(Number(user?.age))) && (
+          {needsBirthDate && (
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-200">{t("assess.intro.ageLabel")}</label>
-              <input type="number" min="13" max="120" value={ageInput} onChange={(e) => setAgeInput(e.target.value)} placeholder={t("assess.intro.agePlaceholder")} className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:text-slate-500" />
+              <label htmlFor="assessment-birth-date" className="text-sm font-medium text-slate-200">{lang === "en" ? "Date of birth" : "วันเดือนปีเกิด"}</label>
+              <input id="assessment-birth-date" type="date" max={localDateString(latestEligibleBirthDate)} value={birthDateInput} onChange={(e) => { setBirthDateInput(e.target.value); setError(null); }} className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600" />
+              <p className="text-xs leading-relaxed text-slate-400">{lang === "en" ? "Your birthdate stays private to your account. You must be at least 13 to use the assessment." : "วันเกิดจะเก็บเป็นข้อมูลส่วนตัวของบัญชี และต้องมีอายุอย่างน้อย 13 ปีจึงใช้แบบประเมินได้"}</p>
             </div>
           )}
-          {isAuthenticated && Number.isInteger(Number(user?.age)) && (
+          {!isAuthenticated && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-200">{t("assess.intro.ageLabel")}</label>
+              <input type="number" min="13" max="120" value={ageInput} onChange={(e) => { setAgeInput(e.target.value); setError(null); }} placeholder={t("assess.intro.agePlaceholder")} className="w-full text-sm text-slate-200 p-3 rounded-xl bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:text-slate-500" />
+            </div>
+          )}
+          {isAuthenticated && user?.birth_date && (
             <p className="text-xs text-slate-400">{lang === "en" ? "Age on your account: " + user.age : "อายุในบัญชีของคุณ: " + user.age + " ปี"}</p>
           )}
+          {belowMinimumAge && <p role="alert" className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-sm text-rose-300">{lang === "en" ? "You must be at least 13 years old to use the assessment." : "คุณต้องมีอายุอย่างน้อย 13 ปีจึงจะใช้แบบประเมินได้"}</p>}
 
           {lang === "en" && (
             <div className="space-y-2">
@@ -364,15 +396,34 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              const effectiveAge = isAuthenticated && Number.isInteger(Number(user?.age)) ? Number(user.age) : Number(ageInput);
-              if (!Number.isInteger(effectiveAge) || effectiveAge < 13 || effectiveAge > 120) { setError(t("assess.intro.ageRequired")); return; }
+            onClick={async () => {
+              const needsBirthDate = isAuthenticated && !user?.birth_date;
+              const effectiveAge = user?.birth_date ? ageFromBirthDate(user.birth_date) : needsBirthDate ? ageFromBirthDate(birthDateInput) : Number(ageInput);
+              if (!Number.isInteger(effectiveAge) || effectiveAge < 13 || effectiveAge > 120) {
+                setError(needsBirthDate && birthDateInput && effectiveAge < 13
+                  ? (lang === "en" ? "You must be at least 13 years old to use the assessment." : "คุณต้องมีอายุอย่างน้อย 13 ปีจึงจะใช้แบบประเมินได้")
+                  : t("assess.intro.ageRequired"));
+                return;
+              }
               if (lang === "en" && !nationality) { setError(t("assess.intro.ageRequired")); return; }
+              if (needsBirthDate) {
+                if (!birthDateInput) { setError(lang === "en" ? "Enter your date of birth to continue." : "กรุณากรอกวันเดือนปีเกิดเพื่อดำเนินการต่อ"); return; }
+                setSavingBirthDate(true);
+                try {
+                  await appClient.auth.saveMyProfile({ username: user.username, birthDate: birthDateInput });
+                  await checkUserAuth();
+                } catch (saveError) {
+                  setError(saveError?.message || (lang === "en" ? "Could not save your private birthdate. Please try again." : "บันทึกวันเกิดส่วนตัวไม่สำเร็จ กรุณาลองอีกครั้ง"));
+                  setSavingBirthDate(false);
+                  return;
+                }
+                setSavingBirthDate(false);
+              }
               setError(null);
               if (!privacyAcknowledged) { setPolicyScrolledToEnd(false); setPolicyOpen(true); return; }
               setStep("chapter");
             }}
-            disabled={!canOpenPolicy || policyAcceptanceLoading}
+            disabled={!canOpenPolicy || policyAcceptanceLoading || savingBirthDate}
             className="w-full flex items-center justify-center gap-2 bg-slate-100 text-slate-900 text-sm font-semibold py-3 rounded-2xl hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Check className="w-4 h-4" />
@@ -624,3 +675,4 @@ const activePolicySections = lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_P
     </div>
   );
 }
+

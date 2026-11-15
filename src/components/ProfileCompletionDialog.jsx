@@ -7,6 +7,16 @@ import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 
 const localDateString = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+const ageFromBirthDate = (value) => {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const [year, month, day] = value.split("-").map(Number);
+  const parsed = new Date(year, month - 1, day);
+  if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) return null;
+  const today = new Date();
+  let age = today.getFullYear() - year;
+  if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) age -= 1;
+  return age;
+};
 
 export default function ProfileCompletionDialog() {
   const { user, checkUserAuth } = useAuth();
@@ -63,6 +73,8 @@ export default function ProfileCompletionDialog() {
 
   if (!needsProfile || dismissed) return null;
   const today = localDateString();
+  const latestEligibleBirthDate = new Date();
+  latestEligibleBirthDate.setFullYear(latestEligibleBirthDate.getFullYear() - 13);
 
   const saveProfile = async (event) => {
     event.preventDefault();
@@ -74,6 +86,11 @@ export default function ProfileCompletionDialog() {
     }
     if (!birthDate || birthDate > today) {
       setError(en ? "Choose your date of birth." : "กรุณาเลือกวันเดือนปีเกิด");
+      return;
+    }
+    const age = ageFromBirthDate(birthDate);
+    if (!Number.isInteger(age) || age < 13 || age > 120) {
+      setError(en ? "You must be at least 13 years old to create an account." : "คุณต้องมีอายุอย่างน้อย 13 ปีจึงจะสร้างบัญชีได้");
       return;
     }
 
@@ -100,7 +117,7 @@ export default function ProfileCompletionDialog() {
       </div>
       <form onSubmit={saveProfile} className="space-y-5 p-6 sm:p-8">
         <label className="block space-y-2 text-sm font-medium text-slate-800 dark:text-slate-100"><span className="flex items-center gap-2"><UserRound className="h-4 w-4 text-violet-600 dark:text-violet-300" />{en ? "Username" : "ชื่อผู้ใช้"}</span><input value={username} onChange={(event) => setUsername(event.target.value)} maxLength={20} autoComplete="username" required className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-200 dark:border-slate-600 dark:bg-slate-950 dark:text-white" /><span className="block text-xs font-normal text-slate-500">{en ? "3–20 letters, numbers, or underscores." : "3–20 ตัวอักษร ตัวเลข หรือ _"}</span></label>
-        <label className="block space-y-2 text-sm font-medium text-slate-800 dark:text-slate-100"><span className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-sky-600 dark:text-sky-300" />{en ? "Date of birth" : "วันเดือนปีเกิด"}</span><input type="date" value={birthDate} onChange={(event) => setBirthDate(event.target.value)} max={today} required className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-200 dark:border-slate-600 dark:bg-slate-950 dark:text-white" /><span className="flex items-start gap-1.5 text-xs font-normal leading-relaxed text-slate-500"><LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0" />{en ? "Your birthdate stays private to your account; administrators cannot see it." : "วันเกิดเป็นข้อมูลส่วนตัวของบัญชี ผู้ดูแลจะไม่เห็นข้อมูลนี้"}</span></label>
+        <label className="block space-y-2 text-sm font-medium text-slate-800 dark:text-slate-100"><span className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-sky-600 dark:text-sky-300" />{en ? "Date of birth" : "วันเดือนปีเกิด"}</span><input type="date" value={birthDate} onChange={(event) => setBirthDate(event.target.value)} max={localDateString(latestEligibleBirthDate)} required className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-200 dark:border-slate-600 dark:bg-slate-950 dark:text-white" /><span className="flex items-start gap-1.5 text-xs font-normal leading-relaxed text-slate-500"><LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0" />{en ? "Your birthdate stays private to your account; administrators cannot see it. You must be at least 13 to create an account." : "วันเกิดเป็นข้อมูลส่วนตัวของบัญชี ผู้ดูแลจะไม่เห็นข้อมูลนี้ และต้องมีอายุอย่างน้อย 13 ปีจึงจะสร้างบัญชีได้"}</span></label>
 
         <fieldset className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50/70 p-4 dark:border-violet-400/20 dark:bg-violet-400/5"><legend className="px-1 text-sm font-semibold text-slate-900 dark:text-white">{en ? "Share assessment risk scores with admins?" : "อนุญาตให้ผู้ดูแลดูคะแนนความเสี่ยงจากแบบประเมินหรือไม่?"}</legend><p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Only risk scores and levels are shared, never your answers or written responses." : "แบ่งปันเฉพาะคะแนนและระดับความเสี่ยง ไม่รวมคำตอบหรือข้อความที่เขียน"}</p><div className="grid grid-cols-2 gap-3"><button type="button" aria-pressed={shareRiskScore} onClick={() => setShareRiskScore(true)} className={`min-h-10 rounded-xl border px-3 text-sm font-semibold transition ${shareRiskScore ? "border-violet-600 bg-violet-700 text-white" : "border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"}`}>{en ? "Yes, share" : "ใช่ แบ่งปัน"}</button><button type="button" aria-pressed={!shareRiskScore} onClick={() => setShareRiskScore(false)} className={`min-h-10 rounded-xl border px-3 text-sm font-semibold transition ${!shareRiskScore ? "border-violet-600 bg-violet-700 text-white" : "border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"}`}>{en ? "No, keep private" : "ไม่ แยกเป็นส่วนตัว"}</button></div></fieldset>
 
