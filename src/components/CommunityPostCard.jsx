@@ -7,6 +7,7 @@ import { appClient } from "@/api/appClient";
 import CommentSection from "@/components/CommentSection";
 import ReportButton from "@/components/ReportButton";
 import BanModal from "@/components/BanModal";
+import CommunityTranslation from "@/components/CommunityTranslation";
 
 function useIsPhone() {
   const [isPhone, setIsPhone] = useState(false);
@@ -127,9 +128,10 @@ function CommunityPostCard({ post, isAdmin, canBanUsers, canModerateComments, ca
             </button>
           )}
         </div>
-        <p className="text-sm text-slate-100 leading-relaxed whitespace-pre-wrap font-medium">
+        <p data-translation-source className="text-sm text-slate-100 leading-relaxed whitespace-pre-wrap font-medium">
           {post.content}
         </p>
+        <CommunityTranslation text={post.content || ""} lang={lang} />
 
         <BanModal userId={banUserId} onClose={() => setBanUserId(null)} />
       </Card>
@@ -181,9 +183,10 @@ function CommunityPostCard({ post, isAdmin, canBanUsers, canModerateComments, ca
         )}
       </div>
 
-      <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
+      <p data-translation-source className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
         {post.content}
       </p>
+      <CommunityTranslation text={post.content || ""} lang={lang} />
 
       {/* Interactions */}
       <div className="flex items-center gap-2 pt-1">

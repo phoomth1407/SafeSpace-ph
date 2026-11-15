@@ -46,7 +46,7 @@ Guest assessment storage is admin-only at the database layer.
 Authenticated users can create their own reports. Admins can review/manage reports.
 
 ### users
-Users can read their own profile; admins can manage user records.
+Users can read their own profile; admins can manage user records. The username is in the admin-readable profile. Full birthdates are stored separately in the non-exposed `private.user_birthdates` table and are available only to the authenticated owner through `get_my_private_profile`; the admin dashboard and users Data API do not expose them. The `save_my_profile` SECURITY DEFINER RPC validates the authenticated owner, username uniqueness and format, minimum age, and change intervals. It updates named Community content in the same transaction when a username changes. Anonymous content remains labeled `anonymous`.
 
 ### emergency_resources
 Public read access is intentional. Admin-only write access is enforced by RLS.

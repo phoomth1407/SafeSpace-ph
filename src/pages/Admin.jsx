@@ -264,7 +264,7 @@ export default function Admin() {
     if (showBannedOnly && !u.banned) return false;
     if (userSearch.trim()) {
       const q = userSearch.trim().toLowerCase();
-      if (!(u.full_name || "").toLowerCase().includes(q) && !(u.email || "").toLowerCase().includes(q)) return false;
+      if (!(u.username || "").toLowerCase().includes(q) && !(u.full_name || "").toLowerCase().includes(q) && !(u.email || "").toLowerCase().includes(q)) return false;
     }
     return true;
   });
@@ -834,11 +834,11 @@ export default function Admin() {
                 return (
                   <div key={u.id} className="flex items-center gap-3 p-3 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">
                     <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-medium text-slate-300">{(u.full_name || u.email || "?").charAt(0).toUpperCase()}</span>
+                      <span className="text-xs font-medium text-slate-300">{(u.username || u.email || "?").charAt(0).toUpperCase()}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-medium text-slate-200 truncate">{u.full_name || u.email}</span>
+                        <span className="text-xs font-medium text-slate-200 truncate">{u.username || u.full_name || u.email}</span>
                         {u.role === "admin" && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-900">admin</span>}
                         {u.role === "tester" && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-500/10 text-violet-300">tester</span>}
                         {u.banned && (

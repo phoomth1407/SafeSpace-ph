@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Loader2, Trash2, Heart, Pin } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import ReportButton from "@/components/ReportButton";
+import CommunityTranslation from "@/components/CommunityTranslation";
 
 export default function CommentItem({ comment, isOwner, isAdmin, canModerateComments, isPostOwner, canReport, postId, onDelete, onTogglePin }) {
   const { t, lang } = useTranslation();
@@ -74,7 +75,8 @@ export default function CommentItem({ comment, isOwner, isAdmin, canModerateComm
             />
           )}
         </div>
-        <p className="text-xs text-slate-300 leading-relaxed mt-0.5">{comment.content}</p>
+        <p data-translation-source className="text-xs text-slate-300 leading-relaxed mt-0.5">{comment.content}</p>
+        <CommunityTranslation text={comment.content || ""} lang={lang} />
       </div>
     </div>
   );

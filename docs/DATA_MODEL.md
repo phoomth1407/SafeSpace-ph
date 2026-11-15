@@ -22,6 +22,8 @@ One important detail: the repository does not contain the original full database
 
 The exact columns can change as the project develops. This table is mainly here to explain why the data exists and how it is protected.
 
+The admin-readable `users` profile stores a unique username. A user's full birthdate is stored separately in the non-exposed `private.user_birthdates` table. Only the authenticated owner can read the date through `get_my_private_profile`; the admin dashboard and user-list Data API do not expose it. Users update these values through `save_my_profile`, which validates age and username format/uniqueness, limits username changes to once per 30 days, and limits birthdate changes to once per 365 days.
+
 ## How the relationships work
 
 There is not a huge relational model with dozens of joins. Most important relationships use a user ID or post ID.
@@ -35,6 +37,8 @@ Signed-in assessment rows are tied to the authenticated Supabase user ID. RLS li
 Community posts are associated with their authenticated creator.
 
 Posts are publicly readable, but creating a post is not treated as a public anonymous database INSERT. The current application uses a controlled server/database path, and direct client INSERT access is restricted.
+
+Named posts and comments always use the account username enforced by a database trigger. The anonymous choice stores the generic `anonymous` author label. A username change updates all of the owner's previously named posts and comments while leaving anonymous entries unchanged.
 
 A rolling post limit is also enforced at the database layer.
 

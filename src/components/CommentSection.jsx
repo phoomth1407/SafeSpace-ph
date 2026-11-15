@@ -9,8 +9,7 @@ export default function CommentSection({ post, user, isAdmin, canModerateComment
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [anon, setAnon] = useState(true);
+  const [anon, setAnon] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
@@ -41,7 +40,7 @@ export default function CommentSection({ post, user, isAdmin, canModerateComment
       const res = await appClient.functions.invoke("createComment", {
         post_id: post.id,
         content: content.trim(),
-        author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
+        author_name: anon ? "anonymous" : user?.username || "anonymous",
       });
       const created = res.data;
       if (created?.error) {
@@ -99,13 +98,7 @@ export default function CommentSection({ post, user, isAdmin, canModerateComment
           {user ? (
             <>
               <div className="flex items-center gap-2">
-                <input
-                  value={authorName}
-                  onChange={(e) => setAuthorName(e.target.value)}
-                  placeholder={t("community.authorPlaceholder")}
-                  disabled={anon}
-                  className="text-xs text-slate-200 p-2 rounded-lg bg-slate-800/60 border border-slate-700 focus:outline-none focus:border-slate-600 placeholder:text-slate-500 disabled:opacity-40 w-32"
-                />
+                <span className="text-xs text-slate-300 p-2 rounded-lg bg-slate-800/60 border border-slate-700 w-32 truncate">{anon ? t("community.anon") : user.username}</span>
                 <label className="flex items-center gap-1 text-[10px] text-slate-500 cursor-pointer select-none">
                   <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} className="accent-rose-500" />
                   {t("community.anonToggle")}

@@ -38,6 +38,7 @@ export default function Register() {
   const [month, setMonth] = useState(String(today.getMonth() + 1));
   const [year, setYear] = useState(String(todayYear - 18));
   const [shareRiskScore, setShareRiskScore] = useState(null);
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -96,7 +97,7 @@ export default function Register() {
     if (method === "google") {
       setLoading(true);
       try {
-        await appClient.auth.loginWithProvider("google", safeReturnTo(), age, shareRiskScore);
+        await appClient.auth.loginWithProvider("google", safeReturnTo(), age, shareRiskScore, { username: username.trim(), birthDate: `${year}-${String(month).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}` });
       } catch (err) {
         sessionStorage.removeItem("safespace_pending_share_risk_score");
         setError(err.message || (en ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ"));
@@ -109,11 +110,11 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e?.preventDefault();
     setError("");
-    if (!policyAccepted || !validAge || shareRiskScore === null) { setError(en ? "Complete the policy, age, and sharing steps first." : "กรุณาทำขั้นตอนนโยบาย อายุ และการแบ่งปันให้ครบ"); return; }
+    if (!policyAccepted || !validAge || shareRiskScore === null || !/^[A-Za-z0-9_]{3,20}$/.test(username.trim())) { setError(en ? "Complete the policy, username, age, and sharing steps first." : "กรุณาทำขั้นตอนนโยบาย ชื่อผู้ใช้ อายุ และการแบ่งปันให้ครบ"); return; }
     if (password !== confirmPassword) { setError(t("auth.passwordMismatch")); return; }
     setLoading(true);
     try {
-      const result = await appClient.auth.register({ email, password, age, shareRiskScore });
+      const result = await appClient.auth.register({ email, password, age, shareRiskScore, username: username.trim(), birthDate: `${year}-${String(month).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}` });
       if (result?.session) {
         const dest = safeReturnTo();
         if (dest.startsWith("http://") || dest.startsWith("https://")) window.location.href = dest;
@@ -172,7 +173,7 @@ export default function Register() {
   };
   const subtitles = {
     method: en ? "Choose how you want to join SafeSpace." : "เลือกวิธีที่ต้องการสมัครใช้งาน SafeSpace",
-    profile: en ? "Your full birthdate stays in this form and is not sent during registration." : "วันเดือนปีเกิดจะอยู่ในแบบฟอร์มนี้ และจะไม่ถูกส่งไปตอนสมัครบัญชี",
+    profile: en ? "Choose the name shown in Community and save your birthdate to your account." : "ตั้งชื่อที่จะแสดงในชุมชนและบันทึกวันเกิดไว้กับบัญชีของคุณ",
     credentials: en ? "Use an email address and a secure password." : "ใช้อีเมลและรหัสผ่านที่ปลอดภัย",
   };
 
@@ -186,6 +187,11 @@ export default function Register() {
       </div>}
       {step === "profile" && <div className="space-y-5">
         <div className="space-y-2">
+          <Label htmlFor="username">{en ? "Username" : "ชื่อผู้ใช้"}</Label>
+          <Input id="username" autoComplete="username" maxLength={20} value={username} onChange={(e) => setUsername(e.target.value)} placeholder={en ? "e.g. calm_cloud" : "เช่น calm_cloud"} className="h-12" required />
+          <p className="text-xs text-muted-foreground">{en ? "3–20 letters, numbers, or underscores. You can change it later in Settings." : "ใช้ตัวอักษร ตัวเลข หรือ _ จำนวน 3–20 ตัว เปลี่ยนได้ภายหลังในตั้งค่า"}</p>
+        </div>
+        <div className="space-y-2">
           <Label>{en ? "Date of birth" : "วันเดือนปีเกิด"}</Label>
           <div className="flex gap-2">
             <SelectField label={en ? "Day" : "วัน"} ariaLabel="Day" value={day} onChange={setDay}>{days.map((d) => <option key={d} value={d}>{String(d).padStart(2,"0")}</option>)}</SelectField>
@@ -193,7 +199,7 @@ export default function Register() {
             <SelectField label={en ? "Year" : "ปี"} ariaLabel="Year" value={year} onChange={(next) => { setYear(next); setMonth(next === String(todayYear) ? String(today.getMonth() + 1) : "1"); setDay("1"); }}>{years.map((y) => <option key={y} value={y}>{y}</option>)}</SelectField>
           </div>
           <p className="text-xs text-muted-foreground">{en ? `Latest selectable date: ${today.toLocaleDateString("en-GB")} · Calculated age: ${birthDateValid ? age : "—"}` : `เลือกวันเกิดได้ถึง: ${today.toLocaleDateString("th-TH")} · อายุที่คำนวณได้: ${birthDateValid ? age : "—"}`}</p>
-          <p className="text-xs text-muted-foreground">{en ? "Only your calculated age is used for account features; the full date is not stored." : "ระบบใช้เฉพาะอายุที่คำนวณได้สำหรับฟีเจอร์บัญชี โดยไม่จัดเก็บวันเกิดแบบเต็ม"}</p>
+          <p className="text-xs text-muted-foreground">{en ? "Your birthdate is stored privately with your account so you only need to enter it once. Administrators cannot see it." : "ระบบบันทึกวันเกิดไว้เป็นข้อมูลส่วนตัวในบัญชีเพื่อให้กรอกเพียงครั้งเดียว ผู้ดูแลจะไม่เห็นข้อมูลนี้"}</p>
         </div>
         <div className="space-y-3">
           <div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-primary"/><Label>{en ? "Share assessment risk scores with admins?" : "อนุญาตให้ผู้ดูแลดูคะแนนความเสี่ยงจากแบบประเมินหรือไม่?"}</Label></div>
@@ -203,7 +209,7 @@ export default function Register() {
             <Button type="button" variant={shareRiskScore === false ? "default" : "outline"} className="h-11" aria-pressed={shareRiskScore === false} onClick={() => setShareRiskScore(false)}>{en ? "No, keep private" : "ไม่ แยกเป็นส่วนตัว"}</Button>
           </div>
         </div>
-        <Button className="h-12 w-full" disabled={!birthDateValid || !validAge || shareRiskScore === null || loading} onClick={continueProfile}>{loading ? <Loader2 className="h-4 w-4 animate-spin"/> : (method === "google" ? (en ? "Continue with Google" : "ดำเนินการต่อด้วย Google") : (en ? "Continue" : "ดำเนินการต่อ"))}</Button>
+        <Button className="h-12 w-full" disabled={!/^[A-Za-z0-9_]{3,20}$/.test(username.trim()) || !birthDateValid || !validAge || shareRiskScore === null || loading} onClick={continueProfile}>{loading ? <Loader2 className="h-4 w-4 animate-spin"/> : (method === "google" ? (en ? "Continue with Google" : "ดำเนินการต่อด้วย Google") : (en ? "Continue" : "ดำเนินการต่อ"))}</Button>
         <Button variant="ghost" className="w-full" onClick={() => setStep("method")}>{en ? "Back" : "ย้อนกลับ"}</Button>
       </div>}
       {step === "credentials" && <form onSubmit={handleSubmit} className="space-y-4">
