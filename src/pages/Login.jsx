@@ -19,7 +19,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   // Post-login destination (e.g. the MCP OAuth consent page sends users here
   // with returnTo so the grant flow can resume). Same-origin paths only.
   const returnTo = safeReturnTo();
@@ -53,13 +53,12 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = () => {
-    // Route Google sign-in through the same policy, age, and sharing flow
-    // used by Google signup. The registration flow handles existing accounts
-    // through Supabase OAuth after the required details are collected.
-    const query = new URLSearchParams({ method: "google" });
-    if (returnTo !== "/") query.set("returnTo", returnTo);
-    navigate(`/register?${query.toString()}`);
+  const handleGoogle = async () => {
+    // OAuth identifies existing accounts first. Accounts without a saved
+    // username or birthdate are sent to Settings once the session is ready.
+    setError(""); setLoading(true);
+    try { await appClient.auth.loginWithProvider("google", returnTo); }
+    catch (err) { setError(err.message || (lang === "en" ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ")); setLoading(false); }
   };
 
   return (

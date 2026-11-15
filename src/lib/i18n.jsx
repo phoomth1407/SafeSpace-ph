@@ -390,8 +390,8 @@ const translations = {
     "theme.light": "โหมดสว่าง",
     "theme.toggle": "สลับธีม",
 
-    "community.authorName": "ชื่อสมมุติ",
-    "community.authorPlaceholder": "ตั้งชื่อสมมุติของคุณ",
+    "community.authorName": "ชื่อผู้ใช้บัญชี",
+    "community.authorPlaceholder": "ใช้ชื่อผู้ใช้จากบัญชีของคุณ",
     "community.anonToggle": "ไม่แสดงตัวตน (นิรนาม)",
     "community.filter.all": "ทั้งหมด",
     "community.announcement": "ประกาศจากแอดมิน",
@@ -891,8 +891,8 @@ const translations = {
     "theme.light": "Light",
     "theme.toggle": "Toggle theme",
 
-    "community.authorName": "Pseudonym",
-    "community.authorPlaceholder": "Choose your pseudonym",
+    "community.authorName": "Account username",
+    "community.authorPlaceholder": "Your saved account username is used",
     "community.anonToggle": "Stay anonymous",
     "community.filter.all": "All",
     "community.announcement": "Admin announcement",

@@ -16,6 +16,15 @@ const tableFor = (name) => ({
 
 const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+function calculateAgeFromBirthDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) return null;
+  const [year, month, day] = value.split("-").map(Number);
+  const birth = new Date(year, month - 1, day);
+  const today = new Date();
+  if (birth.getFullYear() !== year || birth.getMonth() !== month - 1 || birth.getDate() !== day || birth > today) return null;
+  return today.getFullYear() - year - (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day) ? 1 : 0);
+}
+
 const PRIVATE_ASSESSMENT_CACHE = "safespace_private_assessment_results_v1";
 function cachePrivateAssessment(result) {
   if (!result?.id || typeof window === "undefined") return;
@@ -137,18 +146,39 @@ const currentAppUser = async () => {
       }
     }
   } catch {}
+
+  // Registration details are held only for the active signup/OAuth session until
+  // they can be saved through the authenticated, ownership-checked profile RPC.
+  try {
+    const pendingProfile = window.sessionStorage.getItem("safespace_pending_profile");
+    if (pendingProfile) {
+      const details = JSON.parse(pendingProfile);
+      if (details?.username && details?.birthDate) {
+        const { error: profileError } = await supabase.rpc("save_my_profile", {
+          p_username: details.username,
+          p_birth_date: details.birthDate,
+        });
+        if (!profileError) window.sessionStorage.removeItem("safespace_pending_profile");
+      }
+    }
+  } catch {}
   
   const { data: profile, error } = await supabase
     .from("users")
-    .select("id,email,full_name,role,admin_permissions,banned,banned_until,created_date,updated_date")
+    .select("id,email,full_name,username,username_changed_at,role,admin_permissions,banned,banned_until,created_date,updated_date")
     .eq("id", authUser.id)
     .maybeSingle();
   if (error && error.code !== "PGRST116") throw error;
+  const { data: privateProfiles, error: privateProfileError } = await supabase.rpc("get_my_private_profile");
+  if (privateProfileError) throw privateProfileError;
+  const privateProfile = Array.isArray(privateProfiles) ? privateProfiles[0] : null;
   return {
     id: authUser.id,
     email: authUser.email,
     ...authUser.user_metadata,
     ...(profile || {}),
+    ...(privateProfile || {}),
+    age: privateProfile?.birth_date ? calculateAgeFromBirthDate(privateProfile.birth_date) : authUser.user_metadata?.age,
     admin_permissions: profile?.role === "tester" ? (profile.admin_permissions || {}) : {},
   };
 };
@@ -533,7 +563,7 @@ const auth = {
     if (error) throw error;
     return currentAppUser();
   },
-  async register({ email, password, age, shareRiskScore }) {
+  async register({ email, password, age, shareRiskScore, username, birthDate }) {
     await validatePasswordBeforeSignup(password);
     if (!Number.isInteger(age) || age < 13 || age > 120) {
       throw new Error("A valid age of 13 or older is required.");
@@ -541,9 +571,13 @@ const auth = {
     if (typeof shareRiskScore !== "boolean") {
       throw new Error("Choose whether to share assessment risk scores.");
     }
+    if (!/^[A-Za-z0-9_]{3,20}$/.test(username || "") || !/^\d{4}-\d{2}-\d{2}$/.test(birthDate || "")) {
+      throw new Error("A valid username and birthdate are required.");
+    }
     // Keep this explicit choice in session storage until an authenticated session exists.
     // The full birthdate is never sent to Supabase.
     sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
+    sessionStorage.setItem("safespace_pending_profile", JSON.stringify({ username, birthDate }));
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -551,6 +585,7 @@ const auth = {
     });
     if (error) {
       sessionStorage.removeItem("safespace_pending_share_risk_score");
+      sessionStorage.removeItem("safespace_pending_profile");
       throw error;
     }
     return data.user ? currentAppUser() : data;
@@ -574,7 +609,7 @@ const auth = {
   redirectToLogin(returnTo = "/") {
     window.location.hash = `/login?returnTo=${encodeURIComponent(returnTo)}`;
   },
-  async loginWithProvider(provider = "google", returnTo = "/", age, shareRiskScore) {
+  async loginWithProvider(provider = "google", returnTo = "/", age, shareRiskScore, profile = null) {
     try {
       if (age !== undefined && (!Number.isInteger(age) || age < 13 || age > 120)) throw new Error("A valid age of 13 or older is required.");
       if (shareRiskScore !== undefined && typeof shareRiskScore !== "boolean") throw new Error("Choose whether to share assessment risk scores.");
@@ -582,6 +617,11 @@ const auth = {
       else sessionStorage.removeItem("safespace_pending_oauth_age");
       if (typeof shareRiskScore === "boolean") {
         sessionStorage.setItem("safespace_pending_share_risk_score", String(shareRiskScore));
+      }
+      if (profile?.username && profile?.birthDate) {
+        sessionStorage.setItem("safespace_pending_profile", JSON.stringify(profile));
+      } else {
+        sessionStorage.removeItem("safespace_pending_profile");
       }
       sessionStorage.setItem("safespace_auth_return_to", returnTo || "/");
       const redirectTo = `${window.location.origin}${window.location.pathname}`;
@@ -594,6 +634,7 @@ const auth = {
       sessionStorage.removeItem("safespace_auth_return_to");
       sessionStorage.removeItem("safespace_pending_oauth_age");
       sessionStorage.removeItem("safespace_pending_share_risk_score");
+      sessionStorage.removeItem("safespace_pending_profile");
       const message = error?.message || "Google sign-in failed";
       if (/provider.*not enabled|unsupported provider/i.test(message)) {
         throw new Error("Google sign-in is not enabled in the SafeSpace Supabase project yet.");
@@ -617,6 +658,14 @@ const auth = {
       sessionStorage.removeItem("safespace_pending_oauth_age");
       throw error;
     }
+  },
+  async saveMyProfile({ username, birthDate }) {
+    const { data, error } = await supabase.rpc("save_my_profile", {
+      p_username: username,
+      p_birth_date: birthDate,
+    });
+    if (error) throw error;
+    return data;
   },
 };
 

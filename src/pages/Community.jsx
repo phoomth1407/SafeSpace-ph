@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail, UsersRound } from "lucide-react";
+import { Loader2, Send, PenLine, X, Heart, LogIn, Megaphone, Filter, ArrowLeft, Ban, Mail, UsersRound, Search } from "lucide-react";
 import { appClient } from "@/api/appClient";
 import { useAuth } from "@/lib/AuthContext";
 import CommunityPostCard from "@/components/CommunityPostCard";
@@ -28,11 +28,12 @@ export default function Community() {
   const [showAnnounce, setShowAnnounce] = useState(false);
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("other");
-  const [authorName, setAuthorName] = useState("");
-  const [anon, setAnon] = useState(true);
+  const [anon, setAnon] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortMode, setSortMode] = useState("newest");
   const [focusedPostId, setFocusedPostId] = useState(null);
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
@@ -200,7 +201,7 @@ export default function Community() {
       const { data: result } = await appClient.functions.invoke("createCommunityPost", {
         content: content.trim(),
         category,
-        author_name: anon ? "anonymous" : authorName.trim() || "anonymous",
+        author_name: anon ? "anonymous" : user?.username || "anonymous",
         ai_response: "",
         ai_risk_flag: "safe",
         ai_enabled: false,
@@ -257,8 +258,14 @@ export default function Community() {
 
   const announcements = posts.filter((p) => p.is_announcement);
   const userPosts = posts.filter((p) => !p.is_announcement);
-  const filteredPosts = filter === "all" ? userPosts : userPosts.filter((p) => p.category === filter);
-  const sortedPosts = [...filteredPosts].sort((a, b) => Number(!!b.is_pinned) - Number(!!a.is_pinned) || (b.bumps || 0) - (a.bumps || 0));
+  const query = searchQuery.trim().toLocaleLowerCase();
+  const filteredPosts = (filter === "all" ? userPosts : userPosts.filter((p) => p.category === filter))
+    .filter((post) => !query || `${post.content || ""} ${post.author_name || ""}`.toLocaleLowerCase().includes(query));
+  const sortedPosts = [...filteredPosts].sort((a, b) => Number(!!b.is_pinned) - Number(!!a.is_pinned) || (
+    sortMode === "trending"
+      ? ((b.hearts || 0) + (b.bumps || 0)) - ((a.hearts || 0) + (a.bumps || 0))
+      : new Date(b.created_date) - new Date(a.created_date)
+  ));
 
   const WellnessIcon = ({ type, className = "h-5 w-5" }) => {
     const common = { className, viewBox: "0 0 48 48", fill: "none", xmlns: "http://www.w3.org/2000/svg", "aria-hidden": "true" };
@@ -303,13 +310,7 @@ export default function Community() {
             ))}
           </div>
           <div className="community-composer-row">
-            <input
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              placeholder={t("community.authorPlaceholder")}
-              disabled={anon}
-              className="community-field"
-            />
+            <span className="community-field" aria-live="polite">{anon ? t("community.anon") : user?.username}</span>
             <label className="community-anon-toggle">
               <input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} />
               <span>{t("community.anonToggle")}</span>
@@ -427,7 +428,7 @@ export default function Community() {
           <div className="community-share-avatar"><PenLine className="w-5 h-5" /></div>
           <button onClick={requestPost} className="community-share-trigger">
             <span>{t("community.writePlaceholder")}</span>
-            <small>{isAuthenticated ? (anon ? t("community.anonToggle") : authorName || t("community.anon")) : t("community.loginPrompt")}</small>
+            <small>{isAuthenticated ? (anon ? t("community.anonToggle") : user?.username || t("community.anon")) : t("community.loginPrompt")}</small>
           </button>
           {canPostAnnouncements && (
             <button onClick={() => setShowAnnounce(true)} className="community-announce-button">
@@ -456,6 +457,16 @@ export default function Community() {
                 ))}
               </div>
             </div>
+          </div>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <label className="relative min-w-0 flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder={lang === "en" ? "Search posts and usernames" : "ค้นหาโพสต์และชื่อผู้ใช้"} aria-label={lang === "en" ? "Search community posts" : "ค้นหาโพสต์ในชุมชน"} className="min-h-10 w-full rounded-xl border border-slate-200 bg-white/70 py-2 pl-9 pr-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-sky-400 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100" />
+            </label>
+            <select value={sortMode} onChange={(event) => setSortMode(event.target.value)} aria-label={lang === "en" ? "Sort community posts" : "เรียงโพสต์ในชุมชน"} className="min-h-10 rounded-xl border border-slate-200 bg-white/70 px-3 text-sm text-slate-700 outline-none focus:border-sky-400 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">
+              <option value="newest">{lang === "en" ? "Newest" : "ใหม่ล่าสุด"}</option>
+              <option value="trending">{lang === "en" ? "Trending" : "กำลังนิยม"}</option>
+            </select>
           </div>
         </section>
       )}
@@ -487,7 +498,8 @@ export default function Community() {
         ) : sortedPosts.length === 0 ? (
           <div className="community-empty">
             <div className="community-empty-icon"><Heart className="w-6 h-6" /></div>
-            <h3>{t("community.empty")}</h3>
+            <h3>{userPosts.length > 0 ? (lang === "en" ? "No posts match these filters." : "ไม่พบโพสต์ที่ตรงกับตัวกรองนี้") : t("community.empty")}</h3>
+            {userPosts.length > 0 && <button onClick={() => { setFilter("all"); setSearchQuery(""); }} className="community-secondary-button">{lang === "en" ? "Clear filters" : "ล้างตัวกรอง"}</button>}
             
             {isAuthenticated && !isBanned && <button onClick={requestPost} className="community-primary-button"><PenLine className="w-4 h-4" />{t("community.writePlaceholder")}</button>}
           </div>

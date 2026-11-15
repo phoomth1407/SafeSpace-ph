@@ -7,15 +7,18 @@ import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/lib/i18n";
 import { usePerformanceSettings } from "@/lib/performanceSettings";
 import { DESKTOP_MODE_EVENT, isMobileDevice, readDesktopMode, saveDesktopMode } from "@/lib/desktopMode";
+import { appClient } from "@/api/appClient";
 
 const QUALITY_OPTIONS = ["auto", "low", "balanced", "high", "ultra", "custom"];
+const localDateString = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
 export default function SharingPreferences() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, checkUserAuth } = useAuth();
   const { lang } = useTranslation();
   const { quality, setQuality, activeQuality, recommendedQuality, recommendedAdvancedGraphics } = usePerformanceSettings();
   const navigate = useNavigate();
   const en = lang === "en";
+  const todayString = localDateString();
   const [desktopMode, setDesktopMode] = useState(readDesktopMode);
   const [mobileDevice] = useState(isMobileDevice);
   const [sharing, setSharing] = useState(false);
@@ -27,6 +30,17 @@ export default function SharingPreferences() {
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [username, setUsername] = useState(user?.username || "");
+  const [birthDate, setBirthDate] = useState(user?.birth_date || "");
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [setupShareChoice, setSetupShareChoice] = useState(null);
+
+  useEffect(() => {
+    setUsername(user?.username || "");
+    setBirthDate(user?.birth_date || "");
+  }, [user?.username, user?.birth_date]);
 
   useEffect(() => {
     const syncDesktopMode = (event) => setDesktopMode(Boolean(event.detail?.enabled));
@@ -83,6 +97,44 @@ export default function SharingPreferences() {
     } finally { setSaving(false); }
   };
 
+  const saveProfile = async () => {
+    if (!user?.id || savingProfile) return;
+    const nextUsername = username.trim();
+    if (!/^[A-Za-z0-9_]{3,20}$/.test(nextUsername)) {
+      setProfileError(en ? "Use 3–20 letters, numbers, or underscores for your username." : "ชื่อผู้ใช้ต้องมี 3–20 ตัว และใช้ได้เฉพาะตัวอักษร ตัวเลข หรือ _");
+      return;
+    }
+    if (!birthDate || birthDate > todayString) {
+      setProfileError(en ? "Choose a valid birthdate." : "กรุณาเลือกวันเกิดที่ถูกต้อง");
+      return;
+    }
+    if (!user.birth_date && typeof setupShareChoice !== "boolean") {
+      setProfileError(en ? "Choose Yes or No for sharing assessment risk scores." : "กรุณาเลือกว่าจะอนุญาตให้แบ่งปันคะแนนความเสี่ยงหรือไม่");
+      return;
+    }
+    const usernameChanged = !!user.username && nextUsername !== user.username;
+    const birthDateChanged = !!user.birth_date && birthDate !== user.birth_date;
+    if (usernameChanged && !window.confirm(en ? "Change your username? This will update the name on all of your named Community posts and comments." : "เปลี่ยนชื่อผู้ใช้หรือไม่? ชื่อนี้จะอัปเดตในโพสต์และความคิดเห็นที่ไม่ระบุตัวตนทั้งหมดของคุณ")) return;
+    if (birthDateChanged && !window.confirm(en ? "Change your birthdate? Age-based assessments and age-related features may become inconsistent with your previous results. You can change it only once every 365 days." : "เปลี่ยนวันเกิดหรือไม่? ผลประเมินและฟีเจอร์ที่อิงอายุอาจไม่ตรงกับข้อมูลเดิม และเปลี่ยนได้เพียงทุก 365 วัน")) return;
+    setSavingProfile(true); setProfileError(""); setProfileSaved(false);
+    try {
+      if (!user.birth_date) {
+        const { error: preferenceError } = await supabase.from("assessment_sharing_preferences").upsert({ user_id: user.id, share_risk_score: setupShareChoice, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+        if (preferenceError) throw preferenceError;
+        const { error: scoresError } = await supabase.from("assessments").update({ share_with_admin: setupShareChoice }).eq("created_by_id", user.id);
+        if (scoresError) throw scoresError;
+        setSharing(setupShareChoice);
+      }
+      await appClient.auth.saveMyProfile({ username: nextUsername, birthDate });
+      await checkUserAuth();
+      setProfileSaved(true);
+    } catch (err) {
+      const message = err?.message || "";
+      if (message.includes("already taken") || err?.code === "23505") setProfileError(en ? "That username is already in use. Choose another one." : "มีผู้ใช้ชื่อนี้แล้ว กรุณาเลือกชื่ออื่น");
+      else setProfileError(message || (en ? "Could not save your profile." : "บันทึกโปรไฟล์ไม่สำเร็จ"));
+    } finally { setSavingProfile(false); }
+  };
+
   const deletePhrase = en ? "DELETE" : "ลบข้อมูล";
   const deleteAccount = async () => {
     if (!user?.id || deletingAccount || deleteConfirmation.trim() !== deletePhrase) return;
@@ -131,6 +183,17 @@ export default function SharingPreferences() {
       <div className="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-500/15 flex items-center justify-center"><SettingsIcon /></div>
       <div><p className="text-xs uppercase tracking-wider text-violet-500 font-semibold">SafeSpace</p><h1 className="text-2xl font-bold text-slate-900 dark:text-white">{en ? "Settings" : "ตั้งค่า"}</h1></div>
     </header>
+
+    <section className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/80 p-6 md:p-8 space-y-5 shadow-sm">
+      <div className="flex items-start gap-3"><div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-100 dark:bg-violet-500/15"><ShieldCheck className="h-5 w-5 text-violet-600 dark:text-violet-300" /></div><div><h2 className="font-semibold text-slate-900 dark:text-white">{en ? "Account identity" : "ข้อมูลบัญชี"}</h2><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Your username is the fixed name used on Community posts and comments unless you choose to stay anonymous. Your birthdate is saved to your account so sign-in will not ask for it again." : "ชื่อผู้ใช้นี้จะแสดงในโพสต์และความคิดเห็น เว้นแต่คุณเลือกไม่ระบุตัวตน วันเกิดจะบันทึกไว้กับบัญชีเพื่อไม่ต้องกรอกซ้ำเมื่อลงชื่อเข้าใช้"}</p></div></div>
+      {!isAuthenticated ? <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">{en ? "Sign in to manage your account identity." : "เข้าสู่ระบบเพื่อจัดการข้อมูลบัญชี"} <Link className="font-semibold text-violet-600 underline dark:text-violet-300" to="/login?returnTo=/settings">{en ? "Sign in" : "เข้าสู่ระบบ"}</Link></div> : <div className="grid gap-4 sm:grid-cols-2">
+        <label className="space-y-2 text-sm font-medium text-slate-800 dark:text-slate-100">{en ? "Username" : "ชื่อผู้ใช้"}<input value={username} onChange={(event) => setUsername(event.target.value)} maxLength={20} autoComplete="username" className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-200 dark:border-slate-600 dark:bg-slate-950 dark:text-white" /><span className="block text-xs font-normal text-slate-500">{user?.username_changed_at ? (en ? "Change limit: once every 30 days." : "เปลี่ยนได้ทุก 30 วัน") : (en ? "3–20 letters, numbers, or underscores." : "3–20 ตัวอักษร ตัวเลข หรือ _")}</span></label>
+        <label className="space-y-2 text-sm font-medium text-slate-800 dark:text-slate-100">{en ? "Date of birth" : "วันเดือนปีเกิด"}<input type="date" value={birthDate} onChange={(event) => setBirthDate(event.target.value)} max={todayString} className="min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-200 dark:border-slate-600 dark:bg-slate-950 dark:text-white" /><span className="block text-xs font-normal text-slate-500">{user?.birth_date_changed_at ? (en ? "Private · change limit: once every 365 days." : "ข้อมูลส่วนตัว · เปลี่ยนได้ทุก 365 วัน") : (en ? "Private to your account; administrators cannot see it." : "เก็บเป็นข้อมูลส่วนตัว ผู้ดูแลจะไม่เห็นข้อมูลนี้")}</span></label>
+      </div>}
+      {isAuthenticated && !user?.birth_date && <div className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50/70 p-4 dark:border-violet-400/20 dark:bg-violet-400/5"><div><p className="text-sm font-semibold text-slate-900 dark:text-white">{en ? "Share assessment risk scores with admins?" : "อนุญาตให้ผู้ดูแลดูคะแนนความเสี่ยงจากแบบประเมินหรือไม่?"}</p><p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{en ? "Only scores and risk levels are shared, never your answers or written responses. You can change this in Settings later." : "แบ่งปันเฉพาะคะแนนและระดับความเสี่ยง ไม่รวมคำตอบหรือข้อความที่เขียน และเปลี่ยนได้ภายหลังในตั้งค่า"}</p></div><div className="grid grid-cols-2 gap-3"><button type="button" aria-pressed={setupShareChoice === true} onClick={() => setSetupShareChoice(true)} className={`min-h-10 rounded-xl border px-3 text-sm font-medium ${setupShareChoice === true ? "border-violet-500 bg-violet-700 text-white" : "border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"}`}>{en ? "Yes, share" : "ใช่ แบ่งปัน"}</button><button type="button" aria-pressed={setupShareChoice === false} onClick={() => setSetupShareChoice(false)} className={`min-h-10 rounded-xl border px-3 text-sm font-medium ${setupShareChoice === false ? "border-violet-500 bg-violet-700 text-white" : "border-slate-300 bg-white text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"}`}>{en ? "No, keep private" : "ไม่ แยกเป็นส่วนตัว"}</button></div></div>}
+      {isAuthenticated && <><div className="flex flex-wrap items-center gap-3"><button type="button" onClick={saveProfile} disabled={savingProfile || (!username.trim() || !birthDate)} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-violet-700 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-800 disabled:opacity-50">{savingProfile && <Loader2 className="h-4 w-4 animate-spin" />}{en ? "Save account details" : "บันทึกข้อมูลบัญชี"}</button>{profileSaved && <span role="status" className="text-sm text-emerald-600">{en ? "Saved." : "บันทึกแล้ว"}</span>}</div>{profileError && <p role="alert" className="text-sm text-rose-600">{profileError}</p>}</>}
+      <p className="flex items-start gap-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400"><LockKeyhole className="h-4 w-4 shrink-0" />{en ? "Username changes are limited to once every 30 days. Birthdate changes are limited to once every 365 days and can affect age-based features and assessment history." : "จำกัดการเปลี่ยนชื่อผู้ใช้ทุก 30 วัน และวันเกิดทุก 365 วัน การเปลี่ยนวันเกิดอาจกระทบฟีเจอร์และประวัติแบบประเมินที่อิงอายุ"}</p>
+    </section>
 
     <section className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/80 p-6 md:p-8 space-y-5 shadow-sm">
       <div className="flex items-start gap-3">
