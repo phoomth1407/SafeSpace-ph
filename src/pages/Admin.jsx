@@ -25,6 +25,54 @@ function matchesAgeSegment(assessment, segment) {
   return false;
 }
 
+const emptyTesterPermissions = {
+  view_assessments: false,
+  delete_assessments: false,
+  delete_comments: false,
+  ban_users: false,
+  post_announcements: false,
+};
+
+function TesterDashboard({ user, assessments, deleting, lang, onDeleteAssessment }) {
+  const permissions = user?.admin_permissions || {};
+  const canSeeAssessments = permissions.view_assessments === true || permissions.delete_assessments === true;
+  const capability = (key) => permissions[key] === true;
+  const capabilities = [
+    ["view_assessments", lang === "en" ? "View shared assessment scores" : "ดูคะแนนแบบประเมินที่อนุญาตให้แบ่งปัน"],
+    ["delete_assessments", lang === "en" ? "Delete shared assessment history" : "ลบประวัติแบบประเมินที่แบ่งปัน"],
+    ["delete_comments", lang === "en" ? "Remove community comments" : "ลบความคิดเห็นในชุมชน"],
+    ["ban_users", lang === "en" ? "Ban users from the community" : "แบนผู้ใช้จากชุมชน"],
+    ["post_announcements", lang === "en" ? "Post community announcements" : "โพสต์ประกาศในชุมชน"],
+  ];
+  return (
+    <div className="admin-page mx-auto max-w-5xl space-y-6">
+      <header className="flex items-center gap-3 rounded-3xl border border-violet-200 bg-white/80 p-5 shadow-sm dark:border-violet-400/20 dark:bg-slate-900/70">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 dark:bg-violet-400/10 dark:text-violet-200"><Shield className="h-5 w-5" /></span>
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white">{lang === "en" ? "Tester dashboard" : "แดชบอร์ดผู้ทดสอบ"}</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{lang === "en" ? "Your access is limited to the tools selected by an administrator." : "สิทธิ์ของคุณจำกัดตามเครื่องมือที่ผู้ดูแลเปิดให้"}</p>
+        </div>
+        <span className="ml-auto rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-400/10 dark:text-violet-200">{lang === "en" ? "Tester" : "ผู้ทดสอบ"}</span>
+      </header>
+      <section className="rounded-3xl border border-slate-200 bg-white/80 p-5 dark:border-slate-700 dark:bg-slate-900/70">
+        <h2 className="text-sm font-semibold text-slate-900 dark:text-white">{lang === "en" ? "Enabled access" : "สิทธิ์ที่ได้รับ"}</h2>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+          {capabilities.map(([key, label]) => <div key={key} className={`rounded-xl border px-3 py-2 text-sm ${capability(key) ? "border-violet-200 bg-violet-50 text-violet-800 dark:border-violet-400/20 dark:bg-violet-400/5 dark:text-violet-200" : "border-slate-200 text-slate-400 dark:border-slate-700 dark:text-slate-500"}`}><span aria-hidden="true" className="mr-2">{capability(key) ? "✓" : "–"}</span>{label}</div>)}
+        </div>
+        {(capability("delete_comments") || capability("ban_users") || capability("post_announcements")) && <Link to="/community" className="mt-4 inline-flex min-h-10 items-center rounded-xl bg-violet-700 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-800">{lang === "en" ? "Open community tools" : "เปิดเครื่องมือชุมชน"}</Link>}
+      </section>
+      {canSeeAssessments && <section className="rounded-3xl border border-slate-200 bg-white/80 p-5 dark:border-slate-700 dark:bg-slate-900/70">
+        <div className="mb-3 flex items-center gap-2"><ClipboardList className="h-4 w-4 text-violet-500" /><h2 className="text-sm font-semibold text-slate-900 dark:text-white">{lang === "en" ? "Shared assessment scores" : "คะแนนแบบประเมินที่แบ่งปัน"}</h2></div>
+        <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">{lang === "en" ? "Only accounts that opted in to score sharing appear here." : "แสดงเฉพาะบัญชีที่อนุญาตให้แบ่งปันคะแนน"}</p>
+        <div className="space-y-2">
+          {assessments.map((item) => <div key={item.id} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 dark:border-slate-700"><div className="min-w-0 flex-1"><p className="text-sm font-medium text-slate-800 dark:text-slate-100">{item.risk_level} · {item.risk_score || 0}</p><p className="text-xs text-slate-500">{new Date(item.created_date).toLocaleDateString(lang === "en" ? "en-US" : "th-TH", { day: "numeric", month: "short", year: "numeric" })}</p></div>{capability("delete_assessments") && <button type="button" disabled={deleting === item.id} onClick={() => onDeleteAssessment(item)} className="rounded-lg p-2 text-rose-500 hover:bg-rose-50 disabled:opacity-50 dark:hover:bg-rose-500/10" aria-label={lang === "en" ? "Delete shared assessment" : "ลบประวัติแบบประเมินที่แบ่งปัน"}>{deleting === item.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}</button>}</div>)}
+          {assessments.length === 0 && <p className="py-5 text-center text-sm text-slate-500">{lang === "en" ? "No shared scores to review." : "ยังไม่มีคะแนนที่แบ่งปันให้ตรวจสอบ"}</p>}
+        </div>
+      </section>}
+    </div>
+  );
+}
+
 export default function Admin() {
   const { user } = useAuth();
   const { t, lang } = useTranslation();
@@ -46,18 +94,42 @@ export default function Admin() {
   const [resolving, setResolving] = useState(null);
   const [contactRequests, setContactRequests] = useState([]);
   const [resolvingContact, setResolvingContact] = useState(null);
+  const [testerAccess, setTesterAccess] = useState([]);
+  const [testerTarget, setTesterTarget] = useState(null);
+  const [testerDraft, setTesterDraft] = useState(emptyTesterPermissions);
+  const [savingTester, setSavingTester] = useState(false);
+  const [testerError, setTesterError] = useState("");
 
   useEffect(() => {
+    if (user?.role === "tester") {
+      const loadTesterScores = async () => {
+        try {
+          const permission = user.admin_permissions || {};
+          if (permission.view_assessments === true || permission.delete_assessments === true) {
+            const result = await appClient.functions.invoke("adminSharedAssessments");
+            if (result.data?.error) throw new Error(result.data.error);
+            setAssessments(result.data || []);
+          }
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadTesterScores();
+      return;
+    }
     if (user?.role !== "admin") { setLoading(false); return; }
     const load = async () => {
       try {
-        const [a, g, p, r, cr, sharedScores] = await Promise.all([
+        const [a, g, p, r, cr, sharedScores, configuredTesters] = await Promise.all([
           appClient.functions.invoke("adminSharedAssessments").then((result) => { if (result.data?.error) throw new Error(result.data.error); return result.data; }),
           appClient.entities.GuestAssessment.list("-created_date", 200),
           appClient.entities.CommunityPost.list("-created_date", 200),
           appClient.entities.Report.filter({ status: "pending" }, "-created_date", 100),
           appClient.entities.ContactRequest.filter({ status: "pending" }, "-created_date", 100),
           appClient.functions.invoke("adminGuestScoreShares").then((result) => { if (result.data?.error) throw new Error(result.data.error); return result.data; }),
+          appClient.functions.invoke("adminListTesterAccess").then((result) => { if (result.data?.error) throw new Error(result.data.error); return result.data; }),
         ]);
         setAssessments(a);
         setGuestAssessments(g);
@@ -65,6 +137,7 @@ export default function Admin() {
         setPosts(p);
         setReports(r);
         setContactRequests(cr);
+        setTesterAccess(configuredTesters);
         try {
           const u = await appClient.entities.User.list("-created_date", 200);
           setUsers(u);
@@ -76,9 +149,9 @@ export default function Admin() {
       }
     };
     load();
-  }, [user?.role]);
+  }, [user?.id, user?.role]);
 
-  if (user?.role !== "admin") return <Navigate to="/" replace />;
+  if (user?.role !== "admin" && user?.role !== "tester") return <Navigate to="/" replace />;
 
   const handleBan = async (u) => {
     setBanning(u.id);
@@ -137,6 +210,56 @@ export default function Admin() {
     }
   };
 
+  const handleDeleteAssessment = async (assessment) => {
+    if (!window.confirm(lang === "en" ? "Delete this shared assessment record? The owner will lose this saved history entry." : "ลบประวัติแบบประเมินที่แบ่งปันนี้หรือไม่? เจ้าของจะสูญเสียรายการประวัตินี้")) return;
+    setDeleting(assessment.id);
+    try {
+      await appClient.entities.Assessment.delete(assessment.id);
+      setAssessments((current) => current.filter((item) => item.id !== assessment.id));
+    } catch {
+      alert(lang === "en" ? "Could not delete this assessment." : "ลบแบบประเมินนี้ไม่ได้");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const openTesterEditor = (target) => {
+    const saved = testerAccess.find((item) => item.user_id === target.id);
+    setTesterTarget(target);
+    setTesterError("");
+    setTesterDraft({
+      enabled: target.role === "tester",
+      ...emptyTesterPermissions,
+      ...(saved ? {
+        view_assessments: saved.view_assessments,
+        delete_assessments: saved.delete_assessments,
+        delete_comments: saved.delete_comments,
+        ban_users: saved.ban_users,
+        post_announcements: saved.post_announcements,
+      } : {}),
+    });
+  };
+
+  const saveTesterAccess = async () => {
+    if (!testerTarget) return;
+    setSavingTester(true);
+    setTesterError("");
+    try {
+      const permissions = { ...testerDraft, view_assessments: testerDraft.view_assessments || testerDraft.delete_assessments };
+      const result = await appClient.functions.invoke("adminSetTesterAccess", { user_id: testerTarget.id, ...permissions });
+      if (result.data?.error) throw new Error(result.data.error);
+      setUsers((current) => current.map((item) => item.id === testerTarget.id ? { ...item, role: permissions.enabled ? "tester" : "user", admin_permissions: permissions.enabled ? permissions : {} } : item));
+      setTesterAccess((current) => permissions.enabled
+        ? [...current.filter((item) => item.user_id !== testerTarget.id), { user_id: testerTarget.id, email: testerTarget.email, full_name: testerTarget.full_name, ...permissions }]
+        : current.filter((item) => item.user_id !== testerTarget.id));
+      setTesterTarget(null);
+    } catch (error) {
+      setTesterError(error?.message || (lang === "en" ? "Could not save tester access." : "บันทึกสิทธิ์ผู้ทดสอบไม่ได้"));
+    } finally {
+      setSavingTester(false);
+    }
+  };
+
   const filteredUsers = users.filter((u) => {
     if (showBannedOnly && !u.banned) return false;
     if (userSearch.trim()) {
@@ -153,6 +276,10 @@ export default function Admin() {
         <p className="text-sm text-slate-500 mt-3">{t("admin.loading")}</p>
       </div>
     );
+  }
+
+  if (user?.role === "tester") {
+    return <TesterDashboard user={user} assessments={assessments} deleting={deleting} lang={lang} onDeleteAssessment={handleDeleteAssessment} />;
   }
 
   const riskLabels = {
@@ -713,6 +840,7 @@ export default function Admin() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs font-medium text-slate-200 truncate">{u.full_name || u.email}</span>
                         {u.role === "admin" && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-900">admin</span>}
+                        {u.role === "tester" && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-500/10 text-violet-300">tester</span>}
                         {u.banned && (
                           <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${banExpired ? "bg-slate-700/40 text-slate-400" : "bg-red-500/10 text-red-300"}`}>
                             {banExpired ? t("admin.banExpired") : t("admin.banned")}
@@ -722,6 +850,7 @@ export default function Admin() {
                       </div>
                       <p className="text-[10px] text-slate-500 truncate">{u.email}</p>
                     </div>
+                    {u.id !== user?.id && u.role !== "admin" && <button type="button" onClick={() => openTesterEditor(u)} className="flex-shrink-0 rounded-xl border border-violet-400/20 bg-violet-500/5 px-3 py-1.5 text-xs font-medium text-violet-300 hover:bg-violet-500/10">{u.role === "tester" ? (lang === "en" ? "Tester access" : "สิทธิ์ผู้ทดสอบ") : (lang === "en" ? "Make tester" : "ตั้งเป็นผู้ทดสอบ")}</button>}
                     {u.id !== user?.id && (
                       <button
                         onClick={() => { setBanTarget(banTarget?.id === u.id ? null : u); setBanDuration("permanent"); }}
@@ -745,6 +874,34 @@ export default function Admin() {
           </div>
         </div>
       ) : null}
+
+      {testerTarget && (
+        <div className="fixed inset-0 z-[320] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="tester-access-title">
+          <section className="w-full max-w-xl rounded-3xl border border-violet-200 bg-white p-5 shadow-2xl dark:border-violet-400/20 dark:bg-slate-900 sm:p-7">
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 dark:bg-violet-400/10 dark:text-violet-200"><Shield className="h-5 w-5" /></span>
+              <div className="min-w-0 flex-1"><h2 id="tester-access-title" className="text-lg font-bold text-slate-900 dark:text-white">{lang === "en" ? "Tester access" : "สิทธิ์ผู้ทดสอบ"}</h2><p className="mt-1 truncate text-sm text-slate-500 dark:text-slate-400">{testerTarget.full_name || testerTarget.email}</p></div>
+              <button type="button" onClick={() => setTesterTarget(null)} className="rounded-lg px-2 py-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5" aria-label={lang === "en" ? "Close" : "ปิด"}>×</button>
+            </div>
+            <label className="mt-5 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-400/20 dark:bg-violet-400/5">
+              <span><span className="block text-sm font-semibold text-slate-900 dark:text-white">{lang === "en" ? "Enable tester role" : "เปิดบทบาทผู้ทดสอบ"}</span><span className="mt-1 block text-xs text-slate-500 dark:text-slate-400">{lang === "en" ? "This grants dashboard access. All extra actions below start disabled." : "เปิดสิทธิ์เข้าแดชบอร์ด โดยสิทธิ์เพิ่มเติมด้านล่างจะปิดไว้ก่อน"}</span></span>
+              <input type="checkbox" aria-label={lang === "en" ? "Enable tester role" : "เปิดบทบาทผู้ทดสอบ"} checked={testerDraft.enabled === true} onChange={(event) => setTesterDraft((current) => ({ ...current, enabled: event.target.checked }))} className="h-5 w-5 accent-violet-600" />
+            </label>
+            <div className="mt-4 space-y-2">
+              {[
+                ["view_assessments", lang === "en" ? "View opt-in assessment scores" : "ดูคะแนนแบบประเมินที่อนุญาตให้แบ่งปัน"],
+                ["delete_assessments", lang === "en" ? "Delete opt-in assessment history" : "ลบประวัติแบบประเมินที่อนุญาตให้แบ่งปัน"],
+                ["delete_comments", lang === "en" ? "Delete other users’ community comments" : "ลบความคิดเห็นของผู้ใช้อื่นในชุมชน"],
+                ["ban_users", lang === "en" ? "Ban or unban users from Community" : "แบนหรือปลดแบนผู้ใช้จากชุมชน"],
+                ["post_announcements", lang === "en" ? "Publish community announcements" : "เผยแพร่ประกาศในชุมชน"],
+              ].map(([key, label]) => <label key={key} className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 ${testerDraft.enabled ? "border-slate-200 dark:border-slate-700" : "border-slate-100 opacity-50 dark:border-slate-800"}`}><input type="checkbox" checked={testerDraft[key] === true} disabled={!testerDraft.enabled} onChange={(event) => setTesterDraft((current) => { const next = { ...current, [key]: event.target.checked }; if (key === "delete_assessments" && event.target.checked) next.view_assessments = true; if (key === "view_assessments" && !event.target.checked) next.delete_assessments = false; return next; })} className="h-4 w-4 accent-violet-600" /><span className="text-sm text-slate-700 dark:text-slate-200">{label}</span></label>)}
+            </div>
+            <p className="mt-4 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{lang === "en" ? "Testers can pin comments only on posts they created. Pinning community posts remains admin-only. Assessment tools only return scores from accounts that opted into sharing." : "ผู้ทดสอบปักหมุดความคิดเห็นได้เฉพาะโพสต์ที่ตนสร้าง ส่วนการปักหมุดโพสต์สงวนไว้สำหรับผู้ดูแล และข้อมูลแบบประเมินจะแสดงเฉพาะคะแนนที่เจ้าของอนุญาตให้แบ่งปัน"}</p>
+            {testerError && <p role="alert" className="mt-3 text-sm text-rose-600">{testerError}</p>}
+            <div className="mt-5 flex justify-end gap-2"><button type="button" onClick={() => setTesterTarget(null)} className="rounded-xl px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5">{lang === "en" ? "Cancel" : "ยกเลิก"}</button><button type="button" onClick={saveTesterAccess} disabled={savingTester} className="inline-flex items-center gap-2 rounded-xl bg-violet-700 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-800 disabled:opacity-50">{savingTester && <Loader2 className="h-4 w-4 animate-spin" />}{lang === "en" ? "Save access" : "บันทึกสิทธิ์"}</button></div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

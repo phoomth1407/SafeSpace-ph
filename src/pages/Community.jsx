@@ -17,6 +17,10 @@ export default function Community() {
   const { isAuthenticated, user } = useAuth();
   const { t, lang } = useTranslation();
   const isAdmin = user?.role === "admin";
+  const testerPermissions = user?.role === "tester" ? (user.admin_permissions || {}) : {};
+  const canBanUsers = isAdmin || testerPermissions.ban_users === true;
+  const canModerateComments = isAdmin || testerPermissions.delete_comments === true;
+  const canPostAnnouncements = isAdmin || testerPermissions.post_announcements === true;
   const isBanned = !!user?.banned;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -180,6 +184,11 @@ export default function Community() {
     }
   };
 
+  const handleTogglePostPin = async (id, pinned) => {
+    await appClient.functions.invoke("adminSetCommunityPostPin", { post_id: id, pinned });
+    setPosts((current) => current.map((post) => post.id === id ? { ...post, is_pinned: pinned } : post));
+  };
+
   const handleSubmit = async () => {
     if (content.trim().length < 10) {
       setError(t("community.errorShort"));
@@ -249,7 +258,7 @@ export default function Community() {
   const announcements = posts.filter((p) => p.is_announcement);
   const userPosts = posts.filter((p) => !p.is_announcement);
   const filteredPosts = filter === "all" ? userPosts : userPosts.filter((p) => p.category === filter);
-  const sortedPosts = [...filteredPosts].sort((a, b) => (b.bumps || 0) - (a.bumps || 0));
+  const sortedPosts = [...filteredPosts].sort((a, b) => Number(!!b.is_pinned) - Number(!!a.is_pinned) || (b.bumps || 0) - (a.bumps || 0));
 
   const WellnessIcon = ({ type, className = "h-5 w-5" }) => {
     const common = { className, viewBox: "0 0 48 48", fill: "none", xmlns: "http://www.w3.org/2000/svg", "aria-hidden": "true" };
@@ -420,7 +429,7 @@ export default function Community() {
             <span>{t("community.writePlaceholder")}</span>
             <small>{isAuthenticated ? (anon ? t("community.anonToggle") : authorName || t("community.anon")) : t("community.loginPrompt")}</small>
           </button>
-          {isAdmin && (
+          {canPostAnnouncements && (
             <button onClick={() => setShowAnnounce(true)} className="community-announce-button">
               <Megaphone className="w-4 h-4" />
               {t("community.postAnnouncement")}
@@ -462,7 +471,7 @@ export default function Community() {
         <div className="community-announcements">
           <div className="community-feed-label"><Megaphone className="w-4 h-4" /> {t("community.announcement")}</div>
           {announcements.map((post) => (
-            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} isAnnouncement />
+            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} canBanUsers={canBanUsers} canModerateComments={canModerateComments} canPinPosts={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onTogglePin={handleTogglePostPin} isAnnouncement />
           ))}
         </div>
       )}
@@ -473,7 +482,7 @@ export default function Community() {
         ) : focusedPostId ? (
           (() => {
             const p = posts.find((x) => x.id === focusedPostId);
-            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} focused onFocus={() => setFocusedPostId(null)} onCommentIntent={requestComment} /> : null;
+            return p ? <CommunityPostCard post={p} isAdmin={isAdmin} canBanUsers={canBanUsers} canModerateComments={canModerateComments} canPinPosts={isAdmin} isOwner={user?.id === p.created_by_id} user={user} onDelete={handleDeletePost} onTogglePin={handleTogglePostPin} focused onFocus={() => setFocusedPostId(null)} onCommentIntent={requestComment} /> : null;
           })()
         ) : sortedPosts.length === 0 ? (
           <div className="community-empty">
@@ -484,7 +493,7 @@ export default function Community() {
           </div>
         ) : (
           sortedPosts.map((post) => (
-            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onFocus={() => setFocusedPostId(post.id)} onCommentIntent={requestComment} />
+            <CommunityPostCard key={post.id} post={post} isAdmin={isAdmin} canBanUsers={canBanUsers} canModerateComments={canModerateComments} canPinPosts={isAdmin} isOwner={user?.id === post.created_by_id} user={user} onDelete={handleDeletePost} onTogglePin={handleTogglePostPin} onFocus={() => setFocusedPostId(post.id)} onCommentIntent={requestComment} />
           ))
         )}
       </div>

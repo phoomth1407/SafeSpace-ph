@@ -140,7 +140,7 @@ const currentAppUser = async () => {
   
   const { data: profile, error } = await supabase
     .from("users")
-    .select("id,email,full_name,role,banned,banned_until,created_date,updated_date")
+    .select("id,email,full_name,role,admin_permissions,banned,banned_until,created_date,updated_date")
     .eq("id", authUser.id)
     .maybeSingle();
   if (error && error.code !== "PGRST116") throw error;
@@ -149,6 +149,7 @@ const currentAppUser = async () => {
     email: authUser.email,
     ...authUser.user_metadata,
     ...(profile || {}),
+    admin_permissions: profile?.role === "tester" ? (profile.admin_permissions || {}) : {},
   };
 };
 
@@ -316,6 +317,48 @@ const invoke = async (name, payload = {}) => {
     if (error) throw error;
     return { data: data || [] };
   }
+  if (name === "adminListTesterAccess") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { data, error } = await supabase.rpc("admin_list_tester_access");
+    if (error) throw error;
+    return { data: data || [] };
+  }
+  if (name === "adminSetTesterAccess") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { error } = await supabase.rpc("admin_set_tester_access", {
+      p_user_id: payload.user_id,
+      p_enabled: !!payload.enabled,
+      p_view_assessments: !!payload.view_assessments,
+      p_delete_assessments: !!payload.delete_assessments,
+      p_delete_comments: !!payload.delete_comments,
+      p_ban_users: !!payload.ban_users,
+      p_post_announcements: !!payload.post_announcements,
+    });
+    if (error) throw error;
+    return { data: { success: true } };
+  }
+  if (name === "adminSetCommunityPostPin") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { error } = await supabase.rpc("admin_set_community_post_pin", {
+      p_post_id: payload.post_id,
+      p_pinned: !!payload.pinned,
+    });
+    if (error) throw error;
+    return { data: { success: true } };
+  }
+  if (name === "setCommunityCommentPin") {
+    const authUser = await currentAuthUser();
+    if (!authUser) return { data: { error: "auth_required" } };
+    const { error } = await supabase.rpc("set_community_comment_pin", {
+      p_comment_id: payload.comment_id,
+      p_pinned: !!payload.pinned,
+    });
+    if (error) throw error;
+    return { data: { success: true } };
+  }
   if (name === "saveGuestScore") {
     const token = payload.claim_token;
     if (!/^[A-Za-z0-9_-]{40,100}$/.test(token || "")) return { data: { error: "invalid_claim_token" } };
@@ -467,10 +510,13 @@ const invoke = async (name, payload = {}) => {
   if (name === "manageBan") {
     const authUser = await currentAuthUser();
     if (!authUser) return { data: { error: "auth_required" } };
-    const { data: me } = await supabase.from("users").select("role").eq("id", authUser.id).maybeSingle();
-    if (me?.role !== "admin") return { data: { error: "admin_required" } };
-    const result = await entities.User.update(payload.target_id, { banned: !!payload.banned, banned_until: payload.banned_until || null });
-    return { data: result };
+    const { error } = await supabase.rpc("admin_set_user_ban", {
+      p_user_id: payload.target_id,
+      p_banned: !!payload.banned,
+      p_banned_until: payload.banned_until || null,
+    });
+    if (error) throw error;
+    return { data: { success: true } };
   }
 
   return { data: { error: `Function ${name} is unavailable.` } };

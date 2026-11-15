@@ -23,6 +23,7 @@ export default function Layout() {
   const [desktopMode, setDesktopMode] = useState(readDesktopMode);
   const [mobileDevice] = useState(isMobileDevice);
   const isAdmin = user?.role === "admin";
+  const isStaff = isAdmin || user?.role === "tester";
   const pageTheme = location.pathname === "/" ? "ss-page-home" : location.pathname === "/history" ? "ss-page-history" : location.pathname === "/community" ? "ss-page-social" : location.pathname === "/resources" ? "ss-page-resources" : location.pathname === "/assessment" ? "ss-page-assessment" : location.pathname.startsWith("/result") ? "ss-page-result" : location.pathname === "/admin" ? "ss-page-admin" : "ss-page-default";
   const [langOpen, setLangOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
@@ -120,9 +121,9 @@ export default function Layout() {
 
               {isAuthenticated ? (
                 <div className="flex items-center gap-2 ml-1 pl-2 border-l border-slate-800">
-                  {isAdmin && (
+                  {isStaff && (
                     <Link to="/admin" className={cn("admin-nav-link flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-colors", location.pathname === "/admin" ? "bg-slate-100 text-slate-900" : "text-slate-400 hover:bg-slate-800 hover:text-slate-200")}>
-                      <Shield className="w-3.5 h-3.5" /><span className="hidden sm:inline">{t("nav.admin")}</span>
+                      <Shield className="w-3.5 h-3.5" /><span className="hidden sm:inline">{user?.role === "tester" ? (lang === "en" ? "Tester" : "ผู้ทดสอบ") : t("nav.admin")}</span>
                     </Link>
                   )}
                   <span className="header-user hidden sm:block text-xs text-slate-500 max-w-[120px] truncate">{user?.full_name || user?.email}</span>
@@ -146,7 +147,7 @@ export default function Layout() {
             const active = location.pathname === item.to;
             return <Link key={item.to} to={item.to} className={cn("nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", active ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Icon className="w-[18px] h-[18px]" />{item.label}</Link>;
           })}
-          {isAdmin && <Link to="/admin" className={cn("flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", location.pathname === "/admin" ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Shield className="w-[18px] h-[18px]" />{t("nav.admin")}</Link>}
+          {isStaff && <Link to="/admin" className={cn("flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", location.pathname === "/admin" ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Shield className="w-[18px] h-[18px]" />{user?.role === "tester" ? (lang === "en" ? "Tester dashboard" : "แดชบอร์ดผู้ทดสอบ") : t("nav.admin")}</Link>}
           <Link to="/toolkit" className={cn("flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all", location.pathname === "/toolkit" ? "nav-link-active" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/5")}><Pin className="w-[18px] h-[18px]" />{lang === "en" ? "Toolkit" : "ชุดเครื่องมือ"}</Link>
         </nav>
         <div className="mt-auto px-3 py-3 text-xs leading-relaxed text-slate-400">{lang === "en" ? "A calm space to care for your mind." : "พื้นที่อ่อนโยนสำหรับดูแลใจ"}</div>

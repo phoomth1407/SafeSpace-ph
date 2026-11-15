@@ -4,7 +4,7 @@ import { appClient } from "@/api/appClient";
 import { useTranslation } from "@/lib/i18n";
 import CommentItem from "@/components/CommentItem";
 
-export default function CommentSection({ post, user, isAdmin, expanded, onToggle, onCommentIntent }) {
+export default function CommentSection({ post, user, isAdmin, canModerateComments, expanded, onToggle, onCommentIntent }) {
   const { t, lang } = useTranslation();
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -71,6 +71,17 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
     }
   };
 
+  const handleTogglePin = async (commentId, pinned) => {
+    try {
+      await appClient.functions.invoke("setCommunityCommentPin", { comment_id: commentId, pinned });
+      await loadComments();
+    } catch {
+      setError(lang === "en" ? "Only the post creator can pin a comment." : "เฉพาะเจ้าของโพสต์เท่านั้นที่ปักหมุดความคิดเห็นได้");
+    }
+  };
+
+  const orderedComments = [...comments].sort((a, b) => Number(!!b.is_pinned) - Number(!!a.is_pinned) || new Date(a.created_date) - new Date(b.created_date));
+
   return (
     <div className="space-y-2">
       <button
@@ -130,15 +141,18 @@ export default function CommentSection({ post, user, isAdmin, expanded, onToggle
             <p className="text-[10px] text-slate-500 text-center py-1">{t("community.commentEmpty")}</p>
           ) : (
             <div className="divide-y divide-slate-800/50">
-              {comments.map((c) => (
+              {orderedComments.map((c) => (
                 <CommentItem
                   key={c.id}
                   comment={c}
                   isOwner={user?.id === c.created_by_id}
                   isAdmin={isAdmin}
+                  canModerateComments={canModerateComments}
+                  isPostOwner={user?.id === post.created_by_id}
                   canReport={!!user && user?.id !== c.created_by_id && !isAdmin}
                   postId={post.id}
                   onDelete={handleDelete}
+                  onTogglePin={handleTogglePin}
                 />
               ))}
             </div>

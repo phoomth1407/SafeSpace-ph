@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, Trash2, Loader2, TrendingUp, Megaphone } from "lucide-react";
+import { Heart, Trash2, Loader2, TrendingUp, Megaphone, Pin } from "lucide-react";
 import { categoryLabels } from "@/lib/assessmentQuestions";
 import { useTranslation } from "@/lib/i18n";
 import { appClient } from "@/api/appClient";
@@ -20,7 +20,7 @@ function useIsPhone() {
   return isPhone;
 }
 
-function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncement, focused, onFocus, onCommentIntent }) {
+function CommunityPostCard({ post, isAdmin, canBanUsers, canModerateComments, canPinPosts, isOwner, user, onDelete, onTogglePin, isAnnouncement, focused, onFocus, onCommentIntent }) {
   const { t, lang } = useTranslation();
   const isPhone = useIsPhone();
   const Card = isPhone ? "div" : motion.div;
@@ -37,6 +37,7 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
   );
   const [interacting, setInteracting] = useState(null);
   const [banUserId, setBanUserId] = useState(null);
+  const [pinning, setPinning] = useState(false);
 
   const categoryColors = {
     bullying: "bg-orange-500/10 text-orange-300",
@@ -51,6 +52,15 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
   const catLabel = categoryLabels[post.category]?.[lang] || categoryLabels.other[lang];
   const canDelete = isAdmin || isOwner;
   const authorDisplay = post.author_name || (isAnnouncement ? t("community.admin") : t("community.anon"));
+  const authorRole = post.author_role || (isAnnouncement ? "admin" : "user");
+  const authorColor = authorRole === "admin" ? "text-amber-400" : authorRole === "tester" ? "text-violet-400" : "text-slate-500";
+
+  const togglePin = async () => {
+    if (!onTogglePin || pinning) return;
+    setPinning(true);
+    try { await onTogglePin(post.id, !post.is_pinned); }
+    finally { setPinning(false); }
+  };
 
   const handleDelete = async () => {
     if (!confirming) {
@@ -95,13 +105,15 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
             <Megaphone className="w-3 h-3" />
             {t("community.announcement")}
           </span>
-          {isAdmin && post.created_by_id ? (
-  <button onClick={() => setBanUserId(post.created_by_id)} className="text-[10px] text-slate-500 ml-auto hover:text-rose-300 underline transition-colors">
+          {canBanUsers && post.created_by_id ? (
+  <button onClick={() => setBanUserId(post.created_by_id)} className={`text-[10px] ml-auto hover:text-rose-300 underline transition-colors ${authorColor}`}>
     {authorDisplay}
   </button>
 ) : (
-  <span className="text-[10px] text-slate-500 ml-auto">{authorDisplay}</span>
+  <span className={`text-[10px] ml-auto ${authorColor}`}>{authorDisplay}</span>
 )}
+          {authorRole === "tester" && <span className="rounded-full bg-violet-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-violet-300">{lang === "en" ? "Tester" : "ผู้ทดสอบ"}</span>}
+          {authorRole === "admin" && <span className="rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-amber-300">{lang === "en" ? "Admin" : "ผู้ดูแล"}</span>}
           {canDelete && (
             <button
               onClick={handleDelete}
@@ -131,13 +143,21 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
     >
       <div className="flex items-center gap-2 flex-wrap">
         <span className={`text-[10px] px-2 py-0.5 rounded-full ${catColor}`}>{catLabel}</span>
-        {isAdmin && post.created_by_id ? (
-  <button onClick={() => setBanUserId(post.created_by_id)} className="text-[10px] text-slate-500 ml-auto hover:text-rose-300 underline transition-colors">
+        {canBanUsers && post.created_by_id ? (
+  <button onClick={() => setBanUserId(post.created_by_id)} className={`text-[10px] ml-auto hover:text-rose-300 underline transition-colors ${authorColor}`}>
     {authorDisplay}
   </button>
 ) : (
-  <span className="text-[10px] text-slate-500 ml-auto">{authorDisplay}</span>
+  <span className={`text-[10px] ml-auto ${authorColor}`}>{authorDisplay}</span>
 )}
+        {authorRole === "tester" && <span className="rounded-full bg-violet-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-violet-300">{lang === "en" ? "Tester" : "ผู้ทดสอบ"}</span>}
+        {authorRole === "admin" && <span className="rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-amber-300">{lang === "en" ? "Admin" : "ผู้ดูแล"}</span>}
+        {post.is_pinned && <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/10 px-1.5 py-0.5 text-[9px] font-medium text-sky-300"><Pin className="h-2.5 w-2.5" />{lang === "en" ? "Pinned" : "ปักหมุด"}</span>}
+        {canPinPosts && !isAnnouncement && (
+          <button type="button" onClick={togglePin} disabled={pinning} aria-pressed={!!post.is_pinned} title={post.is_pinned ? (lang === "en" ? "Unpin post" : "เลิกปักหมุดโพสต์") : (lang === "en" ? "Pin post" : "ปักหมุดโพสต์")} className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors disabled:opacity-50 ${post.is_pinned ? "text-sky-300" : "text-slate-600 hover:text-sky-300"}`}>
+            {pinning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Pin className="h-3 w-3" />}
+          </button>
+        )}
         {canDelete && (
           <button
             onClick={handleDelete}
@@ -197,6 +217,7 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
         post={post}
         user={user}
         isAdmin={isAdmin}
+        canModerateComments={canModerateComments}
         expanded={!!focused}
         onToggle={() => onFocus && onFocus(focused ? null : post.id)}
         onCommentIntent={onCommentIntent}
@@ -210,9 +231,13 @@ function CommunityPostCard({ post, isAdmin, isOwner, user, onDelete, isAnnouncem
 export default React.memo(CommunityPostCard, (prev, next) => (
   prev.post === next.post &&
   prev.isAdmin === next.isAdmin &&
+  prev.canBanUsers === next.canBanUsers &&
+  prev.canModerateComments === next.canModerateComments &&
+  prev.canPinPosts === next.canPinPosts &&
   prev.isOwner === next.isOwner &&
   prev.user?.id === next.user?.id &&
   prev.isAnnouncement === next.isAnnouncement &&
   prev.focused === next.focused &&
-  prev.onCommentIntent === next.onCommentIntent
+  prev.onCommentIntent === next.onCommentIntent &&
+  prev.onTogglePin === next.onTogglePin
 ));

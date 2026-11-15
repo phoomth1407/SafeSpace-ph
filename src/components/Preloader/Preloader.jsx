@@ -531,7 +531,7 @@ export default function Preloader({ onComplete }) {
         </div>
 
         <footer className="pre-bottom">
-          <span>© 2025 — SafeSpace</span>
+          <span>© {new Date().getFullYear()} — SafeSpace</span>
           <span className="right">Crafted with care</span>
         </footer>
       </div>
