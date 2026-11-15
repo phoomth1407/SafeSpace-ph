@@ -48,13 +48,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!user?.id || (user.username && user.birth_date)) return;
-    const currentPath = window.location.hash.replace(/^#/, "");
-    if (currentPath.startsWith("/settings") || currentPath.startsWith("/register")) return;
-    window.location.hash = "/settings?completeProfile=1";
-  }, [user]);
-
-  useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       // Update the basic auth state immediately from Supabase, then hydrate
       // the application profile without creating an auth/session race.
@@ -76,11 +69,8 @@ export const AuthProvider = ({ children }) => {
         const pending = sessionStorage.getItem("safespace_auth_return_to");
         if (pending) {
           sessionStorage.removeItem("safespace_auth_return_to");
-          window.setTimeout(async () => {
-            const signedInUser = await appClient.auth.me();
-            window.location.hash = signedInUser?.username && signedInUser?.birth_date
-              ? (pending || "/")
-              : "/settings?completeProfile=1";
+          window.setTimeout(() => {
+            window.location.hash = pending || "/";
           }, 100);
         }
       }
@@ -123,3 +113,4 @@ export const useAuth = () => {
   if (!context) throw Error("useAuth must be used within an AuthProvider");
   return context;
 };
+

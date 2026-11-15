@@ -55,12 +55,13 @@ export default function CommunityTranslation({ text, lang }) {
   };
 
   return <div className="mt-2">
-    <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={translate} disabled={loading} title={lang === "en" ? "Only the selected word or short phrase is sent to MyMemory" : "ส่งเฉพาะคำหรือวลีสั้น ๆ ที่เลือกไปยัง MyMemory"} className="inline-flex min-h-7 items-center gap-1 rounded-full border border-slate-700 px-2.5 py-1 text-[10px] text-slate-400 transition hover:border-sky-500/40 hover:text-sky-300 disabled:opacity-50">
+    <button type="button" onMouseDown={(event) => event.preventDefault()} onClick={translate} disabled={loading || (!translated && !selectedPhrase)} title={selectedPhrase ? (lang === "en" ? "Only the selected word or short phrase is sent to MyMemory" : "ส่งเฉพาะคำหรือวลีสั้น ๆ ที่เลือกไปยัง MyMemory") : (lang === "en" ? "Highlight a word or short phrase in the post first" : "เลือกคำหรือวลีสั้น ๆ ในโพสต์ก่อน")} className="inline-flex min-h-7 items-center gap-1 rounded-full border border-slate-700 px-2.5 py-1 text-[10px] text-slate-400 transition hover:border-sky-500/40 hover:text-sky-300 disabled:cursor-not-allowed disabled:opacity-50">
       {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
       {translated ? (lang === "en" ? "Hide translation" : "ซ่อนคำแปล") : (lang === "en" ? "Translate selected word" : "แปลคำที่เลือก")}
     </button>
-    {!translated && <span className="ml-2 text-[9px] text-slate-500">{lang === "en" ? "Select a word first · only your selection is sent to MyMemory." : "เลือกคำก่อน · ส่งเฉพาะข้อความที่เลือกไปยัง MyMemory"}</span>}
+    {!translated && <span className="ml-2 text-[9px] text-slate-500">{selectedPhrase ? (lang === "en" ? "Selection ready · only this text is sent to MyMemory." : "เลือกข้อความแล้ว · ส่งเฉพาะส่วนนี้ไปยัง MyMemory") : (lang === "en" ? "Highlight a word or short phrase first to enable translation." : "ลากเลือกคำหรือวลีสั้น ๆ ก่อน จึงจะแปลได้")}</span>}
     {translated && <p className="mt-2 whitespace-pre-wrap rounded-xl border border-sky-500/15 bg-sky-500/5 p-3 text-xs leading-relaxed text-slate-300">{translated}<span className="mt-1 block text-[9px] text-slate-500">{lang === "en" ? "Machine translation · MyMemory" : "แปลอัตโนมัติ · MyMemory"}</span></p>}
     {error && <p role="status" className="mt-1 text-[10px] text-rose-400">{error}</p>}
   </div>;
 }
+
