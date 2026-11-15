@@ -105,6 +105,8 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
 
   const pixels = stampContext.getImageData(0, 0, stamp.width, stamp.height).data;
   const budget = graphics?.particleCount || QUALITY_BUDGET[quality] || QUALITY_BUDGET.balanced;
+  // Wind and river scenes need more breathing room between dots after release.
+  const particleBudget = budget * (ritual === "wind" || ritual === "river" ? 0.68 : 1);
   let sample = 3;
   let points = [];
   for (const stride of [3, 4, 5, 6, 8, 10, 12, 14]) {
@@ -115,7 +117,7 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
         if (pixels[(y * stamp.width + x) * 4 + 3] > 120) points.push({ x, y });
       }
     }
-    if (points.length <= budget) break;
+    if (points.length <= particleBudget) break;
   }
 
   const clusters = [
@@ -141,7 +143,8 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
     homeY: y,
     x,
     y,
-    size: sample * (0.45 + Math.random() * 0.55) * (graphics?.particleSize || 1),
+    size: sample * (0.45 + Math.random() * 0.55) * (graphics?.particleSize || 1)
+      * (ritual === "wind" || ritual === "river" ? 0.74 : 1),
     delay: ritual === "wind" ? ((x / width) * 2.4) + Math.random() * 0.6 : ritual === "starlight" ? 0.3 + Math.random() * 1.3 : Math.random() * 2.4,
     phase: Math.random() * Math.PI * 2,
     simX: x,
@@ -156,7 +159,11 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
     targetX: targets[index]?.x ?? width * 0.5,
     targetY: targets[index]?.y ?? height * 0.3,
     sway: (Math.random() - 0.5) * width * 0.14,
-    waterY: height * (0.68 + Math.random() * 0.17),
+    waterY: height * (0.63 + Math.random() * 0.25),
+    windLift: (Math.random() - 0.46) * height * 0.22,
+    windSpeed: 65 + Math.random() * 105,
+    riverDrift: 42 + Math.random() * 88,
+    riverSway: 5 + Math.random() * 13,
     soilY: height * (0.78 + Math.random() * 0.08),
     color: graphics?.palette === "soft"
       ? `hsl(${Math.random() * 360} 82% 82%)`
@@ -523,16 +530,17 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
       y = particle.homeY + Math.cos(time + particle.phase * 1.7) * 0.55
         + (Math.random() - 0.5) * tremble;
     } else if (ritual === "wind") {
-      const drift = age * (58 + Math.min(age, 3.5) * 35 + (particle.index % 4) * 8);
+      const drift = age * (particle.windSpeed + Math.min(age, 3.5) * 25);
       x = particle.homeX + drift;
-      y = particle.homeY + Math.sin(age * 2 + particle.phase * 5) * (10 + age * 9);
+      y = particle.homeY + particle.windLift * age
+        + Math.sin(age * 2 + particle.phase * 5) * (10 + age * 14);
       alpha *= 1 - smooth(1.5, 5, age);
     } else if (ritual === "river") {
       const fall = smooth(0, 0.8, age);
       const landingY = height * 0.69;
-      x = particle.homeX + Math.max(0, age - 0.8) * (18 + particle.index % 20);
+      x = particle.homeX + Math.max(0, age - 0.8) * particle.riverDrift;
       y = mix(particle.homeY, Math.min(particle.waterY, landingY + height * 0.14), fall)
-        + (age > 0.8 ? Math.sin(time * 1.8 + particle.phase) * 2 : 0);
+        + (age > 0.8 ? Math.sin(time * 1.8 + particle.phase) * particle.riverSway : 0);
       size *= age > 0.8 ? 0.9 : 1;
       alpha *= 1 - smooth(3, 7.5, age);
       if (age > 0.72 && age < 0.78 && particle.index % 15 === 0) {
@@ -573,7 +581,8 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
     if (alpha <= 0.01) return;
     // Crisp cores make the word easy to read before release. Glow blooms back in
     // only once the dots start moving away from the handwritten shape.
-    context.shadowBlur = age > 0 && enhanced ? (ultra ? 10 : 5) : 0;
+    const airyRitual = ritual === "wind" || ritual === "river";
+    context.shadowBlur = age > 0 && enhanced ? (airyRitual ? (ultra ? 3 : 1.5) : (ultra ? 10 : 5)) : 0;
     if (graphics.trails && age > 0.12 && age < 4.5 && Math.hypot(x - particle.renderX, y - particle.renderY) > 0.5) {
       context.globalAlpha = alpha * (1 - smooth(3, 4.5, age)) * Math.min(0.46, graphics.glow * 0.28);
       context.strokeStyle = particle.color;
@@ -587,10 +596,11 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
     particle.renderY = y;
     if (graphics.glow > 0) {
       const heldGlow = age <= 0 ? 0.22 : 1;
-      context.globalAlpha = alpha * Math.min(0.38, graphics.glow * 0.18) * heldGlow;
+      const ritualGlow = airyRitual ? 0.4 : 1;
+      context.globalAlpha = alpha * Math.min(0.38, graphics.glow * 0.18) * heldGlow * ritualGlow;
       context.fillStyle = particle.color;
       context.beginPath();
-      context.arc(x, y, Math.max(1, size * (age <= 0 ? 1.35 : 1.8 + graphics.glow * 0.2)), 0, Math.PI * 2);
+      context.arc(x, y, Math.max(1, size * (age <= 0 ? 1.35 : airyRitual ? 1.25 : 1.8 + graphics.glow * 0.2)), 0, Math.PI * 2);
       context.fill();
     }
     context.globalAlpha = alpha;
