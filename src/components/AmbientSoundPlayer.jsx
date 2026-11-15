@@ -327,7 +327,7 @@ export default function AmbientSoundPlayer() {
     setMixMessage(en ? "Mix saved on this device." : "บันทึกมิกซ์ไว้ในอุปกรณ์นี้แล้ว");
   };
 
-  const useMix = (mix) => {
+  const loadMix = (mix) => {
     if (!mix?.volumes) return;
     setVolumes((current) => ({ ...current, ...mix.volumes }));
     if (Number.isFinite(Number(mix.master))) setMaster(Number(mix.master));
@@ -423,7 +423,7 @@ export default function AmbientSoundPlayer() {
               <button type="button" onClick={saveMix} className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-violet-700 px-3 py-2 text-xs font-semibold text-white hover:bg-violet-800"><Save className="h-3.5 w-3.5" />{en ? "Save mix" : "บันทึก"}</button>
             </div>
             {mixMessage && <p role="status" className="mt-2 text-[10px] text-slate-500 dark:text-slate-400">{mixMessage}</p>}
-            {mixes.length > 0 && <div className="mt-2 flex flex-wrap gap-1.5">{mixes.map((mix) => <span key={mix.id} className="inline-flex items-center rounded-full border border-violet-200 bg-white dark:border-violet-400/20 dark:bg-slate-950"><button type="button" onClick={() => useMix(mix)} className="max-w-32 truncate px-2.5 py-1.5 text-[10px] font-semibold text-violet-700 hover:text-violet-900 dark:text-violet-200">{mix.name}</button><button type="button" onClick={() => setMixes((current) => current.filter((item) => item.id !== mix.id))} aria-label={en ? `Delete ${mix.name}` : `ลบ ${mix.name}`} className="px-2 py-1.5 text-slate-400 hover:text-rose-600"><X className="h-3 w-3" /></button></span>)}</div>}
+            {mixes.length > 0 && <div className="mt-2 flex flex-wrap gap-1.5">{mixes.map((mix) => <span key={mix.id} className="inline-flex items-center rounded-full border border-violet-200 bg-white dark:border-violet-400/20 dark:bg-slate-950"><button type="button" onClick={() => loadMix(mix)} className="max-w-32 truncate px-2.5 py-1.5 text-[10px] font-semibold text-violet-700 hover:text-violet-900 dark:text-violet-200">{mix.name}</button><button type="button" onClick={() => setMixes((current) => current.filter((item) => item.id !== mix.id))} aria-label={en ? `Delete ${mix.name}` : `ลบ ${mix.name}`} className="px-2 py-1.5 text-slate-400 hover:text-rose-600"><X className="h-3 w-3" /></button></span>)}</div>}
           </section>
 
           <section className="mb-3 rounded-2xl border border-sky-100 bg-sky-50/70 p-3 dark:border-sky-400/10 dark:bg-sky-400/5" aria-label={en ? "Import an MP3 file" : "นำเข้าไฟล์ MP3"}>
