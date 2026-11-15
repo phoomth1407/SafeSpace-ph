@@ -10,6 +10,9 @@ export default function CommentSection({ post, user, isAdmin, canModerateComment
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [anon, setAnon] = useState(false);
+  useEffect(() => {
+    setAnon(Boolean(user?.id && (!user?.birth_date || !user?.username_changed_at)));
+  }, [user?.id, user?.birth_date, user?.username_changed_at]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
@@ -155,3 +158,4 @@ export default function CommentSection({ post, user, isAdmin, canModerateComment
     </div>
   );
 }
+

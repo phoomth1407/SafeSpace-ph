@@ -29,6 +29,9 @@ export default function Community() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("other");
   const [anon, setAnon] = useState(false);
+  useEffect(() => {
+    setAnon(Boolean(user?.id && (!user?.birth_date || !user?.username_changed_at)));
+  }, [user?.id, user?.birth_date, user?.username_changed_at]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
@@ -587,3 +590,4 @@ export default function Community() {
     </div>
   );
 }
+
