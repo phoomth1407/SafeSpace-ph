@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle2, LockKeyhole, Loader2, ShieldCheck, Sparkles, Gauge, MonitorSmartphone } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuth } from "@/lib/AuthContext";
@@ -7,12 +7,13 @@ import { useTranslation } from "@/lib/i18n";
 import { usePerformanceSettings } from "@/lib/performanceSettings";
 import { DESKTOP_MODE_EVENT, isMobileDevice, readDesktopMode, saveDesktopMode } from "@/lib/desktopMode";
 
-const QUALITY_OPTIONS = ["auto", "low", "balanced", "high", "ultra"];
+const QUALITY_OPTIONS = ["auto", "low", "balanced", "high", "ultra", "custom"];
 
 export default function SharingPreferences() {
   const { isAuthenticated, user } = useAuth();
   const { lang } = useTranslation();
-  const { quality, setQuality, activeQuality, recommendedQuality } = usePerformanceSettings();
+  const { quality, setQuality, activeQuality, recommendedQuality, recommendedAdvancedGraphics } = usePerformanceSettings();
+  const navigate = useNavigate();
   const en = lang === "en";
   const [desktopMode, setDesktopMode] = useState(readDesktopMode);
   const [mobileDevice] = useState(isMobileDevice);
@@ -74,13 +75,15 @@ export default function SharingPreferences() {
     balanced: en ? "Balanced" : "สมดุล",
     high: en ? "High" : "สูง",
     ultra: en ? "Ultra" : "อัลตรา",
+    custom: en ? "Advanced" : "ขั้นสูง",
   };
   const optionCopy = {
-    auto: en ? `Use the ${optionLabels[recommendedQuality]} preset recommended for this device.` : `ใช้ค่าที่แนะนำสำหรับอุปกรณ์นี้: ${optionLabels[recommendedQuality]}`,
+    auto: en ? "Automatically tunes canvas resolution, particle count, and motion for this device." : "ปรับความละเอียดแคนวาส จำนวนอนุภาค และการเคลื่อนไหวให้เหมาะกับอุปกรณ์นี้โดยอัตโนมัติ",
     low: en ? "Keep the page lightweight and turn off most decorative motion and heavy visual effects." : "ลดการเคลื่อนไหวและเอฟเฟกต์ตกแต่งส่วนใหญ่ เพื่อให้หน้าเว็บเบาและตอบสนองไว",
     balanced: en ? "Keep the core atmosphere with fewer continuous effects." : "คงบรรยากาศหลักไว้ พร้อมลดเอฟเฟกต์ที่ทำงานต่อเนื่อง",
     high: en ? "Keep the full visual atmosphere, motion, and layered effects." : "คงบรรยากาศ การเคลื่อนไหว และเอฟเฟกต์เต็มรูปแบบ",
     ultra: en ? "For high-end phones and PCs: richer ambient color, stronger glass depth, glow, and more fluid motion." : "สำหรับมือถือและคอมพิวเตอร์ประสิทธิภาพสูง เพิ่มสีสัน มิติของกระจก แสงเรือง และการเคลื่อนไหวที่ลื่นไหลยิ่งขึ้น",
+    custom: en ? "Fine-tune particle physics, animation, glow, and canvas resolution." : "ปรับฟิสิกส์อนุภาค แอนิเมชัน แสงเรือง และความละเอียดแคนวาสได้เอง",
   };
 
   return <div className="max-w-3xl mx-auto space-y-6">
@@ -94,17 +97,17 @@ export default function SharingPreferences() {
         <div className="w-10 h-10 rounded-xl bg-sky-100 dark:bg-sky-500/15 grid place-items-center shrink-0"><Gauge className="w-5 h-5 text-sky-600 dark:text-sky-300" /></div>
         <div><h2 className="font-semibold text-slate-900 dark:text-white">{en ? "Graphics & performance" : "กราฟิกและประสิทธิภาพ"}</h2><p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 mt-1">{en ? "SafeSpace checks available browser device hints and motion preferences to suggest a starting level. Your choice stays on this device." : "SafeSpace ใช้ข้อมูลอุปกรณ์ที่เบราว์เซอร์เปิดเผยและการตั้งค่าการเคลื่อนไหว เพื่อแนะนำระดับเริ่มต้น การเลือกของคุณจะบันทึกไว้ในอุปกรณ์นี้"}</p></div>
       </div>
-      <div className="flex items-center gap-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 px-4 py-3 text-sm text-slate-600 dark:text-slate-300"><MonitorSmartphone className="w-5 h-5 shrink-0 text-slate-500" /><span>{en ? `Recommended for this device: ${optionLabels[recommendedQuality]}` : `ค่าที่แนะนำสำหรับอุปกรณ์นี้: ${optionLabels[recommendedQuality]}`}{quality !== "auto" && <span className="text-slate-400"> · {en ? `currently using ${optionLabels[activeQuality]}` : `กำลังใช้ระดับ${optionLabels[activeQuality]}`}</span>}</span></div>
+      <div className="flex items-center gap-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 px-4 py-3 text-sm text-slate-600 dark:text-slate-300"><MonitorSmartphone className="w-5 h-5 shrink-0 text-slate-500" /><span>{en ? `Auto recommendation: ${optionLabels[recommendedQuality]} · ${recommendedAdvancedGraphics.particleCount} particles · ${recommendedAdvancedGraphics.canvasScale.toFixed(2)}× canvas` : `ค่าแนะนำอัตโนมัติ: ${optionLabels[recommendedQuality]} · ${recommendedAdvancedGraphics.particleCount} อนุภาค · แคนวาส ${recommendedAdvancedGraphics.canvasScale.toFixed(2)}×`}{quality !== "auto" && <span className="text-slate-400"> · {en ? `currently using ${optionLabels[quality]}` : `กำลังใช้ระดับ${optionLabels[quality]}`}</span>}</span></div>
       <div className="grid sm:grid-cols-2 gap-3" role="radiogroup" aria-label={en ? "Graphics quality" : "คุณภาพกราฟิก"}>
         {QUALITY_OPTIONS.map((option) => {
           const selected = quality === option;
-          return <button key={option} type="button" role="radio" aria-checked={selected} onClick={() => setQuality(option)} className={`text-left rounded-2xl border p-4 transition-colors ${selected ? "border-violet-400 bg-violet-50 dark:border-violet-400/60 dark:bg-violet-500/10" : "border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-500/50"}`}>
+          return <button key={option} type="button" role="radio" aria-checked={selected} onClick={() => { if (option === "custom") { setQuality("custom"); navigate("/settings/graphics"); } else setQuality(option); }} className={`text-left rounded-2xl border p-4 transition-colors ${selected ? "border-violet-400 bg-violet-50 dark:border-violet-400/60 dark:bg-violet-500/10" : "border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-500/50"}`}>
             <span className="flex items-center justify-between gap-2"><span className="font-semibold text-slate-900 dark:text-white">{optionLabels[option]}{option === "auto" ? ` · ${en ? "Recommended" : "แนะนำ"}` : ""}</span>{selected && <CheckCircle2 className="w-4 h-4 text-violet-600 dark:text-violet-300" />}</span>
             <span className="mt-1 block text-xs leading-relaxed text-slate-500 dark:text-slate-400">{optionCopy[option]}</span>
           </button>;
         })}
       </div>
-      <p className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400"><Sparkles className="w-4 h-4" />{en ? `Active graphics level: ${optionLabels[activeQuality]}` : `ระดับกราฟิกที่ใช้อยู่: ${optionLabels[activeQuality]}`}</p>
+      <p className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400"><Sparkles className="w-4 h-4" />{en ? `Active rendering base: ${optionLabels[activeQuality]}` : `พื้นฐานการเรนเดอร์ที่ใช้อยู่: ${optionLabels[activeQuality]}`}</p>
     </section>
 
     {mobileDevice && <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 md:p-8" aria-labelledby="desktop-mode-title">

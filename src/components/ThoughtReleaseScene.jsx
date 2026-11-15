@@ -78,7 +78,7 @@ function wrapThought(text, context, maxWidth) {
   return lines.length ? lines : [""];
 }
 
-function makeTextParticles(text, width, height, ritual, quality) {
+function makeTextParticles(text, width, height, ritual, quality, graphics) {
   const stamp = document.createElement("canvas");
   stamp.width = Math.ceil(width);
   stamp.height = Math.ceil(height);
@@ -104,7 +104,7 @@ function makeTextParticles(text, width, height, ritual, quality) {
   lines.forEach((line, index) => stampContext.fillText(line, width / 2, firstY + index * lineHeight, maxWidth));
 
   const pixels = stampContext.getImageData(0, 0, stamp.width, stamp.height).data;
-  const budget = QUALITY_BUDGET[quality] || QUALITY_BUDGET.balanced;
+  const budget = graphics?.particleCount || QUALITY_BUDGET[quality] || QUALITY_BUDGET.balanced;
   let sample = 3;
   let points = [];
   for (const stride of [3, 4, 5, 6, 8, 10, 12, 14]) {
@@ -141,13 +141,15 @@ function makeTextParticles(text, width, height, ritual, quality) {
     homeY: y,
     x,
     y,
-    size: sample * (0.45 + Math.random() * 0.55),
+    size: sample * (0.45 + Math.random() * 0.55) * (graphics?.particleSize || 1),
     delay: ritual === "wind" ? ((x / width) * 2.4) + Math.random() * 0.6 : ritual === "starlight" ? 0.3 + Math.random() * 1.3 : Math.random() * 2.4,
     phase: Math.random() * Math.PI * 2,
     simX: x,
     simY: y,
     prevX: x,
     prevY: y,
+    renderX: x,
+    renderY: y,
     velocityX: 0,
     velocityY: 0,
     launched: false,
@@ -156,7 +158,11 @@ function makeTextParticles(text, width, height, ritual, quality) {
     sway: (Math.random() - 0.5) * width * 0.14,
     waterY: height * (0.68 + Math.random() * 0.17),
     soilY: height * (0.78 + Math.random() * 0.08),
-    color: ritual === "starlight" ? `hsl(${205 + Math.random() * 55} 100% ${76 + Math.random() * 18}%)` : `hsl(${Math.random() < 0.35 ? 335 : 145 + Math.random() * 25} 78% 86%)`,
+    color: graphics?.palette === "soft"
+      ? `hsl(${Math.random() * 360} 82% 82%)`
+      : graphics?.palette === "cosmic" || ritual === "starlight"
+        ? `hsl(${190 + Math.random() * 145} 100% ${72 + Math.random() * 20}%)`
+        : `hsl(${145 + Math.random() * 185} 88% ${72 + Math.random() * 20}%)`,
     index,
   }));
 }
@@ -175,8 +181,9 @@ function drawRidges(context, width, height, y, amplitude, frequency, phase, colo
   context.fill();
 }
 
-function stepStarlightPhysics(particles, time, delta, width, height) {
-  const dt = Math.min(0.04, Math.max(0, delta));
+function stepStarlightPhysics(particles, time, delta, width, height, graphics) {
+  const dt = Math.min(0.05, Math.max(0, delta * graphics.motionSpeed));
+  const movementTime = RELEASE_AT + Math.max(0, time - RELEASE_AT) * graphics.motionSpeed;
   if (!dt) return;
 
   const cellSize = 28;
@@ -207,25 +214,25 @@ function stepStarlightPhysics(particles, time, delta, width, height) {
     const age = Math.max(0, time - (RELEASE_AT + particle.delay));
     const settle = smooth(0.7, 5.2, age);
     let forceX = (particle.targetX - particle.simX) * (1.4 + settle * 5.2);
-    let forceY = (particle.targetY - particle.simY) * (1.4 + settle * 5.2) + 12;
+    let forceY = (particle.targetY - particle.simY) * (1.4 + settle * 5.2) + 12 * graphics.gravity;
     const vortexFade = 1 - settle;
 
     // Three moving gravity wells bend the initial burst into loose, curved streams.
     for (let well = 0; well < 3; well += 1) {
-      const phase = time * (0.42 + well * 0.08) + well * Math.PI * 2 / 3;
+      const phase = movementTime * (0.42 + well * 0.08) + well * Math.PI * 2 / 3;
       const wellX = width * (0.5 + Math.cos(phase) * 0.22);
       const wellY = height * (0.34 + Math.sin(phase * 1.17) * 0.2);
       const dx = wellX - particle.simX;
       const dy = wellY - particle.simY;
       const distance = Math.max(28, Math.hypot(dx, dy));
       const influence = Math.exp(-distance / (height * 0.42)) * vortexFade;
-      forceX += (dx / distance * 32 - dy / distance * 86) * influence;
-      forceY += (dy / distance * 32 + dx / distance * 86) * influence;
+      forceX += (dx / distance * 32 - dy / distance * 86) * influence * graphics.turbulence;
+      forceY += (dy / distance * 32 + dx / distance * 86) * influence * graphics.turbulence;
     }
 
-    const turbulence = (1 - settle * 0.82) * 68;
-    forceX += Math.sin(particle.simY * 0.021 + time * 2.4 + particle.phase) * turbulence;
-    forceY += Math.cos(particle.simX * 0.018 - time * 2.1 + particle.phase * 1.4) * turbulence;
+    const turbulence = (1 - settle * 0.82) * 68 * graphics.turbulence;
+    forceX += Math.sin(particle.simY * 0.021 + movementTime * 2.4 + particle.phase) * turbulence;
+    forceY += Math.cos(particle.simX * 0.018 - movementTime * 2.1 + particle.phase * 1.4) * turbulence;
 
     const cellX = Math.floor(particle.simX / cellSize);
     const cellY = Math.floor(particle.simY / cellSize);
@@ -237,9 +244,10 @@ function stepStarlightPhysics(particles, time, delta, width, height) {
           const dx = particle.simX - other.simX;
           const dy = particle.simY - other.simY;
           const distanceSquared = dx * dx + dy * dy;
-          if (distanceSquared > 1 && distanceSquared < 13 * 13) {
+          const particleDistance = 8 + particle.size * 1.4;
+          if (distanceSquared > 1 && distanceSquared < particleDistance * particleDistance) {
             const distance = Math.sqrt(distanceSquared);
-            const push = (13 - distance) * 5.8;
+            const push = (particleDistance - distance) * 5.8;
             forceX += dx / distance * push;
             forceY += dy / distance * push;
           }
@@ -258,20 +266,20 @@ function stepStarlightPhysics(particles, time, delta, width, height) {
     particle.simY += particle.velocityY * dt;
     if (particle.simX < 4 || particle.simX > width - 4) {
       particle.simX = clamp(particle.simX / width) * width;
-      particle.velocityX *= -0.62;
+      particle.velocityX *= -graphics.bounce;
     }
     if (particle.simY < 4 || particle.simY > height * 0.75) {
       particle.simY = Math.min(height * 0.75, Math.max(4, particle.simY));
-      particle.velocityY *= -0.58;
+      particle.velocityY *= -graphics.bounce;
     }
   });
 }
 
-function drawScene(context, width, height, time, ritual, particles, quality, delta) {
+function drawScene(context, width, height, time, ritual, particles, quality, delta, graphics, physicsEnabled) {
   const palette = RITUALS[ritual] || RITUALS.wind;
   const enhanced = quality === "high" || quality === "ultra";
   const ultra = quality === "ultra";
-  if (ultra && ritual === "starlight") stepStarlightPhysics(particles, time, delta, width, height);
+  if (physicsEnabled && ritual === "starlight") stepStarlightPhysics(particles, time, delta, width, height, graphics);
   const sky = context.createLinearGradient(0, 0, 0, height);
   palette.colors.forEach((color, index) => sky.addColorStop(index / 3, color));
   context.fillStyle = sky;
@@ -528,7 +536,7 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
       y = mix(particle.homeY, particle.soilY, fall);
       alpha *= 1 - smooth(1.1, 2.2, age);
     } else {
-      if (ultra && ritual === "starlight") {
+      if (physicsEnabled && ritual === "starlight") {
         x = particle.simX;
         y = particle.simY;
         const settled = smooth(2.8, 6.2, age);
@@ -543,7 +551,7 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
         size *= mix(1, ritual === "starlight" ? 1.2 : 0.65, progress);
         if (ritual === "starlight") {
         const arrived = smooth(1.65, 2.55, age);
-        const twinkle = 0.46 + 0.48 * (0.5 + 0.5 * Math.sin(time * (ultra ? 3.2 : 2.2) + particle.phase * 3));
+        const twinkle = 0.46 + 0.48 * (0.5 + 0.5 * Math.sin(time * (ultra ? 3.2 : graphics.motionSpeed * 2.2) + particle.phase * 3));
         alpha *= mix(1 - smooth(0.25, 1.45, age), twinkle, arrived);
         } else {
           alpha = age < 3 ? alpha * (1 - smooth(2.2, 3.2, age)) : 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(time * 2 + particle.phase * 4));
@@ -551,20 +559,29 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
       }
     }
     if (alpha <= 0.01) return;
-    if (ultra && ritual === "starlight" && age > 0.12 && age < 4.5 && Math.hypot(x - particle.prevX, y - particle.prevY) > 0.5) {
-      context.globalAlpha = alpha * (1 - smooth(3, 4.5, age)) * 0.38;
+    if (graphics.trails && age > 0.12 && age < 4.5 && Math.hypot(x - particle.renderX, y - particle.renderY) > 0.5) {
+      context.globalAlpha = alpha * (1 - smooth(3, 4.5, age)) * Math.min(0.46, graphics.glow * 0.28);
       context.strokeStyle = particle.color;
-      context.lineWidth = Math.max(0.55, size * 0.16);
+      context.lineWidth = Math.max(0.45, size * 0.19);
       context.beginPath();
-      context.moveTo(particle.prevX, particle.prevY);
+      context.moveTo(particle.renderX, particle.renderY);
       context.lineTo(x, y);
       context.stroke();
     }
+    particle.renderX = x;
+    particle.renderY = y;
+    if (graphics.glow > 0) {
+      context.globalAlpha = alpha * Math.min(0.38, graphics.glow * 0.18);
+      context.fillStyle = particle.color;
+      context.beginPath();
+      context.arc(x, y, Math.max(1, size * (1.8 + graphics.glow * 0.2)), 0, Math.PI * 2);
+      context.fill();
+    }
     context.globalAlpha = alpha;
-    context.fillStyle = ritual === "garden" && age > 0.4 ? particle.color : ritual === "starlight" ? particle.color : "#fff";
+    context.fillStyle = "#fff";
     context.beginPath();
-    if (ritual === "starlight" && age > 1.5 && size >= 2.3) {
-      const radius = Math.min(4.2, Math.max(1.1, size * 0.72));
+    if (ritual === "starlight" && age > 1.5 && size >= 1.55) {
+      const radius = Math.min(4.2, Math.max(1.1, size * 0.86));
       context.moveTo(x, y - radius * 1.8);
       context.quadraticCurveTo(x + radius * 0.22, y - radius * 0.22, x + radius * 1.8, y);
       context.quadraticCurveTo(x + radius * 0.22, y + radius * 0.22, x, y + radius * 1.8);
@@ -590,7 +607,7 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
   const reduceMotion = useReducedMotion();
-  const { activeQuality } = usePerformanceSettings();
+  const { quality, activeQuality, activeAdvancedGraphics } = usePerformanceSettings();
   const [caption, setCaption] = useState("");
   const [breathReady, setBreathReady] = useState(false);
 
@@ -614,12 +631,11 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
       const bounds = stage.getBoundingClientRect();
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
-      const qualityScale = activeQuality === "low" ? 1 : activeQuality === "balanced" ? 1.3 : activeQuality === "high" ? 1.75 : 2;
-      ratio = Math.min(window.devicePixelRatio || 1, qualityScale);
+      ratio = Math.min(window.devicePixelRatio || 1, activeAdvancedGraphics.canvasScale);
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      particles = makeTextParticles(thought || "love", width, height, ritual, activeQuality);
+      particles = makeTextParticles(thought || "love", width, height, ritual, activeQuality, activeAdvancedGraphics);
     };
     fit();
 
@@ -630,7 +646,8 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
       const time = reduceMotion ? BREATH_CARD_AT : (now - startTime) / 1000;
       const delta = reduceMotion ? 0 : Math.min(0.04, Math.max(0, (now - previousFrame) / 1000));
       previousFrame = now;
-      drawScene(context, width, height, time, ritual, particles, activeQuality, delta);
+      const physicsEnabled = quality === "ultra" || quality === "custom" || (quality === "auto" && ["high", "ultra"].includes(activeAdvancedGraphics.baseQuality));
+      drawScene(context, width, height, time, ritual, particles, activeQuality, delta, activeAdvancedGraphics, physicsEnabled);
 
       const nextCaption = reduceMotion ? "" : captionAt(time, ritual, language);
       if (nextCaption !== lastCaption) {
@@ -655,7 +672,7 @@ export default function ThoughtReleaseScene({ thought, ritual, language, onConti
       cancelAnimationFrame(animationFrame);
       observer.disconnect();
     };
-  }, [thought, ritual, language, reduceMotion, activeQuality]);
+  }, [thought, ritual, language, reduceMotion, activeQuality, activeAdvancedGraphics, quality]);
 
   return (
     <div ref={stageRef} data-scene-quality={activeQuality} className={`thought-release-scene relative mx-auto aspect-[5/4] min-h-[280px] w-full max-w-2xl overflow-hidden rounded-[1.8rem] bg-[#171746] ${activeQuality === "ultra" ? "shadow-[0_30px_100px_rgba(75,57,160,.44)]" : activeQuality === "low" ? "shadow-md" : "shadow-[0_22px_70px_rgba(34,24,80,.3)]"} sm:min-h-[350px]`}>
