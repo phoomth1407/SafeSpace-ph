@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { AlertTriangle, CheckCircle2, LockKeyhole, Loader2, ShieldCheck, Sparkles, Gauge, MonitorSmartphone, Trash2 } from "lucide-react";
 import { clearCachedPrivateAssessments } from "@/api/appClient";
@@ -73,6 +74,13 @@ export default function SharingPreferences() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [profileConfirm, savingProfile]);
+
+  useEffect(() => {
+    if (!showDeleteDialog && !profileConfirm) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [showDeleteDialog, profileConfirm]);
 
   useEffect(() => {
     let active = true;
@@ -194,8 +202,8 @@ export default function SharingPreferences() {
       <div><p className="text-xs uppercase tracking-wider text-violet-500 font-semibold">SafeSpace</p><h1 className="text-2xl font-bold text-slate-900 dark:text-white">{en ? "Settings" : "ตั้งค่า"}</h1></div>
     </header>
 
-    {profileConfirm && <div className="fixed inset-0 z-[110] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-md" onMouseDown={(event) => { if (event.target === event.currentTarget && !savingProfile) setProfileConfirm(null); }}>
-      <section role="alertdialog" aria-modal="true" aria-labelledby="profile-confirm-title" aria-describedby="profile-confirm-description" className="my-auto w-full max-w-lg overflow-hidden rounded-3xl border border-violet-200 bg-white shadow-2xl shadow-violet-950/20 dark:border-violet-400/20 dark:bg-slate-900">
+    {profileConfirm && createPortal(<div className="fixed inset-0 z-[110] grid place-items-center overflow-y-auto overscroll-contain bg-slate-950/55 p-4 backdrop-blur-md" onMouseDown={(event) => { if (event.target === event.currentTarget && !savingProfile) setProfileConfirm(null); }}>
+      <section role="alertdialog" aria-modal="true" aria-labelledby="profile-confirm-title" aria-describedby="profile-confirm-description" className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-3xl border border-violet-200 bg-white shadow-2xl shadow-violet-950/20 dark:border-violet-400/20 dark:bg-slate-900">
         <div className="bg-gradient-to-br from-violet-100 via-indigo-50 to-sky-50 p-6 dark:from-violet-500/15 dark:via-indigo-500/10 dark:to-slate-900 sm:p-7">
           <div className="flex items-start gap-4">
             <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/90 text-violet-700 shadow-sm dark:bg-violet-400/15 dark:text-violet-200"><ShieldCheck className="h-6 w-6" /></div>
@@ -211,7 +219,7 @@ export default function SharingPreferences() {
           </div>
         </div>
       </section>
-    </div>}
+    </div>, document.body)}
 
     <section className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/80 p-6 md:p-8 space-y-5 shadow-sm">
       <div className="flex items-start gap-3"><div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-100 dark:bg-violet-500/15"><ShieldCheck className="h-5 w-5 text-violet-600 dark:text-violet-300" /></div><div><h2 className="font-semibold text-slate-900 dark:text-white">{en ? "Account identity" : "ข้อมูลบัญชี"}</h2><p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{en ? "Your username is the fixed name used on Community posts and comments unless you choose to stay anonymous. Your birthdate is saved to your account so sign-in will not ask for it again." : "ชื่อผู้ใช้นี้จะแสดงในโพสต์และความคิดเห็น เว้นแต่คุณเลือกไม่ระบุตัวตน วันเกิดจะบันทึกไว้กับบัญชีเพื่อไม่ต้องกรอกซ้ำเมื่อลงชื่อเข้าใช้"}</p></div></div>
@@ -283,8 +291,8 @@ export default function SharingPreferences() {
       {!isAuthenticated ? <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/70 p-4 text-sm text-slate-600 dark:text-slate-300">{en ? "Sign in to delete your account data." : "เข้าสู่ระบบเพื่อลบข้อมูลบัญชีของคุณ"} <Link className="font-semibold text-violet-600 dark:text-violet-300 underline underline-offset-2" to="/login?returnTo=/settings">{en ? "Sign in" : "เข้าสู่ระบบ"}</Link></div> : <button type="button" onClick={() => { setDeleteConfirmation(""); setDeleteError(""); setShowDeleteDialog(true); }} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-800 transition hover:bg-rose-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200 dark:hover:bg-rose-500/20"> <Trash2 className="h-4 w-4" />{en ? "Delete account and data" : "ลบบัญชีและข้อมูล"}</button>}
     </section>
 
-    {showDeleteDialog && isAuthenticated && <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-slate-950/65 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !deletingAccount) setShowDeleteDialog(false); }}>
-      <section role="alertdialog" aria-modal="true" aria-labelledby="delete-account-title" aria-describedby="delete-account-description delete-account-caveat" className="my-auto w-full max-w-xl rounded-3xl border border-rose-200 bg-white p-6 shadow-2xl dark:border-rose-500/30 dark:bg-slate-900 sm:p-8">
+    {showDeleteDialog && isAuthenticated && createPortal(<div className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto overscroll-contain bg-slate-950/65 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !deletingAccount) setShowDeleteDialog(false); }}>
+      <section role="alertdialog" aria-modal="true" aria-labelledby="delete-account-title" aria-describedby="delete-account-description delete-account-caveat" className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-xl overflow-y-auto rounded-3xl border border-rose-200 bg-white p-6 shadow-2xl dark:border-rose-500/30 dark:bg-slate-900 sm:p-8">
         <div className="flex items-start gap-3">
           <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-rose-100 dark:bg-rose-500/15"><AlertTriangle className="h-5 w-5 text-rose-700 dark:text-rose-300" /></div>
           <div><h2 id="delete-account-title" className="text-xl font-bold text-slate-950 dark:text-white">{en ? "Permanently delete this account?" : "ยืนยันลบบัญชีนี้อย่างถาวรหรือไม่?"}</h2>
@@ -300,7 +308,7 @@ export default function SharingPreferences() {
           <button type="button" disabled={deletingAccount || deleteConfirmation.trim() !== deletePhrase} onClick={deleteAccount} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-rose-700 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-rose-600 dark:hover:bg-rose-500">{deletingAccount ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}{deletingAccount ? (en ? "Deleting…" : "กำลังลบ…") : (en ? "Permanently delete" : "ลบอย่างถาวร")}</button>
         </div>
       </section>
-    </div>}
+    </div>, document.body)}
   </div>;
 }
 

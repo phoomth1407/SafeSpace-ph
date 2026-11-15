@@ -54,8 +54,8 @@ export default function Login() {
   };
 
   const handleGoogle = async () => {
-    // OAuth identifies existing accounts first. Accounts without a saved
-    // username or birthdate are sent to Settings once the session is ready.
+    // OAuth identifies existing accounts first. Incomplete profiles land on
+    // the requested page and get a centered welcome dialog from the app shell.
     setError(""); setLoading(true);
     try { await appClient.auth.loginWithProvider("google", returnTo); }
     catch (err) { setError(err.message || (lang === "en" ? "Google sign-in failed." : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ")); setLoading(false); }
@@ -162,3 +162,4 @@ export default function Login() {
     </AuthLayout>
   );
 }
+

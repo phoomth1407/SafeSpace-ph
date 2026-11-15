@@ -13,6 +13,7 @@ import { SAFESPACE_POLICY_EN, SAFESPACE_POLICY_TH } from "@/lib/safespacePolicy"
 import { ASSESSMENT_POLICY_EN, ASSESSMENT_POLICY_TH } from "@/lib/assessmentPolicy";
 import { COMMUNITY_POLICY_EN, COMMUNITY_POLICY_TH } from "@/lib/communityPolicy";
 import { DESKTOP_MODE_EVENT, isMobileDevice, readDesktopMode } from "@/lib/desktopMode";
+import ProfileCompletionDialog from "@/components/ProfileCompletionDialog";
 
 export default function Layout() {
   const location = useLocation();
@@ -213,6 +214,8 @@ export default function Layout() {
 
       <PolicyReaderModal open={!!readerPolicy} title={readerPolicy ? policyDocuments[readerPolicy].title : ""} sections={readerPolicy ? policyDocuments[readerPolicy].sections : []} lang={lang} onClose={() => setReaderPolicy(null)} />
 
+      <ProfileCompletionDialog />
+
       <SafeSpacePolicyModal
         open={policyOpen}
         requiresAcceptance={false}
@@ -234,3 +237,4 @@ export default function Layout() {
     </div>
   );
 }
+
