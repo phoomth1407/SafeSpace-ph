@@ -60,10 +60,10 @@ export default function AdvancedGraphicsSettings() {
         <RangeSetting label={en ? "Bounce" : "แรงเด้ง"} value={advancedGraphics.bounce} min={0} max={1} step={0.02} display={`${Math.round(advancedGraphics.bounce * 100)}%`} onChange={(value) => update("bounce", value)} />
         <RangeSetting label={en ? "Glow" : "แสงเรือง"} value={advancedGraphics.glow} min={0} max={2} step={0.05} display={`${advancedGraphics.glow.toFixed(2)}×`} onChange={(value) => update("glow", value)} />
       </div>
-      <label className="mt-3 flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-950/30">
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/70 p-4 dark:border-slate-700 dark:bg-slate-950/30">
         <span><span className="block text-sm font-semibold text-slate-800 dark:text-slate-100">{en ? "Motion trails" : "แสงลากตามการเคลื่อนไหว"}</span><span className="mt-1 block text-xs text-slate-500 dark:text-slate-400">{en ? "Leave a short luminous trail behind moving dots." : "ทิ้งแสงเป็นทางสั้น ๆ ตามหลังจุดที่เคลื่อนที่"}</span></span>
-        <input type="checkbox" checked={advancedGraphics.trails} onChange={(event) => update("trails", event.target.checked)} className="h-5 w-5 accent-violet-600" />
-      </label>
+        <input type="checkbox" aria-label={en ? "Motion trails" : "แสงลากตามการเคลื่อนไหว"} checked={advancedGraphics.trails} onChange={(event) => update("trails", event.target.checked)} className="h-5 w-5 accent-violet-600" />
+      </div>
     </section>
 
     <section className="rounded-3xl border border-slate-200/80 bg-white/80 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/65 md:p-6" aria-labelledby="canvas-title">
