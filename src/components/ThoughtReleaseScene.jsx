@@ -136,7 +136,7 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
     y: height * (0.06 + target.y * 0.7),
   }));
 
-  return points.map(({ x, y }, index) => ({
+  const particles = points.map(({ x, y }, index) => ({
     homeX: x,
     homeY: y,
     x,
@@ -165,6 +165,8 @@ function makeTextParticles(text, width, height, ritual, quality, graphics) {
         : `hsl(${145 + Math.random() * 185} 88% ${72 + Math.random() * 20}%)`,
     index,
   }));
+  particles.textCanvas = stamp;
+  return particles;
 }
 
 function drawRidges(context, width, height, y, amplitude, frequency, phase, color) {
@@ -496,9 +498,19 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
     context.globalAlpha = 1;
   }
 
+  // Keep the handwritten phrase readable while it is held, then let its guide fade
+  // as the particles begin their release.
+  const textGuideAlpha = 0.24 * (1 - smooth(RELEASE_AT - 0.42, RELEASE_AT + 0.18, time));
+  if (particles.textCanvas && textGuideAlpha > 0.005) {
+    context.save();
+    context.globalAlpha = textGuideAlpha;
+    context.drawImage(particles.textCanvas, 0, 0, width, height);
+    context.restore();
+  }
+
   if (enhanced) {
     context.shadowColor = ritual === "starlight" ? "rgba(189,205,255,.9)" : "rgba(255,255,255,.65)";
-    context.shadowBlur = ultra ? 14 : 8;
+    context.shadowBlur = 0;
   }
   particles.forEach((particle) => {
     const age = time - (RELEASE_AT + particle.delay);
@@ -559,6 +571,9 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
       }
     }
     if (alpha <= 0.01) return;
+    // Crisp cores make the word easy to read before release. Glow blooms back in
+    // only once the dots start moving away from the handwritten shape.
+    context.shadowBlur = age > 0 && enhanced ? (ultra ? 10 : 5) : 0;
     if (graphics.trails && age > 0.12 && age < 4.5 && Math.hypot(x - particle.renderX, y - particle.renderY) > 0.5) {
       context.globalAlpha = alpha * (1 - smooth(3, 4.5, age)) * Math.min(0.46, graphics.glow * 0.28);
       context.strokeStyle = particle.color;
@@ -571,10 +586,11 @@ function drawScene(context, width, height, time, ritual, particles, quality, del
     particle.renderX = x;
     particle.renderY = y;
     if (graphics.glow > 0) {
-      context.globalAlpha = alpha * Math.min(0.38, graphics.glow * 0.18);
+      const heldGlow = age <= 0 ? 0.22 : 1;
+      context.globalAlpha = alpha * Math.min(0.38, graphics.glow * 0.18) * heldGlow;
       context.fillStyle = particle.color;
       context.beginPath();
-      context.arc(x, y, Math.max(1, size * (1.8 + graphics.glow * 0.2)), 0, Math.PI * 2);
+      context.arc(x, y, Math.max(1, size * (age <= 0 ? 1.35 : 1.8 + graphics.glow * 0.2)), 0, Math.PI * 2);
       context.fill();
     }
     context.globalAlpha = alpha;
