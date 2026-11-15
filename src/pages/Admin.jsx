@@ -20,15 +20,9 @@ const riskColors = {
 };
 
 function matchesAgeSegment(assessment, segment) {
-  const age = assessment.age === null || assessment.age === undefined ? NaN : Number(assessment.age);
-  if (Number.isFinite(age)) {
-    return segment === "13to20" ? age >= 13 && age <= 20 : age >= 19;
-  }
-  // Newer data can use the requested ranges directly. Older records only have
-  // the original under-20 / 20-and-up buckets, so retain those as a fallback.
-  return segment === "13to20"
-    ? ["13to20", "under20"].includes(assessment.age_group)
-    : ["19plus", "over20"].includes(assessment.age_group);
+  if (segment === "13to19") return assessment.age_13_19 === true;
+  if (segment === "19plus") return assessment.age_19_plus === true;
+  return false;
 }
 
 export default function Admin() {
@@ -180,16 +174,16 @@ export default function Admin() {
     (a, b) => new Date(b.created_date) - new Date(a.created_date)
   );
 
-  // Filter by segment: all / 13to20 / 19plus / foreigner
+  // Age groups are server-classified from the assessment's exact age.
   const filteredAssessments = segment === "all"
     ? latestAssessments
     : segment === "foreigner"
-      ? latestAssessments.filter((a) => a.nationality === "foreigner")
+      ? latestAssessments.filter((a) => a.is_foreigner === true)
       : latestAssessments.filter((a) => matchesAgeSegment(a, segment));
 
   const segments = [
     { id: "all", label: t("admin.seg.all") },
-    { id: "13to20", label: t("admin.seg.13to20") },
+    { id: "13to19", label: t("admin.seg.13to19") },
     { id: "19plus", label: t("admin.seg.19plus") },
     { id: "foreigner", label: t("admin.seg.foreigner") },
   ];
@@ -377,14 +371,16 @@ export default function Admin() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs font-medium text-slate-200">{riskLabels[a.risk_level]}</span>
                       <span className="text-xs text-slate-500">{a.risk_score || 0}</span>
-                      {a.age_group && (
+                      {(a.age_13_19 || a.age_19_plus) && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">
-                          {a.age !== null && a.age !== undefined
-                            ? (Number(a.age) >= 19 ? t("admin.seg.19plus") : t("admin.seg.13to20"))
-                            : (["under20", "13to20"].includes(a.age_group) ? t("admin.seg.13to20") : t("admin.seg.19plus"))}
+                          {a.age_13_19 && a.age_19_plus
+                            ? `${t("admin.seg.13to19")} · ${t("admin.seg.19plus")}`
+                            : a.age_13_19
+                              ? t("admin.seg.13to19")
+                              : t("admin.seg.19plus")}
                         </span>
                       )}
-                      {a.nationality === "foreigner" && (
+                      {a.is_foreigner === true && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300">INTL</span>
                       )}
                     </div>
