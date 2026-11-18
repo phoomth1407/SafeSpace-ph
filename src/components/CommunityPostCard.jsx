@@ -128,7 +128,7 @@ function CommunityPostCard({ post, isAdmin, canBanUsers, canModerateComments, ca
             </button>
           )}
         </div>
-        <p data-translation-source className="text-sm text-slate-100 leading-relaxed whitespace-pre-wrap font-medium">
+        <p className="text-sm text-slate-100 leading-relaxed whitespace-pre-wrap font-medium">
           {post.content}
         </p>
         <CommunityTranslation text={post.content || ""} lang={lang} />
@@ -183,7 +183,7 @@ function CommunityPostCard({ post, isAdmin, canBanUsers, canModerateComments, ca
         )}
       </div>
 
-      <p data-translation-source className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
+      <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
         {post.content}
       </p>
       <CommunityTranslation text={post.content || ""} lang={lang} />
