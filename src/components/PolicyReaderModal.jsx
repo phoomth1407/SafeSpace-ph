@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PolicyReaderModal({ open, title, sections = [], lang = "en", onClose }) {
+export default function PolicyReaderModal({ open, title, subtitle, sections = [], lang = "en", onClose }) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[310] flex items-center justify-center p-4 sm:p-6 bg-slate-950/65 backdrop-blur-[24px]" role="dialog" aria-modal="true" aria-label={title}>
@@ -10,9 +10,11 @@ export default function PolicyReaderModal({ open, title, sections = [], lang = "
           <button type="button" onClick={onClose} className="text-sm text-slate-200 px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-900">{lang === "en" ? "Close" : "ปิด"}</button>
         </div>
         <div className="overflow-y-auto px-5 sm:px-7 py-5 space-y-5 text-sm leading-7 text-slate-300">
-          {sections.map(([heading, body]) => <section key={heading}><h3 className="font-semibold text-slate-100 mb-1">{heading}</h3><p>{body}</p></section>)}
+          {subtitle && <p className="text-xs font-semibold tracking-wide text-sky-300">{subtitle}</p>}
+          {sections.map(([heading, body]) => <section key={heading}><h3 className="font-semibold text-slate-100 mb-1">{heading}</h3><p className="whitespace-pre-line">{body}</p></section>)}
         </div>
       </div>
     </div>
   );
 }
+

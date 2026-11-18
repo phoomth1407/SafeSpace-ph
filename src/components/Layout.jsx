@@ -30,7 +30,11 @@ export default function Layout() {
   const [policyOpen, setPolicyOpen] = useState(false);
   const [readerPolicy, setReaderPolicy] = useState(null);
   const policyDocuments = {
-    safe: { title: lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace", sections: lang === "en" ? SAFESPACE_POLICY_EN : SAFESPACE_POLICY_TH },
+    safe: {
+      title: lang === "en" ? "SafeSpace Policy" : "นโยบาย SafeSpace",
+      subtitle: lang === "en" ? "Version 1.2 · Last updated: October 2026" : "เวอร์ชัน 1.2 · อัปเดตล่าสุด: ตุลาคม 2569",
+      sections: lang === "en" ? SAFESPACE_POLICY_EN : SAFESPACE_POLICY_TH,
+    },
     assessment: { title: lang === "en" ? "Assessment Policy" : "นโยบายการประเมิน", sections: lang === "en" ? ASSESSMENT_POLICY_EN : ASSESSMENT_POLICY_TH },
     community: { title: lang === "en" ? "Community Policy" : "นโยบายชุมชน", sections: lang === "en" ? COMMUNITY_POLICY_EN : COMMUNITY_POLICY_TH },
   };
@@ -212,7 +216,7 @@ export default function Layout() {
         </div>
       </footer>
 
-      <PolicyReaderModal open={!!readerPolicy} title={readerPolicy ? policyDocuments[readerPolicy].title : ""} sections={readerPolicy ? policyDocuments[readerPolicy].sections : []} lang={lang} onClose={() => setReaderPolicy(null)} />
+      <PolicyReaderModal open={!!readerPolicy} title={readerPolicy ? policyDocuments[readerPolicy].title : ""} subtitle={readerPolicy ? policyDocuments[readerPolicy].subtitle : ""} sections={readerPolicy ? policyDocuments[readerPolicy].sections : []} lang={lang} onClose={() => setReaderPolicy(null)} />
 
       <ProfileCompletionDialog />
 
