@@ -1,131 +1,23 @@
-# SafeSpace AI
+# SafeSpace AI and Assessment Processing
 
-Last reviewed: 2026-09-30
+Last reviewed: 18 November 2026 against repository `main` and live function versions.
 
-AI is used in a few parts of SafeSpace, but it is not the whole application. Some UI and assessment logic work without a remote AI provider.
+AI supports parts of analysis and text generation. Authentication, age checks, input validation, rate limits, and database authorization are enforced outside the model. Results are screening/support information, not diagnoses.
 
-The main idea is to use AI for supportive analysis and text generation while keeping authentication, validation, rate limiting, and database permissions outside the model.
+## Main wellbeing
 
-## Current AI functions
+The signed-in flow sends consented answers to JWT-protected `analyze-assessment` (live v16). It validates request size (64 KB), answer shape (1–100 bounded items), identity, private birthdate/minimum age, consent, and rate limit (5 per 60 seconds per user/endpoint). OpenAI is used when configured; Gemini can be a fallback, with local/offline behavior if remote processing is unavailable.
 
-The frontend also contains a non-remote local fallback path for the main assessment, so AI availability is not the only condition for displaying an assessment result.
+The saved wellbeing row contains score/category and operational/consent metadata; answers and narrative return to the browser, with full result details cached locally. Answers may be processed by configured external AI providers.
 
-| Function | Version | What it does |
-| --- | ---: | --- |
-| `analyze-assessment` | 14 | Analyzes the main wellbeing assessment and saves the result |
-| `analyze-community-post` | 7 | Helps check and process Community posts |
-| `analyze-phq9` | 5 | Processes the PHQ-9-style screening flow |
-| `analyzeCommunityPost` | 3 | Old compatibility endpoint being retired |
+## Guest and PHQ-9
 
-`communityInteract` v3 is also still used by the current Community UI for compatibility.
+Guests can receive a browser result and separately opt to send only score/risk level through `save-guest-score` (live v1, JWT verification off) for later claiming.
 
-## Main assessment flow
+The separate authenticated `analyze-phq9` (live v5) requires nine answers, normalizes values to 0–3, calculates a 0–27 score/band, and can use OpenAI for supportive text. Unlike the main wellbeing path, it stores structured answers and result fields in `assessments`. Direct authenticated Data API grants are narrower than the underlying table schema.
 
-~~~text
-Assessment.jsx
-    |
-    v
-analyze-assessment
-    |
-    +-- check JWT
-    +-- validate request
-    +-- check rate limit
-    |
-    +-- OpenAI
-    |     |
-    |     +-- success -> use result
-    |     +-- unavailable -> fallback
-    |
-    +-- Gemini fallback
-    |
-    +-- local fallback
-    |
-    v
-public.assessments
-    |
-    v
-Assessment Result / History
-~~~
+## Community and provider boundary
 
-The provider response is not used as an authorization decision. The Edge Function decides who can call it and what gets written.
+The JWT-protected `analyze-community-post` (live v7) is a Community analysis endpoint. Post creation also uses a controlled database path and rolling limits. AI safety flags do not guarantee content safety or replace moderation.
 
-## What the main assessment checks
-
-Before expensive processing, `analyze-assessment` checks:
-
-- valid JWT
-- authenticated user
-- request body within 64 KB
-- valid JSON
-- 1–100 answer objects
-- answer text limits
-- reasonable age when supplied
-- 5 requests / 60 seconds / user
-
-The result is saved to `public.assessments`.
-
-## AI fallback
-
-I did not want the whole assessment to stop working just because one provider is unavailable.
-
-For the main assessment:
-
-1. OpenAI is tried first when configured.
-2. Gemini can be used as a fallback.
-3. Local fallback logic is available if remote AI is unavailable.
-
-The local fallback is simpler than a full AI response. It exists to keep the app usable rather than pretending it can reproduce a remote model.
-
-## Community AI
-
-`analyze-community-post` requires a JWT, limits the request body to 64 KB, validates the JSON and content, requires at least 10 characters, applies the 5-per-60-second user limit, performs a lightweight safety check, can use OpenAI, and writes the post to `community_posts`.
-
-Community posting also has a database-side `create_community_post` path and rolling limit. This matters because a React-side limit can be bypassed by calling the backend directly.
-
-The old `analyzeCommunityPost` endpoint is kept while the old path is being retired.
-
-## PHQ-9-style screening
-
-`analyze-phq9` expects exactly nine answers and normalizes them to 0–3. It calculates a total from 0 to 27 and assigns the screening band used by the application.
-
-OpenAI can optionally generate supportive text around the result.
-
-This is a screening result, not a diagnosis.
-
-## Provider and privacy boundary
-
-Provider API keys stay in Supabase Edge Function secret storage. The frontend never receives them.
-
-Assessment and Community content can contain sensitive personal information, so changing the AI payload should be treated as a privacy change, not just an implementation detail. Check the Assessment Policy if the type of information sent to a provider changes.
-
-## What AI does not control
-
-AI does not decide whether a user is authenticated, owns a row, is an admin, is within a rate limit, can bypass RLS, or can use an API secret. Those controls are implemented by Supabase Auth, Edge Functions, database policies, and server-side functions.
-
-## Failure cases
-
-Remote AI can fail because of missing configuration, provider errors, network problems, unexpected responses, or provider-side rate limits.
-
-The app should fail in a controlled way instead of exposing provider secrets or raw internal errors. The main assessment has a local fallback for this reason.
-
-## Safety and limitations
-
-SafeSpace is a school-project screening/support application.
-
-AI output can be wrong, incomplete, or generic. It should not be treated as a medical diagnosis or a replacement for a qualified professional. The app also does not claim that an AI model can reliably determine a person's mental health from a questionnaire.
-
-For urgent situations, the app points users toward appropriate crisis/support resources rather than trying to make the AI an emergency service.
-
-## If you change an AI function
-
-1. Keep JWT verification enabled.
-2. Validate the body before using user-controlled values.
-3. Keep request-size limits.
-4. Rate-limit expensive calls.
-5. Keep provider keys in Supabase secrets.
-6. Preserve response fields expected by the frontend.
-7. Check database writes against RLS/ownership rules.
-8. Test rejected requests as well as successful ones.
-9. Update [docs/EDGE_FUNCTIONS.md](EDGE_FUNCTIONS.md) when the deployed version or behavior changes.
-
-I would rather document a limitation honestly than make the AI sound more capable than it really is.
+Provider secrets stay in Supabase Edge Function secret storage. Models can misunderstand language, culture, context, sarcasm, and incomplete responses. Do not submit credentials, identity numbers, exact addresses, or another person's confidential information. See [policies](SAFESPACE_POLICY.md), [Assessment Policy](ASSESSMENT_POLICY.md), and [Edge Functions](EDGE_FUNCTIONS.md).

@@ -1,76 +1,35 @@
-# SafeSpace Supabase RLS Audit
+# SafeSpace Supabase Access and RLS Notes
 
-Audit date: 2026-09-20
+Review date: 18 November 2026. This snapshot uses the connected project inventory, migration history, current app paths, and tracked SQL; it is not a formal penetration test. Supabase reported RLS enabled on listed app tables in `public` and on `private.user_birthdates`. Recheck each live policy and grant before backend changes.
 
-## What I checked
+## Main access boundaries
 
-RLS is enabled on the current public application tables, including the rate-limit table used by the AI Edge Functions.
+| Data | Access intent |
+| --- | --- |
+| `users` | Profile/role/username; no birthdate column |
+| `private.user_birthdates` | Owner-only profile RPC; excluded from public/admin profile views |
+| `assessments` | Owner records; direct authenticated columns restricted; admin score view follows opt-in |
+| `assessment_sharing_preferences` | Owner opt-in for risk score/level only |
+| `user_policy_acceptances` | Account-scoped policy versions |
+| Community posts/comments | Public reads, controlled authenticated writes, owner/admin moderation |
+| Reports/contact requests | Submitter/admin paths |
+| Emergency resources | Public reads, admin management |
+| Mood check-ins | Account-owned |
+| Rate-limit counters | Protected function/database path |
+| Guest score shares | Optional guest score-only claim flow |
 
-| Table | RLS | Intended access |
-| --- | --- | --- |
-| assessments | ON | Owner + admin |
-| community_comments | ON | Public read; authenticated write; owner/admin manage |
-| community_posts | ON | Public read; controlled authenticated create; owner/admin manage |
-| contact_requests | ON | Authenticated create; admin read/update/delete |
-| edge_rate_limits | ON | Authenticated user can maintain only their own rate-limit rows |
-| emergency_resources | ON | Public read; admin manage |
-| guest_assessments | ON | Admin manage |
-| reports | ON | Authenticated create; admin manage |
-| users | ON | Self read; admin manage |
+## Birthdate privacy
 
-## Key checks
+The full date is in `private.user_birthdates`, separate from `public.users`. The owner reads through `get_my_private_profile`; updates use `save_my_profile`. Admin user lists and public Community do not expose the date. Assessment eligibility is checked server-side.
 
-- `contact_requests_create` requires `created_by_id = auth.uid()`.
-- Contact-request read/update/delete are restricted to admins.
-- Owner checks on user-owned records compare `created_by_id` with `auth.uid()` where applicable.
-- Admin policies use `private.is_admin()`.
-- Anonymous access is revoked from private tables.
-- `edge_rate_limits` allows authenticated users to insert/update only rows belonging to their own `auth.uid()`.
-- The rate-limit function is SECURITY DEFINER with an empty pinned search path, and public/anonymous execute access is revoked; authenticated clients invoke it through the authenticated Supabase session.
+Keep birthdate out of public posts/profiles, admin user lists, admin score-sharing RPCs, and administrator-facing assessment payloads.
 
-## How the sensitive tables are handled
+## Assessment scope
 
-### assessments
-Authenticated users can create/read/update/delete their own rows. Admins can manage all rows.
+Main wellbeing rows save score/category and operational/consent metadata; answers and narrative return to the browser. PHQ-9 stores answer/result fields in the underlying assessment table, while direct authenticated Data API grants are narrower than the schema. Admin sharing is opt-in and score/risk-level only. Browser-local result caches can remain on shared devices.
 
-### community_posts and community_comments
-Posts/comments are publicly readable. Authenticated users can create and manage their own content. Admins can moderate/manage content.
+## Live migration snapshot
 
-### contact_requests
-Authenticated users can create their own requests. Normal users do not have SELECT access, so the frontend intentionally does not chain `.select()` after INSERT. Admins can read and manage requests.
+The applied project history included `account_policy_acceptances`, `store_birth_dates_privately`, `admin_assessment_age_segments`, `community_roles_pinning_tester_permissions`, `allow_tester_user_role`, `backfill_community_author_roles`, `recognize_protected_admin_profiles`, `account_profiles_and_community_usernames`, `set_my_assessment_sharing`, and `allow_anonymous_community_before_profile`. Latest reported applied version: `20261115172949`.
 
-### guest_assessments
-Guest assessment storage is admin-only at the database layer.
-
-### reports
-Authenticated users can create their own reports. Admins can review/manage reports.
-
-### users
-Users can read their own profile; admins can manage user records. The username is in the admin-readable profile. Full birthdates are stored separately in the non-exposed `private.user_birthdates` table and are available only to the authenticated owner through `get_my_private_profile`; the admin dashboard and users Data API do not expose them. The `save_my_profile` SECURITY DEFINER RPC validates the authenticated owner, username uniqueness and format, minimum age, and change intervals. It updates named Community content in the same transaction when a username changes. Anonymous content remains labeled `anonymous`.
-
-### emergency_resources
-Public read access is intentional. Admin-only write access is enforced by RLS.
-
-## Security goal
-
-The frontend should never solve a database authorization problem by exposing more rows to the client. RLS remains the final authorization boundary.
-
-## Production and source-control note
-
-The current security/rate-limit migrations used by this project are tracked under `supabase/migrations/`, including the September 2026 hardening, rate-limit RPC, Community posting-limit, and SECURITY DEFINER search-path changes. The live Supabase project can still drift if changes are made directly in the dashboard, so production state should still be checked before rebuilding the backend.
-
-## After adding a new table or function
-
-Whenever a new table or function is added:
-
-1. Enable RLS where the table is exposed through the public API.
-2. Explicitly deny anonymous access unless the data is intentionally public.
-3. Constrain INSERT/UPDATE/DELETE policies to ownership or admin access.
-4. Re-check function SECURITY DEFINER / SECURITY INVOKER behavior and search paths.
-5. Add the migration to source control.
-6. Re-run the Supabase security advisor.
-
-
-## Community posting hardening
-
-The current database path does not rely on a frontend-only posting limit. `create_community_post` is used for controlled creation, direct client INSERT access is restricted, and the rolling post limit is backed by the database. The September 2026 security-definer hardening migration also pins trusted search paths and limits execution privileges.
+For changes, review schema exposure, RLS, column grants, execution rights/search paths, ownership checks, and admin RPC result columns. Recheck production after deployment because Git and dashboard state can drift.

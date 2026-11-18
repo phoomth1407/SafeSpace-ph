@@ -1,3 +1,10 @@
+## 2026-11-18 — Current app and documentation refresh
+
+- Reconciled README, feature, architecture, data model, AI, RLS, environment, deployment, and Edge Function notes with repository `main` and the connected Supabase project.
+- Documented private birthdates, profile completion, opt-in score sharing, guest score-only sharing, and distinct wellbeing/PHQ-9 storage paths.
+- Refreshed the bilingual standalone project introduction.
+- No app code, database schema, or Edge Function was changed.
+
 # SafeSpace — Changelog
 
 ## 2026-10-01 — Assessment consent metadata and access controls

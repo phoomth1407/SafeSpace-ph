@@ -1,6 +1,6 @@
 # SafeSpace Environment Configuration
 
-Last reviewed: 2026-09-30
+Last reviewed: 18 November 2026.
 
 ## Frontend variables
 

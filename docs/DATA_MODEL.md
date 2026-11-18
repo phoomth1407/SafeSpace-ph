@@ -1,144 +1,37 @@
 # SafeSpace Data Model
 
-Last reviewed: 2026-10-01
+Last reviewed: 18 November 2026 against the connected Supabase project and repository `main`.
 
-This is a practical map of the data SafeSpace uses. It is not meant to replace the actual Supabase schema or migrations.
+This describes practical data boundaries, not a full schema dump. Some legacy table creation SQL is not in this repository; use live schema, policies, grants, functions, and migrations together.
 
-One important detail: the repository does not contain the original full database-creation migration for every application table. Some of the database structure existed before the current migration history was added. So this document describes the tables and access rules currently used by the application and tracked security migrations, rather than pretending this is the complete schema source.
+| Table | Purpose and boundary |
+| --- | --- |
+| `users` | Account profile/role and username; no birthdate column |
+| `private.user_birthdates` | Full date and update timestamps; owner reads through `get_my_private_profile`, writes through `save_my_profile` |
+| `assessments` | Signed-in wellbeing and PHQ-9 records; sensitive, RLS enabled, authenticated column access restricted |
+| `guest_score_shares` | Optional guest score/risk-level share and claim token; no answers or birthdate |
+| `guest_assessments` | Legacy/admin-managed guest assessment table |
+| `mood_checkins` | Account mood and selected factor by date |
+| `assessment_sharing_preferences` | Opt-in to admin score/risk-level visibility |
+| `user_policy_acceptances` | Account-scoped policy key/version/time |
+| `community_posts`, `community_comments` | Public-facing user content; owner/admin moderation |
+| `reports`, `contact_requests` | Submitter/admin paths |
+| `emergency_resources` | Public read; admin-managed |
+| `edge_rate_limits` | Protected rate-limit state |
 
-## Main tables
+## Birthdate privacy
 
-| Table | Main purpose | Sensitivity | Main access |
-| --- | --- | --- | --- |
-| `users` | User profile information | Private | User owns profile; admins manage |
-| `assessments` | Signed-in screening score metadata | Sensitive | Owner/admin RLS; authenticated Data API access limited to metadata columns |
-| `guest_assessments` | Legacy/admin-managed guest screening records | Sensitive | Admin-only RLS; authenticated Data API reads limited to score metadata |
-| `community_posts` | Public Community posts | Public-facing | Public read; controlled authenticated create; owner/admin management |
-| `community_comments` | Comments on Community posts | Public-facing | Public read; authenticated write; owner/admin management |
-| `reports` | Reports about Community content | Sensitive | Authenticated create; admin management |
-| `contact_requests` | Messages sent to admin | Sensitive | Authenticated create; admin management |
-| `emergency_resources` | Mental-health/resource information | Public | Public read; admin write |
-| `edge_rate_limits` | Rate-limit counters | Security-sensitive | Authenticated user maintains own rows through the intended path |
+Full dates are stored in `private.user_birthdates`, not `public.users`. The profile table contains username and role information but no birthdate field. The account owner reads the date through `get_my_private_profile`; `save_my_profile` validates/updates it. Public Community and Admin user lists do not show birthdates. The assessment function checks age server-side from this private record.
 
-The exact columns can change as the project develops. This table is mainly here to explain why the data exists and how it is protected.
+## Assessment data differs by flow
 
-The admin-readable `users` profile stores a unique username. A user's full birthdate is stored separately in the non-exposed `private.user_birthdates` table. Only the authenticated owner can read the date through `get_my_private_profile`; the admin dashboard and user-list Data API do not expose it. Users update these values through `save_my_profile`, which validates age and username format/uniqueness, limits username changes to once per 30 days, and limits birthdate changes to once per 365 days.
+- **Signed-in wellbeing:** answers go to the authenticated `analyze-assessment` function and may be processed by configured AI providers. The saved row contains score/category and operational/consent metadata, not the answer list or narrative. Full results return to the browser and up to 20 recent objects are cached in localStorage; shared/unlocked devices can expose that local cache.
+- **PHQ-9-style:** separate `analyze-phq9` stores nine normalized answers, score/band, and result fields in `assessments`. The underlying schema has these fields, while direct authenticated Data API grants restrict reads. Treat these values as sensitive.
+- **Guest:** results display in browser state. If the guest chooses sharing, only score, risk level, language, and a claim-token hash go to `guest_score_shares`; no answers or birthdate are sent.
+- **Admin sharing:** an account preference permits risk score/risk level review through a restricted path. It does not grant answer or written-response access. Birthdate is not part of this view.
 
-## How the relationships work
+Community posts/comments link internally to their creator and show a username or anonymous label. Username changes update prior named content; anonymous content stays anonymous. Mood check-ins, policy acceptances, and sharing preferences link to the account.
 
-There is not a huge relational model with dozens of joins. Most important relationships use a user ID or post ID.
+The authenticated delete-account function removes supported account-owned data before Auth deletion. Guest/device-only data, imported sounds, third-party logs, backups, and data already processed by external AI are outside that operation.
 
-### Users -> assessments
-
-Signed-in assessment rows are tied to the authenticated Supabase user ID. RLS limits rows to the owner or an administrator. In addition, authenticated Data API column grants now expose only `id`, timestamps, `created_by_id`, `risk_level`, `risk_score`, `screening_type`, `analysis_source`, and `language`; answers, age, nationality, narrative summaries, recommendations, and PHQ-9 detail columns are not selectable through the authenticated Data API. New signed-in assessment submissions still send answers to the analysis function and configured AI provider(s), but only score metadata is written to the `assessments` row. The same row records the assessment-policy consent version and the server receipt timestamp for explicit sensitive-data consent; these fields do not contain answer text. Full result details may be kept in the user's browser localStorage cache (up to 20 entries) for result display; this is browser-local storage, not server-side history, and can be exposed on a shared/unlocked device.
-
-### Users -> Community posts
-
-Community posts are associated with their authenticated creator.
-
-Posts are publicly readable, but creating a post is not treated as a public anonymous database INSERT. The current application uses a controlled server/database path, and direct client INSERT access is restricted.
-
-Named posts and comments always use the account username enforced by a database trigger. The anonymous choice stores the generic `anonymous` author label. A username change updates all of the owner's previously named posts and comments while leaving anonymous entries unchanged.
-
-A rolling post limit is also enforced at the database layer.
-
-### Posts -> comments
-
-Comments belong to Community posts and are stored in `community_comments`. Comments are publicly readable. Authenticated users can create comments, while ownership/admin rules control changes and moderation.
-
-### Users -> reports
-
-A report records the authenticated user who submitted it and the content being reported. Normal users can create their own reports; admins can review and manage them.
-
-### Users -> contact requests
-
-Contact requests are associated with the authenticated creator. The create policy checks that `created_by_id` matches the current authenticated user.
-
-Normal users do not get general SELECT access to contact requests, so the frontend does not need to read back the private row after INSERT.
-
-### Users -> rate limits
-
-AI rate limiting is stored in `edge_rate_limits`. The rate-limit state is associated with the authenticated user and endpoint/window. The database function updates this protected state instead of trusting a value supplied by the browser.
-
-## RLS in simple terms
-
-Supabase Row Level Security is the final database permission layer.
-
-The frontend might hide a button, but that is not security. A user can make their own request from browser developer tools.
-
-For SafeSpace:
-
-- public data is intentionally readable
-- sensitive user data is owner/admin controlled
-- anonymous access is removed from private tables
-- admin access is checked separately
-- Community creation has an additional controlled path
-- rate-limit state is protected
-- security-definer database functions use restricted search paths and execution grants
-
-See [RLS audit](RLS_AUDIT.md) for the current checks.
-
-## Guest assessments
-
-Guest behavior is different from signed-in users.
-
-The current guest UI computes the result locally and keeps it in browser navigation state so it can be shown without creating an account. A persistent browser-only guest history has not been implemented, and the guest result is not submitted to the analysis Edge Function by the current guest path. A `guest_assessments` table also exists for legacy/admin-managed records; authenticated reads are limited to `id`, timestamps, `risk_level`, `risk_score`, and `language`, with row access controlled by the admin-only RLS policies. Its existence does not mean new guest results are automatically written to it.
-
-## Assessment history and deletion
-
-Signed-in score metadata can appear in the History page. The full result shown immediately after analysis is cached in browser localStorage where available (up to 20 entries); if that cache is unavailable or cleared, older server rows provide score metadata only, not the full narrative or answers. Users can delete their saved assessment records through the History feature, subject to the database DELETE policy.
-
-Guest results are not added to the signed-in user's history.
-
-## Data that should be treated as sensitive
-
-Even when a field is not an obvious identifier, assessment answers can contain personal or wellbeing information.
-
-Treat these as sensitive:
-
-- assessment answers
-- generated assessment results
-- PHQ-9-style results
-- reports
-- contact messages
-- private profile information
-- authentication/session information
-- rate-limit/security state
-
-Do not put real user data into tests, screenshots, issues, pull requests, or example payloads.
-
-## Database changes
-
-Tracked database changes live under `supabase/migrations/`.
-
-The current repository includes September–October 2026 security work for:
-
-- security hardening
-- assessment and guest-assessment column-level access restrictions
-- rate-limit RPC grants/locking
-- Community rolling post limits
-- database-enforced Community post creation
-- SECURITY DEFINER search-path hardening
-
-The repository and live Supabase project can still drift if someone changes the database directly in the Supabase dashboard. That is why the deployment and RLS docs call out the difference.
-
-## When adding a table
-
-Before adding a table, I would ask:
-
-1. Is the data public, user-owned, or admin-only?
-2. Can an unauthenticated user ever see it?
-3. Who is allowed to insert it?
-4. Who can update/delete it?
-5. Does the frontend really need direct access?
-6. Should a server-side function or RPC be used?
-7. Does it need an index for the query/RLS pattern?
-8. Does it contain personal or wellbeing information?
-
-Then add the migration and update this document if the table changes the overall data model.
-
-## Important limitation
-
-This document is a guide to the current application data model, not a generated schema dump.
-
-For exact column types, constraints, indexes, functions, and policies, the Supabase database and SQL migrations are the authoritative sources.
+RLS was enabled on the listed app tables during this review. Recheck live schema and policies before backend changes. See [RLS notes](RLS_AUDIT.md).

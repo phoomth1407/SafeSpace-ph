@@ -1,55 +1,33 @@
 # SafeSpace Features
 
-Last reviewed: 30 September 2026
+Last reviewed: 18 November 2026 against repository `main` and connected Supabase metadata.
 
-This document describes the user-facing features currently represented in the frontend. The code and feature-specific policies remain the authoritative sources when behavior changes.
+## Home and self-care
+- Daily mood check-in saved to a signed-in user's account.
+- Wellbeing assessment, screening, resource, and saved-tool shortcuts.
+- Breathing, grounding, worry-release, and browser-generated ambient sound.
+- Thai/English, light/dark themes, reduced motion, and performance settings.
 
-## Assessment and wellbeing
+## Assessment and history
+- General wellbeing assessment with age context, policy acknowledgement, and sensitive-data consent.
+- Signed-in assessments require a saved private birthdate; server-side logic checks eligibility from that profile.
+- Guest assessment results display in the browser. Guests may separately share only score and risk level for later claiming.
+- Signed-in users can review scores in History and delete records. Full wellbeing result details use a browser-local cache.
+- A separate authenticated PHQ-9-style screening flow.
+- Admin sharing is an opt-in for risk score and risk level; answers and written responses are excluded.
 
-- Wellbeing assessment with age and nationality context.
-- Separate assessment policy acknowledgement before starting.
-- Guest assessment flow that keeps the current result in browser navigation state rather than attaching it to an account.
-- Signed-in assessment history with deletion of saved records.
-- AI-assisted assessment analysis with OpenAI, Gemini fallback when configured, and local fallback logic.
-- PHQ-9-style screening flow.
-- Daily mood check-in.
-- Breathing, grounding, and worry-release tools.
-- Procedural ambient sound mixer.
+## Community and support
+- Public Community reading; signed-in posting/commenting after Community Policy acceptance.
+- Username or anonymous author label; incomplete profiles default to anonymous.
+- Reactions, bumping, search/filter, reports, moderation, pinning, and Realtime updates.
+- Controlled database-side post creation and rolling limits.
+- Hotline/emergency-contact information and self-care reading links.
 
-## Community
+## Accounts and app shell
+- Email/password and Google sign-in; reset/verification flows where configured.
+- Welcome profile-completion dialog when username or birthdate is missing; Settings has the same profile controls.
+- Admin/tester tools for permitted moderation, resource, report, support, and score-review tasks; account deletion.
+- React/Vite with `HashRouter` for GitHub Pages, lazy routes, a session preloader, and separate in-app transitions.
+- Standalone [project introduction](../public/about.html).
 
-- Public reading for Community posts and comments.
-- Authenticated posting and commenting.
-- Community policy acknowledgement before posting/commenting where required.
-- Moderation, reporting, reactions, and admin controls.
-- Realtime Community updates through Supabase Realtime.
-- Database-enforced Community posting controls; the UI is not the only protection.
-
-## Resources
-
-- Emergency contacts and support hotlines.
-- Self-care and self-therapy reading resources.
-- Informational resources are presented as support information, not as a replacement for professional care.
-
-## Accounts and administration
-
-- Email/password authentication.
-- Google authentication and Google One Tap.
-- Password recovery and account verification flows where enabled by the Supabase configuration.
-- Admin-only moderation/resource management and contact/report handling.
-- Thai/English interface and Light/Dark themes.
-
-## Application experience
-
-- GitHub Pages-compatible frontend routing through HashRouter.
-- A first-open cinematic preloader stored with the safespace:booted session key so it runs once per browser session.
-- Route transition overlay for in-app navigation with destination labels, progress ring, SafeSpace mark, and top progress bar.
-- Desktop preloader ambient/canvas effects with a lighter mobile path.
-- Reduced-motion handling.
-- SafeSpace app icon reused from public/icons/safespace-icon.svg.
-- Global SafeSpace Policy accessible from the footer.
-- Standalone project introduction at public/about.html.
-
-## Important boundaries
-
-SafeSpace is a wellbeing screening/support project, not a medical diagnosis service or emergency service. Automated output can be wrong, Community content is user-generated, and online services can fail or change. See docs/ASSESSMENT_POLICY.md, docs/SAFESPACE_POLICY.md, docs/COMMUNITY_POLICY.md, and SECURITY.md for the relevant limitations and controls.
+SafeSpace is screening/support, not diagnosis or emergency care. AI can be wrong and Community content is user-generated. Read [SafeSpace Policy](SAFESPACE_POLICY.md), [Assessment Policy](ASSESSMENT_POLICY.md), and [Community Policy](COMMUNITY_POLICY.md).

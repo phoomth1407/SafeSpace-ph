@@ -1,114 +1,46 @@
 # SafeSpace Architecture
 
-Last reviewed: 2026-09-30
+Last reviewed: 18 November 2026 against repository `main` and live Supabase metadata.
 
-## How the project is put together
+## Runtime
 
-The frontend is built with React/Vite. Supabase handles authentication, database storage, Realtime events, and server-side Edge Functions.
+React 18/Vite 6 builds the static single-page app. React Router's `HashRouter` supports GitHub Pages deep links; route pages are lazy-loaded. Supabase provides Auth, Postgres, Realtime, and Edge Functions.
 
 ```text
-Browser
-  |
-  +-- React/Vite UI
-  |     +-- Auth
-  |     +-- Assessment / Result
-  |     +-- Home wellbeing tools
-  |     +-- Community
-  |     +-- Resources
-  |     +-- History
-  |     +-- Admin
-  |
-  +-- src/api/appClient.js
-  |     +-- Supabase Auth
-  |     +-- Postgres through RLS
-  |     +-- Edge Functions
-  |
-  +-- Supabase Realtime
-        +-- Community post updates
+Browser: React/Vite → AuthContext + appClient adapter
+                       ├─ Supabase Auth
+                       ├─ Postgres/RPCs (RLS and grants)
+                       ├─ Edge Functions
+                       └─ Realtime Community changes
+GitHub Actions → checks/build → GitHub Pages
+Supabase project → migrations/functions deployed separately
 ```
 
-## Frontend
+Only the Supabase URL and publishable key are browser-side. Provider keys and service-role credentials remain server-side.
 
-`src/pages/` contains route-level pages such as `Home.jsx`, `Assessment.jsx`, `AssessmentResult.jsx`, `Community.jsx`, `Resources.jsx`, `History.jsx`, `Admin.jsx`, and authentication pages.
+## Main modules
+- `src/App.jsx`: providers, routes, version check, startup and route transitions.
+- `src/components/Layout.jsx`: navigation, policy readers, profile welcome prompt.
+- `src/api/appClient.js`: adapter mapping page operations to tables, RPCs, and functions.
+- `src/lib/AuthContext.jsx`: session handling and profile hydration.
+- `src/pages/`: Home, assessment/results, Community, Resources, History, Settings, Toolkit, Admin, and auth.
+- `public/about.html`: standalone introduction shipped with the Pages build.
 
-`src/api/appClient.js` is the main Supabase-backed data adapter. Some pages still use the older entity/function interface, so this file keeps that interface working while the actual backend is Supabase. It also contains signup password checks and local assessment fallback/repair logic.
+## Account profile
 
-`src/lib/` contains shared infrastructure such as the Supabase client, auth context, i18n, scoring, and auth return-to handling.
+After sign-in, the app loads the SafeSpace profile. A missing username or birthdate opens a welcome completion dialog; Settings provides the same controls. Authenticated RPCs save profile data. Full birthdate is stored in `private.user_birthdates`, separate from `public.users`; the Admin profile view does not expose it. Profile validation and assessment age eligibility are checked server-side.
 
-## Assessment flow
+## Assessment paths
+- **Signed-in wellbeing:** policy/consent acknowledgement, then JWT-protected `analyze-assessment`. The function validates identity, private birthdate/age, request, consent metadata, and rate limit. Configured OpenAI/Gemini and local/offline fallback are supported. The saved row has score/category and operational/consent metadata; answers and narrative return to the browser and full details are cached locally.
+- **Guest:** browser result; optional `save-guest-score` stores only score/risk level for later claiming.
+- **PHQ-9-style:** separate authenticated `analyze-phq9`; it stores structured answers and result fields in `assessments`. Authenticated Data API grants are narrower than the table schema.
 
-### Guest flow
+## Community and account data
 
-1. The UI validates age and requires acknowledgement of the privacy notice.
-2. The user completes the assessment in the browser.
-3. The result can be displayed without writing it to the user's account.
+Community reads are public and updates arrive through Realtime. Post creation uses database-side `create_community_post` with rolling limits. Comments/moderation use authenticated and owner/admin paths. Mood check-ins, sharing preferences, and policy acceptances link to the account. Admin score review follows each user's opt-in and returns score/risk level, not answers.
 
-### Authenticated flow
+## Live backend snapshot
 
-1. The UI invokes `analyze-assessment`.
-2. The Edge Function verifies the JWT and loads the authenticated user.
-3. Request size and JSON shape are validated.
-4. `consume_rate_limit` applies 5 requests / 60 seconds / user.
-5. OpenAI is attempted first when configured.
-6. Gemini is used as a fallback when configured.
-7. Local fallback logic remains available.
-8. The result is saved to `public.assessments`.
-9. The result page reads the saved row through RLS.
+Connected project: SafeSpace (`nvvttqbqhmwpxzfrjixe`, `ap-northeast-1`). Applied history includes private birthdate, profile/username, policy acceptance, score-sharing, and anonymous Community migrations. Supabase reported RLS on listed application tables in `public` and `private.user_birthdates`. This dated inventory can drift; see [RLS notes](RLS_AUDIT.md) and [Edge Functions](EDGE_FUNCTIONS.md).
 
-## Community
-
-`Community.jsx` reads public posts and subscribes to Supabase Realtime INSERT/UPDATE/DELETE events.
-
-Normal authenticated posts are sent to `analyze-community-post`, which currently requires JWT authentication, enforces a 64 KB request limit and 5-request/60-second rate limit, applies a lightweight safety flag, optionally calls OpenAI, and inserts the post into `community_posts`.
-
-Comments use `community_comments` with RLS ownership/admin controls.
-
-## PHQ-9
-
-`analyze-phq9` is a separate authenticated Edge Function. It requires exactly nine answers, normalizes answers to 0–3, calculates a 0–27 screening score and band, optionally asks OpenAI for supportive text, and saves the result to `assessments`.
-
-## What is public and what is private
-
-Public by design:
-
-- community post reads
-- community comment reads
-- emergency resource reads
-
-Private/authenticated:
-
-- assessments
-- guest assessment storage
-- reports
-- contact requests
-- user profiles
-- rate-limit state
-
-RLS is the database authorization boundary.
-
-## Application startup and navigation transitions
-
-The frontend now has two distinct transition layers. The first-open cinematic preloader is rendered from App.jsx before the HashRouter and records safespace:booted in sessionStorage when it completes. The separate RouteTransition component is rendered inside the router and watches pathname changes. This keeps cold-start presentation separate from in-app navigation.
-
-The preloader uses the repository SafeSpace icon, default-on sound state with browser autoplay limitations, desktop ambient/canvas effects, a lighter mobile path, and reduced-motion handling. Route transitions show the destination name, progress ring, SafeSpace mark, and top progress bar. See [docs/TRANSITIONS.md](TRANSITIONS.md).
-
-## Deployment
-
-The frontend is deployed to GitHub Pages from `main`. Supabase database changes and Edge Functions are deployed separately to the connected project.
-
-The live Supabase project can still drift if a change is made directly in the dashboard. The current security migrations and main AI function sources are tracked in the repository, but production state should still be checked before rebuilding the backend from source. See `docs/RLS_AUDIT.md` and `docs/EDGE_FUNCTIONS.md`.
-
-## Things I try to keep consistent
-
-- Keep provider secrets server-side.
-- Keep AI functions JWT-protected.
-- Validate expensive AI requests before processing.
-- Rate-limit expensive AI endpoints.
-- Preserve Thai/English and Light/Dark behavior.
-- Treat assessment answers and generated results as sensitive.
-- Present AI output as screening/supportive guidance, not diagnosis.
-
-
-## Current user flows
-
-The app supports both guest and signed-in assessment flows. Signed-in users can keep assessment history and delete saved assessment records from the History page. Guest results stay in browser navigation state rather than being attached to an account. Authentication includes email/password plus Google OAuth and Google One Tap. The main UI is bilingual (Thai/English) and supports light/dark themes.
+GitHub Actions checks/builds pull requests and deploys successful `main` pushes. Supabase changes deploy separately; frontend rollback does not revert database state.

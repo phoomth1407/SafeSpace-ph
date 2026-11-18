@@ -1,118 +1,37 @@
 # SafeSpace Edge Functions
 
-Last reviewed: 2026-11-15
+Last reviewed: 18 November 2026 using the connected Supabase inventory. All listed functions were reported ACTIVE.
 
-## What is currently deployed
+| Function | Version | JWT | Role |
+| --- | ---: | --- | --- |
+| `analyze-assessment` | 16 | Required | Signed-in wellbeing analysis |
+| `analyze-community-post` | 7 | Required | Protected Community analysis endpoint |
+| `analyze-phq9` | 5 | Required | PHQ-9-style screening |
+| `delete-account` | 1 | Required | Delete authenticated account data |
+| `communityInteract` | 3 | Required | Community compatibility interactions |
+| `analyzeCommunityPost` | 4 | Required | Older compatibility endpoint; check callers before retirement |
+| `save-guest-score` | 1 | No | Optional guest score-only share/claim path |
 
-| Function | Status | Version | JWT |
-| --- | --- | ---: | --- |
-| `analyze-assessment` | ACTIVE | 16 | Required |
-| `analyze-community-post` | ACTIVE | 7 | Required |
-| `analyze-phq9` | ACTIVE | 5 | Required |
-| `delete-account` | ACTIVE | 1 | Required |
-| `analyzeCommunityPost` | ACTIVE | 4 | Required |
-| `communityInteract` | ACTIVE | 3 | Required |
-| `save-guest-score` | ACTIVE | 1 | Not required |
-
-The first three are the current hardened AI endpoints. The latter two are compatibility/legacy-style functions that remain deployed and should be checked before removal.
+Versions are live-project values and can drift from tracked source. Verify before release.
 
 ## `analyze-assessment`
 
-Purpose: authenticated wellbeing assessment analysis and persistence.
-
-Controls:
-
-- JWT required
-- 64 KB request-size limit
-- JSON body validation
-- 1–100 answer objects
-- answer text fields capped at 2,000 characters
-- age validated to 1–120 when supplied
-- authenticated-user lookup
-- 5 requests / 60 seconds / user
-- OpenAI primary when configured
-- Gemini fallback when configured
-- local fallback when remote AI is unavailable
-- result saved to `public.assessments`
+Requires JWT; validates request size (64 KB), JSON, 1–100 bounded answer objects, consent metadata, identity, and a 5-per-60-second rate limit. For a non-anonymous account it gets the birthdate through the authenticated private-profile RPC and checks age server-side. It can use configured OpenAI, Gemini fallback, and local/offline behavior. The saved wellbeing row contains score/category and operational/consent metadata; answers and narrative return to the browser. Provider keys stay in Supabase secrets.
 
 ## `analyze-community-post`
 
-Purpose: authenticated community-post creation with optional AI support.
-
-Controls:
-
-- JWT required
-- 64 KB request-size limit
-- JSON body validation
-- content must be at least 10 characters
-- authenticated-user lookup
-- 5 requests / 60 seconds / user
-- lightweight safety flag
-- optional OpenAI response
-- post saved to `public.community_posts`
+JWT-protected analysis with input validation, safety handling, and rate limiting before configured AI processing. Community post creation also uses database-side `create_community_post` and rolling limits.
 
 ## `analyze-phq9`
 
-Purpose: authenticated PHQ-9 screening result creation.
-
-Controls:
-
-- JWT required
-- 32 KB request-size limit
-- JSON body validation
-- exactly 9 answers required
-- answers normalized to 0–3
-- score calculated from 0–27
-- screening band calculated from the score
-- authenticated-user lookup
-- 5 requests / 60 seconds / user
-- optional OpenAI summary/recommendations
-- result saved to `public.assessments`
-
-The PHQ-9 result is a screening indicator, not a diagnosis.
+Requires authentication and nine answers; normalizes each to 0–3, calculates a 0–27 score/band, applies the rate limit, and can use OpenAI for supportive text. Stores structured answers and result fields in the assessment table. This is screening, not diagnosis.
 
 ## `delete-account`
 
-Purpose: permanently remove the authenticated caller's SafeSpace account and account-owned records.
+Uses caller ID from the verified token, not a caller-supplied target. Server-side service-role access stays inside the function. It removes supported account-owned rows before Auth deletion. Guest/device-only data, imported sounds, provider logs, backups, and content already processed by third parties are outside deletion.
 
-Controls:
+## `save-guest-score`
 
-- JWT required; the target account ID is taken only from the verified access token, never from the request body
-- service-role access is confined to this Edge Function and is not sent to the browser
-- removes the caller's assessments, legacy guest-assessment rows, community posts/comments, submitted reports/contact requests, stored reactions on other posts, and rate-limit rows
-- deleting the Auth user cascades account profile, mood check-ins, sharing preferences, policy acceptances, claimed guest-share records, and Auth sessions
-- local cached private assessment results and the account's local assessment-policy flag are cleared by the client after a successful response
-- guest data, device-only preferences/imported sounds, provider logs, backups, and previously processed third-party AI data are outside the account deletion operation
+JWT verification is disabled for the guest route. It validates a score/risk-level payload and random claim token, storing only score-sharing data for later claiming; no answers or birthdate.
 
-Database cleanup runs before Auth deletion so a retry can finish if the Auth API is temporarily unavailable.
-
-## Rate limiting
-
-The current AI endpoints call `consume_rate_limit` with a 60-second window and maximum of 5 requests per user/endpoint window.
-
-The rate-limit state is stored in `public.edge_rate_limits` and protected by RLS. The database function is intentionally SECURITY DEFINER because it writes the protected counter table on behalf of an authenticated caller; its `search_path` is pinned to an empty path and EXECUTE is restricted to `authenticated`.
-
-## Keeping the source and production in sync
-
-As of 2026-09-20, the three current AI function source files under `supabase/functions/` match the deployed Supabase `index.ts` byte-for-byte for the active functions `analyze-assessment` (v14), `analyze-community-post` (v7), and `analyze-phq9` (v5).
-
-`analyzeCommunityPost` remains deployed as a legacy compatibility function (v3) but is no longer used by the current application flow. `communityInteract` remains deployed and is still used by the Community UI. The current connector can inspect and deploy Edge Functions but does not expose a delete operation, so the legacy `analyzeCommunityPost` endpoint is documented for later retirement rather than removed blindly.
-
-## When changing an Edge Function
-
-When changing an Edge Function:
-
-1. Keep JWT verification enabled.
-2. Validate request size before expensive processing.
-3. Validate JSON shape before using user-controlled fields.
-4. Authenticate the user before database writes.
-5. Apply a rate limit to expensive AI calls.
-6. Keep provider keys in Supabase secrets.
-7. Preserve response fields expected by the frontend.
-8. Test success and rejected-request paths.
-9. Record the deployed version here.
-
-
-## Related database controls
-
-The AI functions are only one part of the current abuse controls. Community posting is also protected by the database-side `create_community_post` path and rolling-limit migrations. The rate-limit RPC uses restricted execution and a hardened search path.
+AI endpoints use database-backed `consume_rate_limit` (5 requests / 60 seconds per user/endpoint). Preserve JWT checks on authenticated functions, validate inputs, keep secrets server-side, review grants/RLS, and update this inventory after deployment. Current sources are under `supabase/functions/`; migrations are under `supabase/migrations/`.
