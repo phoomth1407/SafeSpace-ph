@@ -41,30 +41,28 @@ function splitLine(line) {
 
 function splitForTranslation(value, source) {
   const lines = value.split("\n");
-  const segments = [];
-  const chunks = [];
-  for (const line of lines) {
-    const lineChunks = splitLine(line);
-    for (const chunk of lineChunks) {
-      chunks.push(chunk);
-      segments.push({ text: chunk, separatorAfter: "" });
-    }
-    if (segments.length) segments[segments.length - 1].separatorAfter = "\n";
-    else segments.push({ text: "", separatorAfter: "\n" });
-  }
-
-  if (!value.endsWith("\n") && segments.length) segments[segments.length - 1].separatorAfter = "";
   const chunkSeparator = source === "th" ? " " : "";
-  let chunkIndex = 0;
-  return segments.map((segment) => {
-    if (!segment.text) return segment;
-    chunkIndex += 1;
-    const isLastChunkOnLine = segment.separatorAfter === "\n" || chunkIndex === chunks.length;
-    const separatorAfter = isLastChunkOnLine ? segment.separatorAfter : chunkSeparator;
-    return { ...segment, separatorAfter };
-  });
-}
+  const segments = [];
 
+  lines.forEach((line, lineIndex) => {
+    const lineChunks = splitLine(line);
+    if (!lineChunks.length) {
+      if (lineIndex < lines.length - 1) segments.push({ text: "", separatorAfter: "\n" });
+      return;
+    }
+
+    lineChunks.forEach((chunk, chunkIndex) => {
+      const isLastChunk = chunkIndex === lineChunks.length - 1;
+      const hasNextLine = lineIndex < lines.length - 1;
+      segments.push({
+        text: chunk,
+        separatorAfter: isLastChunk ? (hasNextLine ? "\n" : "") : chunkSeparator,
+      });
+    });
+  });
+
+  return segments;
+}
 function decodeEntities(value) {
   const textarea = document.createElement("textarea");
   textarea.innerHTML = value;
