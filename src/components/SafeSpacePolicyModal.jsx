@@ -117,7 +117,8 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
               <button type="button" onClick={()=>setFullOpen(false)} className="text-sm text-slate-300 px-3 py-2 rounded-xl border border-slate-700">{lang === "en" ? "Back" : "กลับ"}</button>
             </div>
             <div className="overflow-y-auto px-5 sm:px-7 py-5 space-y-5 text-sm leading-7 text-slate-300">
-              {full.map(([heading, body]) => <section key={heading}><h3 className="font-semibold text-slate-100 mb-1">{heading}</h3><p>{body}</p></section>)}
+              <p className="text-xs font-semibold tracking-wide text-sky-300">{lang === "en" ? `Version ${SAFESPACE_POLICY_VERSION} · Last updated: ${SAFESPACE_POLICY_LAST_UPDATED_EN}` : `เวอร์ชัน ${SAFESPACE_POLICY_VERSION} · อัปเดตล่าสุด: ${SAFESPACE_POLICY_LAST_UPDATED_TH}`}</p>
+              {full.map(([heading, body]) => <section key={heading}><h3 className="font-semibold text-slate-100 mb-1">{heading}</h3><p className="whitespace-pre-line">{body}</p></section>)}
               <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4 text-xs text-slate-400">{lang === "en" ? `Version ${SAFESPACE_POLICY_VERSION} — ${SAFESPACE_POLICY_LAST_UPDATED_EN}` : `เวอร์ชัน ${SAFESPACE_POLICY_VERSION} — ${SAFESPACE_POLICY_LAST_UPDATED_TH}`}</div>
             </div>
           </>
@@ -126,3 +127,4 @@ export default function SafeSpacePolicyModal({ open, onAccept, onClose, persistA
     </div>
   );
 }
+
