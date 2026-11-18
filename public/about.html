@@ -1700,6 +1700,27 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     'face-neutral': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M9 15h6"/>',
     'face-good': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M9 14.5c2 1.6 4 1.6 6 0"/>',
     'face-great': '<circle cx="12" cy="12" r="8.5"/><circle cx="9" cy="10" r=".8"/><circle cx="15" cy="10" r=".8"/><path d="M8.5 13.8c2.2 2.7 4.8 2.7 7 0"/>',
+  };
+  function iconSvg(name, className='ui-icon'){
+    const body = ICONS[name] || ICONS.sparkle;
+    return `<svg class="${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+  }
+  document.querySelectorAll('[data-icon]').forEach(el=>{ el.innerHTML = iconSvg(el.dataset.icon); });
+
+  /* ---------- Standalone bilingual system ---------- */
+  const TH = {
+    'SafeSpace — Project Introduction':'SafeSpace — แนะนำโครงการ',
+    'Overview':'ภาพรวม','Features':'ฟีเจอร์','For developers':'สำหรับนักพัฒนา','Build timeline':'ไทม์ไลน์การพัฒนา','View code':'ดูโค้ด',
+    'Project docs':'เอกสารโครงการ','Built to be understood, not just used.':'สร้างมาให้เข้าใจได้ ไม่ใช่แค่ใช้งานได้',
+    'I added the docs that explain how SafeSpace works behind the UI, how its data is handled, and how other developers can work with the project.':'เพิ่มเอกสารที่อธิบายการทำงานเบื้องหลัง UI การจัดการข้อมูล และแนวทางสำหรับนักพัฒนาคนอื่นที่ต้องการทำงานกับโครงการ',
+    'AI architecture':'สถาปัตยกรรม AI','The current Edge Functions, validation, rate limits, provider fallback chain, privacy boundary, and what the AI is actually allowed to do.':'Edge Functions ปัจจุบัน การตรวจสอบข้อมูล การจำกัดคำขอ ระบบสำรองผู้ให้บริการ ขอบเขตความเป็นส่วนตัว และสิ่งที่ AI สามารถทำได้',
+    'Data model':'โครงสร้างข้อมูล','The main tables, relationships, RLS boundaries, Community write path, assessment history, and the way sensitive data is treated.':'ตารางหลัก ความสัมพันธ์ ขอบเขต RLS เส้นทางการสร้างโพสต์ Community ประวัติการประเมิน และแนวทางจัดการข้อมูลที่ละเอียดอ่อน',
+    'Contributing':'การมีส่วนร่วม','A practical guide for setting up the project, finding the right files, testing changes, and keeping the SafeSpace feel intact.':'คู่มือสำหรับตั้งค่าโครงการ หาไฟล์ที่เกี่ยวข้อง ทดสอบการเปลี่ยนแปลง และรักษาแนวทางของ SafeSpace ไว้',
+    'License & reuse':'ใบอนุญาตและการนำไปใช้ต่อ','SafeSpace uses a custom non-commercial attribution license. Non-commercial reuse is allowed with attribution; commercial use needs written permission.':'SafeSpace ใช้ใบอนุญาตแบบกำหนดเองสำหรับการใช้งานที่ไม่ใช่เชิงพาณิชย์พร้อมระบุที่มา การนำไปใช้ต่อแบบไม่ใช่เชิงพาณิชย์ทำได้เมื่อให้เครดิต ส่วนการใช้งานเชิงพาณิชย์ต้องได้รับอนุญาตเป็นลายลักษณ์อักษร',
+    'Third-party libraries and assets keep their own licenses. The SafeSpace license does not grant access to the original GitHub repository or its write permissions.':'ไลบรารีและไฟล์จากบุคคลที่สามยังคงใช้ใบอนุญาตของตนเอง ใบอนุญาต SafeSpace ไม่ได้ให้สิทธิ์เข้าถึงหรือเขียนไปยัง GitHub repository ต้นฉบับ',
+    'The foundation pass':'รากฐานของโครงการ','Project docs':'เอกสารโครงการ','License':'ใบอนุญาต','Security':'ความปลอดภัย','Community AI':'AI ของ Community','About page':'หน้า About',
+    'A school capstone project, in production':'โครงงานปลายภาคของนักเรียนที่นำมาใช้งานจริง',
+    'Take a breath.':'พักหายใจสักครู่','Then meet SafeSpace.':'แล้วมาทำความรู้จัก SafeSpace',
     'A bilingual (Thai / English) web app for teens and young adults: a mental-health screening check-in, six self-care tools, a quiet anonymous community, and real hotlines — built solo over about a month with React, Vite, and Supabase.':'เว็บแอปสองภาษา (ไทย / อังกฤษ) สำหรับวัยรุ่นและคนหนุ่มสาว มีแบบคัดกรองสุขภาวะทางใจ เครื่องมือดูแลตัวเอง 6 แบบ ชุมชนนิรนาม และสายด่วนจริง — พัฒนาเดี่ยวด้วย React, Vite และ Supabase ประมาณหนึ่งเดือน',
     'Open the live app':'เปิดแอปจริง','Explore what it does':'ดูว่า SafeSpace ทำอะไรได้บ้าง',
     "Everything below is interactive — small, honest rebuilds of the app's real tools, not screenshots. Try the breathing ring, mix some ambient sound, or let a worry float away.":'เนื้อหาด้านล่างเป็นตัวอย่างแบบโต้ตอบที่สร้างขึ้นจากแนวคิดของเครื่องมือจริง ไม่ใช่ภาพหน้าจอ ลองวงแหวนฝึกหายใจ มิกซ์เสียงบรรยากาศ หรือปล่อยความกังวลออกไป',
@@ -1748,7 +1769,7 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     'The player persists globally — it keeps playing while you browse Community or Resources':'เครื่องเล่นทำงานต่อทั่วทั้งหน้า — เสียงยังเล่นขณะเปิดชุมชนหรือแหล่งข้อมูล',
     'Real audio — Rain, Ocean, and Wind are actually synthesized below':'เสียงจริง — ฝน คลื่นทะเล และลมถูกสร้างขึ้นแบบสดด้านล่าง','Rainy Cabin':'ห้องฝนตก','Zen':'Zen','Reset':'รีเซ็ต','Rain':'ฝน','Ocean':'คลื่นทะเล','Wind':'ลม','Fireplace':'กองไฟ','432 Hz Bowl':'เสียงกังวาน 432 Hz','Lo-Fi':'Lo-Fi',
     'Fireplace, Bowl, and Lo-Fi are more involved synths — hear them in the full app. Tap play, then raise a slider above.':'กองไฟ เสียงกังวาน และ Lo-Fi เป็นซินธ์ที่ซับซ้อนกว่า — ไปลองฟังในแอปจริงได้ แตะเล่นแล้วเพิ่มระดับเสียงด้านบน',
-    'FEATURE 7: Community':'ฟีเจอร์ 7: ชุมชน','07 · Community & anonymous posting':'07 · ชุมชนนิรนาม','A place to share with privacy':'พื้นที่โพสต์โดยไม่ต้องติดชื่อ',
+    'FEATURE 7: Community':'ฟีเจอร์ 7: ชุมชน','07 · Community &amp; anonymous posting':'07 · ชุมชนนิรนาม','A place to share with privacy':'พื้นที่โพสต์โดยไม่ต้องติดชื่อ',
     "Read posts and comments publicly. Signed-in users can participate using their account username or choose the anonymous label when posting.":'ไม่มีรูปโปรไฟล์และไม่มีชื่อผู้ใช้ที่ผูกกับประวัติแบบประเมิน — มีเพียงพื้นที่ให้เล่าสิ่งที่กำลังเจอและอ่านประสบการณ์ของคนอื่น',
     'Posts appear live, no refresh needed':'โพสต์ใหม่แสดงแบบสดโดยไม่ต้องรีเฟรช','Quick Breathe, Grounding, and Sounds tools sit right in the feed':'เครื่องมือด่วนสำหรับหายใจ Grounding และเสียงอยู่ในฟีดเลย',
     'Public author labels can be anonymous; account ownership remains protected for moderation':'แยกจากประวัติแบบประเมินส่วนตัว — เนื้อหาที่นี่ไม่เชื่อมกลับไปยังบัญชี',
@@ -1793,8 +1814,6 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     'What is saved, and where':'ข้อมูลอะไรถูกเก็บและเก็บที่ไหน',
     'Built by phoomth1407':'สร้างโดย phoomth1407',
     'Back to top':'กลับด้านบน',
-  };
-
     'A bilingual (Thai / English) web app for teens and young adults: wellbeing screening, self-care tools, a Community with an anonymous posting option, resources, authentication, assessment history, and AI-assisted guidance — built with React, Vite, and Supabase.':'เว็บแอปสองภาษา (ไทย / อังกฤษ) สำหรับวัยรุ่นและวัยผู้ใหญ่ มีแบบคัดกรองสุขภาวะ เครื่องมือดูแลตัวเอง ชุมชนที่เลือกโพสต์แบบนิรนามได้ แหล่งข้อมูล การลงชื่อเข้าใช้ ประวัติการประเมิน และคำแนะนำจาก AI สร้างด้วย React, Vite และ Supabase',
     'Public Community, anonymous posting + quick tools':'ชุมชนสาธารณะ โพสต์แบบนิรนามได้ และเครื่องมือด่วน',
     'If remote analysis is unavailable, local fallback logic can still provide a result':'หากบริการวิเคราะห์ระยะไกลใช้งานไม่ได้ ระบบสำรองในเครื่องยังช่วยแสดงผลได้',
@@ -1818,7 +1837,6 @@ footer{ border-top:1px solid var(--border); padding:64px 0 40px; }
     'Account privacy':'ความเป็นส่วนตัวของบัญชี',
     'Private':'ส่วนตัว','birthdate · owner profile':'วันเกิด · โปรไฟล์เจ้าของบัญชี','Optional':'เลือกได้','admin score + risk level':'คะแนนและระดับความเสี่ยงที่ผู้ดูแลเห็น','Anonymous':'นิรนาม','Community author label':'ชื่อผู้เขียนในชุมชน',
     'Birthdate stays out of public and admin profile views.':'วันเกิดไม่แสดงในโปรไฟล์สาธารณะหรือโปรไฟล์ผู้ดูแล'
-
   };
 
   const ATTR_TH = {
