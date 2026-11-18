@@ -1,88 +1,25 @@
 # SafeSpace Deployment
 
-Last reviewed: 2026-09-30
+Last reviewed: 18 November 2026.
 
-## Frontend deployment
+## Frontend
 
-The frontend is deployed to GitHub Pages from `main` through `.github/workflows/test.yml`.
+`.github/workflows/test.yml` uses Node.js 22 and runs `npm ci`, `npm test`, `npm run lint:a11y`, `npm run build`, and Playwright Chromium smoke checks (`npm run test:e2e`). Pull requests run quality checks without deployment. Successful pushes to `main` deploy the tested artifact to GitHub Pages.
 
-The workflow currently runs the quality checks before deployment:
+The workflow passes the commit SHA as `VITE_APP_VERSION` and writes `version.json` for the app's update check. `public/about.html` is part of the static build.
 
-1. `npm ci`
-2. `npm test`
-3. `npm run lint:a11y`
-4. `npm run build`
-5. Install Playwright Chromium
-6. `npm run test:e2e`
-7. Upload the Pages artifact
-8. Deploy to GitHub Pages only after the quality job succeeds
+## Supabase
 
-The standalone `public/about.html` page is deployed with the same Pages build.
+Connected project: SafeSpace (`nvvttqbqhmwpxzfrjixe`, `ap-northeast-1`). Migrations and Edge Functions deploy separately from Pages. A frontend deployment does not apply SQL or deploy functions.
 
-## Supabase deployment
+The live applied history includes the November private birthdate, profile/username, policy acceptance, score-sharing, admin age-segment, Community permissions, and anonymous Community changes. Latest applied database version reported in this review: `20261115172949` (`allow_anonymous_community_before_profile`). Check the live history before applying SQL; Git and production can drift.
 
-Supabase is a separate backend from the GitHub Pages frontend. The repository tracks the current Edge Function source and database migrations, but changes made directly in the Supabase dashboard can still create drift.
+See [Edge Functions](EDGE_FUNCTIONS.md) for current deployed names/versions.
 
-### Current Edge Functions
+## Release checks
 
-- `analyze-assessment` — v14, JWT required
-- `analyze-community-post` — v7, JWT required
-- `analyze-phq9` — v5, JWT required
-- `communityInteract` — v3, compatibility function still used by the Community UI
-- `analyzeCommunityPost` — v3, legacy endpoint being retired
+Frontend: review Actions, Thai/English and light/dark, mobile layouts, auth return paths, profile completion and age validation, guest and signed-in assessments, history/deletion, score sharing, Community, resources, admin permissions, and About page.
 
-### Current migrations tracked in Git
+Supabase: inspect project/tables/RLS/grants/migration history/function versions; review privacy effects; keep birthdate out of public/admin data and secrets server-side; verify deployed changes with read-only inspection.
 
-- `20260919000000_security_hardening.sql`
-- `20260919000003_lock_rate_limit_rpc_grants.sql`
-- `20260919000004_community_post_rolling_limit.sql`
-- `20260919000005_community_post_limit_index.sql`
-- `20260920000000_enforce_community_post_limit_rpc.sql`
-- `20260920000001_harden_security_definer_search_paths.sql`
-
-The recent migrations cover the security hardening, AI rate-limit RPC grants, rolling Community post limits, controlled Community creation, and SECURITY DEFINER/search-path hardening.
-
-## Before deploying
-
-### Frontend
-
-- [ ] `npm ci`
-- [ ] `npm test`
-- [ ] `npm run lint:a11y`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e`
-- [ ] Check Thai/English
-- [ ] Check Light/Dark
-- [ ] Check email/password and Google authentication
-- [ ] Check guest and authenticated assessment flows
-- [ ] Check assessment history deletion
-- [ ] Check Community realtime updates, posting, comments, and reports
-- [ ] Check Resources and admin flows
-
-### Supabase
-
-- [ ] Confirm RLS for new/changed tables
-- [ ] Confirm ownership/admin policies
-- [ ] Confirm AI functions still require JWT
-- [ ] Confirm request-size and rate-limit controls
-- [ ] Confirm Community creation still goes through the controlled database path
-- [ ] Confirm provider secrets exist only in Supabase
-- [ ] Run Supabase security advisors after schema changes
-
-## Rollback
-
-### Frontend
-
-Redeploy a previous known-good `main` commit through GitHub Pages.
-
-### Supabase
-
-Roll back the affected Edge Function or database migration using the Supabase deployment process. Do not assume a frontend rollback also rolls back database state.
-
-## One important distinction
-
-A successful Vite build only proves that the frontend can be built. It does not prove that the live Supabase schema, RLS policies, Edge Functions, secrets, or Realtime configuration are correct. Those parts need their own verification.
-
-## Notes
-
-The deployment setup follows the normal Supabase model where authenticated client calls send a user JWT to protected Edge Functions; Supabase documents `verify_jwt` as the platform-level check for functions that require authenticated callers. citeturn1search1turn1search3
+A frontend rollback does not roll back Supabase state. A successful Vite build does not prove live database, RLS, Edge Function, secret, or Realtime configuration.
