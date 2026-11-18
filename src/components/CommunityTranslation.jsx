@@ -15,7 +15,7 @@ function graphemes(value) {
 }
 
 function splitLine(line) {
-  if (byteLength(line) <= MAX_SEGMENT_BYTES) return [line];
+  if (!line || byteLength(line) <= MAX_SEGMENT_BYTES) return [line];
   const parts = [];
   let remaining = line;
   while (remaining && byteLength(remaining) > MAX_SEGMENT_BYTES) {
@@ -39,8 +39,30 @@ function splitLine(line) {
   return parts.filter(Boolean);
 }
 
-function splitForTranslation(value) {
-  return value.split("\n").flatMap((line) => line ? splitLine(line) : [""]);
+function splitForTranslation(value, source) {
+  const lines = value.split("\n");
+  const segments = [];
+  const chunks = [];
+  for (const line of lines) {
+    const lineChunks = splitLine(line);
+    for (const chunk of lineChunks) {
+      chunks.push(chunk);
+      segments.push({ text: chunk, separatorAfter: "" });
+    }
+    if (segments.length) segments[segments.length - 1].separatorAfter = "\n";
+    else segments.push({ text: "", separatorAfter: "\n" });
+  }
+
+  if (!value.endsWith("\n") && segments.length) segments[segments.length - 1].separatorAfter = "";
+  const chunkSeparator = source === "th" ? " " : "";
+  let chunkIndex = 0;
+  return segments.map((segment) => {
+    if (!segment.text) return segment;
+    chunkIndex += 1;
+    const isLastChunkOnLine = segment.separatorAfter === "\n" || chunkIndex === chunks.length;
+    const separatorAfter = isLastChunkOnLine ? segment.separatorAfter : chunkSeparator;
+    return { ...segment, separatorAfter };
+  });
 }
 
 function decodeEntities(value) {
@@ -66,8 +88,7 @@ export default function CommunityTranslation({ text = "", lang = "en" }) {
   const target = lang === "en" ? "en" : "th";
   const { thai, latin } = languageCounts(text);
   const source = thai > latin ? "th" : "en";
-  const hasWords = thai + latin > 0;
-  const needsTranslation = Boolean(text.trim()) && hasWords && source !== target;
+  const needsTranslation = Boolean(text.trim()) && thai + latin > 0 && source !== target;
   const targetName = target === "en" ? "English" : "ไทย";
 
   useEffect(() => {
@@ -94,20 +115,24 @@ export default function CommunityTranslation({ text = "", lang = "en" }) {
     controllerRef.current = requestController;
     setLoading(true);
     setError("");
-    const chunks = splitForTranslation(text);
+
+    const segments = splitForTranslation(text, source);
+    const chunks = segments.filter((segment) => segment.text);
+    const total = chunks.length;
 
     try {
-      const results = [];
-      for (let index = 0; index < chunks.length; index += 1) {
-        const chunk = chunks[index];
-        if (!chunk) {
-          results.push("");
+      let chunkIndex = 0;
+      let translatedText = "";
+      for (const segment of segments) {
+        if (!segment.text) {
+          translatedText += segment.separatorAfter;
           continue;
         }
 
-        setProgress({ current: index + 1, total: chunks.filter(Boolean).length });
+        chunkIndex += 1;
+        setProgress({ current: chunkIndex, total });
         const params = new URLSearchParams({
-          q: chunk,
+          q: segment.text,
           langpair: source === "th" ? "th|en" : "en|th",
         });
         const response = await fetch(`https://api.mymemory.translated.net/get?${params.toString()}`, {
@@ -126,12 +151,11 @@ export default function CommunityTranslation({ text = "", lang = "en" }) {
           if (/quota|daily|limit|too many/i.test(detail)) throw new Error("quota");
           throw new Error("unavailable");
         }
-        results.push(decodeEntities(result.responseData.translatedText));
+        translatedText += decodeEntities(result.responseData.translatedText) + segment.separatorAfter;
       }
 
       if (controllerRef.current === requestController) {
-        const joiner = target === "en" ? " " : "";
-        setTranslated(results.join(joiner));
+        setTranslated(translatedText);
         setVisible(true);
       }
     } catch (translateError) {
