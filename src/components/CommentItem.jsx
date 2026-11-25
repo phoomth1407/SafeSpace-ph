@@ -75,7 +75,7 @@ export default function CommentItem({ comment, isOwner, isAdmin, canModerateComm
             />
           )}
         </div>
-        <p data-translation-source className="text-xs text-slate-300 leading-relaxed mt-0.5">{comment.content}</p>
+        <p className="text-xs text-slate-300 leading-relaxed mt-0.5">{comment.content}</p>
         <CommunityTranslation text={comment.content || ""} lang={lang} />
       </div>
     </div>
